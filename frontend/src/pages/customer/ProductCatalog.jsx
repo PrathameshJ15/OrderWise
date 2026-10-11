@@ -1,240 +1,158 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { Package, Search, ShoppingCart, RefreshCw, CheckCircle2, AlertTriangle, AlertOctagon } from 'lucide-react';
 import apiClient from '../../api/client';
-import { CardSkeleton } from '../../components/ui/Skeleton';
-import EmptyState from '../../components/ui/EmptyState';
-import Toast from '../../components/ui/Toast';
-import {
-  Search,
-  Filter,
-  Package,
-  Layers,
-  ArrowRight,
-  ShieldCheck,
-  CheckCircle,
-  AlertTriangle,
-  Flame,
-} from 'lucide-react';
 
-export function ProductCatalog() {
-  const navigate = useNavigate();
+export default function ProductCatalog() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [inStockOnly, setInStockOnly] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+
+  const fetchProducts = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await apiClient.get('/products?active=true');
+      setProducts(res.data || []);
+    } catch (err) {
+      setError(err?.error?.message || err?.message || 'Failed to load product catalog.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    let isMounted = true;
-
-    async function loadProducts() {
-      setLoading(true);
-      try {
-        const res = await apiClient.get('/products');
-        const list = res.products || res.data?.products || res;
-        if (isMounted) {
-          setProducts(Array.isArray(list) ? list : []);
-        }
-      } catch (err) {
-        if (isMounted) {
-          console.error('Failed to load products:', err);
-          setErrorMessage(err.error?.message || err.message || 'Failed to load catalog');
-        }
-      } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
-      }
-    }
-
-    loadProducts();
-    return () => {
-      isMounted = false;
-    };
+    fetchProducts();
   }, []);
 
-  // Filter products by search and stock
   const filteredProducts = products.filter((p) => {
-    const query = searchQuery.toLowerCase().trim();
-    const matchesSearch =
-      !query ||
-      p.name.toLowerCase().includes(query) ||
-      p.sku.toLowerCase().includes(query) ||
-      (p.description && p.description.toLowerCase().includes(query));
-
-    const matchesStock = !inStockOnly || p.available_stock > 0;
-    return matchesSearch && matchesStock;
+    if (!searchQuery) return true;
+    const q = searchQuery.toLowerCase();
+    return (
+      p.name.toLowerCase().includes(q) ||
+      p.sku.toLowerCase().includes(q) ||
+      (p.description && p.description.toLowerCase().includes(q))
+    );
   });
 
-  const getStockIndicator = (product) => {
-    const avail = product.available_stock;
-    const onHand = product.on_hand_quantity;
-
-    if (avail <= 0) {
-      return {
-        badge: 'Out of Stock',
-        badgeClass: 'bg-rose-100 text-rose-800 border-rose-200',
-        barColor: 'bg-rose-500',
-        icon: AlertTriangle,
-        percentage: 0,
-      };
-    }
-
-    if (avail <= 15 || (onHand > 0 && avail / onHand < 0.2)) {
-      return {
-        badge: 'Scarce / Low Stock',
-        badgeClass: 'bg-amber-100 text-amber-800 border-amber-200',
-        barColor: 'bg-amber-500',
-        icon: Flame,
-        percentage: Math.min(100, Math.round((avail / (onHand || 1)) * 100)),
-      };
-    }
-
-    return {
-      badge: 'In Stock',
-      badgeClass: 'bg-emerald-100 text-emerald-800 border-emerald-200',
-      barColor: 'bg-emerald-500',
-      icon: CheckCircle,
-      percentage: Math.min(100, Math.round((avail / (onHand || 1)) * 100)),
-    };
-  };
-
-  const handleOrderClick = (productId) => {
-    navigate(`/orders/new?product_id=${productId}`);
-  };
-
   return (
-    <div className="space-y-6">
-      {errorMessage && (
-        <Toast message={errorMessage} type="error" onClose={() => setErrorMessage('')} />
-      )}
-
+    <div className="space-y-6 font-mono py-4">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div className="border border-arcade-border bg-arcade-neutral p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Product Catalog</h1>
-          <p className="text-sm text-slate-500 mt-1">
-            Explore certified industrial hardware with live stock levels ready for prioritized allocation.
+          <div className="inline-flex items-center space-x-1.5 text-xs text-arcade-accent bg-arcade-accent/10 border border-arcade-accent/20 px-2 py-0.5 mb-2">
+            <Package className="h-3 w-3" />
+            <span>AVAILABLE INDUSTRIAL CATALOG</span>
+          </div>
+          <h1 className="font-display text-3xl font-extrabold uppercase text-arcade-primary">
+            Product Catalog
+          </h1>
+          <p className="text-xs text-arcade-secondary mt-1">
+            Certified industrial hardware with live warehouse availability indicators.
           </p>
         </div>
 
-        {/* Search & Stock Filter Toolbar */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-          <div className="relative min-w-[260px]">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-              <Search className="w-4 h-4" />
-            </div>
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search product or SKU..."
-              className="block w-full pl-9 pr-4 py-2 text-sm rounded-xl border border-slate-300 bg-white shadow-xs focus:ring-indigo-500 focus:border-indigo-500 transition"
-              aria-label="Search products"
-            />
-          </div>
-
-          <label className="inline-flex items-center gap-2 px-3.5 py-2 bg-white rounded-xl border border-slate-300 shadow-xs cursor-pointer select-none hover:bg-slate-50 transition text-sm text-slate-700">
-            <input
-              type="checkbox"
-              checked={inStockOnly}
-              onChange={(e) => setInStockOnly(e.target.checked)}
-              className="rounded text-indigo-600 focus:ring-indigo-500 h-4 w-4 border-slate-300"
-            />
-            <span className="font-medium">In stock only</span>
-          </label>
+        {/* Search */}
+        <div className="flex items-center space-x-2 border border-arcade-border bg-arcade-surface px-3 py-2 text-xs w-full md:w-72">
+          <Search className="h-3.5 w-3.5 text-arcade-secondary" />
+          <input
+            type="text"
+            placeholder="Search catalog by product name or SKU..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="bg-transparent text-arcade-primary focus:outline-none text-xs w-full placeholder-arcade-secondary/60"
+          />
         </div>
       </div>
 
-      {/* Products Grid */}
+      {error && (
+        <div className="p-4 border border-arcade-danger/40 bg-arcade-danger/10 text-arcade-danger text-xs flex items-center justify-between">
+          <span>{error}</span>
+          <button onClick={() => setError(null)} className="underline hover:text-white">
+            Dismiss
+          </button>
+        </div>
+      )}
+
+      {/* Catalog Grid */}
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <CardSkeleton />
-          <CardSkeleton />
-          <CardSkeleton />
-          <CardSkeleton />
-          <CardSkeleton />
-          <CardSkeleton />
+        <div className="border border-arcade-border bg-arcade-neutral p-12 text-center text-arcade-secondary flex flex-col items-center justify-center space-y-3">
+          <RefreshCw className="h-6 w-6 animate-spin text-arcade-accent" />
+          <span className="text-xs tracking-wider uppercase">Loading catalog components...</span>
         </div>
       ) : filteredProducts.length === 0 ? (
-        <EmptyState
-          title="No products matched your criteria"
-          description="Try loosening your search terms or uncheck the 'In stock only' filter."
-          actionText="Clear Filters"
-          onAction={() => {
-            setSearchQuery('');
-            setInStockOnly(false);
-          }}
-        />
+        <div className="border border-arcade-border bg-arcade-neutral p-12 text-center text-arcade-secondary space-y-2">
+          <Package className="h-8 w-8 text-arcade-secondary mx-auto opacity-50" />
+          <h3 className="font-display text-base uppercase text-arcade-primary font-bold">
+            No Matching Products
+          </h3>
+          <p className="text-xs">No active products match your current search query.</p>
+        </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {filteredProducts.map((product) => {
-            const stockInfo = getStockIndicator(product);
-            const StockIcon = stockInfo.icon;
+            const onHand = product.on_hand_quantity || product.stock || 0;
+            const available = product.available_quantity ?? onHand;
+
+            // Availability rating based on FRONTEND_SPEC.md:
+            // green (>20%), yellow (5-20%), red (<5% or 0)
+            let indicatorColor = 'border-arcade-accent text-arcade-accent bg-arcade-accent/10';
+            let indicatorText = 'In Stock';
+            let IndicatorIcon = CheckCircle2;
+
+            if (available <= 0) {
+              indicatorColor = 'border-arcade-danger text-arcade-danger bg-arcade-danger/10';
+              indicatorText = 'Scarce / Exhausted';
+              IndicatorIcon = AlertOctagon;
+            } else if (available < 15) {
+              indicatorColor = 'border-arcade-warning text-arcade-warning bg-arcade-warning/10';
+              indicatorText = 'Limited Supply';
+              IndicatorIcon = AlertTriangle;
+            }
 
             return (
               <div
                 key={product.id}
-                className="bg-white rounded-2xl border border-slate-200 shadow-xs hover:shadow-md transition-all flex flex-col justify-between overflow-hidden group"
+                className="border border-arcade-border bg-arcade-neutral p-5 flex flex-col justify-between hover:border-arcade-accent/60 transition-colors group relative"
               >
-                <div className="p-6">
-                  {/* Top tags */}
-                  <div className="flex items-center justify-between gap-2 mb-3">
-                    <span className="text-xs font-mono font-bold tracking-wider text-indigo-700 bg-indigo-50 border border-indigo-200 px-2.5 py-1 rounded-md">
+                <div>
+                  <div className="flex items-start justify-between gap-2 mb-2">
+                    <span className="text-[10px] text-arcade-accent font-bold px-1.5 py-0.5 bg-arcade-surface border border-arcade-border">
                       {product.sku}
                     </span>
                     <span
-                      className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-0.5 rounded-full border ${stockInfo.badgeClass}`}
+                      className={`inline-flex items-center space-x-1 text-[9px] uppercase font-bold px-1.5 py-0.5 border ${indicatorColor}`}
                     >
-                      <StockIcon className="w-3 h-3" />
-                      {stockInfo.badge}
+                      <IndicatorIcon className="h-2.5 w-2.5" />
+                      <span>{indicatorText}</span>
                     </span>
                   </div>
 
-                  {/* Title & Description */}
-                  <h3 className="text-lg font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">
+                  <h3 className="font-display text-lg font-bold text-arcade-primary group-hover:text-arcade-accent transition-colors">
                     {product.name}
                   </h3>
-                  <p className="text-sm text-slate-500 mt-2 line-clamp-2 leading-relaxed">
-                    {product.description || 'No extended description available for this catalog item.'}
+
+                  <p className="text-xs text-arcade-secondary mt-1 mb-4 line-clamp-3 leading-relaxed">
+                    {product.description || 'Standard precision industrial hardware component.'}
                   </p>
-
-                  {/* Stock Metrics Box */}
-                  <div className="mt-5 p-3.5 bg-slate-50 rounded-xl border border-slate-100 space-y-2">
-                    <div className="flex justify-between items-center text-xs">
-                      <span className="text-slate-500 font-medium">Available to allocate:</span>
-                      <span className="font-bold text-slate-900">
-                        {product.available_stock} {product.unit || 'units'}
-                      </span>
-                    </div>
-
-                    <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
-                      <div
-                        className={`h-full rounded-full ${stockInfo.barColor}`}
-                        style={{ width: `${stockInfo.percentage}%` }}
-                      />
-                    </div>
-
-                    <div className="flex justify-between items-center text-[11px] text-slate-400">
-                      <span>On hand: {product.on_hand_quantity}</span>
-                      <span>Reserved: {product.reserved_quantity}</span>
-                    </div>
-                  </div>
                 </div>
 
-                {/* Card Action footer */}
-                <div className="p-4 bg-slate-50/50 border-t border-slate-100 flex items-center justify-between">
-                  <span className="text-xs font-semibold text-slate-500">
-                    Unit: {product.unit || 'units'}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => handleOrderClick(product.id)}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-xs transition"
+                <div className="pt-3 border-t border-arcade-border/60 space-y-3">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-arcade-secondary text-[11px]">Warehouse Units:</span>
+                    <span className="font-semibold text-arcade-primary">
+                      {available} <span className="text-[10px] text-arcade-secondary">{product.unit || 'units'}</span>
+                    </span>
+                  </div>
+
+                  <Link
+                    to={`/orders/new?product_id=${product.id}`}
+                    className="w-full flex items-center justify-center space-x-2 py-2 px-3 bg-arcade-accent text-arcade-surface font-bold text-xs uppercase tracking-wider hover:opacity-90 transition-opacity shadow-[0_0_8px_rgba(200,255,58,0.2)]"
                   >
-                    <span>Order Item</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
+                    <ShoppingCart className="h-3.5 w-3.5" />
+                    <span>Order Now</span>
+                  </Link>
                 </div>
               </div>
             );
@@ -244,5 +162,3 @@ export function ProductCatalog() {
     </div>
   );
 }
-
-export default ProductCatalog;

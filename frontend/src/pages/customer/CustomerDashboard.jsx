@@ -1,261 +1,285 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import apiClient from '../../api/client';
 import { useAuth } from '../../hooks/useAuth';
-import StatusPill from '../../components/ui/StatusPill';
-import Skeleton, { TableRowSkeleton } from '../../components/ui/Skeleton';
-import EmptyState from '../../components/ui/EmptyState';
-import Toast from '../../components/ui/Toast';
 import {
-  PackagePlus,
-  ClipboardList,
+  ShoppingBag,
+  PlusCircle,
   Clock,
   CheckCircle2,
   AlertCircle,
-  Clock3,
+  Package,
   ArrowRight,
-  TrendingUp,
-  ShieldCheck,
+  RefreshCw,
 } from 'lucide-react';
+import apiClient from '../../api/client';
+import StatusPill from '../../components/ui/StatusPill';
 
-export function CustomerDashboard() {
+export default function CustomerDashboard() {
   const { user } = useAuth();
-  const [stats, setStats] = useState({
-    total: 0,
-    pending: 0,
-    fulfilled: 0,
-    partially_fulfilled: 0,
-    deferred: 0,
-  });
-  const [recentOrders, setRecentOrders] = useState([]);
+  const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [error, setError] = useState(null);
+
+  const fetchOrders = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await apiClient.get('/orders');
+      // /api/orders returns customer's own orders when authenticated as customer
+      setOrders(res.data || []);
+    } catch (err) {
+      setError(err?.error?.message || err?.message || 'Failed to load your orders.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    let isMounted = true;
-
-    async function loadDashboardData() {
-      setLoading(true);
-      try {
-        const [statsRes, ordersRes] = await Promise.all([
-          apiClient.get('/orders/stats/my'),
-          apiClient.get('/orders/my?limit=5'),
-        ]);
-
-        if (isMounted) {
-          const statsData = statsRes.stats || statsRes.data || statsRes;
-          const ordersData = ordersRes.orders || ordersRes.data?.orders || ordersRes;
-
-          setStats({
-            total: statsData.total || 0,
-            pending: statsData.pending || 0,
-            fulfilled: statsData.fulfilled || 0,
-            partially_fulfilled: statsData.partially_fulfilled || 0,
-            deferred: statsData.deferred || 0,
-          });
-
-          setRecentOrders(Array.isArray(ordersData) ? ordersData : []);
-        }
-      } catch (err) {
-        if (isMounted) {
-          console.error('Failed to load dashboard:', err);
-          setErrorMessage(err.error?.message || err.message || 'Failed to load dashboard data');
-        }
-      } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
-      }
-    }
-
-    loadDashboardData();
-    return () => {
-      isMounted = false;
-    };
+    fetchOrders();
   }, []);
 
-  const statCards = [
-    {
-      title: 'Total Orders',
-      value: stats.total,
-      icon: ClipboardList,
-      color: 'bg-indigo-50 text-indigo-700 border-indigo-100',
-      badge: 'All Placed',
-    },
-    {
-      title: 'Pending Allocation',
-      value: stats.pending,
-      icon: Clock3,
-      color: 'bg-slate-50 text-slate-700 border-slate-200',
-      badge: 'In Queue',
-    },
-    {
-      title: 'Fulfilled',
-      value: stats.fulfilled,
-      icon: CheckCircle2,
-      color: 'bg-emerald-50 text-emerald-700 border-emerald-100',
-      badge: '100% Stock',
-    },
-    {
-      title: 'Partially Fulfilled',
-      value: stats.partially_fulfilled,
-      icon: TrendingUp,
-      color: 'bg-amber-50 text-amber-700 border-amber-100',
-      badge: 'Min Threshold Met',
-    },
-    {
-      title: 'Deferred',
-      value: stats.deferred,
-      icon: AlertCircle,
-      color: 'bg-rose-50 text-rose-700 border-rose-100',
-      badge: 'Stock Constrained',
-    },
-  ];
+  const totalOrders = orders.length;
+  const pendingOrders = orders.filter((o) => o.status === 'pending').length;
+  const fulfilledOrders = orders.filter((o) => o.status === 'allocated' || o.status === 'completed').length;
+  const partialOrders = orders.filter((o) => o.status === 'partially_allocated').length;
+  const cancelledOrders = orders.filter((o) => o.status === 'cancelled').length;
+
+  const recentOrders = orders.slice(0, 5);
 
   return (
-    <div className="space-y-8">
-      {errorMessage && (
-        <Toast message={errorMessage} type="error" onClose={() => setErrorMessage('')} />
-      )}
-
-      {/* Top Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
+    <div className="space-y-6 font-mono py-4">
+      {/* Welcome Banner */}
+      <div className="border border-arcade-border bg-arcade-neutral p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
-            Welcome back, {user?.name || 'Customer'}
+          <div className="inline-flex items-center space-x-1.5 text-xs text-arcade-accent bg-arcade-accent/10 border border-arcade-accent/20 px-2 py-0.5 mb-2">
+            <CheckCircle2 className="h-3 w-3" />
+            <span>Customer Command Hub • Authenticated Portal</span>
+          </div>
+          <h1 className="font-display text-3xl font-extrabold uppercase text-arcade-primary">
+            Welcome, <span>{user?.name || 'Valued Customer'}</span>
           </h1>
-          <p className="text-sm text-slate-500 mt-1">
-            Track your equipment order allocations, delivery timelines, and inventory availability.
+          <p className="text-xs text-arcade-secondary mt-1">
+            Account: {user?.email} • Authority: <span className="uppercase text-arcade-accent">{user?.role}</span>
           </p>
         </div>
-        <div className="flex items-center gap-3">
+
+        <div className="flex items-center space-x-2">
           <Link
             to="/orders/new"
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold shadow-sm transition"
+            className="flex items-center space-x-2 px-4 py-2 bg-arcade-accent text-arcade-surface font-bold text-xs uppercase tracking-wider hover:opacity-90 transition-opacity"
           >
-            <PackagePlus className="w-4 h-4" />
+            <PlusCircle className="h-4 w-4" />
             <span>Create New Order</span>
           </Link>
           <Link
             to="/products"
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold transition"
+            className="flex items-center space-x-2 px-4 py-2 border border-arcade-border text-arcade-primary hover:border-arcade-accent hover:text-arcade-accent text-xs uppercase tracking-wider transition-colors"
           >
-            <span>Product Catalog</span>
+            <Package className="h-4 w-4" />
+            <span>Catalog</span>
           </Link>
         </div>
       </div>
 
-      {/* Real Counts Row */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-        {statCards.map((card, idx) => {
-          const Icon = card.icon;
-          return (
-            <div
-              key={idx}
-              className={`p-5 rounded-2xl border bg-white shadow-xs flex flex-col justify-between transition-transform hover:-translate-y-0.5`}
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                  {card.title}
-                </span>
-                <div className={`p-2 rounded-xl border ${card.color}`}>
-                  <Icon className="w-4 h-4" aria-hidden="true" />
-                </div>
-              </div>
-              <div className="mt-4">
-                {loading ? (
-                  <Skeleton className="h-8 w-14" />
-                ) : (
-                  <div className="text-3xl font-extrabold text-slate-900">{card.value}</div>
-                )}
-                <span className="text-[11px] text-slate-500 font-medium mt-1 inline-block">
-                  {card.badge}
-                </span>
-              </div>
-            </div>
-          );
-        })}
+      {error && (
+        <div className="p-4 border border-arcade-danger/40 bg-arcade-danger/10 text-arcade-danger text-xs flex items-center justify-between">
+          <span>{error}</span>
+          <button onClick={() => setError(null)} className="underline hover:text-white">
+            Dismiss
+          </button>
+        </div>
+      )}
+
+      {/* Real KPI Summary Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+        <div className="border border-arcade-border bg-arcade-neutral p-4">
+          <div className="text-[11px] uppercase tracking-wider text-arcade-secondary mb-1">
+            Total Placed
+          </div>
+          <div className="text-2xl font-display font-extrabold text-arcade-primary">
+            {totalOrders}
+          </div>
+          <span className="text-[10px] text-arcade-secondary">Lifetime orders</span>
+        </div>
+
+        <div className="border border-arcade-border bg-arcade-neutral p-4">
+          <div className="text-[11px] uppercase tracking-wider text-arcade-secondary mb-1">
+            Pending Queue
+          </div>
+          <div className="text-2xl font-display font-extrabold text-arcade-primary">
+            {pendingOrders}
+          </div>
+          <span className="text-[10px] text-arcade-secondary">Awaiting run</span>
+        </div>
+
+        <div className="border border-arcade-accent/30 bg-arcade-accent/5 p-4">
+          <div className="text-[11px] uppercase tracking-wider text-arcade-accent mb-1">
+            Fulfilled
+          </div>
+          <div className="text-2xl font-display font-extrabold text-arcade-accent">
+            {fulfilledOrders}
+          </div>
+          <span className="text-[10px] text-arcade-accent/80">100% stock allocated</span>
+        </div>
+
+        <div className="border border-arcade-warning/30 bg-arcade-warning/5 p-4">
+          <div className="text-[11px] uppercase tracking-wider text-arcade-warning mb-1">
+            Partial
+          </div>
+          <div className="text-2xl font-display font-extrabold text-arcade-warning">
+            {partialOrders}
+          </div>
+          <span className="text-[10px] text-arcade-warning/80">Minimum met</span>
+        </div>
+
+        <div className="border border-arcade-border bg-arcade-neutral p-4">
+          <div className="text-[11px] uppercase tracking-wider text-arcade-secondary mb-1">
+            Cancelled
+          </div>
+          <div className="text-2xl font-display font-extrabold text-arcade-secondary">
+            {cancelledOrders}
+          </div>
+          <span className="text-[10px] text-arcade-secondary">Closed records</span>
+        </div>
+      </div>
+
+      {/* Quick Action Navigation Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Link
+          to="/products"
+          className="border border-arcade-border bg-arcade-neutral p-5 hover:border-arcade-accent/60 transition-colors group block"
+        >
+          <div className="w-8 h-8 bg-arcade-accent/10 text-arcade-accent flex items-center justify-center mb-3">
+            <Package className="h-4 w-4" />
+          </div>
+          <h3 className="font-display text-lg uppercase font-bold text-arcade-primary group-hover:text-arcade-accent transition-colors flex items-center justify-between">
+            <span>Product Catalog</span>
+            <ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+          </h3>
+          <p className="text-xs text-arcade-secondary mt-1 mb-4">
+            Browse active industrial inventory with real-time on-hand availability indicators.
+          </p>
+          <span className="text-[10px] uppercase tracking-wider text-arcade-accent font-bold">
+            Explore Catalog &rarr;
+          </span>
+        </Link>
+
+        <Link
+          to="/orders/new"
+          className="border border-arcade-border bg-arcade-neutral p-5 hover:border-arcade-accent/60 transition-colors group block"
+        >
+          <div className="w-8 h-8 bg-arcade-accent/10 text-arcade-accent flex items-center justify-center mb-3">
+            <PlusCircle className="h-4 w-4" />
+          </div>
+          <h3 className="font-display text-lg uppercase font-bold text-arcade-primary group-hover:text-arcade-accent transition-colors flex items-center justify-between">
+            <span>Create New Order</span>
+            <ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+          </h3>
+          <p className="text-xs text-arcade-secondary mt-1 mb-4">
+            Assemble multi-line orders with custom requested quantities and minimum thresholds.
+          </p>
+          <span className="text-[10px] uppercase tracking-wider text-arcade-accent font-bold">
+            Draft Order &rarr;
+          </span>
+        </Link>
+
+        <Link
+          to="/orders"
+          className="border border-arcade-border bg-arcade-neutral p-5 hover:border-arcade-accent/60 transition-colors group block"
+        >
+          <div className="w-8 h-8 bg-arcade-accent/10 text-arcade-accent flex items-center justify-center mb-3">
+            <Clock className="h-4 w-4" />
+          </div>
+          <h3 className="font-display text-lg uppercase font-bold text-arcade-primary group-hover:text-arcade-accent transition-colors flex items-center justify-between">
+            <span>My Orders &amp; Allocations</span>
+            <ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+          </h3>
+          <p className="text-xs text-arcade-secondary mt-1 mb-4">
+            Track allocation explanations, item status, and scheduled promised delivery dates.
+          </p>
+          <span className="text-[10px] uppercase tracking-wider text-arcade-accent font-bold">
+            View All ({totalOrders}) &rarr;
+          </span>
+        </Link>
       </div>
 
       {/* Recent Orders Section */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-        <div className="p-6 border-b border-slate-100 flex items-center justify-between">
-          <div>
-            <h2 className="text-lg font-bold text-slate-900">Recent Orders</h2>
-            <p className="text-xs text-slate-500 mt-0.5">
-              Live status and item allocations for your latest orders
-            </p>
+      <div className="border border-arcade-border bg-arcade-neutral p-5 space-y-4">
+        <div className="flex items-center justify-between border-b border-arcade-border pb-3">
+          <div className="flex items-center space-x-2">
+            <ShoppingBag className="h-4 w-4 text-arcade-accent" />
+            <h3 className="font-display text-base uppercase font-bold text-arcade-primary">
+              Recent Order History
+            </h3>
           </div>
           <Link
             to="/orders"
-            className="text-xs font-semibold text-indigo-600 hover:text-indigo-700 inline-flex items-center gap-1"
+            className="text-xs text-arcade-accent hover:underline uppercase tracking-wider"
           >
-            <span>View All Orders</span>
-            <ArrowRight className="w-3.5 h-3.5" />
+            View All Orders &rarr;
           </Link>
         </div>
 
         {loading ? (
-          <div className="p-6">
-            <div className="space-y-3">
-              <Skeleton className="h-10 w-full" />
-              <Skeleton className="h-10 w-full" />
-              <Skeleton className="h-10 w-full" />
-            </div>
+          <div className="p-8 text-center text-arcade-secondary flex items-center justify-center space-x-2">
+            <RefreshCw className="h-4 w-4 animate-spin text-arcade-accent" />
+            <span className="text-xs">Loading order telemetry...</span>
           </div>
         ) : recentOrders.length === 0 ? (
-          <div className="p-8">
-            <EmptyState
-              title="No orders placed yet"
-              description="You have not created any purchase orders. Browse the catalog and place an order to test our deterministic allocation engine."
-              actionText="Create Order Now"
-              onAction={() => (window.location.href = '/orders/new')}
-            />
+          <div className="p-8 text-center text-arcade-secondary space-y-2">
+            <AlertCircle className="h-6 w-6 text-arcade-secondary mx-auto opacity-60" />
+            <div className="text-sm font-bold text-arcade-primary uppercase">No Orders Placed Yet</div>
+            <p className="text-xs max-w-sm mx-auto">
+              You haven&apos;t placed any orders yet. Browse our catalog and submit your first order.
+            </p>
+            <div className="pt-2">
+              <Link
+                to="/orders/new"
+                className="inline-block px-3 py-1.5 bg-arcade-accent text-arcade-surface font-bold text-xs uppercase"
+              >
+                Create First Order
+              </Link>
+            </div>
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-slate-600" aria-label="Recent customer orders">
-              <thead className="bg-slate-50/80 text-xs text-slate-500 uppercase tracking-wider border-b border-slate-200">
-                <tr>
-                  <th scope="col" className="px-6 py-3.5 font-semibold">Order ID</th>
-                  <th scope="col" className="px-6 py-3.5 font-semibold">Date Placed</th>
-                  <th scope="col" className="px-6 py-3.5 font-semibold">Promised Delivery</th>
-                  <th scope="col" className="px-6 py-3.5 font-semibold">Items</th>
-                  <th scope="col" className="px-6 py-3.5 font-semibold">Allocation Status</th>
-                  <th scope="col" className="px-6 py-3.5 font-semibold text-right">Actions</th>
+            <table className="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr className="border-b border-arcade-border text-arcade-secondary uppercase text-[10px] tracking-wider">
+                  <th className="py-2.5 px-3">Order ID</th>
+                  <th className="py-2.5 px-3">Date Placed</th>
+                  <th className="py-2.5 px-3">Promised Delivery</th>
+                  <th className="py-2.5 px-3 text-right">Items</th>
+                  <th className="py-2.5 px-3 text-right">Requested Qty</th>
+                  <th className="py-2.5 px-3 text-center">Status</th>
+                  <th className="py-2.5 px-3 text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
-                {recentOrders.map((order) => (
-                  <tr key={order.id} className="hover:bg-slate-50/60 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900">
-                      <Link to={`/orders/${order.id}`} className="hover:text-indigo-600">
-                        #{order.id}
-                      </Link>
+              <tbody className="divide-y divide-arcade-border/40">
+                {recentOrders.map((ord) => (
+                  <tr key={ord.id} className="hover:bg-arcade-surface/50 transition-colors">
+                    <td className="py-3 px-3 font-bold text-arcade-primary">#{ord.id}</td>
+                    <td className="py-3 px-3 text-arcade-secondary">
+                      {new Date(ord.created_at).toLocaleDateString()}
                     </td>
-                    <td className="px-6 py-4 text-slate-500">
-                      {order.created_at ? new Date(order.created_at).toLocaleDateString() : '—'}
+                    <td className="py-3 px-3 text-arcade-secondary">
+                      {ord.promised_delivery_date || 'Standard Delivery'}
                     </td>
-                    <td className="px-6 py-4 text-slate-700">
-                      {order.promised_delivery_date
-                        ? new Date(order.promised_delivery_date).toLocaleDateString()
-                        : 'Flexible'}
+                    <td className="py-3 px-3 text-right text-arcade-primary">
+                      {ord.item_count || 1}
                     </td>
-                    <td className="px-6 py-4">
-                      <span className="inline-flex items-center gap-1 font-medium text-slate-800">
-                        {order.total_items || order.items?.length || 1} line item(s)
-                      </span>
+                    <td className="py-3 px-3 text-right font-semibold text-arcade-primary">
+                      {ord.total_requested_quantity || '—'}
                     </td>
-                    <td className="px-6 py-4">
-                      <StatusPill status={order.display_status || order.status} size="sm" />
+                    <td className="py-3 px-3 text-center">
+                      <StatusPill status={ord.status} />
                     </td>
-                    <td className="px-6 py-4 text-right">
+                    <td className="py-3 px-3 text-right">
                       <Link
-                        to={`/orders/${order.id}`}
-                        className="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition"
+                        to={`/orders/${ord.id}`}
+                        className="px-2.5 py-1 border border-arcade-border text-arcade-primary hover:border-arcade-accent hover:text-arcade-accent text-[11px] uppercase tracking-wider transition-colors inline-block"
                       >
-                        <span>Details</span>
-                        <ArrowRight className="w-3.5 h-3.5" />
+                        Details
                       </Link>
                     </td>
                   </tr>
@@ -268,5 +292,3 @@ export function CustomerDashboard() {
     </div>
   );
 }
-
-export default CustomerDashboard;

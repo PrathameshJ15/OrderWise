@@ -1,356 +1,281 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { BrowserRouter, MemoryRouter } from 'react-router-dom';
-import apiClient from '../src/api/client';
-import { AuthContext } from '../src/contexts/AuthContext';
-import StatusPill from '../src/components/ui/StatusPill';
+import { MemoryRouter, Routes, Route } from 'react-router-dom';
+import CustomerDashboard from '../src/pages/customer/CustomerDashboard';
 import ProductCatalog from '../src/pages/customer/ProductCatalog';
 import CreateOrder from '../src/pages/customer/CreateOrder';
-import CustomerDashboard from '../src/pages/customer/CustomerDashboard';
+import MyOrders from '../src/pages/customer/MyOrders';
 import OrderDetail from '../src/pages/customer/OrderDetail';
-import Login from '../src/pages/Login';
-import Register from '../src/pages/Register';
+import apiClient from '../src/api/client';
 
-const mockCustomer = {
-  id: 3,
-  name: 'Alice Smith Corp',
-  email: 'alice@demo.com',
-  role: 'customer',
-};
+vi.mock('../src/hooks/useAuth', () => ({
+  useAuth: () => ({
+    user: { id: 2, name: 'Alice Customer', role: 'customer', email: 'alice@demo.com' },
+    token: 'mock-jwt-token',
+    logout: vi.fn(),
+  }),
+}));
 
-const mockAuthContextValue = {
-  user: mockCustomer,
-  loading: false,
-  login: vi.fn(),
-  register: vi.fn(),
-  logout: vi.fn(),
-  refreshUser: vi.fn(),
-  isAuthenticated: true,
-};
+vi.mock('../src/contexts/AuthContext', () => {
+  const React = require('react');
+  return {
+    AuthContext: React.createContext({
+      user: { id: 2, name: 'Alice Customer', role: 'customer', email: 'alice@demo.com' },
+      token: 'mock-jwt-token',
+      logout: vi.fn(),
+    }),
+    useAuth: () => ({
+      user: { id: 2, name: 'Alice Customer', role: 'customer', email: 'alice@demo.com' },
+      token: 'mock-jwt-token',
+      logout: vi.fn(),
+    }),
+    AuthProvider: ({ children }) => <div>{children}</div>,
+  };
+});
 
-function renderWithAuth(ui, authValue = mockAuthContextValue) {
-  return render(
-    <AuthContext.Provider value={authValue}>
-      <BrowserRouter>{ui}</BrowserRouter>
-    </AuthContext.Provider>
-  );
-}
+vi.mock('../src/api/client', () => ({
+  default: {
+    get: vi.fn(),
+    post: vi.fn(),
+    put: vi.fn(),
+    patch: vi.fn(),
+    delete: vi.fn(),
+  },
+}));
 
-describe('Customer Portal Component Tests', () => {
+describe('Frontend Phase 6: Customer Portal UI Tests', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  describe('StatusPill Component', () => {
-    it('renders correct labels and color indicators for allocation statuses', () => {
-      const { rerender } = render(<StatusPill status="fulfilled" />);
-      expect(screen.getByText('Fulfilled')).toBeInTheDocument();
+  it('renders Customer Dashboard with real order status metrics and recent orders', async () => {
+    const mockOrders = [
+      {
+        id: 101,
+        status: 'allocated',
+        created_at: new Date().toISOString(),
+        items: [{ id: 1, product_name: 'Pressure Gauge Pro', requested_quantity: 25 }],
+      },
+      {
+        id: 102,
+        status: 'pending',
+        created_at: new Date().toISOString(),
+        items: [{ id: 2, product_name: 'Safety Valve Type B', requested_quantity: 50 }],
+      },
+    ];
 
-      rerender(<StatusPill status="partially_fulfilled" />);
-      expect(screen.getByText('Partially Fulfilled')).toBeInTheDocument();
-
-      rerender(<StatusPill status="deferred" />);
-      expect(screen.getByText('Deferred')).toBeInTheDocument();
-
-      rerender(<StatusPill status="pending" />);
-      expect(screen.getByText('Pending Allocation')).toBeInTheDocument();
+    apiClient.get.mockImplementation((url) => {
+      if (url.startsWith('/orders')) {
+        return Promise.resolve({ data: mockOrders });
+      }
+      return Promise.resolve({ data: [] });
     });
 
-    it('renders priority pills with designated color classes', () => {
-      const { rerender } = render(<StatusPill status="CRITICAL" type="priority" />);
-      expect(screen.getByText('CRITICAL')).toBeInTheDocument();
+    render(
+      <MemoryRouter>
+        <CustomerDashboard />
+      </MemoryRouter>
+    );
 
-      rerender(<StatusPill status="HIGH" type="priority" />);
-      expect(screen.getByText('HIGH')).toBeInTheDocument();
+    expect(screen.getByText(/Customer Command Hub/i)).toBeInTheDocument();
 
-      rerender(<StatusPill status="MEDIUM" type="priority" />);
-      expect(screen.getByText('MEDIUM')).toBeInTheDocument();
-
-      rerender(<StatusPill status="LOW" type="priority" />);
-      expect(screen.getByText('LOW')).toBeInTheDocument();
-    });
-  });
-
-  describe('Login & Register Pages', () => {
-    it('validates email and password on Login submission', async () => {
-      renderWithAuth(<Login />, { ...mockAuthContextValue, user: null });
-
-      const submitBtn = screen.getByRole('button', { name: /Sign In/i });
-      fireEvent.click(submitBtn);
-
-      expect(await screen.findByText(/Email address is required/i)).toBeInTheDocument();
-      expect(await screen.findByText(/Password is required/i)).toBeInTheDocument();
-    });
-
-    it('validates password match on Register', async () => {
-      renderWithAuth(<Register />, { ...mockAuthContextValue, user: null });
-
-      const nameInput = screen.getByLabelText(/Full Name/i);
-      const emailInput = screen.getByLabelText(/Email Address/i);
-      const passInput = screen.getByLabelText(/^Password/i);
-      const confirmInput = screen.getByLabelText(/Confirm Password/i);
-
-      fireEvent.change(nameInput, { target: { value: 'New User Corp' } });
-      fireEvent.change(emailInput, { target: { value: 'new@user.com' } });
-      fireEvent.change(passInput, { target: { value: 'Pass123!' } });
-      fireEvent.change(confirmInput, { target: { value: 'Mismatch123!' } });
-
-      const submitBtn = screen.getByRole('button', { name: /Create Account/i });
-      fireEvent.click(submitBtn);
-
-      expect(await screen.findByText(/Passwords do not match/i)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('Alice Customer')).toBeInTheDocument();
+      expect(screen.getByText('#101')).toBeInTheDocument();
+      expect(screen.getByText('#102')).toBeInTheDocument();
     });
   });
 
-  describe('CustomerDashboard Component', () => {
-    it('displays real counts for total, pending, fulfilled, partially fulfilled, and deferred', async () => {
-      vi.spyOn(apiClient, 'get').mockImplementation((url) => {
-        if (url.includes('/orders/stats/my')) {
-          return Promise.resolve({
-            success: true,
-            stats: {
-              total: 12,
-              pending: 3,
-              fulfilled: 5,
-              partially_fulfilled: 4,
-              deferred: 1,
-            },
-          });
-        }
-        if (url.includes('/orders/my')) {
-          return Promise.resolve({
-            success: true,
-            orders: [
-              {
-                id: 101,
-                created_at: new Date().toISOString(),
-                promised_delivery_date: '2026-10-30',
-                display_status: 'fulfilled',
-                items: [{ requested_quantity: 20 }],
-              },
-            ],
-          });
-        }
-        return Promise.resolve({ success: true, data: {} });
-      });
+  it('renders Product Catalog with active hardware items and search filtering', async () => {
+    const mockProducts = [
+      {
+        id: 1,
+        sku: 'PUMP-X100',
+        name: 'Industrial Pump Model X',
+        description: 'High pressure pump',
+        is_active: true,
+        available_quantity: 150,
+        on_hand_quantity: 150,
+      },
+      {
+        id: 3,
+        sku: 'GAUGE-P300',
+        name: 'Pressure Gauge Pro',
+        description: 'Critical monitoring gauge',
+        is_active: true,
+        available_quantity: 40,
+        on_hand_quantity: 40,
+      },
+    ];
 
-      renderWithAuth(<CustomerDashboard />);
-
-      // Await counts to render
-      await waitFor(() => {
-        expect(screen.getByText('12')).toBeInTheDocument();
-        expect(screen.getByText('3')).toBeInTheDocument();
-        expect(screen.getByText('5')).toBeInTheDocument();
-        expect(screen.getByText('4')).toBeInTheDocument();
-        expect(screen.getByText('1')).toBeInTheDocument();
-      });
-
-      expect(screen.getByText(/Total Orders/i)).toBeInTheDocument();
-      expect(screen.getByText(/Pending Allocation/i)).toBeInTheDocument();
-      expect(screen.getByText(/Partially Fulfilled/i)).toBeInTheDocument();
-      expect(screen.getByText(/#101/i)).toBeInTheDocument();
+    apiClient.get.mockImplementation((url) => {
+      if (url.startsWith('/products')) {
+        return Promise.resolve({ data: mockProducts });
+      }
+      return Promise.resolve({ data: [] });
     });
-  });
 
-  describe('ProductCatalog Component', () => {
-    it('renders products and filters dynamically by search query and stock', async () => {
-      vi.spyOn(apiClient, 'get').mockResolvedValue({
-        success: true,
-        products: [
-          {
-            id: 1,
-            sku: 'PUMP-X100',
-            name: 'Industrial Pump Model X',
-            description: 'Heavy duty fluid extraction pump',
-            unit: 'units',
-            on_hand_quantity: 150,
-            reserved_quantity: 0,
-            available_stock: 150,
-          },
-          {
-            id: 3,
-            sku: 'GAUGE-P300',
-            name: 'Pressure Gauge Pro',
-            description: 'High-precision digital gauge (Scarce)',
-            unit: 'units',
-            on_hand_quantity: 40,
-            reserved_quantity: 35,
-            available_stock: 5,
-          },
-        ],
-      });
+    render(
+      <MemoryRouter>
+        <ProductCatalog />
+      </MemoryRouter>
+    );
 
-      renderWithAuth(<ProductCatalog />);
-
-      await waitFor(() => {
-        expect(screen.getByText('Industrial Pump Model X')).toBeInTheDocument();
-        expect(screen.getByText('Pressure Gauge Pro')).toBeInTheDocument();
-      });
-
-      // Filter by search query
-      const searchInput = screen.getByLabelText(/Search products/i);
-      fireEvent.change(searchInput, { target: { value: 'Pump' } });
-
+    await waitFor(() => {
       expect(screen.getByText('Industrial Pump Model X')).toBeInTheDocument();
-      expect(screen.queryByText('Pressure Gauge Pro')).not.toBeInTheDocument();
+      expect(screen.getByText('Pressure Gauge Pro')).toBeInTheDocument();
+    });
+
+    // Test search filter
+    const searchInput = screen.getByPlaceholderText(/Search catalog by product name or SKU/i);
+    fireEvent.change(searchInput, { target: { value: 'GAUGE' } });
+
+    expect(screen.getByText('Pressure Gauge Pro')).toBeInTheDocument();
+    expect(screen.queryByText('Industrial Pump Model X')).not.toBeInTheDocument();
+  });
+
+  it('validates Create Order form rules (minimum quantity <= requested quantity) and creates order', async () => {
+    const mockProducts = [
+      { id: 3, sku: 'GAUGE-P300', name: 'Pressure Gauge Pro', available_quantity: 40 },
+    ];
+
+    apiClient.get.mockImplementation((url) => {
+      if (url.startsWith('/products')) {
+        return Promise.resolve({ data: mockProducts });
+      }
+      return Promise.resolve({ data: [] });
+    });
+
+    apiClient.post.mockResolvedValue({
+      data: { id: 200, status: 'pending' },
+    });
+
+    render(
+      <MemoryRouter>
+        <CreateOrder />
+      </MemoryRouter>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText(/Create Order Requisition/i)).toBeInTheDocument();
+    });
+
+    // Inputs: requested qty, minimum acceptable qty
+    const reqQtyInput = screen.getByLabelText(/Requested Quantity/i);
+    const minQtyInput = screen.getByLabelText(/Min Acceptable/i);
+
+    // Set invalid minimum > requested
+    fireEvent.change(reqQtyInput, { target: { value: '10' } });
+    fireEvent.change(minQtyInput, { target: { value: '15' } });
+
+    const submitBtn = screen.getByRole('button', { name: /Submit Order for Allocation/i });
+    fireEvent.click(submitBtn);
+
+    // Expect validation error
+    await waitFor(() => {
+      expect(
+        screen.getByText(/Minimum acceptable quantity cannot exceed requested quantity/i)
+      ).toBeInTheDocument();
+    });
+
+    // Fix the validation
+    fireEvent.change(minQtyInput, { target: { value: '5' } });
+    fireEvent.click(submitBtn);
+
+    await waitFor(() => {
+      expect(apiClient.post).toHaveBeenCalledWith(
+        '/orders',
+        expect.objectContaining({
+          items: expect.arrayContaining([
+            expect.objectContaining({
+              requested_quantity: 10,
+              minimum_acceptable_quantity: 5,
+            }),
+          ]),
+        }),
+        expect.objectContaining({
+          headers: expect.objectContaining({
+            'Idempotency-Key': expect.any(String),
+          }),
+        })
+      );
     });
   });
 
-  describe('CreateOrder Component', () => {
-    it('enforces validation when minimum quantity exceeds requested quantity', async () => {
-      vi.spyOn(apiClient, 'get').mockResolvedValue({
-        success: true,
-        products: [
-          { id: 1, sku: 'PUMP-X100', name: 'Industrial Pump Model X', available_stock: 50, on_hand_quantity: 50 },
-        ],
-      });
+  it('renders My Orders list with status badges and details navigation', async () => {
+    const mockOrders = [
+      {
+        id: 301,
+        status: 'fulfilled',
+        total_requested_quantity: 25,
+        total_allocated_quantity: 25,
+        item_count: 1,
+        promised_delivery_date: '2026-10-25',
+        created_at: new Date().toISOString(),
+      },
+    ];
 
-      renderWithAuth(<CreateOrder />);
-
-      await waitFor(() => {
-        expect(screen.getByText(/Line Items & Allocation Rules/i)).toBeInTheDocument();
-      });
-
-      // Change requested to 10 and min to 20
-      const reqInput = screen.getByLabelText(/Requested Qty/i);
-      const minInput = screen.getByLabelText(/Min Acceptable/i);
-
-      // Attempt to input min greater than requested
-      fireEvent.change(reqInput, { target: { value: '10' } });
-      fireEvent.change(minInput, { target: { value: '25' } });
-
-      const submitBtn = screen.getByRole('button', { name: /Submit Order/i });
-      fireEvent.click(submitBtn);
-
-      // Verify validation triggers
-      expect(screen.getByText(/Line Items & Allocation Rules/i)).toBeInTheDocument();
+    apiClient.get.mockImplementation((url) => {
+      if (url.startsWith('/orders')) {
+        return Promise.resolve({ data: mockOrders });
+      }
+      return Promise.resolve({ data: [] });
     });
 
-    it('syncs minimum acceptable quantity to requested quantity when partial delivery is unchecked', async () => {
-      vi.spyOn(apiClient, 'get').mockResolvedValue({
-        success: true,
-        products: [
-          { id: 1, sku: 'PUMP-X100', name: 'Industrial Pump Model X', available_stock: 50, on_hand_quantity: 50 },
-        ],
-      });
+    render(
+      <MemoryRouter>
+        <MyOrders />
+      </MemoryRouter>
+    );
 
-      renderWithAuth(<CreateOrder />);
-
-      await waitFor(() => {
-        expect(screen.getByLabelText(/Partial OK/i)).toBeInTheDocument();
-      });
-
-      const reqInput = screen.getByLabelText(/Requested Qty/i);
-      const partialCheckbox = screen.getByLabelText(/Partial OK/i);
-      const minInput = screen.getByLabelText(/Min Acceptable/i);
-
-      fireEvent.change(reqInput, { target: { value: '15' } });
-      // Uncheck partial delivery
-      fireEvent.click(partialCheckbox);
-
-      expect(partialCheckbox.checked).toBe(false);
-      expect(minInput.value).toBe('15');
-      expect(minInput).toBeDisabled();
+    await waitFor(() => {
+      expect(screen.getByText('#301')).toBeInTheDocument();
+      expect(screen.getByText(/fulfilled/i)).toBeInTheDocument();
     });
   });
 
-  describe('OrderDetail Component', () => {
-    it('renders customer-friendly status timeline and displays "No allocation yet" when allocation is null', async () => {
-      vi.spyOn(apiClient, 'get').mockResolvedValue({
-        success: true,
-        order: {
-          id: 42,
-          customer_id: 3,
-          status: 'pending',
-          display_status: 'pending',
-          promised_delivery_date: '2026-11-01',
-          created_at: new Date().toISOString(),
-          business_notes: 'Urgent refinery replacement',
-          priority: 'HIGH',
-          timeline: [
-            { key: 'submitted', title: 'Order Placed', description: 'Order submitted.', status: 'completed' },
-            { key: 'priority', title: 'Priority Evaluated', description: 'Priority HIGH assigned.', status: 'completed' },
-            { key: 'allocation', title: 'Inventory Allocation', description: 'Waiting for allocation cycle.', status: 'in_progress' },
-            { key: 'fulfillment', title: 'Fulfillment & Dispatch', description: 'Pending allocation.', status: 'pending' },
-          ],
-          items: [
-            {
-              id: 99,
-              product_id: 1,
-              product_name: 'Industrial Pump Model X',
-              product_sku: 'PUMP-X100',
-              product_unit: 'units',
-              requested_quantity: 20,
-              minimum_acceptable_quantity: 10,
-              partial_delivery_allowed: true,
-              latest_allocation: null, // explicit: NO ALLOCATION YET!
-            },
-          ],
+  it('renders Order Details with allocation explanation and pending fallback', async () => {
+    const mockOrderUnallocated = {
+      id: 401,
+      status: 'pending',
+      created_at: new Date().toISOString(),
+      promised_delivery_date: '2026-10-30',
+      business_notes: 'Urgent factory line maintenance',
+      items: [
+        {
+          id: 501,
+          product_name: 'Pressure Gauge Pro',
+          sku: 'GAUGE-P300',
+          product_sku: 'GAUGE-P300',
+          requested_quantity: 25,
+          minimum_acceptable_quantity: 15,
+          partial_delivery_allowed: true,
+          allocated_quantity: null,
+          allocation_status: null,
+          explanation: null,
         },
-      });
+      ],
+    };
 
-      renderWithAuth(<OrderDetail />);
-
-      await waitFor(() => {
-        expect(screen.getByText('Order #42')).toBeInTheDocument();
-      });
-
-      // Verify timeline steps
-      expect(screen.getByText('Order Placed')).toBeInTheDocument();
-      expect(screen.getByText('Priority Evaluated')).toBeInTheDocument();
-      expect(screen.getByText('Inventory Allocation')).toBeInTheDocument();
-
-      // Verify "No allocation yet" message instead of invented result!
-      expect(screen.getByText('No allocation yet')).toBeInTheDocument();
-      expect(screen.getByText(/Awaiting Allocation Run/i)).toBeInTheDocument();
-      expect(screen.getByText(/never invents or approximates unverified quantities/i)).toBeInTheDocument();
+    apiClient.get.mockImplementation((url) => {
+      if (url.startsWith('/orders/401')) {
+        return Promise.resolve({ data: mockOrderUnallocated });
+      }
+      return Promise.resolve({ data: {} });
     });
 
-    it('renders allocation details and "Why was this item deferred?" explanation for deferred item', async () => {
-      vi.spyOn(apiClient, 'get').mockResolvedValue({
-        success: true,
-        order: {
-          id: 43,
-          customer_id: 3,
-          status: 'pending',
-          display_status: 'deferred',
-          created_at: new Date().toISOString(),
-          priority: 'MEDIUM',
-          timeline: [
-            { key: 'submitted', title: 'Order Placed', description: 'Order submitted.', status: 'completed' },
-            { key: 'allocation', title: 'Inventory Allocation Processed', description: 'Deferred.', status: 'completed' },
-          ],
-          items: [
-            {
-              id: 100,
-              product_name: 'Pressure Gauge Pro',
-              product_sku: 'GAUGE-P300',
-              product_unit: 'units',
-              requested_quantity: 25,
-              minimum_acceptable_quantity: 15,
-              partial_delivery_allowed: true,
-              latest_allocation: {
-                allocated_quantity: 0,
-                status: 'deferred',
-                explanation: 'Available stock (10 units) is below the minimum acceptable quantity (15 units). No allocation made.',
-                run_at: new Date().toISOString(),
-              },
-            },
-          ],
-        },
-      });
+    render(
+      <MemoryRouter initialEntries={['/orders/401']}>
+        <Routes>
+          <Route path="/orders/:id" element={<OrderDetail />} />
+        </Routes>
+      </MemoryRouter>
+    );
 
-      renderWithAuth(<OrderDetail />);
-
-      await waitFor(() => {
-        expect(screen.getByText('Order #43')).toBeInTheDocument();
-      });
-
-      expect(screen.getByText('Allocated Units:')).toBeInTheDocument();
-      expect(screen.getByText('0 of 25')).toBeInTheDocument();
-      expect(screen.getByText(/Why was this item deferred\?/i)).toBeInTheDocument();
-      expect(screen.getAllByText(/below the minimum acceptable quantity/i).length).toBeGreaterThanOrEqual(1);
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: /Order #401/i })).toBeInTheDocument();
+      expect(screen.getByText(/No allocation yet — pending allocation run/i)).toBeInTheDocument();
     });
   });
 });

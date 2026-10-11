@@ -1,22 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
-import apiClient from '../../api/client';
-import Toast from '../../components/ui/Toast';
-import Alert from '../../components/ui/Alert';
 import {
   Plus,
   Trash2,
   Calendar,
   FileText,
-  Package,
-  ArrowRight,
-  Info,
-  CheckCircle,
+  Send,
   AlertCircle,
-  ShieldAlert,
+  RefreshCw,
+  ShoppingBag,
+  ArrowLeft,
+  Check,
 } from 'lucide-react';
+import apiClient from '../../api/client';
 
-export function CreateOrder() {
+export default function CreateOrder() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const preselectedProductId = searchParams.get('product_id');
@@ -24,74 +22,80 @@ export function CreateOrder() {
   const [products, setProducts] = useState([]);
   const [loadingProducts, setLoadingProducts] = useState(true);
   const [submitting, setSubmitting] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [validationErrors, setValidationErrors] = useState({});
+  const [error, setError] = useState(null);
 
-  // Form state
-  const [promisedDate, setPromisedDate] = useState(() => {
+  // Multi-line order items state
+  const [items, setItems] = useState([
+    {
+      productId: preselectedProductId ? Number(preselectedProductId) : '',
+      requestedQuantity: 10,
+      minimumAcceptableQuantity: 5,
+      partialDeliveryAllowed: true,
+    },
+  ]);
+
+  // Form meta fields
+  const [promisedDeliveryDate, setPromisedDeliveryDate] = useState(() => {
     const d = new Date();
-    d.setDate(d.getDate() + 14); // Default to 2 weeks out
+    d.setDate(d.getDate() + 14);
     return d.toISOString().split('T')[0];
   });
   const [businessNotes, setBusinessNotes] = useState('');
 
-  const [items, setItems] = useState([
-    {
-      product_id: '',
-      requested_quantity: 10,
-      minimum_acceptable_quantity: 5,
-      partial_delivery_allowed: true,
-    },
-  ]);
-
-  // Load products catalog
   useEffect(() => {
-    async function loadProducts() {
+    const fetchCatalog = async () => {
       setLoadingProducts(true);
       try {
-        const res = await apiClient.get('/products');
-        const list = res.products || res.data?.products || res;
-        const prodList = Array.isArray(list) ? list : [];
+        const res = await apiClient.get('/products?active=true');
+        const prodList = res.data || [];
         setProducts(prodList);
 
-        // Prepopulate product if passed via URL
         if (preselectedProductId && prodList.length > 0) {
           const match = prodList.find((p) => String(p.id) === String(preselectedProductId));
           if (match) {
             setItems([
               {
-                product_id: String(match.id),
-                requested_quantity: 10,
-                minimum_acceptable_quantity: 5,
-                partial_delivery_allowed: true,
+                productId: match.id,
+                requestedQuantity: 10,
+                minimumAcceptableQuantity: 5,
+                partialDeliveryAllowed: true,
               },
             ]);
           }
         } else if (prodList.length > 0) {
-          setItems((prev) =>
-            prev.map((item, idx) => (idx === 0 && !item.product_id ? { ...item, product_id: String(prodList[0].id) } : item))
-          );
+          setItems((prev) => {
+            if (prev.length === 1 && prev[0].productId === '') {
+              return [
+                {
+                  productId: prodList[0].id,
+                  requestedQuantity: 10,
+                  minimumAcceptableQuantity: 5,
+                  partialDeliveryAllowed: true,
+                },
+              ];
+            }
+            return prev;
+          });
         }
-      } catch (err) {
-        console.error('Failed to load products for order form:', err);
-        setErrorMessage('Failed to load product catalog');
+      } catch (_err) {
+        setError('Failed to fetch product catalog.');
       } finally {
         setLoadingProducts(false);
       }
-    }
+    };
 
-    loadProducts();
+    fetchCatalog();
   }, [preselectedProductId]);
 
   const handleAddItem = () => {
-    const defaultProduct = products.length > 0 ? String(products[0].id) : '';
+    const defaultProduct = products.length > 0 ? products[0].id : '';
     setItems((prev) => [
       ...prev,
       {
-        product_id: defaultProduct,
-        requested_quantity: 10,
-        minimum_acceptable_quantity: 5,
-        partial_delivery_allowed: true,
+        productId: defaultProduct,
+        requestedQuantity: 10,
+        minimumAcceptableQuantity: 5,
+        partialDeliveryAllowed: true,
       },
     ]);
   };
@@ -99,371 +103,328 @@ export function CreateOrder() {
   const handleRemoveItem = (index) => {
     if (items.length <= 1) return;
     setItems((prev) => prev.filter((_, i) => i !== index));
-    // Clear any validation errors for removed item
-    setValidationErrors((prev) => {
-      const updated = { ...prev };
-      delete updated[`item_${index}`];
-      return updated;
-    });
   };
 
   const handleItemChange = (index, field, value) => {
     setItems((prev) => {
-      const next = [...prev];
-      const item = { ...next[index] };
+      const updated = [...prev];
+      const item = { ...updated[index] };
 
-      if (field === 'partial_delivery_allowed') {
-        item.partial_delivery_allowed = value;
+      if (field === 'productId') {
+        item.productId = Number(value);
+      } else if (field === 'requestedQuantity') {
+        const num = Math.max(1, parseInt(value, 10) || 1);
+        item.requestedQuantity = num;
+      } else if (field === 'minimumAcceptableQuantity') {
+        const num = parseInt(value, 10);
+        item.minimumAcceptableQuantity = isNaN(num) ? '' : num;
+      } else if (field === 'partialDeliveryAllowed') {
+        item.partialDeliveryAllowed = Boolean(value);
         if (!value) {
-          // If partial delivery is disallowed, min quantity MUST equal requested quantity
-          item.minimum_acceptable_quantity = item.requested_quantity;
+          item.minimumAcceptableQuantity = item.requestedQuantity;
         }
-      } else if (field === 'requested_quantity') {
-        const numVal = Math.max(1, parseInt(value, 10) || 1);
-        item.requested_quantity = numVal;
-        if (!item.partial_delivery_allowed || item.minimum_acceptable_quantity > numVal) {
-          item.minimum_acceptable_quantity = numVal;
-        }
-      } else if (field === 'minimum_acceptable_quantity') {
-        const numVal = Math.max(1, parseInt(value, 10) || 1);
-        item.minimum_acceptable_quantity = Math.min(numVal, item.requested_quantity);
-      } else {
-        item[field] = value;
       }
 
-      next[index] = item;
-      return next;
+      updated[index] = item;
+      return updated;
     });
-
-    if (validationErrors[`item_${index}`]) {
-      setValidationErrors((prev) => ({ ...prev, [`item_${index}`]: null }));
-    }
-  };
-
-  const validateForm = () => {
-    const errs = {};
-    if (items.length === 0) {
-      errs.general = 'At least one item is required in the order.';
-    }
-
-    const seenProducts = new Set();
-    items.forEach((item, idx) => {
-      if (!item.product_id) {
-        errs[`item_${idx}`] = 'Please select a product.';
-      } else if (seenProducts.has(item.product_id)) {
-        errs[`item_${idx}`] = 'Duplicate product. Merge quantities into a single line item.';
-      } else {
-        seenProducts.add(item.product_id);
-      }
-
-      if (item.requested_quantity <= 0) {
-        errs[`item_${idx}`] = 'Requested quantity must be at least 1.';
-      }
-
-      if (item.minimum_acceptable_quantity <= 0) {
-        errs[`item_${idx}`] = 'Minimum acceptable quantity must be at least 1.';
-      }
-
-      if (item.minimum_acceptable_quantity > item.requested_quantity) {
-        errs[`item_${idx}`] = 'Minimum acceptable quantity cannot exceed requested quantity.';
-      }
-
-      if (!item.partial_delivery_allowed && item.minimum_acceptable_quantity !== item.requested_quantity) {
-        errs[`item_${idx}`] = 'When partial delivery is disabled, minimum quantity must equal requested quantity.';
-      }
-    });
-
-    setValidationErrors(errs);
-    return Object.keys(errs).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorMessage('');
+    setError(null);
 
-    if (!validateForm()) return;
+    // Validate
+    if (items.length === 0) {
+      setError('At least one order line item is required.');
+      return;
+    }
+
+    for (let i = 0; i < items.length; i++) {
+      const itm = items[i];
+      if (!itm.productId) {
+        setError(`Line #${i + 1}: Please select a valid product.`);
+        return;
+      }
+      if (itm.requestedQuantity <= 0) {
+        setError(`Line #${i + 1}: Requested quantity must be greater than 0.`);
+        return;
+      }
+      if (Number(itm.minimumAcceptableQuantity) > Number(itm.requestedQuantity)) {
+        setError('Minimum acceptable quantity cannot exceed requested quantity.');
+        return;
+      }
+      if (Number(itm.minimumAcceptableQuantity) <= 0) {
+        setError(`Line #${i + 1}: Minimum acceptable quantity must be at least 1.`);
+        return;
+      }
+    }
+
+    // Check duplicate products
+    const productIds = items.map((i) => i.productId);
+    const uniqueIds = new Set(productIds);
+    if (uniqueIds.size !== productIds.length) {
+      setError('Each product can only appear once per order. Consolidate requested quantities into a single line.');
+      return;
+    }
 
     setSubmitting(true);
     try {
+      // Generate unique idempotency key
+      const idempotencyKey = `ord-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+
       const payload = {
-        promised_delivery_date: promisedDate || null,
-        business_notes: businessNotes.trim() || null,
-        items: items.map((it) => ({
-          product_id: parseInt(it.product_id, 10),
-          requested_quantity: parseInt(it.requested_quantity, 10),
-          minimum_acceptable_quantity: parseInt(it.minimum_acceptable_quantity, 10),
-          partial_delivery_allowed: Boolean(it.partial_delivery_allowed),
+        items: items.map((i) => ({
+          productId: i.productId,
+          product_id: i.productId,
+          requestedQuantity: Number(i.requestedQuantity),
+          requested_quantity: Number(i.requestedQuantity),
+          minimumAcceptableQuantity: Number(i.minimumAcceptableQuantity),
+          minimum_acceptable_quantity: Number(i.minimumAcceptableQuantity),
+          partialDeliveryAllowed: i.partialDeliveryAllowed,
+          partial_delivery_allowed: i.partialDeliveryAllowed,
         })),
+        promisedDeliveryDate: promisedDeliveryDate || null,
+        promised_delivery_date: promisedDeliveryDate || null,
+        businessNotes: businessNotes.trim() || undefined,
+        business_notes: businessNotes.trim() || undefined,
       };
 
-      const res = await apiClient.post('/orders', payload);
-      const createdOrder = res.order || res.data?.order || res;
+      const res = await apiClient.post('/orders', payload, {
+        headers: {
+          'Idempotency-Key': idempotencyKey,
+        },
+      });
+
+      const createdOrder = res.data;
       navigate(`/orders/${createdOrder.id}`);
     } catch (err) {
-      console.error('Order creation error:', err);
-      const msg = err.error?.message || err.message || 'Failed to place order. Please review line items.';
-      setErrorMessage(msg);
+      setError(err?.error?.message || err?.message || 'Failed to submit order.');
     } finally {
       setSubmitting(false);
     }
   };
 
-  const totalRequestedUnits = items.reduce((sum, it) => sum + (parseInt(it.requested_quantity, 10) || 0), 0);
-
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
-      {errorMessage && (
-        <Toast message={errorMessage} type="error" onClose={() => setErrorMessage('')} />
-      )}
-
+    <div className="space-y-6 font-mono py-4 max-w-4xl mx-auto">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Create Equipment Order</h1>
-        <p className="text-sm text-slate-500 mt-1">
-          Specify items, delivery target, and flexible allocation parameters. The deterministic allocation engine
-          prioritizes and schedules fulfillment according to business rules.
-        </p>
+      <div className="border border-arcade-border bg-arcade-neutral p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center space-x-2 text-xs text-arcade-secondary mb-2">
+            <Link to="/orders" className="hover:text-arcade-primary flex items-center space-x-1">
+              <ArrowLeft className="h-3 w-3" />
+              <span>Orders</span>
+            </Link>
+            <span>/</span>
+            <span className="text-arcade-accent">New Order</span>
+          </div>
+          <h1 className="font-display text-3xl font-extrabold uppercase text-arcade-primary">
+            Create Order Requisition
+          </h1>
+          <p className="text-xs text-arcade-secondary mt-1">
+            Specify requested quantities and minimum partial thresholds for the allocation engine.
+          </p>
+        </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-8">
-        {/* Line Items Card */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-6 space-y-6">
-          <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-            <div>
-              <h2 className="text-base font-bold text-slate-900">Line Items & Allocation Rules</h2>
-              <p className="text-xs text-slate-500 mt-0.5">
-                Set minimum acceptable quantities to permit partial shipments during stock scarcity.
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={handleAddItem}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-semibold transition"
-            >
-              <Plus className="w-4 h-4" />
-              <span>Add Item</span>
-            </button>
+      {error && (
+        <div className="p-4 border border-arcade-danger/40 bg-arcade-danger/10 text-arcade-danger text-xs flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <AlertCircle className="h-4 w-4 shrink-0" />
+            <span>{error}</span>
           </div>
+          <button onClick={() => setError(null)} className="underline hover:text-white text-[11px]">
+            Dismiss
+          </button>
+        </div>
+      )}
 
-          {/* Items list */}
-          <div className="space-y-4">
-            {items.map((item, index) => {
-              const selectedProduct = products.find((p) => String(p.id) === String(item.product_id));
-              const itemError = validationErrors[`item_${index}`];
+      {loadingProducts ? (
+        <div className="border border-arcade-border bg-arcade-neutral p-12 text-center text-arcade-secondary flex items-center justify-center space-x-2">
+          <RefreshCw className="h-5 w-5 animate-spin text-arcade-accent" />
+          <span>Loading catalog...</span>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Line Items Section */}
+          <div className="border border-arcade-border bg-arcade-neutral p-5 space-y-4">
+            <div className="flex items-center justify-between border-b border-arcade-border pb-3">
+              <div className="flex items-center space-x-2">
+                <ShoppingBag className="h-4 w-4 text-arcade-accent" />
+                <h2 className="font-display text-base uppercase font-bold text-arcade-primary">
+                  Order Line Items ({items.length})
+                </h2>
+              </div>
+              <button
+                type="button"
+                onClick={handleAddItem}
+                className="flex items-center space-x-1 text-xs text-arcade-accent hover:underline uppercase tracking-wider"
+              >
+                <Plus className="h-3.5 w-3.5" />
+                <span>Add Item Line</span>
+              </button>
+            </div>
 
-              return (
+            <div className="space-y-3">
+              {items.map((item, idx) => (
                 <div
-                  key={index}
-                  className={`p-4 rounded-xl border ${
-                    itemError ? 'border-rose-300 bg-rose-50/20' : 'border-slate-200 bg-slate-50/50'
-                  } transition-all space-y-4`}
+                  key={idx}
+                  className="border border-arcade-border bg-arcade-surface p-4 flex flex-col md:flex-row md:items-center justify-between gap-4"
                 >
-                  <div className="flex items-start justify-between gap-4">
-                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-                      Item #{index + 1}
-                    </span>
-                    {items.length > 1 && (
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveItem(index)}
-                        className="text-slate-400 hover:text-rose-600 p-1 rounded-md transition"
-                        aria-label={`Remove item ${index + 1}`}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    )}
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-                    {/* Product Select */}
-                    <div className="md:col-span-5">
-                      <label
-                        htmlFor={`product-select-${index}`}
-                        className="block text-xs font-semibold text-slate-700 mb-1"
-                      >
-                        Product / SKU
+                  <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 flex-1">
+                    {/* Product Selector */}
+                    <div className="sm:col-span-2">
+                      <label className="block text-[10px] uppercase text-arcade-secondary mb-1">
+                        Product (SKU)
                       </label>
                       <select
-                        id={`product-select-${index}`}
-                        value={item.product_id}
-                        onChange={(e) => handleItemChange(index, 'product_id', e.target.value)}
-                        className="block w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white shadow-xs focus:ring-indigo-500 focus:border-indigo-500 transition"
+                        value={item.productId}
+                        onChange={(e) => handleItemChange(idx, 'productId', e.target.value)}
+                        className="w-full bg-arcade-neutral border border-arcade-border p-2 text-xs text-arcade-primary focus:border-arcade-accent focus:outline-none"
                       >
                         {products.map((p) => (
                           <option key={p.id} value={p.id}>
-                            {p.name} ({p.sku}) — {p.available_stock} available
+                            {p.name} ({p.sku})
                           </option>
                         ))}
                       </select>
-                      {selectedProduct && (
-                        <p className="mt-1 text-[11px] text-slate-500">
-                          Stock: {selectedProduct.available_stock} {selectedProduct.unit} free of {selectedProduct.on_hand_quantity} on hand
-                        </p>
-                      )}
                     </div>
 
                     {/* Requested Quantity */}
-                    <div className="md:col-span-2">
-                      <label
-                        htmlFor={`req-qty-${index}`}
-                        className="block text-xs font-semibold text-slate-700 mb-1"
-                      >
-                        Requested Qty
+                    <div>
+                      <label htmlFor={`req-qty-${idx}`} className="block text-[10px] uppercase text-arcade-secondary mb-1">
+                        Requested Quantity
                       </label>
                       <input
-                        id={`req-qty-${index}`}
+                        id={`req-qty-${idx}`}
                         type="number"
                         min="1"
-                        value={item.requested_quantity}
-                        onChange={(e) => handleItemChange(index, 'requested_quantity', e.target.value)}
-                        className="block w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white shadow-xs focus:ring-indigo-500 focus:border-indigo-500 transition"
+                        value={item.requestedQuantity}
+                        onChange={(e) => handleItemChange(idx, 'requestedQuantity', e.target.value)}
+                        className="w-full bg-arcade-neutral border border-arcade-border p-2 text-xs text-arcade-primary focus:border-arcade-accent focus:outline-none"
                       />
                     </div>
 
                     {/* Minimum Acceptable Quantity */}
-                    <div className="md:col-span-3">
-                      <label
-                        htmlFor={`min-qty-${index}`}
-                        className="block text-xs font-semibold text-slate-700 mb-1 flex items-center justify-between"
-                      >
-                        <span>Min Acceptable</span>
-                        <span className="text-[10px] text-slate-400 font-normal">Threshold</span>
+                    <div>
+                      <label htmlFor={`min-qty-${idx}`} className="block text-[10px] uppercase text-arcade-secondary mb-1">
+                        Min Acceptable Quantity
                       </label>
                       <input
-                        id={`min-qty-${index}`}
+                        id={`min-qty-${idx}`}
                         type="number"
                         min="1"
-                        max={item.requested_quantity}
-                        disabled={!item.partial_delivery_allowed}
-                        value={item.minimum_acceptable_quantity}
-                        onChange={(e) => handleItemChange(index, 'minimum_acceptable_quantity', e.target.value)}
-                        className={`block w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white shadow-xs focus:ring-indigo-500 focus:border-indigo-500 transition ${
-                          !item.partial_delivery_allowed ? 'bg-slate-100 text-slate-400 cursor-not-allowed' : ''
-                        }`}
+                        disabled={!item.partialDeliveryAllowed}
+                        value={item.minimumAcceptableQuantity}
+                        onChange={(e) =>
+                          handleItemChange(idx, 'minimumAcceptableQuantity', e.target.value)
+                        }
+                        className="w-full bg-arcade-neutral border border-arcade-border p-2 text-xs text-arcade-primary focus:border-arcade-accent focus:outline-none disabled:opacity-50"
                       />
-                    </div>
-
-                    {/* Partial Delivery Toggle */}
-                    <div className="md:col-span-2 flex flex-col justify-end">
-                      <label className="flex items-center gap-2 cursor-pointer select-none py-2">
-                        <input
-                          type="checkbox"
-                          checked={item.partial_delivery_allowed}
-                          onChange={(e) => handleItemChange(index, 'partial_delivery_allowed', e.target.checked)}
-                          className="rounded text-indigo-600 focus:ring-indigo-500 h-4 w-4 border-slate-300"
-                        />
-                        <span className="text-xs font-medium text-slate-700">Partial OK</span>
-                      </label>
                     </div>
                   </div>
 
-                  {itemError && (
-                    <p className="text-xs text-rose-600 font-medium flex items-center gap-1">
-                      <AlertCircle className="w-3.5 h-3.5" />
-                      {itemError}
-                    </p>
-                  )}
+                  {/* Partial Delivery Toggle & Delete */}
+                  <div className="flex items-center space-x-3 pt-2 md:pt-0">
+                    <label className="flex items-center space-x-2 text-xs cursor-pointer select-none">
+                      <input
+                        type="checkbox"
+                        checked={item.partialDeliveryAllowed}
+                        onChange={(e) =>
+                          handleItemChange(idx, 'partialDeliveryAllowed', e.target.checked)
+                        }
+                        className="accent-arcade-accent h-4 w-4"
+                      />
+                      <span className="text-[11px] text-arcade-secondary">Partial OK</span>
+                    </label>
+
+                    {items.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveItem(idx)}
+                        title="Remove Line"
+                        className="p-1.5 text-arcade-secondary hover:text-arcade-danger transition-colors"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    )}
+                  </div>
                 </div>
-              );
-            })}
+              ))}
+            </div>
           </div>
 
-          {/* Quick info note */}
-          <div className="p-3 bg-blue-50/70 border border-blue-200/60 rounded-xl text-xs text-blue-800 flex items-start gap-2.5">
-            <Info className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
-            <span>
-              <strong>How partial fulfillment works:</strong> If stock is scarce, our engine will fulfill your order with
-              available stock as long as it meets or exceeds your <em>Min Acceptable</em> threshold. If available stock is
-              below that threshold, the item is deferred rather than stranding unusable parts.
-            </span>
-          </div>
-        </div>
+          {/* Delivery & Notes Section */}
+          <div className="border border-arcade-border bg-arcade-neutral p-5 space-y-4">
+            <h2 className="font-display text-base uppercase font-bold text-arcade-primary border-b border-arcade-border pb-3">
+              Delivery Commitments &amp; Notes
+            </h2>
 
-        {/* Delivery & Business Notes Card */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-6 space-y-6">
-          <h2 className="text-base font-bold text-slate-900 pb-3 border-b border-slate-100">
-            Delivery Schedule & Operational Context
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label htmlFor="promised-date" className="block text-sm font-semibold text-slate-700 mb-1">
-                Target Delivery Date
-              </label>
-              <div className="relative rounded-lg">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-                  <Calendar className="w-4 h-4" />
-                </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs uppercase text-arcade-secondary mb-1 flex items-center space-x-1">
+                  <Calendar className="h-3 w-3 text-arcade-accent" />
+                  <span>Promised Delivery Date</span>
+                </label>
                 <input
-                  id="promised-date"
                   type="date"
-                  value={promisedDate}
-                  onChange={(e) => setPromisedDate(e.target.value)}
-                  className="block w-full pl-10 pr-3 py-2 text-sm rounded-lg border border-slate-300 shadow-xs focus:ring-indigo-500 focus:border-indigo-500"
+                  value={promisedDeliveryDate}
+                  onChange={(e) => setPromisedDeliveryDate(e.target.value)}
+                  className="w-full bg-arcade-surface border border-arcade-border p-2.5 text-xs text-arcade-primary focus:border-arcade-accent focus:outline-none"
                 />
+                <span className="text-[10px] text-arcade-secondary mt-1 block">
+                  Delivery priority tie-breaks favor earlier committed dates.
+                </span>
               </div>
-              <p className="mt-1 text-xs text-slate-500">
-                Earlier target dates receive deterministic priority tie-breaking.
-              </p>
-            </div>
 
-            <div className="md:col-span-2">
-              <label htmlFor="business-notes" className="block text-sm font-semibold text-slate-700 mb-1">
-                Business Notes / Urgency Context
-              </label>
-              <textarea
-                id="business-notes"
-                rows="3"
-                value={businessNotes}
-                onChange={(e) => setBusinessNotes(e.target.value)}
-                placeholder="E.g., Site 3 offshore rig overhaul scheduled for next week. Critical telemetry replacement required."
-                className="block w-full p-3 text-sm rounded-lg border border-slate-300 shadow-xs focus:ring-indigo-500 focus:border-indigo-500"
-              />
-              <p className="mt-1 text-xs text-slate-500">
-                Business notes are reviewed by administrators and assist AI priority recommendations.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Order Summary & Submit bar */}
-        <div className="bg-slate-900 text-white rounded-2xl p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 shadow-md">
-          <div>
-            <div className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Order Summary</div>
-            <div className="text-xl font-bold mt-1">
-              {items.length} line item(s) • {totalRequestedUnits} total units requested
+              <div>
+                <label className="block text-xs uppercase text-arcade-secondary mb-1 flex items-center space-x-1">
+                  <FileText className="h-3 w-3 text-arcade-accent" />
+                  <span>Business Notes / Contract Context</span>
+                </label>
+                <textarea
+                  rows="3"
+                  placeholder="e.g. Turnaround milestone delivery; penalty clause if deferred."
+                  value={businessNotes}
+                  onChange={(e) => setBusinessNotes(e.target.value)}
+                  className="w-full bg-arcade-surface border border-arcade-border p-2.5 text-xs text-arcade-primary focus:border-arcade-accent focus:outline-none placeholder-arcade-secondary/50"
+                />
+                <span className="text-[10px] text-arcade-secondary mt-1 block">
+                  Reviewed by AI Priority Assistant and Operations Team.
+                </span>
+              </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <Link
-              to="/products"
-              className="px-4 py-2 text-xs font-semibold text-slate-300 hover:text-white transition"
-            >
-              Cancel
-            </Link>
+          {/* Submission Panel */}
+          <div className="border border-arcade-border bg-arcade-neutral p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="text-xs text-arcade-secondary flex items-center space-x-2">
+              <Check className="h-4 w-4 text-arcade-accent" />
+              <span>
+                Protected with Idempotency Key • Default queue status is pending.
+              </span>
+            </div>
+
             <button
               type="submit"
-              disabled={submitting || loadingProducts}
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-bold shadow-md transition disabled:opacity-50"
+              disabled={submitting}
+              className="w-full sm:w-auto flex items-center justify-center space-x-2 px-6 py-3 bg-arcade-accent text-arcade-surface font-extrabold text-xs uppercase tracking-wider hover:opacity-90 disabled:opacity-50 transition-opacity shadow-[0_0_12px_rgba(200,255,58,0.3)]"
             >
               {submitting ? (
                 <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <RefreshCw className="h-4 w-4 animate-spin" />
                   <span>Submitting Order...</span>
                 </>
               ) : (
                 <>
-                  <span>Submit Order</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <Send className="h-4 w-4" />
+                  <span>Submit Order for Allocation</span>
                 </>
               )}
             </button>
           </div>
-        </div>
-      </form>
+        </form>
+      )}
     </div>
   );
 }
-
-export default CreateOrder;

@@ -1,22 +1,49 @@
 import React from 'react';
 
-export function Badge({ children, variant = 'default', className = '' }) {
-  const variantMap = {
-    default: 'bg-slate-100 text-slate-800 border-slate-200',
-    primary: 'bg-indigo-100 text-indigo-800 border-indigo-200',
-    success: 'bg-green-100 text-green-800 border-green-200',
-    warning: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-    danger: 'bg-red-100 text-red-800 border-red-200',
-    scarce: 'bg-rose-50 text-rose-700 border-rose-300 font-semibold',
-  };
+/**
+ * Standardized Priority and Meta Badge
+ */
+export default function Badge({ priority, variant = 'default', children }) {
+  if (priority) {
+    const p = String(priority).toUpperCase();
+    let style = 'border-arcade-border text-arcade-secondary bg-arcade-surface';
+
+    switch (p) {
+      case 'CRITICAL':
+        style = 'border-arcade-danger/40 text-arcade-danger bg-arcade-danger/10';
+        break;
+      case 'HIGH':
+        style = 'border-arcade-warning/40 text-arcade-warning bg-arcade-warning/10';
+        break;
+      case 'MEDIUM':
+        style = 'border-blue-500/40 text-blue-400 bg-blue-500/10';
+        break;
+      case 'LOW':
+        style = 'border-arcade-border text-arcade-secondary bg-arcade-surface';
+        break;
+      default:
+        style = 'border-arcade-border text-arcade-secondary bg-arcade-surface';
+    }
+
+    return (
+      <span className={`inline-flex items-center px-1.5 py-0.5 text-[9px] uppercase font-bold tracking-wider border ${style}`}>
+        {p}
+      </span>
+    );
+  }
+
+  let variantStyle = 'border-arcade-border text-arcade-secondary bg-arcade-surface';
+  if (variant === 'active') {
+    variantStyle = 'border-arcade-accent/30 text-arcade-accent bg-arcade-accent/10';
+  } else if (variant === 'coming-soon') {
+    variantStyle = 'border-arcade-border text-arcade-secondary/60 bg-arcade-surface/60 line-through';
+  } else if (variant === 'warning') {
+    variantStyle = 'border-arcade-warning/40 text-arcade-warning bg-arcade-warning/10';
+  }
 
   return (
-    <span
-      className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border ${variantMap[variant] || variantMap.default} ${className}`}
-    >
+    <span className={`inline-flex items-center px-1.5 py-0.5 text-[9px] uppercase font-bold tracking-wider border ${variantStyle}`}>
       {children}
     </span>
   );
 }
-
-export default Badge;
