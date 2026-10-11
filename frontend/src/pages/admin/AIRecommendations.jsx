@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Sparkles,
   CheckCircle,
@@ -10,10 +10,8 @@ import {
   ShieldAlert,
   Info,
   Calendar,
-  Layers,
   ChevronDown,
   ChevronUp,
-  Cpu,
   BookmarkCheck,
 } from 'lucide-react';
 import apiClient from '../../api/client';
@@ -55,7 +53,7 @@ export default function AIRecommendations() {
     }
   };
 
-  const fetchOrders = async () => {
+  const fetchOrders = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -67,11 +65,11 @@ export default function AIRecommendations() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchOrders();
-  }, []);
+  }, [fetchOrders]);
 
   const toggleExpand = (orderId) => {
     setExpandedOrders((prev) => ({ ...prev, [orderId]: !prev[orderId] }));
@@ -83,7 +81,7 @@ export default function AIRecommendations() {
     setError(null);
     setSuccessMessage(null);
     try {
-      const res = await apiClient.post(`/ai/recommend/${orderId}`, {});
+      await apiClient.post(`/ai/recommend/${orderId}`, {});
       setSuccessMessage(`AI Priority Recommendation generated for Order #${orderId}!`);
       await fetchOrders();
     } catch (err) {

@@ -94,7 +94,11 @@ async function seed(client = null) {
        ON CONFLICT (product_id)
        DO UPDATE SET 
          on_hand_quantity = EXCLUDED.on_hand_quantity,
+<<<<<<< HEAD
          reserved_quantity = 0,
+=======
+          reserved_quantity = 0,
+>>>>>>> origin/main
          safety_stock = EXCLUDED.safety_stock,
          reorder_point = EXCLUDED.reorder_point;`,
       [pId, p.stock, p.safety, p.reorder, userMap['manager@orderwise.com']]

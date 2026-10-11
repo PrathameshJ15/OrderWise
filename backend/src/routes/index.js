@@ -8,6 +8,9 @@ const priorityRoutes = require('./priorities');
 const aiRoutes = require('./ai');
 const allocationRoutes = require('./allocation');
 const impactRoutes = require('./impact');
+const simulationRoutes = require('./simulations');
+const alertRoutes = require('./alerts');
+const replenishmentRoutes = require('./replenishment');
 
 const router = express.Router();
 
@@ -26,10 +29,13 @@ router.use('/orders', orderRoutes);
 router.use('/priorities', priorityRoutes);
 router.use('/ai', aiRoutes);
 
-// Allocation Engine
+// Allocation Engine & Impact
 router.use('/allocation', allocationRoutes);
-
-// Allocation Impact Analyzer
 router.use('/impact', impactRoutes);
+
+// Simulations & Supply Intelligence
+router.use('/simulations', simulationRoutes);
+router.use('/alerts', alertRoutes);
+router.use('/replenishment', replenishmentRoutes);
 
 module.exports = router;
