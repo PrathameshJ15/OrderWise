@@ -64,6 +64,10 @@ router.post(
 
       return successResponse(res, result, undefined, 200);
     } catch (_err) {
+      console.error('runAllocationEngine error:', _err);
+      if (process.env.NODE_ENV === 'test') {
+        throw _err;
+      }
       const outcome = demoStore.runAllocation({ product_ids: productIds, dry_run: dryRun, notes });
 
       if (!dryRun) {
