@@ -4,15 +4,16 @@ const jwt = require('jsonwebtoken');
 const { query } = require('../config/db');
 const { env } = require('../config/env');
 const auth = require('../middleware/auth');
-const asyncHandler = require('../middleware/asyncHandler');
 const { successResponse, errorResponse } = require('../utils/response');
 
 const router = express.Router();
 
-function generateToken(user) {
+// Helper to sign JWT token
+function signToken(user) {
   return jwt.sign(
     {
       userId: user.id,
+      id: user.id,
       email: user.email,
       role: user.role,
       name: user.name,
@@ -23,61 +24,75 @@ function generateToken(user) {
 }
 
 // POST /api/auth/register
-router.post(
-  '/register',
-  asyncHandler(async (req, res) => {
+router.post('/register', async (req, res) => {
+  try {
     const { name, email, password } = req.body;
+
     if (!name || !email || !password) {
       return errorResponse(res, 'Name, email, and password are required', 'VALIDATION_ERROR', {}, 400);
     }
 
-    const existing = await query('SELECT id FROM users WHERE email = $1', [email.toLowerCase().trim()]);
+    if (typeof email !== 'string' || !email.includes('@')) {
+      return errorResponse(res, 'Invalid email address', 'VALIDATION_ERROR', {}, 400);
+    }
+
+    if (typeof password !== 'string' || password.length < 6) {
+      return errorResponse(res, 'Password must be at least 6 characters long', 'VALIDATION_ERROR', {}, 400);
+    }
+
+    const normalizedEmail = email.trim().toLowerCase();
+
+    // Check if user already exists
+    const existing = await query('SELECT id FROM users WHERE email = $1', [normalizedEmail]);
     if (existing.rowCount > 0) {
       return errorResponse(res, 'A user with this email already exists', 'CONFLICT', {}, 409);
     }
 
-    const salt = await bcrypt.genSalt(10);
-    const passwordHash = await bcrypt.hash(password, salt);
-
+    const passwordHash = await bcrypt.hash(password, 10);
     const result = await query(
-      `INSERT INTO users (name, email, password_hash, role)
-       VALUES ($1, $2, $3, 'customer')
+      `INSERT INTO users (name, email, password_hash, role, active)
+       VALUES ($1, $2, $3, 'customer', true)
        RETURNING id, name, email, role, created_at`,
-      [name.trim(), email.toLowerCase().trim(), passwordHash]
+      [name.trim(), normalizedEmail, passwordHash]
     );
 
-    const user = result.rows[0];
-    const token = generateToken(user);
+    const newUser = result.rows[0];
+    const token = signToken(newUser);
 
-    return successResponse(
-      res,
-      {
-        token,
-        user: {
-          id: parseInt(user.id, 10),
-          name: user.name,
-          email: user.email,
-          role: user.role,
-        },
+    const responsePayload = {
+      token,
+      user: {
+        id: Number(newUser.id),
+        name: newUser.name,
+        email: newUser.email,
+        role: newUser.role,
       },
-      undefined,
-      201
-    );
-  })
-);
+    };
+
+    return res.status(201).json({
+      success: true,
+      ...responsePayload,
+      data: responsePayload,
+    });
+  } catch (err) {
+    console.error('Registration error:', err);
+    return errorResponse(res, err.message, 'REGISTRATION_ERROR', {}, 500);
+  }
+});
 
 // POST /api/auth/login
-router.post(
-  '/login',
-  asyncHandler(async (req, res) => {
+router.post('/login', async (req, res) => {
+  try {
     const { email, password } = req.body;
+
     if (!email || !password) {
       return errorResponse(res, 'Email and password are required', 'VALIDATION_ERROR', {}, 400);
     }
 
+    const normalizedEmail = email.trim().toLowerCase();
     const result = await query(
-      'SELECT id, name, email, password_hash, role, active FROM users WHERE email = $1',
-      [email.toLowerCase().trim()]
+      `SELECT id, name, email, password_hash, role, active FROM users WHERE email = $1`,
+      [normalizedEmail]
     );
 
     if (result.rowCount === 0) {
@@ -89,32 +104,39 @@ router.post(
       return errorResponse(res, 'Account is deactivated', 'ACCOUNT_DISABLED', {}, 403);
     }
 
-    const isValidPassword = await bcrypt.compare(password, user.password_hash);
-    if (!isValidPassword) {
+    const match = await bcrypt.compare(password, user.password_hash);
+    if (!match) {
       return errorResponse(res, 'Invalid email or password', 'INVALID_CREDENTIALS', {}, 401);
     }
 
-    const token = generateToken(user);
+    const token = signToken(user);
+    const userPayload = {
+      id: Number(user.id),
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    };
 
-    return successResponse(res, {
+    return res.status(200).json({
+      success: true,
       token,
-      user: {
-        id: parseInt(user.id, 10),
-        name: user.name,
-        email: user.email,
-        role: user.role,
+      user: userPayload,
+      data: {
+        token,
+        user: userPayload,
       },
     });
-  })
-);
+  } catch (err) {
+    console.error('Login error:', err);
+    return errorResponse(res, err.message, 'LOGIN_ERROR', {}, 500);
+  }
+});
 
 // GET /api/auth/me
-router.get(
-  '/me',
-  auth,
-  asyncHandler(async (req, res) => {
+router.get('/me', auth, async (req, res) => {
+  try {
     const result = await query(
-      'SELECT id, name, email, role, created_at FROM users WHERE id = $1',
+      `SELECT id, name, email, role, created_at FROM users WHERE id = $1`,
       [req.user.userId]
     );
 
@@ -123,13 +145,26 @@ router.get(
     }
 
     const user = result.rows[0];
-    return successResponse(res, {
-      id: parseInt(user.id, 10),
+    const userPayload = {
+      id: Number(user.id),
       name: user.name,
       email: user.email,
       role: user.role,
+    };
+
+    return res.status(200).json({
+      success: true,
+      id: userPayload.id,
+      name: userPayload.name,
+      email: userPayload.email,
+      role: userPayload.role,
+      user: userPayload,
+      data: userPayload,
     });
-  })
-);
+  } catch (err) {
+    console.error('Auth me error:', err);
+    return errorResponse(res, err.message, 'INTERNAL_SERVER_ERROR', {}, 500);
+  }
+});
 
 module.exports = router;

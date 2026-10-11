@@ -120,6 +120,22 @@ async function seed(client = null) {
   }
   console.log(`[SEED] Seeded suppliers.`);
 
+  // Link products to default suppliers
+  const supValve = await runner.query("SELECT id FROM suppliers WHERE code = 'SUP-VALVETECH'");
+  const supGauge = await runner.query("SELECT id FROM suppliers WHERE code = 'SUP-GAUGEMASTER'");
+  const supPump = await runner.query("SELECT id FROM suppliers WHERE code = 'SUP-HYDRACORE'");
+
+  if (supValve.rowCount > 0) {
+    await runner.query("UPDATE products SET default_supplier_id = $1, default_lead_time_days = 5 WHERE sku = 'VALVE-B200'", [supValve.rows[0].id]);
+  }
+  if (supGauge.rowCount > 0) {
+    await runner.query("UPDATE products SET default_supplier_id = $1, default_lead_time_days = 14 WHERE sku = 'GAUGE-P300'", [supGauge.rows[0].id]);
+  }
+  if (supPump.rowCount > 0) {
+    await runner.query("UPDATE products SET default_supplier_id = $1, default_lead_time_days = 10 WHERE sku = 'PUMP-X100'", [supPump.rows[0].id]);
+    await runner.query("UPDATE products SET default_supplier_id = $1, default_lead_time_days = 10 WHERE sku = 'CTRL-U400'", [supPump.rows[0].id]);
+  }
+
   // 4. Seed Competing Orders
   // Designed so that Pressure Gauge Pro (stock = 40) creates conflict and every outcome:
   // - Eva (CRITICAL=4, qty 10, partial false) -> gets 10 (Fulfilled)
@@ -237,6 +253,15 @@ async function seed(client = null) {
   }
 
   console.log(`[SEED] Seeded ${ordersToSeed.length} competing orders with priorities.`);
+
+  try {
+    const { scanAndGenerateAlerts } = require('../../services/alertService');
+    const alertResults = await scanAndGenerateAlerts(runner);
+    console.log(`[SEED] Generated ${alertResults.newly_created_count} proactive supply alerts.`);
+  } catch (err) {
+    console.warn('[SEED] Alert scan warning:', err.message);
+  }
+
   console.log('[SEED] Demo data successfully loaded!');
 }
 

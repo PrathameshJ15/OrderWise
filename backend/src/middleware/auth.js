@@ -9,10 +9,15 @@ function auth(req, res, next) {
   }
 
   const token = authHeader.split(' ')[1];
+  if (!token) {
+    return errorResponse(res, 'Invalid authorization format', 'UNAUTHORIZED', {}, 401);
+  }
+
   try {
     const decoded = jwt.verify(token, env.JWT_SECRET);
     req.user = {
       userId: decoded.userId || decoded.id,
+      id: decoded.userId || decoded.id,
       role: decoded.role,
       email: decoded.email,
     };
@@ -25,4 +30,33 @@ function auth(req, res, next) {
   }
 }
 
+// Optional auth: populates req.user if present, but doesn't block if missing
+function optionalAuth(req, res, next) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return next();
+  }
+
+  const token = authHeader.split(' ')[1];
+  if (!token) {
+    return next();
+  }
+
+  try {
+    const decoded = jwt.verify(token, env.JWT_SECRET);
+    req.user = {
+      userId: decoded.userId || decoded.id,
+      id: decoded.userId || decoded.id,
+      role: decoded.role,
+      email: decoded.email,
+    };
+  } catch {
+    // Ignore invalid token in optional auth
+  }
+
+  return next();
+}
+
 module.exports = auth;
+module.exports.auth = auth;
+module.exports.optionalAuth = optionalAuth;

@@ -1,6 +1,13 @@
 import '@testing-library/jest-dom';
 import { vi } from 'vitest';
 
+// Polyfill ResizeObserver for Recharts ResponsiveContainer in jsdom
+global.ResizeObserver = class ResizeObserver {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+};
+
 // Mock apiClient to return mock health response in test environment
 vi.mock('../src/api/client', () => ({
   default: {
