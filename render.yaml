@@ -1,0 +1,33 @@
+services:
+  - type: web
+    name: orderwise-backend
+    env: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm ci
+    startCommand: npm run migrate up && npm run seed && node src/index.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 24h
+      - key: DATABASE_URL
+        fromDatabase:
+          name: orderwise-db
+          property: connectionString
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GROQ_MODEL
+        value: llama3-70b-8192
+
+databases:
+  - name: orderwise-db
+    databaseName: orderwise_db
+    user: orderwise_user
+    plan: free
+    postgresMajorVersion: 15

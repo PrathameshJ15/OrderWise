@@ -295,22 +295,28 @@ class DemoStore {
 
   createOrder(customerId, customerName, customerEmail, { items, promised_delivery_date, notes }) {
     const newId = this.orders.length > 0 ? Math.max(...this.orders.map(o => o.id)) + 1 : 101;
-    const totalQty = (items || []).reduce((sum, it) => sum + Number(it.requested_quantity || 0), 0);
     const formattedItems = (items || []).map((it, idx) => {
-      const p = this.products.find(prod => prod.id === Number(it.product_id)) || {};
+      const prodId = Number(it.product_id || it.productId || 1);
+      const p = this.products.find(prod => prod.id === prodId) || {};
+      const reqQty = Number(it.requested_quantity !== undefined ? it.requested_quantity : (it.requestedQuantity || 0));
+      const minQty = Number(it.minimum_acceptable_quantity !== undefined ? it.minimum_acceptable_quantity : (it.minimumAcceptableQuantity || 1));
+      const partialAllowed = it.partial_delivery_allowed !== undefined ? it.partial_delivery_allowed !== false : (it.partialDeliveryAllowed !== false);
+
       return {
         id: idx + 1,
         order_id: newId,
-        product_id: it.product_id,
+        product_id: prodId,
         product_name: p.name || 'Hardware Part',
         product_sku: p.sku || 'SKU-000',
-        requested_quantity: Number(it.requested_quantity),
+        requested_quantity: reqQty,
         allocated_quantity: 0,
-        minimum_acceptable_quantity: Number(it.minimum_acceptable_quantity || 1),
-        partial_delivery_allowed: it.partial_delivery_allowed !== false,
+        minimum_acceptable_quantity: minQty,
+        partial_delivery_allowed: partialAllowed,
         status: 'pending'
       };
     });
+
+    const totalQty = formattedItems.reduce((sum, it) => sum + Number(it.requested_quantity || 0), 0);
 
     const newOrder = {
       id: newId,

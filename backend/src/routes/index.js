@@ -16,12 +16,18 @@ router.use('/health', healthRoutes);
 // Auth & Access
 router.use('/auth', authRoutes);
 
-// Products
+// Products & Inventory
 router.use('/products', productRoutes);
+const inventoryRoutes = require('./inventory');
+router.use('/inventory', inventoryRoutes);
 
 // Orders & Priorities
 router.use('/orders', orderRoutes);
 router.use('/priorities', priorityRoutes);
+
+// Simulation Lab
+const simulationRoutes = require('./simulations');
+router.use('/simulations', simulationRoutes);
 
 // AI Priority Assistant
 router.use('/ai', aiRoutes);
@@ -47,5 +53,9 @@ const reportRoutes = require('./reports');
 const auditRoutes = require('./audit');
 router.use('/reports', reportRoutes);
 router.use('/audit', auditRoutes);
+
+// Advanced Intelligence (Phase 18 Stretch)
+const intelligenceRoutes = require('./intelligence');
+router.use('/intelligence', intelligenceRoutes);
 
 module.exports = router;

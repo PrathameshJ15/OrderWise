@@ -70,9 +70,14 @@ export default function Login() {
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-arcade-accent via-arcade-secondary to-arcade-accent" />
 
         <div className="mb-6">
-          <div className="flex items-center space-x-2 text-arcade-accent text-xs mb-1 uppercase tracking-widest">
-            <Lock className="h-3.5 w-3.5" />
-            <span>Secure Access Point</span>
+          <div className="flex items-center justify-between mb-2">
+            <span className="font-display font-black text-sm tracking-wider text-arcade-accent uppercase">
+              OrderWise
+            </span>
+            <div className="flex items-center space-x-1 text-arcade-secondary text-[10px] uppercase tracking-widest">
+              <Lock className="h-3 w-3 text-arcade-accent" />
+              <span>Secure Access Point</span>
+            </div>
           </div>
           <h1 className="font-display font-extrabold text-3xl tracking-tight uppercase text-arcade-primary">
             Sign In to OrderWise

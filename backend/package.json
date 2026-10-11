@@ -15,7 +15,7 @@
     "format": "prettier --write \"src/**/*.{js,json}\" \"tests/**/*.{js,json}\"",
     "format:check": "prettier --check \"src/**/*.{js,json}\" \"tests/**/*.{js,json}\"",
     "build": "echo Backend does not require separate build step",
-    "migrate": "node-pg-migrate --migrations-dir src/db/migrations",
+    "migrate": "node-pg-migrate --migrations-dir src/db/migrations up",
     "seed": "node src/db/seeds/demo.js"
   },
   "dependencies": {
