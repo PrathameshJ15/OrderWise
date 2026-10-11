@@ -4,7 +4,7 @@ const { validateRequest } = require('../middleware/validate');
 const { authenticate } = require('../middleware/auth');
 const { authorize } = require('../middleware/rbac');
 const asyncHandler = require('../middleware/asyncHandler');
-const { successResponse } = require('../utils/response');
+const { successResponse, AppError } = require('../utils/response');
 const orderService = require('../services/orderService');
 
 const router = express.Router();
@@ -94,6 +94,30 @@ router.patch(
     const meta = { ip: req.ip, userAgent: req.headers['user-agent'] };
     const cancelled = await orderService.cancelOrder(req.params.id, req.user, req.body.reason, meta);
     return successResponse(res, cancelled);
+  })
+);
+
+// PATCH /api/orders/:id/status (Admin only per API_SPEC.md)
+router.patch(
+  '/:id/status',
+  authorize('admin', 'inventory_manager'),
+  asyncHandler(async (req, res) => {
+    const meta = { ip: req.ip, userAgent: req.headers['user-agent'] };
+    const { status, reason } = req.body;
+
+    if (status === 'cancelled') {
+      const cancelled = await orderService.cancelOrder(req.params.id, req.user, reason, meta);
+      return successResponse(res, cancelled);
+    } else if (status === 'confirmed') {
+      const confirmed = await orderService.confirmOrder(req.params.id, req.user, meta);
+      return successResponse(res, confirmed);
+    } else {
+      throw new AppError(
+        `Invalid status change request: ${status}. Use specific allocation or transition workflows.`,
+        'VALIDATION_ERROR',
+        400
+      );
+    }
   })
 );
 

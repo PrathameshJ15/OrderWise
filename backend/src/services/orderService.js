@@ -38,7 +38,7 @@ async function getOrderById(orderId, reqUser) {
     throw new AppError('Access denied: customers can only view their own orders', 'FORBIDDEN', 403);
   }
 
-  // Fetch items with product metadata
+  // Fetch items with product metadata and latest allocation decision
   const itemsRes = await query(
     `SELECT 
        oi.id,
@@ -49,9 +49,19 @@ async function getOrderById(orderId, reqUser) {
        oi.requested_quantity,
        oi.minimum_acceptable_quantity,
        oi.partial_delivery_allowed,
-       oi.created_at
+       oi.created_at,
+       ar.allocated_quantity,
+       ar.status as allocation_status,
+       ar.explanation as allocation_explanation
      FROM order_items oi
      JOIN products p ON p.id = oi.product_id
+     LEFT JOIN LATERAL (
+       SELECT allocated_quantity, status, explanation
+       FROM allocation_results
+       WHERE order_item_id = oi.id
+       ORDER BY id DESC
+       LIMIT 1
+     ) ar ON true
      WHERE oi.order_id = $1
      ORDER BY oi.id ASC;`,
     [orderId]

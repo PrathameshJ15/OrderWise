@@ -49,6 +49,7 @@ async function closePool() {
 
 module.exports = {
   pool,
+  getPool: () => pool,
   query,
   getClient,
   checkDbHealth,

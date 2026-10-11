@@ -129,11 +129,12 @@ async function adjustStock(productId, { adjustmentType = 'delta', quantity, reas
     );
 
     // Record in inventory movements ledger
+    const safeReason = (reason || 'adjustment').trim().slice(0, 50);
     await client.query(
       `INSERT INTO inventory_movements 
        (product_id, movement_type, quantity, previous_on_hand, new_on_hand, reference_type, reference_id, created_by)
        VALUES ($1, 'adjustment', $2, $3, $4, $5, null, $6);`,
-      [productId, delta, current.on_hand_quantity, newOnHand, reason.trim(), userId]
+      [productId, delta, current.on_hand_quantity, newOnHand, safeReason, userId]
     );
 
     await client.query('COMMIT');
