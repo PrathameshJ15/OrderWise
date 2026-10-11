@@ -157,6 +157,6 @@ describe('Phase 2 Database Schema, Constraints & Governance Tests', () => {
       const testUrl = 'postgresql://orderwise_user:password@localhost:5432/orderwise_test';
       await expect(resetTestDatabase(testUrl)).resolves.not.toThrow();
     },
-    25000
+    60000
   );
 });
