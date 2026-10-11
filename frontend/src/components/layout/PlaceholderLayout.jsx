@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
-import { RefreshCw, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Outlet, NavLink } from 'react-router-dom';
+import { RefreshCw, CheckCircle2, AlertCircle, Sparkles, Home as HomeIcon } from 'lucide-react';
 import apiClient from '../../api/client';
 
 export default function PlaceholderLayout() {
@@ -49,8 +49,40 @@ export default function PlaceholderLayout() {
             </div>
           </div>
 
-          {/* Backend Connectivity Status Badge */}
-          <div className="flex items-center space-x-3">
+          {/* Navigation Links & API Badge */}
+          <div className="flex flex-wrap items-center gap-3">
+            <nav className="flex items-center space-x-2 mr-2">
+              <NavLink
+                to="/"
+                end
+                className={({ isActive }) =>
+                  `flex items-center space-x-1.5 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider border transition-colors ${
+                    isActive
+                      ? 'border-arcade-accent bg-arcade-accent/15 text-arcade-accent'
+                      : 'border-arcade-border text-arcade-secondary hover:text-arcade-primary bg-arcade-surface'
+                  }`
+                }
+              >
+                <HomeIcon className="w-3.5 h-3.5" />
+                <span>Overview</span>
+              </NavLink>
+
+              <NavLink
+                to="/admin/ai"
+                className={({ isActive }) =>
+                  `flex items-center space-x-1.5 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider border transition-colors ${
+                    isActive
+                      ? 'border-arcade-accent bg-arcade-accent/15 text-arcade-accent'
+                      : 'border-arcade-border text-arcade-secondary hover:text-arcade-primary bg-arcade-surface'
+                  }`
+                }
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>AI Recommendations</span>
+              </NavLink>
+            </nav>
+
+            {/* Backend Connectivity Status Badge */}
             <div
               className={`flex items-center space-x-2 px-3 py-1.5 border text-xs uppercase tracking-wider ${
                 loading

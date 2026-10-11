@@ -94,6 +94,7 @@ async function seed(client = null) {
        ON CONFLICT (product_id)
        DO UPDATE SET 
          on_hand_quantity = EXCLUDED.on_hand_quantity,
+          reserved_quantity = 0,
          safety_stock = EXCLUDED.safety_stock,
          reorder_point = EXCLUDED.reorder_point;`,
       [pId, p.stock, p.safety, p.reorder, userMap['manager@orderwise.com']]
@@ -176,6 +177,9 @@ async function seed(client = null) {
       priority: { label: 'LOW', rank: 1, notes: 'Non-critical buffer replenishment' },
     },
   ];
+
+  const seedNotes = ordersToSeed.map((o) => o.notes);
+  await runner.query('DELETE FROM orders WHERE NOT (business_notes = ANY($1::text[]))', [seedNotes]);
 
   for (const o of ordersToSeed) {
     const customerId = userMap[o.customerEmail];
