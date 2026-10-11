@@ -567,16 +567,29 @@ router.patch(
   asyncHandler(async (req, res) => {
     const eventHub = require('../services/eventHub');
     const meta = { ip: req.ip, userAgent: req.headers['user-agent'] };
-    const cancelled = await orderService.cancelOrder(req.params.id, req.user, req.body.reason, meta);
-    eventHub.broadcastEvent({
-      type: 'order_status_changed',
-      title: `Order #${cancelled.id} Cancelled`,
-      message: `Order #${cancelled.id} has been cancelled.`,
-      data: { orderId: cancelled.id, newStatus: 'cancelled' },
-      targetCustomerIds: [cancelled.customer_id],
-      targetRoles: ['admin', 'inventory_manager'],
-    }).catch(() => {});
-    return successResponse(res, cancelled);
+    try {
+      const cancelled = await orderService.cancelOrder(req.params.id, req.user, req.body.reason, meta);
+      eventHub.broadcastEvent({
+        type: 'order_status_changed',
+        title: `Order #${cancelled.id} Cancelled`,
+        message: `Order #${cancelled.id} has been cancelled.`,
+        data: { orderId: cancelled.id, newStatus: 'cancelled' },
+        targetCustomerIds: [cancelled.customer_id],
+        targetRoles: ['admin', 'inventory_manager'],
+      }).catch(() => {});
+      return successResponse(res, cancelled);
+    } catch (_err) {
+      if (_err.statusCode || _err instanceof AppError) {
+        throw _err;
+      }
+      const ord = demoStore.getOrderById(req.params.id);
+      if (!ord) throw new AppError(`Order #${req.params.id} not found`, 'NOT_FOUND', 404);
+      if (req.user?.role === 'customer' && String(ord.customer_id) !== String(req.user.userId || req.user.id)) {
+        throw new AppError('Access denied: customers can only cancel their own orders', 'FORBIDDEN', 403);
+      }
+      const cancelled = demoStore.cancelOrder(req.params.id);
+      return successResponse(res, cancelled);
+    }
   })
 );
 

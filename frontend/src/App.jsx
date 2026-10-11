@@ -31,6 +31,7 @@ import SimulationLab from './pages/admin/SimulationLab';
 import Alerts from './pages/admin/Alerts';
 import Replenishment from './pages/admin/Replenishment';
 import Reports from './pages/admin/Reports';
+import AuditViewer from './pages/admin/AuditViewer';
 
 function App() {
   return (
@@ -80,6 +81,7 @@ function App() {
                 <Route path="/admin/alerts" element={<Alerts />} />
                 <Route path="/admin/replenishment" element={<Replenishment />} />
                 <Route path="/admin/reports" element={<Reports />} />
+                <Route path="/admin/audit" element={<AuditViewer />} />
               </Route>
 
               {/* Catch-all redirect */}

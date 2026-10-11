@@ -33,16 +33,22 @@ router.get(
       }
     }
 
-    const data = await getAlerts({
-      status,
-      severity,
-      alert_type,
-      product_id,
-      page: page || 1,
-      limit: limit || 50,
-    });
+    try {
+      const data = await getAlerts({
+        status,
+        severity,
+        alert_type,
+        product_id,
+        page: page || 1,
+        limit: limit || 50,
+      });
 
-    return successResponse(res, data);
+      return successResponse(res, data);
+    } catch (_err) {
+      const demoStore = require('../services/demoStore');
+      const demoAlerts = demoStore.getAlerts();
+      return successResponse(res, demoAlerts);
+    }
   })
 );
 

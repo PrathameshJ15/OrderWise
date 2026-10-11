@@ -23,6 +23,10 @@ function signToken(user) {
   );
 }
 
+const refreshSchema = z.object({
+  refreshToken: z.string().min(1, 'Refresh token is required'),
+});
+
 // POST /api/auth/register
 router.post('/register', async (req, res) => {
   try {
@@ -131,6 +135,16 @@ router.post('/login', async (req, res) => {
     return errorResponse(res, err.message, 'LOGIN_ERROR', {}, 500);
   }
 });
+
+// POST /api/auth/refresh
+router.post(
+  '/refresh',
+  validateRequest({ body: refreshSchema }),
+  asyncHandler(async (req, res) => {
+    const result = await authService.refreshSession(req.body.refreshToken);
+    return successResponse(res, result);
+  })
+);
 
 // GET /api/auth/me
 router.get('/me', auth, async (req, res) => {

@@ -176,6 +176,53 @@ class DemoStore {
         created_at: new Date().toISOString()
       }
     ];
+
+    this.auditLogs = [
+      {
+        id: 1,
+        actor_id: 1,
+        actor_name: 'Administrator',
+        actor_email: 'admin@orderwise.com',
+        action: 'RUN_ALLOCATION',
+        entity_type: 'allocation_runs',
+        entity_id: 1,
+        details: 'Triggered deterministic inventory allocation run #1 across all pending demand.',
+        created_at: new Date(Date.now() - 3600000 * 2).toISOString(),
+      },
+      {
+        id: 2,
+        actor_id: 1,
+        actor_name: 'Administrator',
+        actor_email: 'admin@orderwise.com',
+        action: 'PRIORITY_APPROVED',
+        entity_type: 'orders',
+        entity_id: 101,
+        details: 'Approved AI recommendation for Order #101: Priority set to HIGH.',
+        created_at: new Date(Date.now() - 3600000 * 4).toISOString(),
+      },
+      {
+        id: 3,
+        actor_id: 2,
+        actor_name: 'Inventory Manager',
+        actor_email: 'manager@orderwise.com',
+        action: 'STOCK_ADJUSTMENT',
+        entity_type: 'inventory',
+        entity_id: 3,
+        details: 'Adjusted Pressure Gauge Pro stock by +40 units (Initial deposit).',
+        created_at: new Date(Date.now() - 3600000 * 6).toISOString(),
+      },
+      {
+        id: 4,
+        actor_id: 1,
+        actor_name: 'Administrator',
+        actor_email: 'admin@orderwise.com',
+        action: 'ORDER_CONFIRMED',
+        entity_type: 'orders',
+        entity_id: 104,
+        details: 'Confirmed order #104 for customer Alice Customer.',
+        created_at: new Date(Date.now() - 3600000 * 8).toISOString(),
+      },
+    ];
   }
 
   getProducts() {
@@ -337,6 +384,88 @@ class DemoStore {
     return {
       alerts: this.alerts,
       stats: { total: this.alerts.length, unresolved: this.alerts.filter(a => !a.resolved).length }
+    };
+  }
+
+  getAuditLogs(filters = {}) {
+    let logs = [...this.auditLogs];
+    if (filters.action && filters.action !== 'all') {
+      logs = logs.filter(l => l.action.toLowerCase() === filters.action.toLowerCase());
+    }
+    if (filters.actor_id) {
+      logs = logs.filter(l => l.actor_id === Number(filters.actor_id));
+    }
+    if (filters.user) {
+      const q = filters.user.toLowerCase();
+      logs = logs.filter(l => l.actor_name.toLowerCase().includes(q) || l.actor_email.toLowerCase().includes(q));
+    }
+    return logs;
+  }
+
+  getReportsSummary() {
+    const totalOrders = this.orders.length;
+    const fulfilledOrders = this.orders.filter(o => o.status === 'allocated' || o.status === 'completed').length;
+    const deferredOrders = this.orders.filter(o => o.status === 'deferred').length;
+    const pendingOrders = this.orders.filter(o => o.status === 'pending').length;
+    const fillRate = totalOrders > 0 ? Math.round(((fulfilledOrders) / totalOrders) * 100) : 0;
+
+    // Estimated inventory valuation
+    const UNIT_COSTS = { 1: 350, 2: 120, 3: 85, 4: 550 };
+    let totalValuation = 0;
+    this.inventory.forEach(inv => {
+      const cost = UNIT_COSTS[inv.product_id] || 100;
+      totalValuation += inv.on_hand_quantity * cost;
+    });
+
+    return {
+      kpis: {
+        total_runs: this.runs.length,
+        total_orders: totalOrders,
+        fulfilled_orders: fulfilledOrders,
+        deferred_orders: deferredOrders,
+        pending_orders: pendingOrders,
+        fill_rate_percent: fillRate,
+        inventory_valuation_usd: totalValuation,
+        ai_recommendations_count: 5,
+        ai_approval_rate_percent: 80,
+      },
+      allocation_runs: this.runs,
+      deferred_breakdown: [
+        {
+          order_id: 101,
+          customer_name: 'Alice Customer',
+          product_name: 'Pressure Gauge Pro',
+          requested_quantity: 25,
+          min_acceptable: 15,
+          reason: 'Available stock was below minimum threshold (10 < 15)',
+        },
+        {
+          order_id: 102,
+          customer_name: 'Bob Customer',
+          product_name: 'Pressure Gauge Pro',
+          requested_quantity: 20,
+          min_acceptable: 20,
+          reason: 'No partial delivery allowed and remaining stock was 0',
+        },
+      ],
+      inventory_valuation_by_product: this.inventory.map(inv => {
+        const cost = UNIT_COSTS[inv.product_id] || 100;
+        return {
+          product_id: inv.product_id,
+          sku: inv.sku,
+          product_name: inv.product_name,
+          on_hand_quantity: inv.on_hand_quantity,
+          unit_cost: cost,
+          total_value: inv.on_hand_quantity * cost,
+        };
+      }),
+      ai_governance: {
+        total_recommendations: 5,
+        approved: 4,
+        overridden: 1,
+        rejected: 0,
+        approval_rate: 80,
+      },
     };
   }
 }

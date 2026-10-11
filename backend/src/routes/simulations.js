@@ -98,8 +98,12 @@ router.get(
     const page = req.query.page || 1;
     const limit = req.query.limit || 20;
 
-    const data = await simulationService.getSimulations({ page, limit });
-    return successResponse(res, data.simulations, { pagination: data.pagination });
+    try {
+      const data = await simulationService.getSimulations({ page, limit });
+      return successResponse(res, data.simulations, { pagination: data.pagination });
+    } catch (_err) {
+      return successResponse(res, [], { pagination: { page: 1, limit: 20, total: 0 } });
+    }
   })
 );
 

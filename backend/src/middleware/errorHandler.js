@@ -16,6 +16,17 @@ function errorHandler(err, req, res, _next) {
     return errorResponse(res, 'Malformed JSON payload', 'INVALID_JSON', null, 400);
   }
 
+  // Handle body-parser payload too large (413)
+  if (err.status === 413 || err.type === 'entity.too.large') {
+    return errorResponse(
+      res,
+      'Request payload exceeds maximum permitted size of 500KB',
+      'PAYLOAD_TOO_LARGE',
+      null,
+      413
+    );
+  }
+
   // Default to internal server error
   const message =
     process.env.NODE_ENV === 'production'

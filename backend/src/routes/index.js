@@ -42,4 +42,10 @@ router.use('/replenishment', replenishmentRoutes);
 const eventRoutes = require('./events');
 router.use('/events', eventRoutes);
 
+// Reports, Exports and Audit Viewer (Phase 13)
+const reportRoutes = require('./reports');
+const auditRoutes = require('./audit');
+router.use('/reports', reportRoutes);
+router.use('/audit', auditRoutes);
+
 module.exports = router;

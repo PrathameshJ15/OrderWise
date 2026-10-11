@@ -275,6 +275,26 @@ export default function PlaceholderLayout() {
                   <span>Replenishment</span>
                   <span className="text-[8px] px-1 py-0.2 border border-arcade-border text-arcade-secondary uppercase">Soon</span>
                 </NavLink>
+                <NavLink
+                  to="/admin/reports"
+                  className={({ isActive }) =>
+                    `px-3 py-1 uppercase tracking-wider transition-colors ${
+                      isActive ? 'text-arcade-accent font-bold' : 'text-arcade-secondary hover:text-arcade-primary'
+                    }`
+                  }
+                >
+                  Reports
+                </NavLink>
+                <NavLink
+                  to="/admin/audit"
+                  className={({ isActive }) =>
+                    `px-3 py-1 uppercase tracking-wider transition-colors ${
+                      isActive ? 'text-arcade-accent font-bold' : 'text-arcade-secondary hover:text-arcade-primary'
+                    }`
+                  }
+                >
+                  Audit Log
+                </NavLink>
               </>
             )}
           </div>

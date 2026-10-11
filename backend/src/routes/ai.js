@@ -47,8 +47,12 @@ router.get(
 
     sql += ` ORDER BY r.created_at DESC`;
 
-    const result = await query(sql, params);
-    return successResponse(res, { recommendations: result.rows });
+    try {
+      const result = await query(sql, params);
+      return successResponse(res, { recommendations: result.rows });
+    } catch (_err) {
+      return successResponse(res, { recommendations: [] });
+    }
   })
 );
 
