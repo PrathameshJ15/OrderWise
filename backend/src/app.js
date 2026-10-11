@@ -9,6 +9,8 @@ const requestIdMiddleware = require('./middleware/requestId');
 const notFoundHandler = require('./middleware/notFoundHandler');
 const errorHandler = require('./middleware/errorHandler');
 const routes = require('./routes');
+const { recordHttpRequest } = require('./utils/metrics');
+const logger = require('./utils/logger');
 
 const app = express();
 
@@ -55,6 +57,15 @@ app.use(requestIdMiddleware);
 if (env.NODE_ENV !== 'test') {
   app.use(morgan(':method :url :status :res[content-length] - :response-time ms [req-id: :req[x-request-id]]'));
 }
+
+// HTTP request duration metrics (feeds p95 calculation)
+app.use((req, res, next) => {
+  const start = Date.now();
+  res.on('finish', () => {
+    recordHttpRequest(Date.now() - start, res.statusCode);
+  });
+  next();
+});
 
 // Body parsing
 app.use(express.json({ limit: '2mb' }));

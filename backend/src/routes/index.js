@@ -7,10 +7,13 @@ const priorityRoutes = require('./priorities');
 const aiRoutes = require('./ai');
 const allocationRoutes = require('./allocation');
 const impactRoutes = require('./impact');
+const alertsRoutes = require('./alerts');
+const replenishmentRoutes = require('./replenishment');
+const metricsRoutes = require('./metrics');
 
 const router = express.Router();
 
-// Health check
+// Health check (shallow + deep)
 router.use('/health', healthRoutes);
 
 // Auth & Access
@@ -33,9 +36,14 @@ router.use('/allocation', allocationRoutes);
 router.use('/impact', impactRoutes);
 
 // Supply Intelligence: Alerts & Replenishment
-const alertsRoutes = require('./alerts');
-const replenishmentRoutes = require('./replenishment');
 router.use('/alerts', alertsRoutes);
 router.use('/replenishment', replenishmentRoutes);
+
+// Simulations
+const simulationRoutes = require('./simulations');
+router.use('/simulations', simulationRoutes);
+
+// Performance metrics (admin only)
+router.use('/metrics', metricsRoutes);
 
 module.exports = router;

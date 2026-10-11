@@ -23,3 +23,4 @@ function rbac(...allowedRoles) {
 
 module.exports = rbac;
 module.exports.rbac = rbac;
+module.exports.authorize = rbac;

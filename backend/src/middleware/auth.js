@@ -59,4 +59,5 @@ function optionalAuth(req, res, next) {
 
 module.exports = auth;
 module.exports.auth = auth;
+module.exports.authenticate = auth;
 module.exports.optionalAuth = optionalAuth;

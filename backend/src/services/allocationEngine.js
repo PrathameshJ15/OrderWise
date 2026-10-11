@@ -3,6 +3,8 @@ const { getPool, query } = require('../config/db');
 const { AppError } = require('../utils/response');
 const { logAuditEvent } = require('../utils/audit');
 const { ORDER_STATUS } = require('./orderStateMachine');
+const { recordAllocationRun } = require('../utils/metrics');
+const logger = require('../utils/logger');
 
 /**
  * ============================================================================
@@ -536,6 +538,18 @@ async function runAllocationEngine({
     });
 
     await client.query('COMMIT');
+
+    // Record duration for p95 metrics
+    recordAllocationRun(durationMs);
+    logger.info('Allocation run completed', {
+      reqId: reqMeta.reqId,
+      runId: Number(runId),
+      durationMs,
+      itemsProcessed: summary.total_items_processed,
+      fulfilled: summary.fulfilled,
+      partiallyFulfilled: summary.partially_fulfilled,
+      deferred: summary.deferred,
+    });
 
     return {
       run: finalRunRes.rows[0],

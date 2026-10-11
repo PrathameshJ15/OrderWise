@@ -1,11 +1,11 @@
 exports.up = (pgm) => {
   pgm.sql(`
     -- Add idempotency_key to orders
-    ALTER TABLE orders ADD COLUMN idempotency_key VARCHAR(255) UNIQUE;
-    CREATE INDEX idx_orders_idempotency_key ON orders(idempotency_key);
+    ALTER TABLE orders ADD COLUMN IF NOT EXISTS idempotency_key VARCHAR(255) UNIQUE;
+    CREATE INDEX IF NOT EXISTS idx_orders_idempotency_key ON orders(idempotency_key);
 
     -- General idempotency store
-    CREATE TABLE idempotency_keys (
+    CREATE TABLE IF NOT EXISTS idempotency_keys (
       key           VARCHAR(255) PRIMARY KEY,
       user_id       BIGINT       REFERENCES users(id) ON DELETE CASCADE,
       endpoint      VARCHAR(255) NOT NULL,
@@ -14,7 +14,7 @@ exports.up = (pgm) => {
       created_at    TIMESTAMPTZ  NOT NULL DEFAULT NOW()
     );
 
-    CREATE INDEX idx_idempotency_keys_created_at ON idempotency_keys(created_at);
+    CREATE INDEX IF NOT EXISTS idx_idempotency_keys_created_at ON idempotency_keys(created_at);
   `);
 };
 

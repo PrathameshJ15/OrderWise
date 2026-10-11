@@ -15,8 +15,10 @@
     "format": "prettier --write \"src/**/*.{js,json}\" \"tests/**/*.{js,json}\"",
     "format:check": "prettier --check \"src/**/*.{js,json}\" \"tests/**/*.{js,json}\"",
     "build": "echo Backend does not require separate build step",
-    "migrate": "node-pg-migrate --migrations-dir src/db/migrations",
-    "seed": "node src/db/seeds/demo.js"
+    "migrate": "node-pg-migrate --migrations-dir src/db/migrations --check-order false up",
+    "seed": "node src/db/seeds/demo.js",
+    "seed:large": "node src/db/seeds/largeSeed.js",
+    "benchmark": "node scripts/benchmark.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
