@@ -48,3 +48,4 @@ The following devDependencies are pinned per hackathon framework constraints (`A
 - Verified git tree: Zero private keys, API secrets, or passwords committed to repository.
 - `.env` files are strictly excluded via `.gitignore`.
 - Production environment requires 64-character high-entropy secret validated at runtime.
+
