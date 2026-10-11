@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background-color: #0a0b08;
+  color: #eef0e6;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Custom scrollbars for Arcade Night theme */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0b08;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e201b;
+  border-radius: 0px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #c8ff3a;
+}

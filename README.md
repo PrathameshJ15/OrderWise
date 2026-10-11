@@ -66,18 +66,31 @@ npm run migrate
 npm run seed          # loads demo data for hackathon presentation
 ```
 
-### 5. Start the Application
+### 5. Run Tests and Linting
 
 ```bash
-# Terminal 1 — Backend
-cd backend && npm run dev
+# Run tests
+npm run test:backend     # or cd backend && npm test
+npm run test:frontend    # or cd frontend && npm test
 
-# Terminal 2 — Frontend
-cd frontend && npm run dev
+# Run linters
+npm run lint:backend     # or cd backend && npm run lint
+npm run lint:frontend    # or cd frontend && npm run lint
+```
+
+### 6. Start the Application
+
+```bash
+# Terminal 1 — Backend (http://localhost:4000)
+npm run dev:backend      # or cd backend && npm run dev
+
+# Terminal 2 — Frontend (http://localhost:5173)
+npm run dev:frontend     # or cd frontend && npm run dev
 ```
 
 Frontend: http://localhost:5173  
-Backend API: http://localhost:4000/api
+Backend API: http://localhost:4000/api  
+Health Check: http://localhost:4000/api/health
 
 ---
 
