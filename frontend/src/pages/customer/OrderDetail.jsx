@@ -139,7 +139,7 @@ export default function OrderDetail() {
           </div>
           <div className="flex flex-wrap items-center gap-3">
             <h1 className="font-display text-3xl font-extrabold uppercase text-arcade-primary">
-              Order #{order.id}
+              {`Order #${order.id}`}
             </h1>
             <StatusPill status={order.status} />
           </div>

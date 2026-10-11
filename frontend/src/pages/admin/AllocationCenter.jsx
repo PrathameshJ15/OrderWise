@@ -160,10 +160,11 @@ export default function AllocationCenter() {
 
         <button
           onClick={() => setRunModalOpen(true)}
+          aria-label="Run Engine"
           className="flex items-center space-x-2 px-5 py-3 bg-arcade-accent text-arcade-surface font-extrabold text-xs uppercase tracking-wider hover:opacity-90 transition-opacity self-start md:self-auto shadow-[0_0_15px_rgba(200,255,58,0.3)]"
         >
           <Play className="h-4 w-4 fill-current" />
-          <span>Run Allocation Engine</span>
+          <span>Run Engine</span>
         </button>
       </div>
 
@@ -419,7 +420,7 @@ export default function AllocationCenter() {
       <Modal
         isOpen={runModalOpen}
         onClose={() => setRunModalOpen(false)}
-        title="Execute Multi-Tier Allocation Engine"
+        title="Execute Order Allocation Engine"
       >
         <div className="space-y-4 text-xs font-mono">
           <div className="p-3 bg-arcade-surface border border-arcade-accent/20 text-arcade-secondary space-y-1">
@@ -487,9 +488,10 @@ export default function AllocationCenter() {
             <button
               onClick={handleExecuteAllocation}
               disabled={executing}
+              aria-label="Execute Allocation"
               className="px-5 py-2 bg-arcade-accent text-arcade-surface font-extrabold uppercase text-xs hover:opacity-90 disabled:opacity-50 shadow-[0_0_10px_rgba(200,255,58,0.25)]"
             >
-              {executing ? 'Executing Run...' : dryRun ? 'Run Dry Simulation' : 'Confirm & Run Allocation'}
+              {executing ? 'Executing Run...' : dryRun ? 'Run Dry Simulation' : 'Execute Allocation'}
             </button>
           </div>
         </div>

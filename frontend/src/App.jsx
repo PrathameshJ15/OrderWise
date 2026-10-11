@@ -37,7 +37,8 @@ function App() {
           <Routes>
             <Route element={<PlaceholderLayout />}>
               {/* Public routes */}
-              <Route path="/" element={<Home />} />
+              <Route path="/" element={<Navigate to="/login" replace />} />
+              <Route path="/home" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
 

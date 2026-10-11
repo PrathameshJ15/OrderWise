@@ -56,7 +56,7 @@ export default function Login() {
             Sign In to OrderWise
           </h1>
           <p className="text-xs text-arcade-secondary mt-1">
-            Deterministic order allocation &amp; supply chain intelligence.
+            Sign in to your account • Deterministic order allocation &amp; supply chain intelligence.
           </p>
         </div>
 
@@ -72,12 +72,13 @@ export default function Login() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs uppercase tracking-wider text-arcade-secondary mb-1">
+            <label htmlFor="email" className="block text-xs uppercase tracking-wider text-arcade-secondary mb-1">
               Email Address
             </label>
             <div className="relative">
               <Mail className="absolute left-3 top-3 h-4 w-4 text-arcade-secondary" />
               <input
+                id="email"
                 type="email"
                 required
                 value={email}
@@ -89,12 +90,13 @@ export default function Login() {
           </div>
 
           <div>
-            <label className="block text-xs uppercase tracking-wider text-arcade-secondary mb-1">
-              Account Password
+            <label htmlFor="password" className="block text-xs uppercase tracking-wider text-arcade-secondary mb-1">
+              Password
             </label>
             <div className="relative">
               <KeyRound className="absolute left-3 top-3 h-4 w-4 text-arcade-secondary" />
               <input
+                id="password"
                 type="password"
                 required
                 value={password}
@@ -127,7 +129,7 @@ export default function Login() {
         {/* Demo Fast-Fill Shortcuts */}
         <div className="mt-6 pt-6 border-t border-arcade-border">
           <span className="block text-[10px] uppercase tracking-widest text-arcade-secondary mb-2">
-            Quick-Fill Demo Credentials:
+            Quick Demo Accounts
           </span>
           <div className="grid grid-cols-3 gap-2 text-[10px]">
             <button

@@ -133,7 +133,7 @@ export default function AdminDashboard() {
         <div>
           <div className="inline-flex items-center space-x-1.5 text-xs text-arcade-accent bg-arcade-accent/10 border border-arcade-accent/20 px-2 py-0.5 mb-2">
             <ShieldCheck className="h-3 w-3" />
-            <span>OPERATIONS COMMAND CENTER</span>
+            <span>Admin Operations Command Center</span>
           </div>
           <h1 className="font-display text-3xl font-extrabold uppercase text-arcade-primary">
             Admin Console: {user?.name || 'Administrator'}
@@ -444,91 +444,114 @@ export default function AdminDashboard() {
             </span>
           </Link>
 
-          {/* Simulation Lab */}
+          {/* Simulation Lab (Coming Soon) */}
           <Link
             to="/admin/simulations"
-            className="group border border-arcade-border bg-arcade-neutral p-5 hover:border-arcade-accent/60 transition-all block relative"
+            className="group border border-arcade-border bg-arcade-neutral p-5 hover:border-arcade-border/80 transition-all block relative opacity-85"
           >
             <div className="flex items-center justify-between mb-3">
-              <div className="w-8 h-8 bg-arcade-accent/10 text-arcade-accent flex items-center justify-center">
+              <div className="w-8 h-8 bg-arcade-surface text-arcade-secondary flex items-center justify-center">
                 <Layers className="h-4 w-4" />
               </div>
-              <Badge variant="active">Active Engine</Badge>
+              <Badge variant="coming-soon">Coming Soon</Badge>
             </div>
-            <h3 className="font-display text-lg uppercase font-bold text-arcade-primary group-hover:text-arcade-accent transition-colors flex items-center justify-between">
+            <h3 className="font-display text-lg uppercase font-bold text-arcade-primary group-hover:text-arcade-secondary transition-colors flex items-center justify-between">
               <span>Simulation Lab</span>
-              <ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity text-arcade-accent" />
+              <ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity text-arcade-secondary" />
             </h3>
             <p className="text-xs text-arcade-secondary mt-1 mb-4">
               Run what-if scenario experiments (surges, shrinkage, delays) without mutating live data.
             </p>
-            <span className="text-[10px] uppercase tracking-wider text-arcade-accent font-bold">
-              Experiment &rarr;
+            <span className="text-[10px] uppercase tracking-wider text-arcade-secondary font-semibold">
+              Simulation Pipeline &rarr;
             </span>
           </Link>
 
-          {/* Supply Alerts */}
+          {/* Supply Alerts (Coming Soon) */}
           <Link
             to="/admin/alerts"
-            className="group border border-arcade-border bg-arcade-neutral p-5 hover:border-arcade-warning/60 transition-all block relative"
+            className="group border border-arcade-border bg-arcade-neutral p-5 hover:border-arcade-border/80 transition-all block relative opacity-85"
           >
             <div className="flex items-center justify-between mb-3">
-              <div className="w-8 h-8 bg-arcade-warning/10 text-arcade-warning flex items-center justify-center">
+              <div className="w-8 h-8 bg-arcade-surface text-arcade-secondary flex items-center justify-center">
                 <AlertTriangle className="h-4 w-4" />
               </div>
-              <Badge variant="warning">Telemetry Live</Badge>
+              <Badge variant="coming-soon">Coming Soon</Badge>
             </div>
-            <h3 className="font-display text-lg uppercase font-bold text-arcade-primary group-hover:text-arcade-warning transition-colors flex items-center justify-between">
+            <h3 className="font-display text-lg uppercase font-bold text-arcade-primary group-hover:text-arcade-secondary transition-colors flex items-center justify-between">
               <span>Supply Alerts</span>
-              <ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity text-arcade-warning" />
+              <ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity text-arcade-secondary" />
             </h3>
             <p className="text-xs text-arcade-secondary mt-1 mb-4">
               Proactive diagnostic telemetry flagging stockouts, safety buffer breaches, and delayed POs.
             </p>
-            <span className="text-[10px] uppercase tracking-wider text-arcade-warning font-bold">
-              View Alerts &rarr;
+            <span className="text-[10px] uppercase tracking-wider text-arcade-secondary font-semibold">
+              Telemetry Pipeline &rarr;
             </span>
           </Link>
 
-          {/* Replenishment Advisor */}
+          {/* Replenishment Advisor (Coming Soon) */}
           <Link
             to="/admin/replenishment"
-            className="group border border-arcade-border bg-arcade-neutral p-5 hover:border-arcade-accent/60 transition-all block relative"
+            className="group border border-arcade-border bg-arcade-neutral p-5 hover:border-arcade-border/80 transition-all block relative opacity-85"
           >
             <div className="flex items-center justify-between mb-3">
-              <div className="w-8 h-8 bg-arcade-accent/10 text-arcade-accent flex items-center justify-center">
+              <div className="w-8 h-8 bg-arcade-surface text-arcade-secondary flex items-center justify-center">
                 <Truck className="h-4 w-4" />
               </div>
-              <Badge variant="active">Active Engine</Badge>
+              <Badge variant="coming-soon">Coming Soon</Badge>
             </div>
-            <h3 className="font-display text-lg uppercase font-bold text-arcade-primary group-hover:text-arcade-accent transition-colors flex items-center justify-between">
+            <h3 className="font-display text-lg uppercase font-bold text-arcade-primary group-hover:text-arcade-secondary transition-colors flex items-center justify-between">
               <span>Replenishment Advisor</span>
-              <ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity text-arcade-accent" />
+              <ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity text-arcade-secondary" />
             </h3>
             <p className="text-xs text-arcade-secondary mt-1 mb-4">
               Algorithmic reorder points and suggested replenishment orders based on demand velocity.
             </p>
-            <span className="text-[10px] uppercase tracking-wider text-arcade-accent font-bold">
+            <span className="text-[10px] uppercase tracking-wider text-arcade-secondary font-semibold">
               Advisor Models &rarr;
             </span>
           </Link>
 
           {/* AI Priority Review (Coming Soon) */}
-          <div className="border border-arcade-border bg-arcade-neutral p-5 opacity-75 relative">
+          <Link
+            to="/admin/ai"
+            className="group border border-arcade-border bg-arcade-neutral p-5 hover:border-arcade-border/80 transition-all block relative opacity-85"
+          >
             <div className="flex items-center justify-between mb-3">
               <div className="w-8 h-8 bg-arcade-surface text-arcade-secondary flex items-center justify-center">
                 <ShieldCheck className="h-4 w-4" />
               </div>
               <Badge variant="coming-soon">Coming Soon</Badge>
             </div>
-            <h3 className="font-display text-lg uppercase font-bold text-arcade-secondary">
-              AI Priority Review
+            <h3 className="font-display text-lg uppercase font-bold text-arcade-primary group-hover:text-arcade-secondary transition-colors flex items-center justify-between">
+              <span>AI Priorities</span>
+              <ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity text-arcade-secondary" />
             </h3>
             <p className="text-xs text-arcade-secondary mt-1 mb-4">
               Groq Llama-3 NLP recommendation assistant for customer business notes.
             </p>
             <span className="text-[10px] uppercase tracking-wider text-arcade-secondary font-semibold">
-              Phase 12 Pipeline
+              NLP Engine &rarr;
+            </span>
+          </Link>
+
+          {/* Impact Analyzer (Coming Soon) */}
+          <div className="border border-arcade-border bg-arcade-neutral p-5 opacity-75 relative">
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-8 h-8 bg-arcade-surface text-arcade-secondary flex items-center justify-center">
+                <Layers className="h-4 w-4" />
+              </div>
+              <Badge variant="coming-soon">Coming Soon</Badge>
+            </div>
+            <h3 className="font-display text-lg uppercase font-bold text-arcade-secondary">
+              Impact Analyzer
+            </h3>
+            <p className="text-xs text-arcade-secondary mt-1 mb-4">
+              Before/after diff inspection measuring changes between allocation runs.
+            </p>
+            <span className="text-[10px] uppercase tracking-wider text-arcade-secondary font-semibold">
+              Diff Pipeline
             </span>
           </div>
 
@@ -547,7 +570,7 @@ export default function AdminDashboard() {
               Cross-period fulfillment metrics, SLA violation analysis, and warehouse audits.
             </p>
             <span className="text-[10px] uppercase tracking-wider text-arcade-secondary font-semibold">
-              Phase 13 Pipeline
+              Reporting Pipeline
             </span>
           </div>
         </div>

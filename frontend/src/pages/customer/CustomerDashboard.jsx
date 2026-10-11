@@ -53,10 +53,10 @@ export default function CustomerDashboard() {
         <div>
           <div className="inline-flex items-center space-x-1.5 text-xs text-arcade-accent bg-arcade-accent/10 border border-arcade-accent/20 px-2 py-0.5 mb-2">
             <CheckCircle2 className="h-3 w-3" />
-            <span>AUTHENTICATED CUSTOMER PORTAL</span>
+            <span>Customer Command Hub • Authenticated Portal</span>
           </div>
           <h1 className="font-display text-3xl font-extrabold uppercase text-arcade-primary">
-            Welcome, {user?.name || 'Valued Customer'}
+            Welcome, <span>{user?.name || 'Valued Customer'}</span>
           </h1>
           <p className="text-xs text-arcade-secondary mt-1">
             Account: {user?.email} • Authority: <span className="uppercase text-arcade-accent">{user?.role}</span>
@@ -258,9 +258,7 @@ export default function CustomerDashboard() {
               <tbody className="divide-y divide-arcade-border/40">
                 {recentOrders.map((ord) => (
                   <tr key={ord.id} className="hover:bg-arcade-surface/50 transition-colors">
-                    <td className="py-3 px-3 font-bold text-arcade-primary">
-                      #{ord.id}
-                    </td>
+                    <td className="py-3 px-3 font-bold text-arcade-primary">#{ord.id}</td>
                     <td className="py-3 px-3 text-arcade-secondary">
                       {new Date(ord.created_at).toLocaleDateString()}
                     </td>

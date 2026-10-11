@@ -74,11 +74,14 @@ export default function InventoryManagement() {
     setAdjusting(true);
     setError(null);
     try {
+      const quantityVal = Number(adjustForm.quantity);
       await apiClient.put(`/inventory/${adjustItem.product_id}`, {
         adjustmentType: adjustForm.adjustmentType,
-        quantity: Number(adjustForm.quantity),
+        quantity: quantityVal,
+        on_hand_quantity: quantityVal,
         reason: adjustForm.reason.trim(),
         expectedVersion: adjustItem.version,
+        expected_version: adjustItem.version,
       });
       setAdjustModalOpen(false);
       await fetchInventory();
@@ -270,10 +273,11 @@ export default function InventoryManagement() {
                     <td className="py-3.5 px-4 text-right space-x-2">
                       <button
                         onClick={() => openAdjustModal(item)}
+                        aria-label="Adjust Stock"
                         className="inline-flex items-center space-x-1 px-2.5 py-1 border border-arcade-border text-arcade-primary hover:border-arcade-accent hover:text-arcade-accent text-[11px] uppercase tracking-wider transition-colors"
                       >
                         <Sliders className="h-3 w-3" />
-                        <span>Adjust</span>
+                        <span>Adjust Stock</span>
                       </button>
                       <button
                         onClick={() => openLedgerModal(item)}
@@ -295,7 +299,7 @@ export default function InventoryManagement() {
       <Modal
         isOpen={adjustModalOpen}
         onClose={() => setAdjustModalOpen(false)}
-        title={`Adjust Inventory: ${adjustItem?.product_name} (${adjustItem?.sku})`}
+        title={`Adjust Physical Inventory: ${adjustItem?.product_name} (${adjustItem?.sku})`}
       >
         <form onSubmit={handleAdjustStock} className="space-y-4 text-xs">
           <div className="p-3 bg-arcade-surface border border-arcade-border flex justify-between items-center text-xs">
@@ -327,10 +331,11 @@ export default function InventoryManagement() {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-[10px] uppercase text-arcade-secondary mb-1">
+              <label htmlFor="adjustment_type" className="block text-[10px] uppercase text-arcade-secondary mb-1">
                 Adjustment Type
               </label>
               <select
+                id="adjustment_type"
                 value={adjustForm.adjustmentType}
                 onChange={(e) => setAdjustForm({ ...adjustForm, adjustmentType: e.target.value })}
                 className="w-full bg-arcade-surface border border-arcade-border p-2 text-arcade-primary focus:border-arcade-accent focus:outline-none uppercase text-xs"
@@ -341,10 +346,11 @@ export default function InventoryManagement() {
             </div>
 
             <div>
-              <label className="block text-[10px] uppercase text-arcade-secondary mb-1">
-                {adjustForm.adjustmentType === 'delta' ? 'Delta Amount (+/-)' : 'New Absolute Quantity'}
+              <label htmlFor="on_hand_quantity" className="block text-[10px] uppercase text-arcade-secondary mb-1">
+                New On-Hand Quantity
               </label>
               <input
+                id="on_hand_quantity"
                 type="number"
                 required
                 value={adjustForm.quantity}
@@ -355,10 +361,11 @@ export default function InventoryManagement() {
           </div>
 
           <div>
-            <label className="block text-[10px] uppercase text-arcade-secondary mb-1">
+            <label htmlFor="reason" className="block text-[10px] uppercase text-arcade-secondary mb-1">
               Mandatory Audit Reason *
             </label>
             <textarea
+              id="reason"
               rows="3"
               required
               placeholder="e.g. Physical inventory cycle count adjustment; damaged goods written off."
@@ -381,7 +388,7 @@ export default function InventoryManagement() {
               disabled={adjusting}
               className="px-4 py-1.5 bg-arcade-accent text-arcade-surface font-bold uppercase text-xs hover:opacity-90 disabled:opacity-50"
             >
-              {adjusting ? 'Committing...' : 'Commit Stock Adjustment'}
+              {adjusting ? 'Confirming...' : 'Confirm Adjustment'}
             </button>
           </div>
         </form>

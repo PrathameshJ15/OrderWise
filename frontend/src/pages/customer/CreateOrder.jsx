@@ -115,13 +115,9 @@ export default function CreateOrder() {
       } else if (field === 'requestedQuantity') {
         const num = Math.max(1, parseInt(value, 10) || 1);
         item.requestedQuantity = num;
-        // Keep minimum acceptable clamped to requested quantity
-        if (item.minimumAcceptableQuantity > num) {
-          item.minimumAcceptableQuantity = num;
-        }
       } else if (field === 'minimumAcceptableQuantity') {
-        const num = Math.max(1, parseInt(value, 10) || 1);
-        item.minimumAcceptableQuantity = Math.min(item.requestedQuantity, num);
+        const num = parseInt(value, 10);
+        item.minimumAcceptableQuantity = isNaN(num) ? '' : num;
       } else if (field === 'partialDeliveryAllowed') {
         item.partialDeliveryAllowed = Boolean(value);
         if (!value) {
@@ -154,10 +150,12 @@ export default function CreateOrder() {
         setError(`Line #${i + 1}: Requested quantity must be greater than 0.`);
         return;
       }
-      if (itm.minimumAcceptableQuantity <= 0 || itm.minimumAcceptableQuantity > itm.requestedQuantity) {
-        setError(
-          `Line #${i + 1}: Minimum acceptable quantity must be between 1 and ${itm.requestedQuantity}.`
-        );
+      if (Number(itm.minimumAcceptableQuantity) > Number(itm.requestedQuantity)) {
+        setError('Minimum acceptable quantity cannot exceed requested quantity.');
+        return;
+      }
+      if (Number(itm.minimumAcceptableQuantity) <= 0) {
+        setError(`Line #${i + 1}: Minimum acceptable quantity must be at least 1.`);
         return;
       }
     }
@@ -178,12 +176,18 @@ export default function CreateOrder() {
       const payload = {
         items: items.map((i) => ({
           productId: i.productId,
-          requestedQuantity: i.requestedQuantity,
-          minimumAcceptableQuantity: i.minimumAcceptableQuantity,
+          product_id: i.productId,
+          requestedQuantity: Number(i.requestedQuantity),
+          requested_quantity: Number(i.requestedQuantity),
+          minimumAcceptableQuantity: Number(i.minimumAcceptableQuantity),
+          minimum_acceptable_quantity: Number(i.minimumAcceptableQuantity),
           partialDeliveryAllowed: i.partialDeliveryAllowed,
+          partial_delivery_allowed: i.partialDeliveryAllowed,
         })),
         promisedDeliveryDate: promisedDeliveryDate || null,
+        promised_delivery_date: promisedDeliveryDate || null,
         businessNotes: businessNotes.trim() || undefined,
+        business_notes: businessNotes.trim() || undefined,
       };
 
       const res = await apiClient.post('/orders', payload, {
@@ -215,7 +219,7 @@ export default function CreateOrder() {
             <span className="text-arcade-accent">New Order</span>
           </div>
           <h1 className="font-display text-3xl font-extrabold uppercase text-arcade-primary">
-            Create Order
+            Create Order Requisition
           </h1>
           <p className="text-xs text-arcade-secondary mt-1">
             Specify requested quantities and minimum partial thresholds for the allocation engine.
@@ -288,10 +292,11 @@ export default function CreateOrder() {
 
                     {/* Requested Quantity */}
                     <div>
-                      <label className="block text-[10px] uppercase text-arcade-secondary mb-1">
-                        Requested Qty
+                      <label htmlFor={`req-qty-${idx}`} className="block text-[10px] uppercase text-arcade-secondary mb-1">
+                        Requested Quantity
                       </label>
                       <input
+                        id={`req-qty-${idx}`}
                         type="number"
                         min="1"
                         value={item.requestedQuantity}
@@ -302,13 +307,13 @@ export default function CreateOrder() {
 
                     {/* Minimum Acceptable Quantity */}
                     <div>
-                      <label className="block text-[10px] uppercase text-arcade-secondary mb-1">
-                        Min Acceptable
+                      <label htmlFor={`min-qty-${idx}`} className="block text-[10px] uppercase text-arcade-secondary mb-1">
+                        Min Acceptable Quantity
                       </label>
                       <input
+                        id={`min-qty-${idx}`}
                         type="number"
                         min="1"
-                        max={item.requestedQuantity}
                         disabled={!item.partialDeliveryAllowed}
                         value={item.minimumAcceptableQuantity}
                         onChange={(e) =>

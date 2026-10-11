@@ -10,10 +10,14 @@ const inventoryService = require('../services/inventoryService');
 const router = express.Router();
 
 const adjustStockSchema = z.object({
-  adjustmentType: z.enum(['set', 'delta']).default('delta'),
-  quantity: z.number().int(),
+  adjustmentType: z.enum(['set', 'delta']).optional().default('delta'),
+  quantity: z.number().int().optional(),
+  on_hand_quantity: z.number().int().optional(),
   reason: z.string().min(3, 'A clear reason is required for inventory adjustments'),
   expectedVersion: z.number().int().optional(),
+  expected_version: z.number().int().optional(),
+}).refine(data => data.quantity !== undefined || data.on_hand_quantity !== undefined, {
+  message: 'Either quantity or on_hand_quantity must be provided',
 });
 
 // All inventory operations require admin or inventory_manager authority
@@ -44,9 +48,15 @@ router.put(
   validateRequest({ body: adjustStockSchema }),
   asyncHandler(async (req, res) => {
     const meta = { ip: req.ip, userAgent: req.headers['user-agent'] };
+    const payload = {
+      adjustmentType: req.body.on_hand_quantity !== undefined ? 'set' : (req.body.adjustmentType || 'delta'),
+      quantity: req.body.on_hand_quantity !== undefined ? req.body.on_hand_quantity : req.body.quantity,
+      reason: req.body.reason,
+      expectedVersion: req.body.expectedVersion ?? req.body.expected_version,
+    };
     const updated = await inventoryService.adjustStock(
       req.params.productId,
-      req.body,
+      payload,
       req.user.userId,
       meta
     );

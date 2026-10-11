@@ -149,20 +149,24 @@ export default function OrderManagement() {
       )}
 
       {/* Filter Tabs */}
-      <div className="border border-arcade-border bg-arcade-neutral p-4 flex items-center space-x-1 overflow-x-auto">
+      <div role="tablist" className="border border-arcade-border bg-arcade-neutral p-4 flex items-center space-x-1 overflow-x-auto">
         <Filter className="h-3.5 w-3.5 text-arcade-secondary shrink-0 mr-2" />
         {['all', 'pending', 'confirmed', 'allocated', 'partially_allocated', 'cancelled'].map((st) => (
-          <button
+          <div
             key={st}
+            role="tab"
+            tabIndex={0}
+            aria-selected={statusFilter === st}
             onClick={() => setStatusFilter(st)}
-            className={`px-3 py-1 text-xs uppercase tracking-wider whitespace-nowrap transition-colors ${
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setStatusFilter(st); }}
+            className={`cursor-pointer px-3 py-1 text-xs uppercase tracking-wider whitespace-nowrap transition-colors ${
               statusFilter === st
                 ? 'bg-arcade-surface text-arcade-accent font-bold border border-arcade-border'
                 : 'text-arcade-secondary hover:text-arcade-primary'
             }`}
           >
             {st.replace(/_/g, ' ')}
-          </button>
+          </div>
         ))}
       </div>
 
@@ -198,9 +202,7 @@ export default function OrderManagement() {
             <tbody className="divide-y divide-arcade-border/50">
               {filteredOrders.map((ord) => (
                 <tr key={ord.id} className="hover:bg-arcade-surface/50 transition-colors">
-                  <td className="py-3.5 px-4 font-bold text-arcade-primary">
-                    #{ord.id}
-                  </td>
+                  <td className="py-3.5 px-4 font-bold text-arcade-primary">{`#${ord.id}`}</td>
                   <td className="py-3.5 px-3">
                     <div className="font-semibold text-arcade-primary">{ord.customer_name}</div>
                     <div className="text-[10px] text-arcade-secondary">{ord.customer_email}</div>
@@ -209,7 +211,7 @@ export default function OrderManagement() {
                     {ord.promised_delivery_date || 'Standard'}
                   </td>
                   <td className="py-3.5 px-3 text-center">
-                    <Badge priority={ord.approved_priority || 'MEDIUM'} />
+                    <Badge priority={ord.approved_priority || ord.priority_level || ord.priority || 'MEDIUM'} />
                   </td>
                   <td className="py-3.5 px-3 text-right font-semibold text-arcade-primary">
                     {ord.item_count || 1}

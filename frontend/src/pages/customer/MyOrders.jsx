@@ -162,7 +162,7 @@ export default function MyOrders() {
                 >
                   <td className="py-3.5 px-4 font-bold text-arcade-primary group-hover:text-arcade-accent">
                     <Link to={`/orders/${ord.id}`} className="block">
-                      #{ord.id}
+                      {`#${ord.id}`}
                     </Link>
                   </td>
                   <td className="py-3.5 px-3 text-arcade-secondary">

@@ -199,17 +199,6 @@ export default function PlaceholderLayout() {
                   Allocation Center
                 </NavLink>
                 <NavLink
-                  to="/admin/ai"
-                  className={({ isActive }) =>
-                    `px-3 py-1 uppercase tracking-wider transition-colors flex items-center space-x-1 ${
-                      isActive ? 'text-arcade-accent font-bold' : 'text-arcade-secondary hover:text-arcade-primary'
-                    }`
-                  }
-                >
-                  <Sparkles className="h-3 w-3 text-arcade-accent" />
-                  <span>AI Priorities</span>
-                </NavLink>
-                <NavLink
                   to="/admin/products"
                   className={({ isActive }) =>
                     `px-3 py-1 uppercase tracking-wider transition-colors ${
@@ -240,34 +229,49 @@ export default function PlaceholderLayout() {
                   Orders
                 </NavLink>
                 <NavLink
-                  to="/admin/simulations"
+                  to="/admin/ai"
                   className={({ isActive }) =>
-                    `px-3 py-1 uppercase tracking-wider transition-colors ${
+                    `px-3 py-1 uppercase tracking-wider transition-colors flex items-center space-x-1 opacity-75 ${
                       isActive ? 'text-arcade-accent font-bold' : 'text-arcade-secondary hover:text-arcade-primary'
                     }`
                   }
                 >
-                  Simulation Lab
+                  <Sparkles className="h-3 w-3 text-arcade-secondary" />
+                  <span>AI Priorities</span>
+                  <span className="text-[8px] px-1 py-0.2 border border-arcade-border text-arcade-secondary uppercase">Soon</span>
+                </NavLink>
+                <NavLink
+                  to="/admin/simulations"
+                  className={({ isActive }) =>
+                    `px-3 py-1 uppercase tracking-wider transition-colors flex items-center space-x-1 opacity-75 ${
+                      isActive ? 'text-arcade-accent font-bold' : 'text-arcade-secondary hover:text-arcade-primary'
+                    }`
+                  }
+                >
+                  <span>Simulation</span>
+                  <span className="text-[8px] px-1 py-0.2 border border-arcade-border text-arcade-secondary uppercase">Soon</span>
                 </NavLink>
                 <NavLink
                   to="/admin/alerts"
                   className={({ isActive }) =>
-                    `px-3 py-1 uppercase tracking-wider transition-colors ${
+                    `px-3 py-1 uppercase tracking-wider transition-colors flex items-center space-x-1 opacity-75 ${
                       isActive ? 'text-arcade-warning font-bold' : 'text-arcade-secondary hover:text-arcade-warning'
                     }`
                   }
                 >
-                  Alerts
+                  <span>Alerts</span>
+                  <span className="text-[8px] px-1 py-0.2 border border-arcade-border text-arcade-secondary uppercase">Soon</span>
                 </NavLink>
                 <NavLink
                   to="/admin/replenishment"
                   className={({ isActive }) =>
-                    `px-3 py-1 uppercase tracking-wider transition-colors ${
+                    `px-3 py-1 uppercase tracking-wider transition-colors flex items-center space-x-1 opacity-75 ${
                       isActive ? 'text-arcade-accent font-bold' : 'text-arcade-secondary hover:text-arcade-primary'
                     }`
                   }
                 >
-                  Replenishment
+                  <span>Replenishment</span>
+                  <span className="text-[8px] px-1 py-0.2 border border-arcade-border text-arcade-secondary uppercase">Soon</span>
                 </NavLink>
               </>
             )}

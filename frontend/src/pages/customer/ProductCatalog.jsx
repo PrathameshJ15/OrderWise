@@ -58,7 +58,7 @@ export default function ProductCatalog() {
           <Search className="h-3.5 w-3.5 text-arcade-secondary" />
           <input
             type="text"
-            placeholder="Search by SKU or name..."
+            placeholder="Search catalog by product name or SKU..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="bg-transparent text-arcade-primary focus:outline-none text-xs w-full placeholder-arcade-secondary/60"
