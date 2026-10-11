@@ -36,6 +36,28 @@ export default function Login() {
     }
   };
 
+  const handleQuickLogin = async (demoEmail, demoPassword) => {
+    setEmail(demoEmail);
+    setPassword(demoPassword);
+    setLocalError(null);
+    setSubmitting(true);
+
+    try {
+      const user = await login(demoEmail, demoPassword);
+      if (from) {
+        navigate(from, { replace: true });
+      } else if (user.role === 'admin' || user.role === 'inventory_manager') {
+        navigate('/admin', { replace: true });
+      } else {
+        navigate('/dashboard', { replace: true });
+      }
+    } catch (err) {
+      setLocalError(err?.error?.message || err?.message || 'Authentication failed');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   const fillCredentials = (demoEmail, demoPassword) => {
     setEmail(demoEmail);
     setPassword(demoPassword);
@@ -126,30 +148,38 @@ export default function Login() {
           </button>
         </form>
 
-        {/* Demo Fast-Fill Shortcuts */}
+        {/* Demo Fast-Fill & 1-Click Access Shortcuts */}
         <div className="mt-6 pt-6 border-t border-arcade-border">
-          <span className="block text-[10px] uppercase tracking-widest text-arcade-secondary mb-2">
-            Quick Demo Accounts
-          </span>
+          <div className="flex items-center justify-between mb-2">
+            <span className="block text-[10px] uppercase tracking-widest text-arcade-secondary">
+              Quick Demo Accounts
+            </span>
+            <span className="text-[9px] text-arcade-accent uppercase tracking-wider">
+              1-Click Fast Login
+            </span>
+          </div>
           <div className="grid grid-cols-3 gap-2 text-[10px]">
             <button
               type="button"
-              onClick={() => fillCredentials('admin@orderwise.com', 'Admin123!')}
-              className="px-2 py-1.5 border border-arcade-border bg-arcade-surface hover:border-arcade-accent text-arcade-primary text-center truncate transition-colors"
+              disabled={submitting}
+              onClick={() => handleQuickLogin('admin@orderwise.com', 'Admin123!')}
+              className="px-2 py-2 border border-arcade-border bg-arcade-surface hover:border-arcade-accent hover:bg-arcade-accent/10 text-arcade-primary text-center font-bold truncate transition-all disabled:opacity-50"
             >
               Admin
             </button>
             <button
               type="button"
-              onClick={() => fillCredentials('manager@orderwise.com', 'Manager123!')}
-              className="px-2 py-1.5 border border-arcade-border bg-arcade-surface hover:border-arcade-accent text-arcade-primary text-center truncate transition-colors"
+              disabled={submitting}
+              onClick={() => handleQuickLogin('manager@orderwise.com', 'Manager123!')}
+              className="px-2 py-2 border border-arcade-border bg-arcade-surface hover:border-arcade-accent hover:bg-arcade-accent/10 text-arcade-primary text-center font-bold truncate transition-all disabled:opacity-50"
             >
               Manager
             </button>
             <button
               type="button"
-              onClick={() => fillCredentials('alice@demo.com', 'Alice123!')}
-              className="px-2 py-1.5 border border-arcade-border bg-arcade-surface hover:border-arcade-accent text-arcade-primary text-center truncate transition-colors"
+              disabled={submitting}
+              onClick={() => handleQuickLogin('alice@demo.com', 'Alice123!')}
+              className="px-2 py-2 border border-arcade-border bg-arcade-surface hover:border-arcade-accent hover:bg-arcade-accent/10 text-arcade-primary text-center font-bold truncate transition-all disabled:opacity-50"
             >
               Customer
             </button>

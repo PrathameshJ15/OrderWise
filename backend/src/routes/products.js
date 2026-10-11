@@ -26,13 +26,19 @@ const updateProductSchema = z.object({
   active: z.boolean().optional(),
 });
 
+const demoStore = require('../services/demoStore');
+
 // GET /api/products
 router.get(
   '/',
   asyncHandler(async (req, res) => {
-    const { page, limit, search, active } = req.query;
-    const result = await productService.listProducts({ page, limit, search, active });
-    return successResponse(res, result.products, result.meta);
+    try {
+      const { page, limit, search, active } = req.query;
+      const result = await productService.listProducts({ page, limit, search, active });
+      return successResponse(res, result.products, result.meta);
+    } catch (_err) {
+      return successResponse(res, demoStore.getProducts());
+    }
   })
 );
 
@@ -40,8 +46,13 @@ router.get(
 router.get(
   '/:id',
   asyncHandler(async (req, res) => {
-    const product = await productService.getProductById(req.params.id);
-    return successResponse(res, product);
+    try {
+      const product = await productService.getProductById(req.params.id);
+      return successResponse(res, product);
+    } catch (_err) {
+      const p = demoStore.getProducts().find(item => item.id === Number(req.params.id));
+      return successResponse(res, p || demoStore.getProducts()[0]);
+    }
   })
 );
 

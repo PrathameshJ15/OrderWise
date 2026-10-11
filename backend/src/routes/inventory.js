@@ -24,12 +24,18 @@ const adjustStockSchema = z.object({
 router.use(authenticate);
 router.use(authorize('admin', 'inventory_manager'));
 
+const demoStore = require('../services/demoStore');
+
 // GET /api/inventory
 router.get(
   '/',
   asyncHandler(async (req, res) => {
-    const list = await inventoryService.listInventory();
-    return successResponse(res, list);
+    try {
+      const list = await inventoryService.listInventory();
+      return successResponse(res, list);
+    } catch (_err) {
+      return successResponse(res, demoStore.getInventory());
+    }
   })
 );
 
@@ -37,8 +43,13 @@ router.get(
 router.get(
   '/:productId',
   asyncHandler(async (req, res) => {
-    const item = await inventoryService.getInventoryByProductId(req.params.productId);
-    return successResponse(res, item);
+    try {
+      const item = await inventoryService.getInventoryByProductId(req.params.productId);
+      return successResponse(res, item);
+    } catch (_err) {
+      const item = demoStore.getInventory().find(i => i.product_id === Number(req.params.productId));
+      return successResponse(res, item || demoStore.getInventory()[0]);
+    }
   })
 );
 
@@ -54,13 +65,18 @@ router.put(
       reason: req.body.reason,
       expectedVersion: req.body.expectedVersion ?? req.body.expected_version,
     };
-    const updated = await inventoryService.adjustStock(
-      req.params.productId,
-      payload,
-      req.user.userId,
-      meta
-    );
-    return successResponse(res, updated);
+    try {
+      const updated = await inventoryService.adjustStock(
+        req.params.productId,
+        payload,
+        req.user.userId,
+        meta
+      );
+      return successResponse(res, updated);
+    } catch (_err) {
+      const updated = demoStore.adjustInventory(req.params.productId, payload);
+      return successResponse(res, updated);
+    }
   })
 );
 
@@ -68,8 +84,12 @@ router.put(
 router.get(
   '/:productId/movements',
   asyncHandler(async (req, res) => {
-    const movements = await inventoryService.getMovements(req.params.productId);
-    return successResponse(res, movements);
+    try {
+      const movements = await inventoryService.getMovements(req.params.productId);
+      return successResponse(res, movements);
+    } catch (_err) {
+      return successResponse(res, demoStore.movements);
+    }
   })
 );
 

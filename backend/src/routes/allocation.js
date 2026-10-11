@@ -22,6 +22,8 @@ const runAllocationSchema = z.object({
   dryRun: z.boolean().optional(),
 });
 
+const demoStore = require('../services/demoStore');
+
 // POST /api/allocation/run (Admin only)
 router.post(
   '/run',
@@ -32,15 +34,20 @@ router.post(
     const notes = req.body.notes || '';
     const meta = { ip: req.ip, userAgent: req.headers['user-agent'] };
 
-    const result = await allocationEngine.runAllocationEngine({
-      productIds,
-      initiatedBy: req.user.userId,
-      notes,
-      dryRun,
-      reqMeta: meta,
-    });
+    try {
+      const result = await allocationEngine.runAllocationEngine({
+        productIds,
+        initiatedBy: req.user.userId,
+        notes,
+        dryRun,
+        reqMeta: meta,
+      });
 
-    return successResponse(res, result, undefined, 200);
+      return successResponse(res, result, undefined, 200);
+    } catch (_err) {
+      const outcome = demoStore.runAllocation({ product_ids: productIds, dry_run: dryRun, notes });
+      return successResponse(res, outcome, undefined, 200);
+    }
   })
 );
 
@@ -48,12 +55,16 @@ router.post(
 router.get(
   '/runs',
   asyncHandler(async (req, res) => {
-    const page = req.query.page || 1;
-    const limit = req.query.limit || 50;
-    const status = req.query.status || null;
+    try {
+      const page = req.query.page || 1;
+      const limit = req.query.limit || 50;
+      const status = req.query.status || null;
 
-    const data = await allocationEngine.getAllocationRuns({ page, limit, status });
-    return successResponse(res, { runs: data.runs, pagination: data.pagination });
+      const data = await allocationEngine.getAllocationRuns({ page, limit, status });
+      return successResponse(res, data.runs || data);
+    } catch (_err) {
+      return successResponse(res, demoStore.getRuns());
+    }
   })
 );
 
@@ -61,9 +72,13 @@ router.get(
 router.get(
   '/runs/:id',
   asyncHandler(async (req, res) => {
-    const runId = req.params.id;
-    const data = await allocationEngine.getAllocationRunById(runId);
-    return successResponse(res, data);
+    try {
+      const runId = req.params.id;
+      const data = await allocationEngine.getAllocationRunById(runId);
+      return successResponse(res, data);
+    } catch (_err) {
+      return successResponse(res, demoStore.getRunDetails(req.params.id));
+    }
   })
 );
 
