@@ -56,7 +56,13 @@ router.get(
   '/me',
   authenticate,
   asyncHandler(async (req, res) => {
-    return successResponse(res, { user: req.user });
+    return successResponse(res, {
+      id: req.user.userId || req.user.id,
+      name: req.user.name,
+      email: req.user.email,
+      role: req.user.role,
+      user: req.user,
+    });
   })
 );
 

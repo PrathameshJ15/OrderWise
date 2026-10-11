@@ -4,8 +4,9 @@ const { validateRequest } = require('../middleware/validate');
 const { authenticate } = require('../middleware/auth');
 const { authorize } = require('../middleware/rbac');
 const asyncHandler = require('../middleware/asyncHandler');
-const { successResponse } = require('../utils/response');
+const { successResponse, errorResponse } = require('../utils/response');
 const allocationEngine = require('../services/allocationEngine');
+const { query } = require('../config/db');
 
 const router = express.Router();
 
@@ -48,11 +49,11 @@ router.get(
   '/runs',
   asyncHandler(async (req, res) => {
     const page = req.query.page || 1;
-    const limit = req.query.limit || 20;
+    const limit = req.query.limit || 50;
     const status = req.query.status || null;
 
     const data = await allocationEngine.getAllocationRuns({ page, limit, status });
-    return successResponse(res, data.runs, { pagination: data.pagination });
+    return successResponse(res, { runs: data.runs, pagination: data.pagination });
   })
 );
 
@@ -63,6 +64,39 @@ router.get(
     const runId = req.params.id;
     const data = await allocationEngine.getAllocationRunById(runId);
     return successResponse(res, data);
+  })
+);
+
+// GET /api/allocation/impact/:runId - Compare run against immediately preceding run
+router.get(
+  '/impact/:runId',
+  asyncHandler(async (req, res) => {
+    const { runId } = req.params;
+    const currentRunId = parseInt(runId, 10);
+
+    const prevRunRes = await query(
+      `SELECT id FROM allocation_runs
+       WHERE id < $1 AND status = 'completed'
+       ORDER BY id DESC
+       LIMIT 1`,
+      [currentRunId]
+    );
+
+    if (prevRunRes.rowCount === 0) {
+      return errorResponse(
+        res,
+        'No previous allocation run found to compare against.',
+        'NOT_FOUND',
+        {},
+        404
+      );
+    }
+
+    const { compareRuns } = require('../services/impactAnalyzer');
+    const previousRunId = prevRunRes.rows[0].id;
+    const comparison = await compareRuns(previousRunId, currentRunId);
+
+    return successResponse(res, { impact: comparison });
   })
 );
 

@@ -178,6 +178,9 @@ async function seed(client = null) {
     },
   ];
 
+  const seedNotes = ordersToSeed.map((o) => o.notes);
+  await runner.query('DELETE FROM orders WHERE NOT (business_notes = ANY($1::text[]))', [seedNotes]);
+
   for (const o of ordersToSeed) {
     const customerId = userMap[o.customerEmail];
     

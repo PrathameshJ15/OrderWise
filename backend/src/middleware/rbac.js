@@ -20,10 +20,11 @@ const PERMISSIONS = {
 
 /**
  * RBAC authorization middleware factory.
- * @param  {...string} roles - e.g. ('admin', 'inventory_manager') or ('ADMIN', 'CUSTOMER')
+ * @param  {...string} roles - e.g. ('admin', 'inventory_manager') or ['admin']
  */
 function authorize(...roles) {
-  const normalizedAllowed = roles.map((r) => r.toLowerCase());
+  const flattened = roles.flat();
+  const normalizedAllowed = flattened.map((r) => String(r).toLowerCase());
 
   return function (req, res, next) {
     if (!req.user) {
@@ -35,9 +36,9 @@ function authorize(...roles) {
     if (!normalizedAllowed.includes(userRole) && !normalizedAllowed.includes('*')) {
       return errorResponse(
         res,
-        `Access denied: required role in [${roles.join(', ')}], current role is "${req.user.role}"`,
+        `Access denied. Role '${req.user ? req.user.role : 'unauthenticated'}' lacks permission for this action.`,
         'FORBIDDEN',
-        { requiredRoles: roles, currentRole: req.user.role },
+        { requiredRoles: flattened, currentRole: req.user.role },
         403
       );
     }
@@ -46,9 +47,8 @@ function authorize(...roles) {
   };
 }
 
-module.exports = {
-  authorize,
-  rbac: authorize,
-  ROLES,
-  PERMISSIONS,
-};
+module.exports = authorize;
+module.exports.authorize = authorize;
+module.exports.rbac = authorize;
+module.exports.ROLES = ROLES;
+module.exports.PERMISSIONS = PERMISSIONS;

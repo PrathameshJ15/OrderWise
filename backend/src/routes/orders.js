@@ -6,19 +6,29 @@ const { authorize } = require('../middleware/rbac');
 const asyncHandler = require('../middleware/asyncHandler');
 const { successResponse, AppError } = require('../utils/response');
 const orderService = require('../services/orderService');
+const { query } = require('../config/db');
 
 const router = express.Router();
 
 const orderItemSchema = z.object({
   productId: z.coerce.number().int().positive('Product ID must be a positive integer'),
   requestedQuantity: z.coerce.number().int().positive('Requested quantity must be greater than 0'),
-  minimumAcceptableQuantity: z.coerce.number().int().positive('Minimum acceptable quantity must be greater than 0').optional(),
+  minimumAcceptableQuantity: z
+    .coerce
+    .number()
+    .int()
+    .positive('Minimum acceptable quantity must be greater than 0')
+    .optional(),
   partialDeliveryAllowed: z.boolean().default(true),
 });
 
 const createOrderSchema = z.object({
   items: z.array(orderItemSchema).min(1, 'At least one item is required'),
-  promisedDeliveryDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date format must be YYYY-MM-DD').nullable().optional(),
+  promisedDeliveryDate: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, 'Date format must be YYYY-MM-DD')
+    .nullable()
+    .optional(),
   businessNotes: z.string().optional(),
 });
 
@@ -56,12 +66,46 @@ router.post(
   })
 );
 
+// GET /api/orders/my (Customer view own orders)
+router.get(
+  '/my',
+  asyncHandler(async (req, res) => {
+    const result = await orderService.listOrders(
+      { customerId: req.user.userId, limit: 100 },
+      req.user
+    );
+    return successResponse(res, result.orders, result.meta);
+  })
+);
+
 // GET /api/orders (List orders - customers see own, admin/manager see all)
 router.get(
   '/',
   asyncHandler(async (req, res) => {
     const { page, limit, status, customerId } = req.query;
     const result = await orderService.listOrders({ page, limit, status, customerId }, req.user);
+
+    // Also enrich with latest_recommendation if available
+    if (result.orders && result.orders.length > 0) {
+      const orderIds = result.orders.map((o) => o.id);
+      const recsRes = await query(
+        `SELECT DISTINCT ON (order_id)
+           id, order_id, suggested_priority, confidence, status, provider,
+           model, prompt_version, explanation, evidence, warning, created_at
+         FROM ai_recommendations
+         WHERE order_id = ANY($1)
+         ORDER BY order_id, created_at DESC;`,
+        [orderIds]
+      );
+      const recMap = new Map();
+      for (const r of recsRes.rows) {
+        recMap.set(r.order_id, r);
+      }
+      for (const o of result.orders) {
+        o.latest_recommendation = recMap.get(o.id) || null;
+      }
+    }
+
     return successResponse(res, result.orders, result.meta);
   })
 );
@@ -71,6 +115,14 @@ router.get(
   '/:id',
   asyncHandler(async (req, res) => {
     const order = await orderService.getOrderById(req.params.id, req.user);
+
+    // Also fetch recommendations list if present
+    const recsRes = await query(
+      `SELECT * FROM ai_recommendations WHERE order_id = $1 ORDER BY created_at DESC`,
+      [req.params.id]
+    );
+    order.recommendations = recsRes.rows;
+
     return successResponse(res, order);
   })
 );

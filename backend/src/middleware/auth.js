@@ -18,7 +18,7 @@ async function authenticate(req, res, next) {
     // Look up active user in DB
     const userRes = await query(
       `SELECT id, name, email, role, active FROM users WHERE id = $1 LIMIT 1;`,
-      [decoded.userId]
+      [decoded.userId || decoded.id]
     );
 
     if (userRes.rowCount === 0) {
@@ -41,11 +41,14 @@ async function authenticate(req, res, next) {
 
     next();
   } catch (err) {
-    if (err instanceof jwt.TokenExpiredError) {
+    if (err instanceof jwt.TokenExpiredError || err.name === 'TokenExpiredError') {
       return errorResponse(res, 'Authentication token has expired', 'TOKEN_EXPIRED', null, 401);
     }
     return errorResponse(res, 'Invalid authentication token', 'INVALID_TOKEN', null, 401);
   }
 }
 
-module.exports = { authenticate, auth: authenticate };
+// Support both `const auth = require(...)` and `const { authenticate } = require(...)`
+module.exports = authenticate;
+module.exports.authenticate = authenticate;
+module.exports.auth = authenticate;

@@ -1,13 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { Outlet, Link } from 'react-router-dom';
-import { RefreshCw, CheckCircle2, AlertCircle, LogIn, UserPlus, LogOut, User } from 'lucide-react';
+import { Outlet, Link, NavLink } from 'react-router-dom';
+import {
+  RefreshCw,
+  CheckCircle2,
+  AlertCircle,
+  LogIn,
+  UserPlus,
+  LogOut,
+  User,
+  Sparkles,
+} from 'lucide-react';
 import apiClient from '../../api/client';
 import { useAuth } from '../../hooks/useAuth';
 
 export default function PlaceholderLayout() {
   const [health, setHealth] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [_error, setError] = useState(null);
 
   const { user, logout } = useAuth();
 
@@ -123,11 +132,152 @@ export default function PlaceholderLayout() {
             )}
           </div>
         </div>
+
+        {/* Primary Role-Aware Navigation Bar */}
+        {user && (
+          <div className="max-w-7xl mx-auto mt-3 pt-2.5 border-t border-arcade-border/60 flex items-center space-x-1 overflow-x-auto text-xs">
+            {user.role === 'customer' ? (
+              <>
+                <NavLink
+                  to="/dashboard"
+                  className={({ isActive }) =>
+                    `px-3 py-1 uppercase tracking-wider transition-colors ${
+                      isActive ? 'text-arcade-accent font-bold' : 'text-arcade-secondary hover:text-arcade-primary'
+                    }`
+                  }
+                >
+                  Dashboard
+                </NavLink>
+                <NavLink
+                  to="/products"
+                  className={({ isActive }) =>
+                    `px-3 py-1 uppercase tracking-wider transition-colors ${
+                      isActive ? 'text-arcade-accent font-bold' : 'text-arcade-secondary hover:text-arcade-primary'
+                    }`
+                  }
+                >
+                  Catalog
+                </NavLink>
+                <NavLink
+                  to="/orders/new"
+                  className="px-3 py-1 text-arcade-accent hover:text-arcade-accent uppercase tracking-wider transition-colors font-bold"
+                >
+                  + Create Order
+                </NavLink>
+                <NavLink
+                  to="/orders"
+                  className={({ isActive }) =>
+                    `px-3 py-1 uppercase tracking-wider transition-colors ${
+                      isActive ? 'text-arcade-accent font-bold' : 'text-arcade-secondary hover:text-arcade-primary'
+                    }`
+                  }
+                >
+                  My Orders
+                </NavLink>
+              </>
+            ) : (
+              <>
+                <NavLink
+                  to="/admin"
+                  end
+                  className={({ isActive }) =>
+                    `px-3 py-1 uppercase tracking-wider transition-colors ${
+                      isActive ? 'text-arcade-accent font-bold' : 'text-arcade-secondary hover:text-arcade-primary'
+                    }`
+                  }
+                >
+                  Console
+                </NavLink>
+                <NavLink
+                  to="/admin/allocation"
+                  className={({ isActive }) =>
+                    `px-3 py-1 uppercase tracking-wider transition-colors ${
+                      isActive ? 'text-arcade-accent font-bold' : 'text-arcade-secondary hover:text-arcade-primary'
+                    }`
+                  }
+                >
+                  Allocation Center
+                </NavLink>
+                <NavLink
+                  to="/admin/ai"
+                  className={({ isActive }) =>
+                    `px-3 py-1 uppercase tracking-wider transition-colors flex items-center space-x-1 ${
+                      isActive ? 'text-arcade-accent font-bold' : 'text-arcade-secondary hover:text-arcade-primary'
+                    }`
+                  }
+                >
+                  <Sparkles className="h-3 w-3 text-arcade-accent" />
+                  <span>AI Priorities</span>
+                </NavLink>
+                <NavLink
+                  to="/admin/products"
+                  className={({ isActive }) =>
+                    `px-3 py-1 uppercase tracking-wider transition-colors ${
+                      isActive ? 'text-arcade-accent font-bold' : 'text-arcade-secondary hover:text-arcade-primary'
+                    }`
+                  }
+                >
+                  Products
+                </NavLink>
+                <NavLink
+                  to="/admin/inventory"
+                  className={({ isActive }) =>
+                    `px-3 py-1 uppercase tracking-wider transition-colors ${
+                      isActive ? 'text-arcade-accent font-bold' : 'text-arcade-secondary hover:text-arcade-primary'
+                    }`
+                  }
+                >
+                  Inventory
+                </NavLink>
+                <NavLink
+                  to="/admin/orders"
+                  className={({ isActive }) =>
+                    `px-3 py-1 uppercase tracking-wider transition-colors ${
+                      isActive ? 'text-arcade-accent font-bold' : 'text-arcade-secondary hover:text-arcade-primary'
+                    }`
+                  }
+                >
+                  Orders
+                </NavLink>
+                <NavLink
+                  to="/admin/simulations"
+                  className={({ isActive }) =>
+                    `px-3 py-1 uppercase tracking-wider transition-colors ${
+                      isActive ? 'text-arcade-accent font-bold' : 'text-arcade-secondary hover:text-arcade-primary'
+                    }`
+                  }
+                >
+                  Simulation Lab
+                </NavLink>
+                <NavLink
+                  to="/admin/alerts"
+                  className={({ isActive }) =>
+                    `px-3 py-1 uppercase tracking-wider transition-colors ${
+                      isActive ? 'text-arcade-warning font-bold' : 'text-arcade-secondary hover:text-arcade-warning'
+                    }`
+                  }
+                >
+                  Alerts
+                </NavLink>
+                <NavLink
+                  to="/admin/replenishment"
+                  className={({ isActive }) =>
+                    `px-3 py-1 uppercase tracking-wider transition-colors ${
+                      isActive ? 'text-arcade-accent font-bold' : 'text-arcade-secondary hover:text-arcade-primary'
+                    }`
+                  }
+                >
+                  Replenishment
+                </NavLink>
+              </>
+            )}
+          </div>
+        )}
       </header>
 
       {/* Main Content Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto p-6">
-        <Outlet context={{ health, loading, error, refreshHealth: fetchHealth }} />
+        <Outlet context={{ health, loading, refreshHealth: fetchHealth }} />
       </main>
 
       {/* Footer */}

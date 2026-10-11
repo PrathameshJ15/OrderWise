@@ -4,8 +4,10 @@ const authRoutes = require('./auth');
 const productRoutes = require('./products');
 const inventoryRoutes = require('./inventory');
 const orderRoutes = require('./orders');
-
+const priorityRoutes = require('./priorities');
+const aiRoutes = require('./ai');
 const allocationRoutes = require('./allocation');
+const impactRoutes = require('./impact');
 
 const router = express.Router();
 
@@ -20,15 +22,14 @@ router.use('/products', productRoutes);
 router.use('/inventory', inventoryRoutes);
 router.use('/orders', orderRoutes);
 
+// Priorities & AI Priority Assistant
+router.use('/priorities', priorityRoutes);
+router.use('/ai', aiRoutes);
+
 // Allocation Engine
 router.use('/allocation', allocationRoutes);
 
-// Placeholder routes for subsequent phases can be mounted here
-// router.use('/priorities', priorityRoutes);
-// router.use('/ai', aiRoutes);
-// router.use('/simulations', simulationRoutes);
-// router.use('/alerts', alertRoutes);
-// router.use('/replenishment', replenishmentRoutes);
-// router.use('/reports', reportRoutes);
+// Allocation Impact Analyzer
+router.use('/impact', impactRoutes);
 
 module.exports = router;
