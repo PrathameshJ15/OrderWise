@@ -72,9 +72,29 @@ router.put(
         req.user.userId,
         meta
       );
+      if (updated && updated.on_hand_quantity <= (updated.reorder_point || 30)) {
+        const eventHub = require('../services/eventHub');
+        eventHub.broadcastEvent({
+          type: 'new_alert',
+          title: `Low Stock Alert: Product #${req.params.productId}`,
+          message: `Stock level dropped to ${updated.on_hand_quantity} units (at or below reorder threshold).`,
+          data: { productId: req.params.productId, onHand: updated.on_hand_quantity },
+          targetRoles: ['admin', 'inventory_manager'],
+        }).catch(() => {});
+      }
       return successResponse(res, updated);
     } catch (_err) {
       const updated = demoStore.adjustInventory(req.params.productId, payload);
+      if (updated && updated.on_hand_quantity <= (updated.reorder_point || 30)) {
+        const eventHub = require('../services/eventHub');
+        eventHub.broadcastEvent({
+          type: 'new_alert',
+          title: `Low Stock Alert: Product #${req.params.productId}`,
+          message: `Stock level dropped to ${updated.on_hand_quantity} units (at or below reorder threshold).`,
+          data: { productId: req.params.productId, onHand: updated.on_hand_quantity },
+          targetRoles: ['admin', 'inventory_manager'],
+        }).catch(() => {});
+      }
       return successResponse(res, updated);
     }
   })

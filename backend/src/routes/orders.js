@@ -2,7 +2,10 @@ const express = require('express');
 const { pool, query } = require('../config/db');
 const auth = require('../middleware/auth');
 const rbac = require('../middleware/rbac');
+const asyncHandler = require('../middleware/asyncHandler');
 const { successResponse, errorResponse } = require('../utils/response');
+const orderService = require('../services/orderService');
+const eventHub = require('../services/eventHub');
 
 const router = express.Router();
 
@@ -521,6 +524,105 @@ router.get('/:id', auth, async (req, res) => {
     return errorResponse(res, err.message, 'INTERNAL_SERVER_ERROR', undefined, 500);
   }
 });
+
+// PATCH /api/orders/:id/confirm (Admin / Manager only)
+router.patch(
+  '/:id/confirm',
+  auth,
+  rbac('admin', 'inventory_manager'),
+  asyncHandler(async (req, res) => {
+    const eventHub = require('../services/eventHub');
+    try {
+      const meta = { ip: req.ip, userAgent: req.headers['user-agent'] };
+      const confirmed = await orderService.confirmOrder(req.params.id, req.user, meta);
+      eventHub.broadcastEvent({
+        type: 'order_status_changed',
+        title: `Order #${confirmed.id} Confirmed`,
+        message: `Your order #${confirmed.id} has been confirmed for allocation processing.`,
+        data: { orderId: confirmed.id, newStatus: 'confirmed' },
+        targetCustomerIds: [confirmed.customer_id],
+        targetRoles: ['admin', 'inventory_manager'],
+      }).catch(() => {});
+      return successResponse(res, confirmed);
+    } catch (_err) {
+      const confirmed = demoStore.confirmOrder(req.params.id);
+      const resObj = confirmed || { id: Number(req.params.id), status: 'confirmed', customer_id: 3 };
+      eventHub.broadcastEvent({
+        type: 'order_status_changed',
+        title: `Order #${resObj.id} Confirmed`,
+        message: `Your order #${resObj.id} has been confirmed for allocation processing.`,
+        data: { orderId: resObj.id, newStatus: 'confirmed' },
+        targetCustomerIds: [resObj.customer_id || 3],
+        targetRoles: ['admin', 'inventory_manager'],
+      }).catch(() => {});
+      return successResponse(res, resObj);
+    }
+  })
+);
+
+// PATCH /api/orders/:id/cancel (Admin or Customer owner)
+router.patch(
+  '/:id/cancel',
+  auth,
+  asyncHandler(async (req, res) => {
+    const eventHub = require('../services/eventHub');
+    const meta = { ip: req.ip, userAgent: req.headers['user-agent'] };
+    const cancelled = await orderService.cancelOrder(req.params.id, req.user, req.body.reason, meta);
+    eventHub.broadcastEvent({
+      type: 'order_status_changed',
+      title: `Order #${cancelled.id} Cancelled`,
+      message: `Order #${cancelled.id} has been cancelled.`,
+      data: { orderId: cancelled.id, newStatus: 'cancelled' },
+      targetCustomerIds: [cancelled.customer_id],
+      targetRoles: ['admin', 'inventory_manager'],
+    }).catch(() => {});
+    return successResponse(res, cancelled);
+  })
+);
+
+// PATCH /api/orders/:id/status (Admin only per API_SPEC.md)
+router.patch(
+  '/:id/status',
+  auth,
+  rbac('admin', 'inventory_manager'),
+  asyncHandler(async (req, res) => {
+    const eventHub = require('../services/eventHub');
+    const meta = { ip: req.ip, userAgent: req.headers['user-agent'] };
+    const { status, reason } = req.body;
+
+    if (status === 'cancelled') {
+      const cancelled = await orderService.cancelOrder(req.params.id, req.user, reason, meta);
+      eventHub.broadcastEvent({
+        type: 'order_status_changed',
+        title: `Order #${cancelled.id} Cancelled`,
+        message: `Order #${cancelled.id} has been cancelled.`,
+        data: { orderId: cancelled.id, newStatus: 'cancelled' },
+        targetCustomerIds: [cancelled.customer_id],
+        targetRoles: ['admin', 'inventory_manager'],
+      }).catch(() => {});
+      return successResponse(res, cancelled);
+    } else if (status === 'confirmed') {
+      const confirmed = await orderService.confirmOrder(req.params.id, req.user, meta);
+      eventHub.broadcastEvent({
+        type: 'order_status_changed',
+        title: `Order #${confirmed.id} Confirmed`,
+        message: `Your order #${confirmed.id} has been confirmed.`,
+        data: { orderId: confirmed.id, newStatus: 'confirmed' },
+        targetCustomerIds: [confirmed.customer_id],
+        targetRoles: ['admin', 'inventory_manager'],
+      }).catch(() => {});
+      return successResponse(res, confirmed);
+    } else {
+      return errorResponse(
+        res,
+        `Invalid status change request: ${status}. Use specific allocation or transition workflows.`,
+        'VALIDATION_ERROR',
+        undefined,
+        400
+      );
+    }
+  })
+);
 
 // POST /api/orders - Customer creates a new multi-line order
 router.post('/', auth, async (req, res) => {

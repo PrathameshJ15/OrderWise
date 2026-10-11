@@ -54,6 +54,22 @@ router.post(
   '/scan',
   asyncHandler(async (req, res) => {
     const result = await scanAndGenerateAlerts();
+
+    if (result && (result.new_alerts_created > 0 || (result.newAlerts && result.newAlerts.length > 0))) {
+      try {
+        const eventHub = require('../services/eventHub');
+        eventHub.broadcastEvent({
+          type: 'new_alert',
+          title: `Inventory Shortage Alert Detected`,
+          message: `${result.new_alerts_created || result.newAlerts?.length || 1} new system alert(s) generated during inventory audit scan.`,
+          data: result,
+          targetRoles: ['admin', 'inventory_manager'],
+        }).catch(() => {});
+      } catch {
+        // Safe ignore if eventHub offline
+      }
+    }
+
     return successResponse(res, result);
   })
 );

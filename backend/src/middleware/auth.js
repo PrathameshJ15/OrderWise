@@ -3,14 +3,17 @@ const { env } = require('../config/env');
 const { errorResponse } = require('../utils/response');
 
 function auth(req, res, next) {
+  let token = null;
   const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return errorResponse(res, 'Authentication token required', 'UNAUTHORIZED', {}, 401);
+
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    token = authHeader.split(' ')[1];
+  } else if (req.query && req.query.token) {
+    token = req.query.token;
   }
 
-  const token = authHeader.split(' ')[1];
   if (!token) {
-    return errorResponse(res, 'Invalid authorization format', 'UNAUTHORIZED', {}, 401);
+    return errorResponse(res, 'Authentication token required', 'UNAUTHORIZED', {}, 401);
   }
 
   try {
@@ -20,6 +23,7 @@ function auth(req, res, next) {
       id: decoded.userId || decoded.id,
       role: decoded.role,
       email: decoded.email,
+      name: decoded.name,
     };
     return next();
   } catch (err) {
@@ -49,6 +53,7 @@ function optionalAuth(req, res, next) {
       id: decoded.userId || decoded.id,
       role: decoded.role,
       email: decoded.email,
+      name: decoded.name,
     };
   } catch {
     // Ignore invalid token in optional auth
@@ -59,4 +64,5 @@ function optionalAuth(req, res, next) {
 
 module.exports = auth;
 module.exports.auth = auth;
+module.exports.authenticate = auth;
 module.exports.optionalAuth = optionalAuth;

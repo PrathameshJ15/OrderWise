@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import apiClient from '../../api/client';
 import { useAuth } from '../../hooks/useAuth';
+import NotificationBell from '../ui/NotificationBell';
 
 export default function PlaceholderLayout() {
   const [health, setHealth] = useState(null);
@@ -91,9 +92,10 @@ export default function PlaceholderLayout() {
               </span>
             </div>
 
-            {/* Auth Controls */}
+            {/* Auth Controls & Notification Bell */}
             {user ? (
               <div className="flex items-center space-x-2 pl-2 border-l border-arcade-border">
+                <NotificationBell />
                 <Link
                   to={user.role === 'customer' ? '/dashboard' : '/admin'}
                   className="flex items-center space-x-1.5 text-arcade-primary hover:text-arcade-accent transition-colors py-1 px-2 border border-arcade-border bg-arcade-surface"

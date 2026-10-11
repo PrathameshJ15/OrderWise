@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import apiClient from '../../api/client';
 import StatusPill from '../../components/ui/StatusPill';
+import { useNotifications } from '../../contexts/NotificationContext';
 
 export default function MyOrders() {
   const [orders, setOrders] = useState([]);
@@ -17,6 +18,8 @@ export default function MyOrders() {
   const [error, setError] = useState(null);
   const [statusFilter, setStatusFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+
+  const { latestLiveEvent } = useNotifications();
 
   const fetchOrders = async () => {
     setLoading(true);
@@ -34,6 +37,18 @@ export default function MyOrders() {
   useEffect(() => {
     fetchOrders();
   }, []);
+
+  useEffect(() => {
+    if (latestLiveEvent) {
+      if (
+        latestLiveEvent.type === 'allocation_completed' ||
+        latestLiveEvent.type === 'order_status_changed' ||
+        latestLiveEvent.type === 'priority_approved'
+      ) {
+        fetchOrders();
+      }
+    }
+  }, [latestLiveEvent]);
 
   const filteredOrders = orders.filter((o) => {
     if (statusFilter !== 'all' && o.status !== statusFilter) return false;

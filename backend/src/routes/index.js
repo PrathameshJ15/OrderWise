@@ -38,4 +38,8 @@ const replenishmentRoutes = require('./replenishment');
 router.use('/alerts', alertsRoutes);
 router.use('/replenishment', replenishmentRoutes);
 
+// Real-Time Events & In-App Notifications (Phase 12)
+const eventRoutes = require('./events');
+router.use('/events', eventRoutes);
+
 module.exports = router;

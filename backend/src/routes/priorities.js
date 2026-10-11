@@ -231,6 +231,27 @@ router.post(
 
       await client.query('COMMIT');
 
+      // Phase 12: Real-time broadcast of priority approval
+      try {
+        const eventHub = require('../services/eventHub');
+        const orderRes = await pool.query('SELECT customer_id FROM orders WHERE id = $1', [orderId]);
+        const customerId = orderRes.rows[0]?.customer_id || null;
+        eventHub.broadcastEvent({
+          type: 'priority_approved',
+          title: `Priority Approved: Order #${orderId}`,
+          message: `Priority level for Order #${orderId} set to ${effectivePriority || 'UPDATED'} (${normalizedDecision}).`,
+          data: {
+            orderId: Number(orderId),
+            decision: normalizedDecision,
+            effectivePriority,
+          },
+          targetCustomerIds: customerId ? [customerId] : [],
+          targetRoles: ['admin', 'inventory_manager'],
+        }).catch(() => {});
+      } catch {
+        // Safe ignore
+      }
+
       return successResponse(res, {
         approval: {
           id: parseInt(approvalRecord.id, 10),

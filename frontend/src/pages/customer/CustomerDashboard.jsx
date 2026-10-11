@@ -13,9 +13,11 @@ import {
 } from 'lucide-react';
 import apiClient from '../../api/client';
 import StatusPill from '../../components/ui/StatusPill';
+import { useNotifications } from '../../contexts/NotificationContext';
 
 export default function CustomerDashboard() {
   const { user } = useAuth();
+  const { latestLiveEvent } = useNotifications();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -37,6 +39,20 @@ export default function CustomerDashboard() {
   useEffect(() => {
     fetchOrders();
   }, []);
+
+  // Acceptance Gate: when an admin runs allocation or updates status,
+  // the logged-in customer's page updates without refresh
+  useEffect(() => {
+    if (latestLiveEvent) {
+      if (
+        latestLiveEvent.type === 'allocation_completed' ||
+        latestLiveEvent.type === 'order_status_changed' ||
+        latestLiveEvent.type === 'priority_approved'
+      ) {
+        fetchOrders();
+      }
+    }
+  }, [latestLiveEvent]);
 
   const totalOrders = orders.length;
   const pendingOrders = orders.filter((o) => o.status === 'pending').length;

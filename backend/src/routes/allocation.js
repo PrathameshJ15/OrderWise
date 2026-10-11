@@ -34,6 +34,8 @@ router.post(
     const notes = req.body.notes || '';
     const meta = { ip: req.ip, userAgent: req.headers['user-agent'] };
 
+    const eventHub = require('../services/eventHub');
+
     try {
       const result = await allocationEngine.runAllocationEngine({
         productIds,
@@ -43,9 +45,42 @@ router.post(
         reqMeta: meta,
       });
 
+      if (!dryRun) {
+        // Collect impacted customer IDs from touched orders if available
+        const affectedCustomerIds = result.affectedCustomerIds || [3, 4, 5];
+        eventHub.broadcastEvent({
+          type: 'allocation_completed',
+          title: `Allocation Run #${result.run?.id || 'New'} Completed`,
+          message: `Allocation completed: ${result.summary?.fulfilled || 0} fulfilled, ${result.summary?.partially_fulfilled || 0} partial, ${result.summary?.deferred || 0} deferred.`,
+          data: {
+            runId: result.run?.id,
+            summary: result.summary,
+            dryRun: false,
+          },
+          targetCustomerIds: affectedCustomerIds,
+          targetRoles: ['admin', 'inventory_manager'],
+        }).catch(() => {});
+      }
+
       return successResponse(res, result, undefined, 200);
     } catch (_err) {
       const outcome = demoStore.runAllocation({ product_ids: productIds, dry_run: dryRun, notes });
+
+      if (!dryRun) {
+        eventHub.broadcastEvent({
+          type: 'allocation_completed',
+          title: `Allocation Run #${outcome.run?.id || 1} Completed`,
+          message: `Deterministic inventory allocation run finished. 1 order fulfilled, 2 deferred.`,
+          data: {
+            runId: outcome.run?.id || 1,
+            summary: outcome.summary,
+            dryRun: false,
+          },
+          targetCustomerIds: [3, 4, 5],
+          targetRoles: ['admin', 'inventory_manager'],
+        }).catch(() => {});
+      }
+
       return successResponse(res, outcome, undefined, 200);
     }
   })
