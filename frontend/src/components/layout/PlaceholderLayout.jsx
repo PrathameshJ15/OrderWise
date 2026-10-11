@@ -117,6 +117,12 @@ export default function PlaceholderLayout() {
             ) : (
               <div className="flex items-center space-x-2 pl-2 border-l border-arcade-border">
                 <Link
+                  to="/home"
+                  className="hidden sm:inline-flex items-center space-x-1 px-2.5 py-1.5 text-arcade-secondary hover:text-arcade-primary text-xs uppercase tracking-wider transition-colors"
+                >
+                  Overview
+                </Link>
+                <Link
                   to="/login"
                   className="flex items-center space-x-1 px-2.5 py-1.5 border border-arcade-border hover:border-arcade-accent text-arcade-primary hover:text-arcade-accent transition-colors"
                 >
