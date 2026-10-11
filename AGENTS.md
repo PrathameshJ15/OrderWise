@@ -7,6 +7,8 @@
 
 ## 1. Project Identity
 
+
+
 **Name:** OrderWise  
 **Event:** VORTEXA 3.0 Hackathon — Problem Statement S-03  
 **Category:** AI, Inventory Management and Supply Chain Intelligence  
@@ -709,6 +711,7 @@ Common error codes: `UNAUTHORIZED`, `FORBIDDEN`, `NOT_FOUND`, `VALIDATION_ERROR`
 - ❌ Do NOT label rule-based fallback recommendations as AI-generated
 
 ---
+
 
 ## 17. Replenishment Formula
 
