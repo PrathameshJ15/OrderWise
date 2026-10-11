@@ -22,12 +22,13 @@ apiClient.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Response interceptor to normalize responses
+// Response interceptor to normalize responses and handle 401s
 apiClient.interceptors.response.use(
   (response) => {
     return response.data;
   },
   (error) => {
+    const status = error.response?.status;
     const errorData = error.response?.data || {
       success: false,
       error: {
@@ -35,6 +36,14 @@ apiClient.interceptors.response.use(
         message: error.message || 'Network request failed',
       },
     };
+
+    // If token is expired or unauthorized (and not on login attempt), clear token & notify
+    if (status === 401 && !error.config?.url?.includes('/auth/login')) {
+      localStorage.removeItem('orderwise_token');
+      localStorage.removeItem('orderwise_user');
+      window.dispatchEvent(new CustomEvent('orderwise:unauthorized'));
+    }
+
     return Promise.reject(errorData);
   }
 );

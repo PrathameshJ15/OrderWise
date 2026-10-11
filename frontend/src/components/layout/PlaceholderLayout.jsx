@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
-import { RefreshCw, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Outlet, Link } from 'react-router-dom';
+import { RefreshCw, CheckCircle2, AlertCircle, LogIn, UserPlus, LogOut, User } from 'lucide-react';
 import apiClient from '../../api/client';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function PlaceholderLayout() {
   const [health, setHealth] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const { user, logout } = useAuth();
 
   const fetchHealth = async () => {
     setLoading(true);
@@ -28,31 +31,34 @@ export default function PlaceholderLayout() {
   return (
     <div className="min-h-screen bg-arcade-surface text-arcade-primary flex flex-col font-mono selection:bg-arcade-accent selection:text-arcade-surface">
       {/* Top Navbar */}
-      <header className="border-b border-arcade-border bg-arcade-neutral/80 backdrop-blur-md sticky top-0 z-50 px-6 py-4">
+      <header className="border-b border-arcade-border bg-arcade-neutral/80 backdrop-blur-md sticky top-0 z-50 px-6 py-3.5">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-arcade-accent text-arcade-surface flex items-center justify-center font-display font-extrabold text-xl shadow-[0_0_12px_rgba(200,255,58,0.4)]">
-              OW
-            </div>
-            <div>
-              <div className="flex items-center space-x-2">
-                <span className="font-display font-black text-2xl tracking-wider text-arcade-primary uppercase">
-                  OrderWise
-                </span>
-                <span className="text-[10px] tracking-widest px-1.5 py-0.5 bg-arcade-surface border border-arcade-border text-arcade-accent font-semibold uppercase">
-                  VORTEXA 3.0
-                </span>
+            <Link to="/" className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-arcade-accent text-arcade-surface flex items-center justify-center font-display font-extrabold text-xl shadow-[0_0_12px_rgba(200,255,58,0.4)]">
+                OW
               </div>
-              <p className="text-[11px] text-arcade-secondary hidden sm:block">
-                AI recommends. Business rules validate. Humans approve. OrderWise allocates.
-              </p>
-            </div>
+              <div>
+                <div className="flex items-center space-x-2">
+                  <span className="font-display font-black text-2xl tracking-wider text-arcade-primary uppercase">
+                    OrderWise
+                  </span>
+                  <span className="text-[10px] tracking-widest px-1.5 py-0.5 bg-arcade-surface border border-arcade-border text-arcade-accent font-semibold uppercase">
+                    VORTEXA 3.0
+                  </span>
+                </div>
+                <p className="text-[10px] text-arcade-secondary hidden sm:block">
+                  AI recommends. Rules validate. Humans approve. OrderWise allocates.
+                </p>
+              </div>
+            </Link>
           </div>
 
-          {/* Backend Connectivity Status Badge */}
-          <div className="flex items-center space-x-3">
+          {/* User Nav and API Status Badge */}
+          <div className="flex items-center space-x-3 text-xs">
+            {/* Backend Connectivity Status Badge */}
             <div
-              className={`flex items-center space-x-2 px-3 py-1.5 border text-xs uppercase tracking-wider ${
+              className={`flex items-center space-x-2 px-2.5 py-1.5 border uppercase tracking-wider text-[11px] ${
                 loading
                   ? 'border-arcade-border text-arcade-secondary bg-arcade-surface'
                   : health
@@ -61,11 +67,11 @@ export default function PlaceholderLayout() {
               }`}
             >
               {loading ? (
-                <RefreshCw className="h-3.5 w-3.5 animate-spin" />
+                <RefreshCw className="h-3 w-3 animate-spin" />
               ) : health ? (
-                <CheckCircle2 className="h-3.5 w-3.5" />
+                <CheckCircle2 className="h-3 w-3" />
               ) : (
-                <AlertCircle className="h-3.5 w-3.5" />
+                <AlertCircle className="h-3 w-3" />
               )}
               <span className="font-semibold">
                 {loading
@@ -76,13 +82,45 @@ export default function PlaceholderLayout() {
               </span>
             </div>
 
-            <button
-              onClick={fetchHealth}
-              title="Refresh API Status"
-              className="p-1.5 border border-arcade-border text-arcade-secondary hover:text-arcade-accent hover:border-arcade-accent transition-colors"
-            >
-              <RefreshCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
-            </button>
+            {/* Auth Controls */}
+            {user ? (
+              <div className="flex items-center space-x-2 pl-2 border-l border-arcade-border">
+                <Link
+                  to={user.role === 'customer' ? '/dashboard' : '/admin'}
+                  className="flex items-center space-x-1.5 text-arcade-primary hover:text-arcade-accent transition-colors py-1 px-2 border border-arcade-border bg-arcade-surface"
+                >
+                  <User className="h-3.5 w-3.5 text-arcade-accent" />
+                  <span className="truncate max-w-[120px] font-semibold">{user.name}</span>
+                  <span className="text-[9px] px-1 py-0.2 bg-arcade-neutral text-arcade-secondary uppercase border border-arcade-border">
+                    {user.role}
+                  </span>
+                </Link>
+                <button
+                  onClick={logout}
+                  title="Logout"
+                  className="p-1.5 border border-arcade-border text-arcade-secondary hover:text-arcade-danger hover:border-arcade-danger transition-colors"
+                >
+                  <LogOut className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-2 pl-2 border-l border-arcade-border">
+                <Link
+                  to="/login"
+                  className="flex items-center space-x-1 px-2.5 py-1.5 border border-arcade-border hover:border-arcade-accent text-arcade-primary hover:text-arcade-accent transition-colors"
+                >
+                  <LogIn className="h-3 w-3" />
+                  <span>Sign In</span>
+                </Link>
+                <Link
+                  to="/register"
+                  className="flex items-center space-x-1 px-2.5 py-1.5 bg-arcade-accent text-arcade-surface font-bold hover:opacity-90 transition-opacity"
+                >
+                  <UserPlus className="h-3 w-3" />
+                  <span>Register</span>
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </header>
