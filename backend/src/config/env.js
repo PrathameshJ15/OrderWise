@@ -3,6 +3,43 @@ const { z } = require('zod');
 
 dotenv.config();
 
+const INSECURE_JWT_SECRETS = [
+  'secret',
+  'password',
+  'changeme',
+  'replace_with_long_random_string_min_64_chars',
+  '12345678901234567890123456789012',
+  'jwtsecret',
+  'admin',
+  'testsecret',
+];
+
+function validateJwtSecretStrength(secret, nodeEnv = process.env.NODE_ENV || 'development') {
+  if (!secret || typeof secret !== 'string') {
+    throw new Error('JWT_SECRET is required');
+  }
+
+  if (secret.length < 32) {
+    throw new Error(`JWT_SECRET must be at least 32 characters long for cryptographic security (found ${secret.length} characters)`);
+  }
+
+  const lower = secret.toLowerCase();
+  const isKnownInsecure = INSECURE_JWT_SECRETS.some((bad) => lower === bad || lower.startsWith(bad));
+
+  if (nodeEnv === 'production') {
+    if (secret.length < 64) {
+      throw new Error(`FATAL: Production JWT_SECRET must be at least 64 characters long per AGENTS.md (found ${secret.length} characters)`);
+    }
+    if (isKnownInsecure) {
+      throw new Error('FATAL: Insecure or default placeholder JWT_SECRET detected in production environment!');
+    }
+  } else if (isKnownInsecure) {
+    console.warn('⚠️  SECURITY WARNING: JWT_SECRET appears to be a default or placeholder value. Ensure a high-entropy secret is configured for production.');
+  }
+
+  return true;
+}
+
 const envSchema = z.object({
   DATABASE_URL: z.string().min(1, 'DATABASE_URL is required'),
   JWT_SECRET: z.string().min(32, 'JWT_SECRET must be at least 32 characters long'),
@@ -30,4 +67,7 @@ if (!parsed.success) {
 
 const env = parsed.data;
 
-module.exports = { env, envSchema };
+// Validate secret strength at startup
+validateJwtSecretStrength(env.JWT_SECRET, env.NODE_ENV);
+
+module.exports = { env, envSchema, validateJwtSecretStrength };

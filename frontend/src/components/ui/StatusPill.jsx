@@ -1,5 +1,7 @@
 import React from 'react';
 
+// ─── Status Pill (branch_1: customer portal allocation statuses) ─────────────
+
 const STATUS_CONFIGS = {
   fulfilled: {
     label: 'Fulfilled',
@@ -80,6 +82,75 @@ export function StatusPill({ status, type = 'status', size = 'md' }) {
     >
       <span className={`h-1.5 w-1.5 rounded-full ${config.dotClass}`} aria-hidden="true" />
       {config.label}
+    </span>
+  );
+}
+
+// ─── Priority Pill (HEAD/main: admin AI recommendations panel) ────────────────
+
+export function PriorityPill({ priority, className = '' }) {
+  const p = (priority || 'MEDIUM').toUpperCase();
+
+  const styles = {
+    CRITICAL: 'bg-arcade-danger/15 text-arcade-danger border-arcade-danger/40',
+    HIGH: 'bg-arcade-warning/15 text-arcade-warning border-arcade-warning/40',
+    MEDIUM: 'bg-cyan-500/15 text-cyan-400 border-cyan-500/40',
+    LOW: 'bg-arcade-secondary/15 text-arcade-secondary border-arcade-border',
+  };
+
+  const currentStyle = styles[p] || styles.MEDIUM;
+
+  return (
+    <span
+      className={`inline-flex items-center px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider border ${currentStyle} ${className}`}
+    >
+      <span className="w-1.5 h-1.5 rounded-full bg-current mr-1.5" />
+      {p}
+    </span>
+  );
+}
+
+// ─── Confidence Pill (HEAD/main: AI recommendation confidence indicator) ──────
+
+export function ConfidencePill({ confidence, className = '' }) {
+  const c = (confidence || 'low').toLowerCase();
+
+  const styles = {
+    high: 'bg-arcade-success/15 text-arcade-success border-arcade-success/40',
+    medium: 'bg-arcade-warning/15 text-arcade-warning border-arcade-warning/40',
+    low: 'bg-arcade-secondary/15 text-arcade-secondary border-arcade-border',
+  };
+
+  const currentStyle = styles[c] || styles.low;
+
+  return (
+    <span
+      className={`inline-flex items-center px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider border ${currentStyle} ${className}`}
+    >
+      Confidence: {c}
+    </span>
+  );
+}
+
+// ─── Recommendation Status Pill (HEAD/main: AI approval workflow) ─────────────
+
+export function RecommendationStatusPill({ status, className = '' }) {
+  const s = (status || 'pending').toLowerCase();
+
+  const styles = {
+    pending: 'bg-arcade-warning/10 text-arcade-warning border-arcade-warning/40 animate-pulse',
+    approved: 'bg-arcade-success/15 text-arcade-success border-arcade-success/40',
+    overridden: 'bg-arcade-accent/15 text-arcade-accent border-arcade-accent/40',
+    rejected: 'bg-arcade-danger/15 text-arcade-danger border-arcade-danger/40',
+  };
+
+  const currentStyle = styles[s] || styles.pending;
+
+  return (
+    <span
+      className={`inline-flex items-center px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider border ${currentStyle} ${className}`}
+    >
+      {s === 'overridden' ? 'Modified' : s}
     </span>
   );
 }

@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: orderwise-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: orderwise_user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: orderwise_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U orderwise_user -d orderwise_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: orderwise-backend
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://orderwise_user:password@postgres:5432/orderwise_db
+      JWT_SECRET: super_secure_production_jwt_secret_key_minimum_64_characters_orderwise_2026
+      JWT_EXPIRES_IN: 24h
+      PORT: 4000
+      NODE_ENV: production
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      GROQ_MODEL: ${GROQ_MODEL:-llama3-70b-8192}
+    command: >
+      sh -c "npm run migrate up && npm run seed && node src/index.js"
+    ports:
+      - "4000:4000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:4000/api/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: /api
+    container_name: orderwise-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "5173:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:

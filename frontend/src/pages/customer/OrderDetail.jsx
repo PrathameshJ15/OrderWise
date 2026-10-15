@@ -1,321 +1,447 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import apiClient from '../../api/client';
-import StatusPill from '../../components/ui/StatusPill';
-import Skeleton from '../../components/ui/Skeleton';
-import Alert from '../../components/ui/Alert';
-import Toast from '../../components/ui/Toast';
 import {
   ArrowLeft,
   Calendar,
   Clock,
   CheckCircle2,
-  AlertCircle,
-  HelpCircle,
-  Package,
-  Layers,
+  AlertTriangle,
+  RefreshCw,
+  XCircle,
   FileText,
-  ShieldCheck,
-  Hourglass,
-  Check,
+  Info,
+  Layers,
 } from 'lucide-react';
+import apiClient from '../../api/client';
+import StatusPill from '../../components/ui/StatusPill';
+import Modal from '../../components/ui/Modal';
 
-export function OrderDetail() {
+export default function OrderDetail() {
   const { id } = useParams();
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [cancelling, setCancelling] = useState(false);
+  const [cancelModalOpen, setCancelModalOpen] = useState(false);
+  const [cancelReason, setCancelReason] = useState('');
+  const [error, setError] = useState(null);
+
+  const fetchOrderDetail = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await apiClient.get(`/orders/${id}`);
+      setOrder(res.data);
+    } catch (err) {
+      setError(err?.error?.message || err?.message || 'Failed to retrieve order details.');
+    } finally {
+      setLoading(false);
+    }
+  }, [id]);
 
   useEffect(() => {
-    let isMounted = true;
+    fetchOrderDetail();
+  }, [fetchOrderDetail]);
 
-    async function loadOrder() {
-      setLoading(true);
-      try {
-        const res = await apiClient.get(`/orders/${id}`);
-        const orderData = res.order || res.data?.order || res;
-        if (isMounted) {
-          setOrder(orderData);
-        }
-      } catch (err) {
-        if (isMounted) {
-          console.error('Failed to load order details:', err);
-          setErrorMessage(err.error?.message || err.message || 'Order not found or access denied');
-        }
-      } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
-      }
+  const handleCancelOrder = async () => {
+    setCancelling(true);
+    setError(null);
+    try {
+      const res = await apiClient.patch(`/orders/${id}/cancel`, {
+        reason: cancelReason.trim() || 'Cancelled by customer',
+      });
+      setOrder(res.data);
+      setCancelModalOpen(false);
+    } catch (err) {
+      setError(err?.error?.message || err?.message || 'Failed to cancel order.');
+    } finally {
+      setCancelling(false);
     }
-
-    loadOrder();
-    return () => {
-      isMounted = false;
-    };
-  }, [id]);
+  };
 
   if (loading) {
     return (
-      <div className="space-y-6 max-w-5xl mx-auto">
-        <Skeleton className="h-8 w-48" />
-        <div className="p-8 bg-white rounded-2xl border border-slate-200 space-y-4">
-          <Skeleton className="h-8 w-1/3" />
-          <Skeleton className="h-4 w-1/2" />
-          <div className="grid grid-cols-4 gap-4 pt-4">
-            <Skeleton className="h-16 w-full" />
-            <Skeleton className="h-16 w-full" />
-            <Skeleton className="h-16 w-full" />
-            <Skeleton className="h-16 w-full" />
-          </div>
-        </div>
+      <div className="border border-arcade-border bg-arcade-neutral p-12 text-center text-arcade-secondary flex flex-col items-center justify-center space-y-3 font-mono my-8">
+        <RefreshCw className="h-6 w-6 animate-spin text-arcade-accent" />
+        <span className="text-xs uppercase tracking-wider">Loading order details...</span>
       </div>
     );
   }
 
-  if (errorMessage || !order) {
+  if (!order) {
     return (
-      <div className="max-w-2xl mx-auto py-12 text-center space-y-4">
-        <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-rose-100 text-rose-600 mb-2">
-          <AlertCircle className="w-6 h-6" />
-        </div>
-        <h2 className="text-xl font-bold text-slate-800">Unable to load order</h2>
-        <p className="text-sm text-slate-500">
-          {errorMessage || 'The requested order could not be retrieved. Please check permissions.'}
+      <div className="border border-arcade-border bg-arcade-neutral p-12 text-center text-arcade-secondary space-y-3 font-mono my-8">
+        <AlertTriangle className="h-8 w-8 text-arcade-warning mx-auto" />
+        <h2 className="font-display text-xl uppercase font-bold text-arcade-primary">
+          Order #{id} Not Found
+        </h2>
+        <p className="text-xs">
+          This order does not exist or you do not have permission to view it.
         </p>
         <Link
           to="/orders"
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 text-white text-xs font-semibold hover:bg-indigo-700 transition"
+          className="inline-block px-4 py-2 bg-arcade-accent text-arcade-surface font-bold text-xs uppercase"
         >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Back to My Orders</span>
+          Back to My Orders
         </Link>
       </div>
     );
   }
 
-  const items = order.items || [];
-  const timeline = order.timeline || [];
-  const hasAllocations = items.some((it) => it.latest_allocation !== null);
+  // Determine Timeline Progress
+  const isCancelled = order.status === 'cancelled';
+  const isPending = order.status === 'pending';
+  const isConfirmed = order.status === 'confirmed';
+  const isAllocated =
+    order.status === 'allocated' ||
+    order.status === 'partially_allocated' ||
+    order.items?.some((i) => i.allocation_status !== null);
+  const isShipped = order.status === 'shipped' || order.status === 'completed';
+
+  const timelineSteps = [
+    {
+      title: 'Submitted',
+      desc: 'Order created in queue',
+      completed: true,
+      current: isPending,
+    },
+    {
+      title: 'Confirmed',
+      desc: 'Approved by dispatch',
+      completed: isConfirmed || isAllocated || isShipped,
+      current: isConfirmed,
+    },
+    {
+      title: 'Allocated',
+      desc: 'Stock evaluated by engine',
+      completed: isAllocated || isShipped,
+      current: isAllocated && !isShipped,
+    },
+    {
+      title: 'Shipped',
+      desc: 'Dispatched for delivery',
+      completed: isShipped,
+      current: isShipped,
+    },
+  ];
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8">
-      {/* Navigation header */}
-      <div>
-        <Link
-          to="/orders"
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-indigo-600 transition mb-3"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Back to All Orders</span>
-        </Link>
-
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">
-                Order #{order.id}
-              </h1>
-              <StatusPill status={order.display_status || order.status} />
-              <StatusPill status={order.priority || 'MEDIUM'} type="priority" size="sm" />
-            </div>
-            <p className="text-xs text-slate-500 mt-1 flex items-center gap-4">
-              <span>Placed on: {new Date(order.created_at).toLocaleString()}</span>
-              <span>•</span>
-              <span>
-                Promised Target:{' '}
-                {order.promised_delivery_date
-                  ? new Date(order.promised_delivery_date).toLocaleDateString()
-                  : 'Flexible'}
-              </span>
-            </p>
+    <div className="space-y-6 font-mono py-4">
+      {/* Header */}
+      <div className="border border-arcade-border bg-arcade-neutral p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center space-x-2 text-xs text-arcade-secondary mb-2">
+            <Link to="/orders" className="hover:text-arcade-primary flex items-center space-x-1">
+              <ArrowLeft className="h-3 w-3" />
+              <span>Orders</span>
+            </Link>
+            <span>/</span>
+            <span className="text-arcade-accent">Order #{order.id}</span>
           </div>
+          <div className="flex flex-wrap items-center gap-3">
+            <h1 className="font-display text-3xl font-extrabold uppercase text-arcade-primary">
+              {`Order #${order.id}`}
+            </h1>
+            <StatusPill status={order.status} />
+          </div>
+          <p className="text-xs text-arcade-secondary mt-1">
+            Submitted on {new Date(order.created_at).toLocaleString()} • Customer: {order.customer_name || 'You'}
+          </p>
+        </div>
+
+        {/* Action Controls */}
+        <div className="flex items-center space-x-3">
+          {(order.status === 'pending' || order.status === 'confirmed') && (
+            <button
+              onClick={() => setCancelModalOpen(true)}
+              className="px-3.5 py-2 border border-arcade-danger/60 text-arcade-danger hover:bg-arcade-danger/10 text-xs uppercase tracking-wider transition-colors"
+            >
+              Cancel Order
+            </button>
+          )}
+          <Link
+            to="/orders/new"
+            className="px-3.5 py-2 bg-arcade-accent text-arcade-surface font-bold text-xs uppercase tracking-wider hover:opacity-90 transition-opacity"
+          >
+            Reorder Similar
+          </Link>
         </div>
       </div>
+
+      {error && (
+        <div className="p-4 border border-arcade-danger/40 bg-arcade-danger/10 text-arcade-danger text-xs flex items-center justify-between">
+          <span>{error}</span>
+          <button onClick={() => setError(null)} className="underline hover:text-white">
+            Dismiss
+          </button>
+        </div>
+      )}
 
       {/* Customer-Friendly Status Timeline */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-6 space-y-6">
-        <div>
-          <h2 className="text-base font-bold text-slate-900">Order Progress & Allocation Timeline</h2>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Transparent status track from order placement to deterministic inventory allocation.
+      <div className="border border-arcade-border bg-arcade-neutral p-6 space-y-4">
+        <h2 className="font-display text-base uppercase font-bold text-arcade-primary flex items-center space-x-2">
+          <Clock className="h-4 w-4 text-arcade-accent" />
+          <span>Fulfillment Progress Timeline</span>
+        </h2>
+
+        {isCancelled ? (
+          <div className="p-4 border border-arcade-danger/40 bg-arcade-danger/10 text-arcade-danger text-xs flex items-center space-x-3">
+            <XCircle className="h-5 w-5 shrink-0" />
+            <div>
+              <span className="font-bold uppercase block">Order Cancelled</span>
+              <span>This order has been cancelled and will not receive inventory allocation.</span>
+            </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 pt-2">
+            {timelineSteps.map((step, idx) => (
+              <div
+                key={idx}
+                className={`p-4 border transition-all ${
+                  step.completed
+                    ? 'border-arcade-accent/60 bg-arcade-accent/5'
+                    : 'border-arcade-border bg-arcade-surface/40 opacity-50'
+                }`}
+              >
+                <div className="flex items-center space-x-2 mb-1.5">
+                  <div
+                    className={`w-5 h-5 flex items-center justify-center text-[10px] font-bold border ${
+                      step.completed
+                        ? 'border-arcade-accent bg-arcade-accent text-arcade-surface'
+                        : 'border-arcade-border text-arcade-secondary'
+                    }`}
+                  >
+                    {step.completed ? <CheckCircle2 className="h-3.5 w-3.5" /> : idx + 1}
+                  </div>
+                  <span
+                    className={`text-xs uppercase font-bold tracking-wider ${
+                      step.completed ? 'text-arcade-primary' : 'text-arcade-secondary'
+                    }`}
+                  >
+                    {step.title}
+                  </span>
+                </div>
+                <p className="text-[11px] text-arcade-secondary">{step.desc}</p>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Commitments & Business Notes */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+        <div className="border border-arcade-border bg-arcade-neutral p-5 space-y-2">
+          <div className="flex items-center space-x-2 text-arcade-secondary uppercase text-[10px] tracking-wider">
+            <Calendar className="h-3.5 w-3.5 text-arcade-accent" />
+            <span>Promised Delivery Date</span>
+          </div>
+          <div className="text-base font-bold text-arcade-primary">
+            {order.promised_delivery_date || 'Standard Commercial Delivery Schedule'}
+          </div>
+          <p className="text-[11px] text-arcade-secondary">
+            Priority-based allocation resolves customer delivery commitments using strict date sequencing.
           </p>
         </div>
 
-        <div className="relative">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 relative">
-            {timeline.map((step, idx) => {
-              const isCompleted = step.status === 'completed';
-              const isInProgress = step.status === 'in_progress';
-              const isCancelled = step.status === 'cancelled';
-
-              let circleClass = 'bg-slate-100 text-slate-400 border-slate-300';
-              if (isCompleted) circleClass = 'bg-emerald-600 text-white border-emerald-600';
-              else if (isInProgress) circleClass = 'bg-indigo-600 text-white border-indigo-600 ring-4 ring-indigo-50';
-              else if (isCancelled) circleClass = 'bg-rose-600 text-white border-rose-600';
-
-              return (
-                <div key={step.key || idx} className="flex flex-col space-y-2">
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`w-8 h-8 rounded-full border-2 flex items-center justify-center text-xs font-bold shrink-0 transition-colors ${circleClass}`}
-                    >
-                      {isCompleted ? (
-                        <Check className="w-4 h-4 stroke-[3]" />
-                      ) : (
-                        <span>{idx + 1}</span>
-                      )}
-                    </div>
-                    <div className="text-xs font-bold text-slate-900">{step.title}</div>
-                  </div>
-
-                  <p className="text-xs text-slate-500 pl-11 leading-relaxed">
-                    {step.description}
-                  </p>
-
-                  {step.timestamp && (
-                    <p className="text-[10px] text-slate-400 pl-11 font-mono">
-                      {new Date(step.timestamp).toLocaleString()}
-                    </p>
-                  )}
-                </div>
-              );
-            })}
+        <div className="border border-arcade-border bg-arcade-neutral p-5 space-y-2">
+          <div className="flex items-center space-x-2 text-arcade-secondary uppercase text-[10px] tracking-wider">
+            <FileText className="h-3.5 w-3.5 text-arcade-accent" />
+            <span>Business Context &amp; Notes</span>
+          </div>
+          <div className="text-arcade-primary text-xs leading-relaxed italic">
+            &ldquo;{order.business_notes || 'No customer business notes attached to this order submission.'}&rdquo;
           </div>
         </div>
       </div>
 
-      {/* Line Items Breakdown Card */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-        <div className="p-6 border-b border-slate-100">
-          <h2 className="text-base font-bold text-slate-900">Line Items & Allocation Results</h2>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Compare requested units against engine allocations and review fulfillment reasons.
-          </p>
+      {/* Order Items Breakdown & Allocation Explanations */}
+      <div className="border border-arcade-border bg-arcade-neutral p-5 space-y-4">
+        <div className="flex items-center justify-between border-b border-arcade-border pb-3">
+          <div className="flex items-center space-x-2">
+            <Layers className="h-4 w-4 text-arcade-accent" />
+            <h2 className="font-display text-base uppercase font-bold text-arcade-primary">
+              Order Items &amp; Allocation Explanations ({order.items?.length || 0})
+            </h2>
+          </div>
         </div>
 
-        <div className="divide-y divide-slate-100">
-          {items.map((item, index) => {
-            const hasAlloc = item.latest_allocation !== null;
-            const alloc = item.latest_allocation;
-            const itemStatus = hasAlloc ? alloc.status : 'pending';
+        <div className="space-y-4">
+          {order.items?.map((item) => {
+            const hasAllocated = item.allocation_status !== null && item.allocation_status !== undefined;
+            const isDeferred = item.allocation_status === 'deferred';
+            const isPartial = item.allocation_status === 'partially_fulfilled';
+            const isFulfilled = item.allocation_status === 'fulfilled';
 
             return (
-              <div key={item.id || index} className="p-6 space-y-4 hover:bg-slate-50/40 transition">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div
+                key={item.id}
+                className="border border-arcade-border bg-arcade-surface p-5 space-y-3"
+              >
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-arcade-border/60 pb-3">
                   <div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-mono font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200">
-                        {item.product_sku || 'SKU'}
+                    <div className="flex items-center space-x-2">
+                      <span className="font-bold text-base text-arcade-primary">
+                        {item.product_name}
                       </span>
-                      <h3 className="text-base font-bold text-slate-900">
-                        {item.product_name || `Product #${item.product_id}`}
-                      </h3>
-                    </div>
-                    <div className="text-xs text-slate-500 mt-1 flex flex-wrap items-center gap-3">
-                      <span>Requested: <strong>{item.requested_quantity}</strong> {item.product_unit || 'units'}</span>
-                      <span>•</span>
-                      <span>
-                        Min Threshold: <strong>{item.minimum_acceptable_quantity}</strong> {item.product_unit || 'units'}
-                      </span>
-                      <span>•</span>
-                      <span>
-                        Partial Allowed: <strong>{item.partial_delivery_allowed ? 'Yes' : 'No'}</strong>
+                      <span className="text-[10px] px-1.5 py-0.5 bg-arcade-neutral border border-arcade-border text-arcade-accent">
+                        {item.sku}
                       </span>
                     </div>
+                    <span className="text-[11px] text-arcade-secondary mt-0.5 block">
+                      Unit: {item.unit || 'units'} • Partial Delivery Allowed:{' '}
+                      <span className="font-semibold text-arcade-primary">
+                        {item.partial_delivery_allowed ? 'Yes' : 'No'}
+                      </span>
+                    </span>
                   </div>
 
                   <div>
-                    {hasAlloc ? (
-                      <StatusPill status={itemStatus} />
+                    {hasAllocated ? (
+                      <StatusPill status={item.allocation_status} />
                     ) : (
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-200">
-                        <Hourglass className="w-3.5 h-3.5 text-amber-600 animate-pulse" />
-                        No allocation yet
+                      <span className="inline-flex items-center space-x-1 px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider border border-arcade-border text-arcade-secondary bg-arcade-neutral">
+                        <Clock className="h-3 w-3" />
+                        <span>Pending Run</span>
                       </span>
                     )}
                   </div>
                 </div>
 
-                {/* Allocation Box */}
-                {hasAlloc ? (
-                  <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/60 space-y-3">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
-                      <div className="flex items-center gap-2">
-                        <span className="font-semibold text-slate-700">Allocated Units:</span>
-                        <span className="text-base font-extrabold text-slate-900">
-                          {alloc.allocated_quantity} of {item.requested_quantity}
-                        </span>
-                        <span className="text-slate-400">({item.product_unit || 'units'})</span>
-                      </div>
-
-                      {alloc.run_at && (
-                        <div className="text-slate-400 font-mono text-[11px]">
-                          Processed at: {new Date(alloc.run_at).toLocaleString()}
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Explanation text */}
-                    {alloc.explanation && (
-                      <div className="text-xs text-slate-600 bg-white p-3 rounded-lg border border-slate-200 leading-relaxed">
-                        <div className="font-semibold text-slate-700 mb-1 flex items-center gap-1.5">
-                          <ShieldCheck className="w-4 h-4 text-indigo-600" />
-                          <span>Allocation Explanation:</span>
-                        </div>
-                        <p>{alloc.explanation}</p>
-                      </div>
-                    )}
-
-                    {/* Customer-friendly "Why was my order deferred?" block */}
-                    {itemStatus === 'deferred' && (
-                      <div className="p-3.5 bg-rose-50/80 rounded-lg border border-rose-200 text-xs text-rose-900 space-y-1.5">
-                        <div className="font-bold flex items-center gap-1.5 text-rose-800">
-                          <HelpCircle className="w-4 h-4 text-rose-600" />
-                          <span>Why was this item deferred?</span>
-                        </div>
-                        <p className="leading-relaxed">
-                          {alloc.explanation ||
-                            'Available warehouse stock was insufficient to meet your order rules. Either stock was completely depleted by higher priority orders, or remaining stock fell below your minimum acceptable threshold.'}
-                        </p>
-                        <p className="text-[11px] text-rose-700/80 italic pt-1">
-                          Our supply chain team has been alerted for automatic replenishment reorders.
-                        </p>
-                      </div>
-                    )}
+                {/* Quantitative Breakdown Grid */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                  <div className="p-2.5 bg-arcade-neutral border border-arcade-border">
+                    <span className="text-[10px] uppercase text-arcade-secondary block">
+                      Requested
+                    </span>
+                    <span className="text-base font-bold text-arcade-primary">
+                      {item.requested_quantity}
+                    </span>
                   </div>
-                ) : (
-                  <div className="p-4 rounded-xl border border-dashed border-amber-300 bg-amber-50/40 text-xs text-amber-900 flex items-start gap-3">
-                    <Hourglass className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-                    <div>
-                      <h4 className="font-bold text-amber-950">Awaiting Allocation Run</h4>
-                      <p className="mt-0.5 leading-relaxed text-amber-800">
-                        This item has been queued for the next allocation engine batch. No stock has been distributed
-                        yet. Our system never invents or approximates unverified quantities.
-                      </p>
-                    </div>
+
+                  <div className="p-2.5 bg-arcade-neutral border border-arcade-border">
+                    <span className="text-[10px] uppercase text-arcade-secondary block">
+                      Min Acceptable
+                    </span>
+                    <span className="text-base font-bold text-arcade-primary">
+                      {item.minimum_acceptable_quantity}
+                    </span>
                   </div>
-                )}
+
+                  <div className="p-2.5 bg-arcade-neutral border border-arcade-border">
+                    <span className="text-[10px] uppercase text-arcade-secondary block">
+                      Allocated
+                    </span>
+                    <span
+                      className={`text-base font-bold ${
+                        isFulfilled
+                          ? 'text-arcade-accent'
+                          : isPartial
+                          ? 'text-arcade-warning'
+                          : isDeferred
+                          ? 'text-arcade-danger'
+                          : 'text-arcade-secondary'
+                      }`}
+                    >
+                      {hasAllocated ? item.allocated_quantity : '—'}
+                    </span>
+                  </div>
+
+                  <div className="p-2.5 bg-arcade-neutral border border-arcade-border">
+                    <span className="text-[10px] uppercase text-arcade-secondary block">
+                      Fulfillment Rate
+                    </span>
+                    <span className="text-base font-bold text-arcade-primary">
+                      {hasAllocated
+                        ? `${Math.round((item.allocated_quantity / item.requested_quantity) * 100)}%`
+                        : 'Pending'}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Plain-English Allocation Explanation Callout */}
+                <div
+                  className={`p-3.5 border text-xs flex items-start space-x-2.5 ${
+                    isFulfilled
+                      ? 'border-arcade-accent/30 bg-arcade-accent/5 text-arcade-primary'
+                      : isPartial
+                      ? 'border-arcade-warning/30 bg-arcade-warning/5 text-arcade-primary'
+                      : isDeferred
+                      ? 'border-arcade-danger/30 bg-arcade-danger/5 text-arcade-primary'
+                      : 'border-arcade-border bg-arcade-neutral text-arcade-secondary'
+                  }`}
+                >
+                  <Info
+                    className={`h-4 w-4 shrink-0 mt-0.5 ${
+                      isFulfilled
+                        ? 'text-arcade-accent'
+                        : isPartial
+                        ? 'text-arcade-warning'
+                        : isDeferred
+                        ? 'text-arcade-danger'
+                        : 'text-arcade-secondary'
+                    }`}
+                  />
+                  <div>
+                    <span className="text-[10px] uppercase font-bold tracking-wider block mb-0.5 text-arcade-secondary">
+                      {hasAllocated
+                        ? 'Allocation Engine Explanation'
+                        : 'Allocation Engine Status'}
+                    </span>
+                    <p className="leading-relaxed">
+                      {hasAllocated
+                        ? typeof (item.allocation_explanation || item.explanation) === 'object' &&
+                          (item.allocation_explanation || item.explanation) !== null
+                          ? (item.allocation_explanation || item.explanation).reason ||
+                            JSON.stringify(item.allocation_explanation || item.explanation)
+                          : item.allocation_explanation || item.explanation || 'Allocation processed.'
+                        : 'No allocation yet — pending allocation run. The deterministic allocation engine has not processed this order item yet.'}
+                    </p>
+                  </div>
+                </div>
               </div>
             );
           })}
         </div>
       </div>
 
-      {/* Business Notes Context Card */}
-      {order.business_notes && (
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-6 space-y-2">
-          <div className="flex items-center gap-2 text-sm font-bold text-slate-900">
-            <FileText className="w-4 h-4 text-indigo-600" />
-            <span>Business Notes Submitted With Order</span>
-          </div>
-          <p className="text-xs text-slate-600 bg-slate-50 p-3.5 rounded-xl border border-slate-100 leading-relaxed font-mono">
-            {order.business_notes}
+      {/* Cancel Order Modal */}
+      <Modal
+        isOpen={cancelModalOpen}
+        onClose={() => setCancelModalOpen(false)}
+        title={`Cancel Order #${order.id}`}
+      >
+        <div className="space-y-4 text-xs">
+          <p className="text-arcade-secondary">
+            Are you sure you want to cancel Order #{order.id}? Once cancelled, any allocated stock will be released back to the warehouse.
           </p>
+          <div>
+            <label className="block text-[10px] uppercase text-arcade-secondary mb-1">
+              Cancellation Reason (Optional)
+            </label>
+            <input
+              type="text"
+              placeholder="e.g. Project rescheduled, redundant order"
+              value={cancelReason}
+              onChange={(e) => setCancelReason(e.target.value)}
+              className="w-full bg-arcade-surface border border-arcade-border p-2 text-arcade-primary focus:border-arcade-accent focus:outline-none"
+            />
+          </div>
+          <div className="flex items-center justify-end space-x-2 pt-2">
+            <button
+              onClick={() => setCancelModalOpen(false)}
+              className="px-3 py-1.5 border border-arcade-border text-arcade-secondary hover:text-arcade-primary uppercase text-xs"
+            >
+              Keep Order
+            </button>
+            <button
+              onClick={handleCancelOrder}
+              disabled={cancelling}
+              className="px-4 py-1.5 bg-arcade-danger text-white uppercase text-xs font-bold hover:opacity-90 disabled:opacity-50"
+            >
+              {cancelling ? 'Cancelling...' : 'Confirm Cancellation'}
+            </button>
+          </div>
         </div>
-      )}
+      </Modal>
     </div>
   );
 }
-
-export default OrderDetail;

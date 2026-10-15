@@ -3,25 +3,59 @@ const healthRoutes = require('./health');
 const authRoutes = require('./auth');
 const productRoutes = require('./products');
 const orderRoutes = require('./orders');
+const priorityRoutes = require('./priorities');
+const aiRoutes = require('./ai');
+const allocationRoutes = require('./allocation');
+const impactRoutes = require('./impact');
 
 const router = express.Router();
 
 // Health check
 router.use('/health', healthRoutes);
 
-// Customer & Core routes
+// Auth & Access
 router.use('/auth', authRoutes);
-router.use('/products', productRoutes);
-router.use('/orders', orderRoutes);
 
-// Placeholder routes for subsequent phases can be mounted here
-// router.use('/inventory', inventoryRoutes);
-// router.use('/priorities', priorityRoutes);
-// router.use('/allocation', allocationRoutes);
-// router.use('/ai', aiRoutes);
-// router.use('/simulations', simulationRoutes);
-// router.use('/alerts', alertRoutes);
-// router.use('/replenishment', replenishmentRoutes);
-// router.use('/reports', reportRoutes);
+// Products & Inventory
+router.use('/products', productRoutes);
+const inventoryRoutes = require('./inventory');
+router.use('/inventory', inventoryRoutes);
+
+// Orders & Priorities
+router.use('/orders', orderRoutes);
+router.use('/priorities', priorityRoutes);
+
+// Simulation Lab
+const simulationRoutes = require('./simulations');
+router.use('/simulations', simulationRoutes);
+
+// AI Priority Assistant
+router.use('/ai', aiRoutes);
+
+// Allocation Engine
+router.use('/allocation', allocationRoutes);
+
+// Allocation Impact Analyzer
+router.use('/impact', impactRoutes);
+
+// Supply Intelligence: Alerts & Replenishment
+const alertsRoutes = require('./alerts');
+const replenishmentRoutes = require('./replenishment');
+router.use('/alerts', alertsRoutes);
+router.use('/replenishment', replenishmentRoutes);
+
+// Real-Time Events & In-App Notifications (Phase 12)
+const eventRoutes = require('./events');
+router.use('/events', eventRoutes);
+
+// Reports, Exports and Audit Viewer (Phase 13)
+const reportRoutes = require('./reports');
+const auditRoutes = require('./audit');
+router.use('/reports', reportRoutes);
+router.use('/audit', auditRoutes);
+
+// Advanced Intelligence (Phase 18 Stretch)
+const intelligenceRoutes = require('./intelligence');
+router.use('/intelligence', intelligenceRoutes);
 
 module.exports = router;

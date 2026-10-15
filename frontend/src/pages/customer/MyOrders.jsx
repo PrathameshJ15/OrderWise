@@ -1,241 +1,215 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import {
+  Clock,
+  Search,
+  PlusCircle,
+  RefreshCw,
+  ChevronRight,
+  Package,
+} from 'lucide-react';
 import apiClient from '../../api/client';
 import StatusPill from '../../components/ui/StatusPill';
-import Skeleton, { TableRowSkeleton } from '../../components/ui/Skeleton';
-import EmptyState from '../../components/ui/EmptyState';
-import Toast from '../../components/ui/Toast';
-import {
-  ClipboardList,
-  Search,
-  Filter,
-  PlusCircle,
-  ArrowRight,
-  Calendar,
-  Layers,
-} from 'lucide-react';
+import { useNotifications } from '../../contexts/NotificationContext';
 
-export function MyOrders() {
+export default function MyOrders() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [statusFilter, setStatusFilter] = useState('ALL');
+  const [error, setError] = useState(null);
+  const [statusFilter, setStatusFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+
+  const { latestLiveEvent } = useNotifications();
+
+  const fetchOrders = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await apiClient.get('/orders');
+      setOrders(res.data || []);
+    } catch (err) {
+      setError(err?.error?.message || err?.message || 'Failed to fetch your orders.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    let isMounted = true;
-
-    async function loadOrders() {
-      setLoading(true);
-      try {
-        const res = await apiClient.get('/orders/my');
-        const list = res.orders || res.data?.orders || res;
-        if (isMounted) {
-          setOrders(Array.isArray(list) ? list : []);
-        }
-      } catch (err) {
-        if (isMounted) {
-          console.error('Failed to load orders:', err);
-          setErrorMessage(err.error?.message || err.message || 'Failed to load orders');
-        }
-      } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
-      }
-    }
-
-    loadOrders();
-    return () => {
-      isMounted = false;
-    };
+    fetchOrders();
   }, []);
 
-  const filterTabs = [
-    { key: 'ALL', label: 'All Orders' },
-    { key: 'pending', label: 'Pending' },
-    { key: 'fulfilled', label: 'Fulfilled' },
-    { key: 'partially_fulfilled', label: 'Partially Fulfilled' },
-    { key: 'deferred', label: 'Deferred' },
-  ];
+  useEffect(() => {
+    if (latestLiveEvent) {
+      if (
+        latestLiveEvent.type === 'allocation_completed' ||
+        latestLiveEvent.type === 'order_status_changed' ||
+        latestLiveEvent.type === 'priority_approved'
+      ) {
+        fetchOrders();
+      }
+    }
+  }, [latestLiveEvent]);
 
-  const filteredOrders = orders.filter((ord) => {
-    const statusMatch =
-      statusFilter === 'ALL' ||
-      (ord.display_status || ord.status).toLowerCase() === statusFilter.toLowerCase();
-
-    const query = searchQuery.trim().toLowerCase();
-    const queryMatch =
-      !query ||
-      String(ord.id).includes(query) ||
-      (ord.business_notes && ord.business_notes.toLowerCase().includes(query)) ||
-      (ord.items && ord.items.some((it) => it.product_name?.toLowerCase().includes(query) || it.product_sku?.toLowerCase().includes(query)));
-
-    return statusMatch && queryMatch;
+  const filteredOrders = orders.filter((o) => {
+    if (statusFilter !== 'all' && o.status !== statusFilter) return false;
+    if (!searchQuery) return true;
+    const q = searchQuery.toLowerCase();
+    return (
+      String(o.id).includes(q) ||
+      (o.business_notes && o.business_notes.toLowerCase().includes(q))
+    );
   });
 
   return (
-    <div className="space-y-6">
-      {errorMessage && (
-        <Toast message={errorMessage} type="error" onClose={() => setErrorMessage('')} />
-      )}
-
+    <div className="space-y-6 font-mono py-4">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="border border-arcade-border bg-arcade-neutral p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">My Equipment Orders</h1>
-          <p className="text-sm text-slate-500 mt-1">
-            Track allocation decisions, line items fulfillment, and delivery promises in real time.
+          <div className="inline-flex items-center space-x-1.5 text-xs text-arcade-accent bg-arcade-accent/10 border border-arcade-accent/20 px-2 py-0.5 mb-2">
+            <Clock className="h-3 w-3" />
+            <span>ORDER DISPATCH &amp; ALLOCATIONS</span>
+          </div>
+          <h1 className="font-display text-3xl font-extrabold uppercase text-arcade-primary">
+            My Orders
+          </h1>
+          <p className="text-xs text-arcade-secondary mt-1">
+            Track your demand submissions, allocation decisions, and promised delivery timelines.
           </p>
         </div>
 
         <Link
           to="/orders/new"
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold shadow-xs transition"
+          className="flex items-center space-x-2 px-4 py-2.5 bg-arcade-accent text-arcade-surface font-bold text-xs uppercase tracking-wider hover:opacity-90 transition-opacity self-start md:self-auto shadow-[0_0_12px_rgba(200,255,58,0.25)]"
         >
-          <PlusCircle className="w-4 h-4" />
+          <PlusCircle className="h-4 w-4" />
           <span>New Order</span>
         </Link>
       </div>
 
-      {/* Filter Tabs & Search Bar */}
-      <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
-        {/* Tabs */}
-        <div className="flex items-center gap-1 overflow-x-auto pb-1 md:pb-0" role="tablist">
-          {filterTabs.map((tab) => {
-            const active = statusFilter === tab.key;
-            return (
+      {error && (
+        <div className="p-4 border border-arcade-danger/40 bg-arcade-danger/10 text-arcade-danger text-xs flex items-center justify-between">
+          <span>{error}</span>
+          <button onClick={() => setError(null)} className="underline hover:text-white">
+            Dismiss
+          </button>
+        </div>
+      )}
+
+      {/* Filter and Search Bar */}
+      <div className="border border-arcade-border bg-arcade-neutral p-4 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+        {/* Status Filter Tabs */}
+        <div className="flex items-center space-x-1 border border-arcade-border bg-arcade-surface p-1 overflow-x-auto">
+          {['all', 'pending', 'confirmed', 'allocated', 'partially_allocated', 'cancelled'].map(
+            (st) => (
               <button
-                key={tab.key}
-                type="button"
-                role="tab"
-                aria-selected={active}
-                onClick={() => setStatusFilter(tab.key)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition ${
-                  active
-                    ? 'bg-indigo-600 text-white shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                key={st}
+                onClick={() => setStatusFilter(st)}
+                className={`px-3 py-1 text-xs uppercase tracking-wider whitespace-nowrap transition-colors ${
+                  statusFilter === st
+                    ? 'bg-arcade-neutral text-arcade-accent font-bold border border-arcade-border'
+                    : 'text-arcade-secondary hover:text-arcade-primary'
                 }`}
               >
-                {tab.label}
+                {st.replace(/_/g, ' ')}
               </button>
-            );
-          })}
+            )
+          )}
         </div>
 
         {/* Search */}
-        <div className="relative min-w-[240px]">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-            <Search className="w-4 h-4" />
-          </div>
+        <div className="flex items-center space-x-2 border border-arcade-border bg-arcade-surface px-3 py-1.5 text-xs w-full md:w-64">
+          <Search className="h-3.5 w-3.5 text-arcade-secondary" />
           <input
             type="text"
+            placeholder="Search order ID..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search order #, product..."
-            className="block w-full pl-9 pr-3 py-1.5 text-xs rounded-lg border border-slate-300 bg-white shadow-xs focus:ring-indigo-500 focus:border-indigo-500 transition"
-            aria-label="Filter orders"
+            className="bg-transparent text-arcade-primary focus:outline-none text-xs w-full placeholder-arcade-secondary/60"
           />
         </div>
       </div>
 
       {/* Orders Table */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-        {loading ? (
-          <div className="p-6 space-y-3">
-            <Skeleton className="h-10 w-full" />
-            <Skeleton className="h-10 w-full" />
-            <Skeleton className="h-10 w-full" />
-            <Skeleton className="h-10 w-full" />
+      {loading ? (
+        <div className="border border-arcade-border bg-arcade-neutral p-12 text-center text-arcade-secondary flex flex-col items-center justify-center space-y-3">
+          <RefreshCw className="h-6 w-6 animate-spin text-arcade-accent" />
+          <span className="text-xs uppercase tracking-wider">Loading your order history...</span>
+        </div>
+      ) : filteredOrders.length === 0 ? (
+        <div className="border border-arcade-border bg-arcade-neutral p-12 text-center text-arcade-secondary space-y-3">
+          <Package className="h-8 w-8 text-arcade-secondary mx-auto opacity-50" />
+          <h3 className="font-display text-base uppercase text-arcade-primary font-bold">
+            No Orders Found
+          </h3>
+          <p className="text-xs max-w-sm mx-auto">
+            {statusFilter !== 'all'
+              ? `No orders matching status filter "${statusFilter}".`
+              : "You haven't submitted any customer orders yet."}
+          </p>
+          <div className="pt-2">
+            <Link
+              to="/orders/new"
+              className="inline-block px-4 py-2 bg-arcade-accent text-arcade-surface font-bold text-xs uppercase"
+            >
+              Create New Order
+            </Link>
           </div>
-        ) : filteredOrders.length === 0 ? (
-          <div className="p-8">
-            <EmptyState
-              title="No orders found"
-              description={
-                orders.length === 0
-                  ? 'You have not placed any orders yet. Click below to start your first order.'
-                  : 'No orders match your selected filters. Try choosing a different status filter or clearing your search.'
-              }
-              actionText={orders.length === 0 ? 'Create Order Now' : 'Clear Filters'}
-              onAction={
-                orders.length === 0
-                  ? () => (window.location.href = '/orders/new')
-                  : () => {
-                      setStatusFilter('ALL');
-                      setSearchQuery('');
-                    }
-              }
-            />
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-slate-600" aria-label="Customer orders list">
-              <thead className="bg-slate-50/80 text-xs text-slate-500 uppercase tracking-wider border-b border-slate-200">
-                <tr>
-                  <th scope="col" className="px-6 py-3.5 font-semibold">Order</th>
-                  <th scope="col" className="px-6 py-3.5 font-semibold">Date Placed</th>
-                  <th scope="col" className="px-6 py-3.5 font-semibold">Promised Delivery</th>
-                  <th scope="col" className="px-6 py-3.5 font-semibold">Priority</th>
-                  <th scope="col" className="px-6 py-3.5 font-semibold">Requested vs Allocated</th>
-                  <th scope="col" className="px-6 py-3.5 font-semibold">Status</th>
-                  <th scope="col" className="px-6 py-3.5 font-semibold text-right">View</th>
+        </div>
+      ) : (
+        <div className="border border-arcade-border bg-arcade-neutral overflow-x-auto">
+          <table className="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr className="border-b border-arcade-border bg-arcade-surface/60 text-arcade-secondary uppercase text-[10px] tracking-wider">
+                <th className="py-3 px-4">Order ID</th>
+                <th className="py-3 px-3">Date Submitted</th>
+                <th className="py-3 px-3">Promised Date</th>
+                <th className="py-3 px-3 text-right">Items</th>
+                <th className="py-3 px-3 text-right">Requested Qty</th>
+                <th className="py-3 px-3 text-center">Status</th>
+                <th className="py-3 px-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-arcade-border/50">
+              {filteredOrders.map((ord) => (
+                <tr
+                  key={ord.id}
+                  className="hover:bg-arcade-surface/50 transition-colors group cursor-pointer"
+                >
+                  <td className="py-3.5 px-4 font-bold text-arcade-primary group-hover:text-arcade-accent">
+                    <Link to={`/orders/${ord.id}`} className="block">
+                      {`#${ord.id}`}
+                    </Link>
+                  </td>
+                  <td className="py-3.5 px-3 text-arcade-secondary">
+                    {new Date(ord.created_at).toLocaleDateString()}
+                  </td>
+                  <td className="py-3.5 px-3 text-arcade-secondary">
+                    {ord.promised_delivery_date || 'Standard'}
+                  </td>
+                  <td className="py-3.5 px-3 text-right font-semibold text-arcade-primary">
+                    {ord.item_count || 1}
+                  </td>
+                  <td className="py-3.5 px-3 text-right font-semibold text-arcade-primary">
+                    {ord.total_requested_quantity || '—'}
+                  </td>
+                  <td className="py-3.5 px-3 text-center">
+                    <StatusPill status={ord.status} />
+                  </td>
+                  <td className="py-3.5 px-4 text-right">
+                    <Link
+                      to={`/orders/${ord.id}`}
+                      className="inline-flex items-center space-x-1 px-2.5 py-1 border border-arcade-border text-arcade-primary hover:border-arcade-accent hover:text-arcade-accent text-[11px] uppercase tracking-wider transition-colors"
+                    >
+                      <span>View</span>
+                      <ChevronRight className="h-3 w-3" />
+                    </Link>
+                  </td>
                 </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {filteredOrders.map((ord) => {
-                  const statusKey = ord.display_status || ord.status;
-                  const totalReq = ord.total_requested ?? ord.items?.reduce((s, it) => s + it.requested_quantity, 0) ?? 0;
-                  const totalAlloc = ord.total_allocated ?? ord.items?.reduce((s, it) => s + (it.latest_allocation?.allocated_quantity || 0), 0) ?? 0;
-
-                  return (
-                    <tr key={ord.id} className="hover:bg-slate-50/70 transition-colors">
-                      <td className="px-6 py-4 font-bold text-slate-900">
-                        <Link to={`/orders/${ord.id}`} className="hover:text-indigo-600">
-                          Order #{ord.id}
-                        </Link>
-                      </td>
-                      <td className="px-6 py-4 text-slate-500">
-                        {ord.created_at ? new Date(ord.created_at).toLocaleDateString() : '—'}
-                      </td>
-                      <td className="px-6 py-4 text-slate-700">
-                        {ord.promised_delivery_date
-                          ? new Date(ord.promised_delivery_date).toLocaleDateString()
-                          : 'Flexible'}
-                      </td>
-                      <td className="px-6 py-4">
-                        <StatusPill status={ord.priority || 'MEDIUM'} type="priority" size="sm" />
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="font-semibold text-slate-900">
-                          {totalAlloc} / {totalReq} units
-                        </div>
-                        <div className="text-[11px] text-slate-400">
-                          {ord.total_items || ord.items?.length || 1} line item(s)
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <StatusPill status={statusKey} size="sm" />
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <Link
-                          to={`/orders/${ord.id}`}
-                          className="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition"
-                        >
-                          <span>Review</span>
-                          <ArrowRight className="w-3.5 h-3.5" />
-                        </Link>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }
-
-export default MyOrders;

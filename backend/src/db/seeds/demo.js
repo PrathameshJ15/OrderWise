@@ -94,6 +94,7 @@ async function seed(client = null) {
        ON CONFLICT (product_id)
        DO UPDATE SET 
          on_hand_quantity = EXCLUDED.on_hand_quantity,
+         reserved_quantity = 0,
          safety_stock = EXCLUDED.safety_stock,
          reorder_point = EXCLUDED.reorder_point;`,
       [pId, p.stock, p.safety, p.reorder, userMap['manager@orderwise.com']]
@@ -118,6 +119,22 @@ async function seed(client = null) {
     );
   }
   console.log(`[SEED] Seeded suppliers.`);
+
+  // Link products to default suppliers
+  const supValve = await runner.query("SELECT id FROM suppliers WHERE code = 'SUP-VALVETECH'");
+  const supGauge = await runner.query("SELECT id FROM suppliers WHERE code = 'SUP-GAUGEMASTER'");
+  const supPump = await runner.query("SELECT id FROM suppliers WHERE code = 'SUP-HYDRACORE'");
+
+  if (supValve.rowCount > 0) {
+    await runner.query("UPDATE products SET default_supplier_id = $1, default_lead_time_days = 5 WHERE sku = 'VALVE-B200'", [supValve.rows[0].id]);
+  }
+  if (supGauge.rowCount > 0) {
+    await runner.query("UPDATE products SET default_supplier_id = $1, default_lead_time_days = 14 WHERE sku = 'GAUGE-P300'", [supGauge.rows[0].id]);
+  }
+  if (supPump.rowCount > 0) {
+    await runner.query("UPDATE products SET default_supplier_id = $1, default_lead_time_days = 10 WHERE sku = 'PUMP-X100'", [supPump.rows[0].id]);
+    await runner.query("UPDATE products SET default_supplier_id = $1, default_lead_time_days = 10 WHERE sku = 'CTRL-U400'", [supPump.rows[0].id]);
+  }
 
   // 4. Seed Competing Orders
   // Designed so that Pressure Gauge Pro (stock = 40) creates conflict and every outcome:
@@ -177,6 +194,9 @@ async function seed(client = null) {
     },
   ];
 
+  const seedNotes = ordersToSeed.map((o) => o.notes);
+  await runner.query('DELETE FROM orders WHERE NOT (business_notes = ANY($1::text[]))', [seedNotes]);
+
   for (const o of ordersToSeed) {
     const customerId = userMap[o.customerEmail];
     
@@ -233,6 +253,15 @@ async function seed(client = null) {
   }
 
   console.log(`[SEED] Seeded ${ordersToSeed.length} competing orders with priorities.`);
+
+  try {
+    const { scanAndGenerateAlerts } = require('../../services/alertService');
+    const alertResults = await scanAndGenerateAlerts(runner);
+    console.log(`[SEED] Generated ${alertResults.newly_created_count} proactive supply alerts.`);
+  } catch (err) {
+    console.warn('[SEED] Alert scan warning:', err.message);
+  }
+
   console.log('[SEED] Demo data successfully loaded!');
 }
 
