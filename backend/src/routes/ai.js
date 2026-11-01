@@ -7,6 +7,7 @@ const { successResponse, errorResponse } = require('../utils/response');
 const {
   fetchOrderContext,
   generatePriorityRecommendation,
+  chatWithAssistant,
 } = require('../services/aiService');
 
 const router = express.Router();
@@ -146,6 +147,25 @@ router.post(
         created_at: savedRec.created_at,
       },
     });
+  })
+);
+
+// POST /api/ai/chat - Interactive AI Assistant Chatbot
+router.post(
+  '/chat',
+  asyncHandler(async (req, res) => {
+    const { message, history } = req.body || {};
+    if (!message || typeof message !== 'string' || !message.trim()) {
+      return errorResponse(res, 'Message text is required', 'VALIDATION_ERROR', {}, 400);
+    }
+
+    const chatResponse = await chatWithAssistant({
+      message: message.trim(),
+      history: Array.isArray(history) ? history : [],
+      userRole: req.user?.role || 'admin',
+    });
+
+    return successResponse(res, chatResponse);
   })
 );
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import {
   ShoppingBag,
   Search,
@@ -7,6 +8,8 @@ import {
   XCircle,
   AlertCircle,
   Eye,
+  Cpu,
+  Sparkles,
 } from 'lucide-react';
 import apiClient from '../../api/client';
 import StatusPill from '../../components/ui/StatusPill';
@@ -123,8 +126,22 @@ export default function OrderManagement() {
           </p>
         </div>
 
-        {/* Search */}
-        <div className="flex items-center space-x-2 border border-arcade-border bg-arcade-surface px-3 py-2 text-xs w-full md:w-72">
+        <div className="flex flex-wrap items-center gap-2">
+          <Link
+            to="/admin/ai"
+            className="flex items-center space-x-1.5 px-3 py-2 border border-arcade-border text-arcade-primary hover:border-arcade-accent hover:text-arcade-accent text-xs uppercase tracking-wider transition-colors"
+          >
+            <Sparkles className="h-3.5 w-3.5 text-arcade-accent" />
+            <span>AI Priorities</span>
+          </Link>
+          <Link
+            to="/admin/allocation"
+            className="flex items-center space-x-1.5 px-3 py-2 bg-arcade-accent text-arcade-surface font-bold text-xs uppercase tracking-wider hover:opacity-90 transition-opacity shadow-[0_0_8px_rgba(200,255,58,0.2)]"
+          >
+            <Cpu className="h-3.5 w-3.5" />
+            <span>Allocate Stock &rarr;</span>
+          </Link>
+          <div className="flex items-center space-x-2 border border-arcade-border bg-arcade-surface px-3 py-2 text-xs w-full md:w-60">
           <Search className="h-3.5 w-3.5 text-arcade-secondary" />
           <input
             type="text"
@@ -133,6 +150,7 @@ export default function OrderManagement() {
             onChange={(e) => setSearchQuery(e.target.value)}
             className="bg-transparent text-arcade-primary focus:outline-none text-xs w-full placeholder-arcade-secondary/60"
           />
+        </div>
         </div>
       </div>
 

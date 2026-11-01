@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
   Sparkles,
   CheckCircle,
@@ -13,18 +13,43 @@ import {
   ChevronDown,
   ChevronUp,
   BookmarkCheck,
+  MessageSquare,
+  Send,
+  Bot,
+  User,
+  Trash2,
+  CornerDownLeft,
 } from 'lucide-react';
 import apiClient from '../../api/client';
 import { PriorityPill, ConfidencePill, RecommendationStatusPill } from '../../components/ui/StatusPill';
 import Modal from '../../components/ui/Modal';
 
 export default function AIRecommendations() {
+  const [activeTab, setActiveTab] = useState('review'); // 'review' | 'chatbot'
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState({});
   const [filter, setFilter] = useState('all'); // all, pending, approved, overridden, rejected
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
+
+  // Chatbot state
+  const [chatMessages, setChatMessages] = useState([
+    {
+      id: 1,
+      sender: 'assistant',
+      text: "👋 Hello! I am your **OrderWise AI Assistant Chatbot** powered by Groq Llama-3. I can explain allocation decisions, analyze inventory bottlenecks like Pressure Gauge Pro, answer priority sorting questions, and guide simulations. What would you like to know?",
+      suggestions: [
+        'Which product is our biggest inventory bottleneck?',
+        'Why was Alice’s order deferred?',
+        'How does the allocation engine break priority ties?',
+      ],
+      time: 'Just now',
+    },
+  ]);
+  const [inputMessage, setInputMessage] = useState('');
+  const [chatLoading, setChatLoading] = useState(false);
+  const chatBottomRef = useRef(null);
 
   // Modal state for Modify action
   const [modifyModalOpen, setModifyModalOpen] = useState(false);
@@ -73,6 +98,80 @@ export default function AIRecommendations() {
 
   const toggleExpand = (orderId) => {
     setExpandedOrders((prev) => ({ ...prev, [orderId]: !prev[orderId] }));
+  };
+
+  const scrollToBottom = () => {
+    chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    if (activeTab === 'chatbot') {
+      scrollToBottom();
+    }
+  }, [chatMessages, activeTab]);
+
+  const handleSendChat = async (textToSend) => {
+    const text = (textToSend || inputMessage).trim();
+    if (!text || chatLoading) return;
+    setInputMessage('');
+    const nowTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const userMsg = {
+      id: Date.now(),
+      sender: 'user',
+      text,
+      time: nowTime,
+    };
+    setChatMessages((prev) => [...prev, userMsg]);
+    setChatLoading(true);
+
+    try {
+      await ensureAdminAuth();
+      const history = chatMessages.slice(-6).map((m) => ({ sender: m.sender, text: m.text }));
+      const res = await apiClient.post('/ai/chat', { message: text, history });
+      const data = res.data?.data || res.data || {};
+      const botMsg = {
+        id: Date.now() + 1,
+        sender: 'assistant',
+        text: data.reply || 'Analysis completed.',
+        suggestions: data.suggestions || [],
+        provider: data.provider,
+        model: data.model,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      };
+      setChatMessages((prev) => [...prev, botMsg]);
+    } catch (err) {
+      const errMsg = {
+        id: Date.now() + 1,
+        sender: 'assistant',
+        text: '⚠️ Unable to reach assistant right now: ' + (err?.error?.message || err?.message || 'Server error'),
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      };
+      setChatMessages((prev) => [...prev, errMsg]);
+    } finally {
+      setChatLoading(false);
+    }
+  };
+
+  const handleResetChat = () => {
+    setChatMessages([
+      {
+        id: Date.now(),
+        sender: 'assistant',
+        text: "👋 Chat reset. I am your **OrderWise AI Assistant Chatbot**. Ask me anything about order allocations, inventory shortages, or simulation experiments!",
+        suggestions: [
+          'Which product is our biggest inventory bottleneck?',
+          'Why was Alice’s order deferred?',
+          'How does the allocation engine break priority ties?',
+        ],
+        time: 'Just now',
+      },
+    ]);
+  };
+
+  const handleAskAboutOrder = (order) => {
+    setActiveTab('chatbot');
+    const prompt = `Explain why Order #${order.id} for customer ${order.customer_name || 'Customer'} was assigned priority ${order.approved_priority || order.latest_recommendation?.suggested_priority || 'MEDIUM'}, and analyze its allocation status.`;
+    handleSendChat(prompt);
   };
 
   // Request new AI recommendation
@@ -263,8 +362,203 @@ export default function AIRecommendations() {
         </div>
       )}
 
-      {/* Filter Tabs */}
-      <div className="flex flex-wrap gap-2 border-b border-arcade-border pb-3">
+      {/* Primary View Switcher: Approvals vs Chatbot */}
+      <div className="flex flex-wrap items-center gap-2 border-b border-arcade-border pb-3">
+        <button
+          onClick={() => setActiveTab('review')}
+          className={`flex items-center space-x-2 px-4 py-2 text-xs font-semibold uppercase tracking-wider transition-colors border ${
+            activeTab === 'review'
+              ? 'bg-arcade-accent text-arcade-neutral border-arcade-accent font-bold shadow-[0_0_12px_rgba(200,255,58,0.25)]'
+              : 'bg-arcade-surface text-arcade-secondary border-arcade-border hover:border-arcade-accent hover:text-arcade-primary'
+          }`}
+        >
+          <Sparkles className="w-4 h-4" />
+          <span>Priority Approvals & Review</span>
+          <span className="ml-1 px-1.5 py-0.2 text-[10px] rounded-full bg-black/20 font-mono">
+            {orders.length}
+          </span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('chatbot')}
+          className={`flex items-center space-x-2 px-4 py-2 text-xs font-semibold uppercase tracking-wider transition-colors border ${
+            activeTab === 'chatbot'
+              ? 'bg-arcade-accent text-arcade-neutral border-arcade-accent font-bold shadow-[0_0_12px_rgba(200,255,58,0.25)]'
+              : 'bg-arcade-surface text-arcade-secondary border-arcade-border hover:border-arcade-accent hover:text-arcade-primary'
+          }`}
+        >
+          <MessageSquare className="w-4 h-4" />
+          <span>Interactive AI Assistant Chatbot</span>
+          <span className="ml-1 px-1.5 py-0.2 text-[10px] rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 uppercase font-mono">
+            Live Copilot
+          </span>
+        </button>
+      </div>
+
+      {activeTab === 'chatbot' ? (
+        <div className="border border-arcade-border bg-arcade-card flex flex-col h-[650px]">
+          {/* Chatbot Top Toolbar */}
+          <div className="p-4 border-b border-arcade-border bg-arcade-surface/60 flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 rounded bg-arcade-accent/15 border border-arcade-accent text-arcade-accent flex items-center justify-center">
+                <Bot className="w-4 h-4" />
+              </div>
+              <div>
+                <div className="flex items-center space-x-2">
+                  <h2 className="font-display font-black text-sm uppercase tracking-wider text-arcade-primary">
+                    OrderWise Intelligent Co-Pilot Chatbot
+                  </h2>
+                  <span className="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 uppercase font-mono">
+                    Online
+                  </span>
+                </div>
+                <p className="text-[10px] text-arcade-secondary">
+                  Groq Llama-3-70b-8192 • Deterministic Allocation Engine Explainer • Live Inventory Grounding
+                </p>
+              </div>
+            </div>
+
+            <button
+              onClick={handleResetChat}
+              className="flex items-center space-x-1.5 px-2.5 py-1 text-xs border border-arcade-border hover:border-arcade-danger hover:text-arcade-danger text-arcade-secondary bg-arcade-surface transition-colors"
+              title="Reset conversation"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              <span>Clear Chat</span>
+            </button>
+          </div>
+
+          {/* Quick Prompts Strip */}
+          <div className="px-4 py-2 border-b border-arcade-border bg-arcade-surface/30 flex items-center gap-2 overflow-x-auto text-[11px]">
+            <span className="text-arcade-secondary uppercase text-[9px] tracking-wider whitespace-nowrap">
+              Suggested:
+            </span>
+            {[
+              '🔥 Which product is our biggest inventory bottleneck?',
+              '📦 Why was Alice’s order deferred?',
+              '⚖️ How does the allocation engine break priority ties?',
+              '🧪 What happens during a demand surge simulation?',
+            ].map((prompt, i) => (
+              <button
+                key={i}
+                onClick={() => handleSendChat(prompt.replace(/^[^\s]+\s/, ''))}
+                disabled={chatLoading}
+                className="whitespace-nowrap px-2.5 py-1 bg-arcade-surface border border-arcade-border hover:border-arcade-accent hover:text-arcade-primary text-arcade-secondary transition-colors"
+              >
+                {prompt}
+              </button>
+            ))}
+          </div>
+
+          {/* Messages Scroll Area */}
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            {chatMessages.map((msg) => (
+              <div
+                key={msg.id}
+                className={`flex gap-3 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+              >
+                {msg.sender === 'assistant' && (
+                  <div className="w-7 h-7 rounded bg-arcade-accent/20 border border-arcade-accent/50 text-arcade-accent flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <Bot className="w-4 h-4" />
+                  </div>
+                )}
+
+                <div
+                  className={`max-w-[80%] rounded border p-3.5 text-xs ${
+                    msg.sender === 'user'
+                      ? 'bg-arcade-accent/15 border-arcade-accent/40 text-arcade-primary'
+                      : 'bg-arcade-surface border-arcade-border text-arcade-primary'
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-1.5 pb-1 border-b border-arcade-border/40 text-[10px] text-arcade-secondary font-mono">
+                    <span className="font-bold uppercase tracking-wider text-arcade-accent">
+                      {msg.sender === 'user' ? 'Admin (You)' : 'OrderWise AI Assistant'}
+                    </span>
+                    <span>{msg.time}</span>
+                  </div>
+
+                  <div className="whitespace-pre-wrap leading-relaxed space-y-2">
+                    {msg.text}
+                  </div>
+
+                  {/* Follow-up question chips */}
+                  {msg.suggestions && msg.suggestions.length > 0 && (
+                    <div className="mt-3 pt-2.5 border-t border-arcade-border/40 space-y-1.5">
+                      <span className="text-[10px] text-arcade-secondary uppercase tracking-wider block">
+                        Suggested Follow-ups:
+                      </span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {msg.suggestions.map((sug, idx) => (
+                          <button
+                            key={idx}
+                            onClick={() => handleSendChat(sug)}
+                            disabled={chatLoading}
+                            className="text-[11px] px-2 py-0.5 bg-arcade-neutral/40 hover:bg-arcade-accent/20 border border-arcade-border hover:border-arcade-accent text-arcade-primary transition-colors text-left"
+                          >
+                            → {sug}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {msg.sender === 'user' && (
+                  <div className="w-7 h-7 rounded bg-arcade-surface border border-arcade-border text-arcade-primary flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <User className="w-4 h-4" />
+                  </div>
+                )}
+              </div>
+            ))}
+
+            {chatLoading && (
+              <div className="flex gap-3 justify-start items-center text-xs text-arcade-secondary">
+                <div className="w-7 h-7 rounded bg-arcade-accent/20 border border-arcade-accent/50 text-arcade-accent flex items-center justify-center flex-shrink-0 animate-pulse">
+                  <Bot className="w-4 h-4" />
+                </div>
+                <div className="p-3 bg-arcade-surface border border-arcade-border rounded flex items-center space-x-2">
+                  <RefreshCw className="w-3.5 h-3.5 animate-spin text-arcade-accent" />
+                  <span>OrderWise AI is analyzing allocation rules & generating response...</span>
+                </div>
+              </div>
+            )}
+            <div ref={chatBottomRef} />
+          </div>
+
+          {/* Chat Input Bar */}
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSendChat();
+            }}
+            className="p-3 border-t border-arcade-border bg-arcade-surface/60 flex items-center gap-2"
+          >
+            <input
+              type="text"
+              value={inputMessage}
+              onChange={(e) => setInputMessage(e.target.value)}
+              placeholder="Ask OrderWise AI (e.g. Why was Order #101 deferred? What is the Pressure Gauge bottleneck?)..."
+              disabled={chatLoading}
+              className="flex-1 px-3 py-2 text-xs bg-arcade-neutral border border-arcade-border focus:border-arcade-accent text-arcade-primary focus:outline-none"
+            />
+            <button
+              type="submit"
+              disabled={chatLoading || !inputMessage.trim()}
+              className="px-4 py-2 bg-arcade-accent text-arcade-neutral font-bold text-xs uppercase tracking-wider flex items-center space-x-1.5 hover:bg-arcade-accent/90 disabled:opacity-50 transition-colors"
+            >
+              {chatLoading ? (
+                <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+              ) : (
+                <Send className="w-3.5 h-3.5" />
+              )}
+              <span>Send</span>
+            </button>
+          </form>
+        </div>
+      ) : (
+        <>
+          {/* Filter Tabs */}
+          <div className="flex flex-wrap gap-2 border-b border-arcade-border pb-3">
         {[
           { key: 'all', label: 'All Orders' },
           { key: 'pending', label: 'Pending Review' },
@@ -502,6 +796,16 @@ export default function AIRecommendations() {
                       </div>
 
                       <div className="flex items-center space-x-2">
+                        {/* Ask AI Chatbot */}
+                        <button
+                          onClick={() => handleAskAboutOrder(order)}
+                          className="flex items-center space-x-1.5 px-3 py-1.5 text-xs font-semibold bg-arcade-surface hover:bg-arcade-surface-light text-arcade-primary border border-arcade-border hover:border-arcade-accent transition-colors"
+                          title="Ask AI Chatbot to explain this order"
+                        >
+                          <MessageSquare className="w-3.5 h-3.5 text-arcade-accent" />
+                          <span>Ask Copilot</span>
+                        </button>
+
                         {/* Approve Action */}
                         <button
                           onClick={() => handleApprove(rec)}
@@ -551,6 +855,8 @@ export default function AIRecommendations() {
             );
           })}
         </div>
+      )}
+      </>
       )}
 
       {/* Modify Modal Dialog */}

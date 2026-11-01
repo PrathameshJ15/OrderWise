@@ -11,6 +11,7 @@ import AdminLayout from './components/layout/AdminLayout';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import NotFound from './pages/NotFound';
 
 // Customer Pages
 import CustomerDashboard from './pages/customer/CustomerDashboard';
@@ -49,7 +50,7 @@ function App() {
               {/* Customer Portal Protected Routes */}
               <Route
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute allowedRoles={['customer']}>
                     <CustomerLayout />
                   </ProtectedRoute>
                 }
@@ -61,7 +62,7 @@ function App() {
                 <Route path="/orders/:id" element={<OrderDetail />} />
               </Route>
 
-              {/* Admin Portal Protected Routes */}
+              {/* Admin & Inventory Manager Portal Protected Routes */}
               <Route
                 element={
                   <ProtectedRoute allowedRoles={['admin', 'inventory_manager']}>
@@ -84,8 +85,8 @@ function App() {
                 <Route path="/admin/audit" element={<AuditViewer />} />
               </Route>
 
-              {/* Catch-all redirect */}
-              <Route path="*" element={<Navigate to="/login" replace />} />
+              {/* Catch-all 404 Route */}
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
         </NotificationProvider>

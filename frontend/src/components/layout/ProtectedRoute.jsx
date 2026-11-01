@@ -2,8 +2,9 @@ import React from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { RefreshCw } from 'lucide-react';
+import AccessDenied from '../ui/AccessDenied';
 
-export default function ProtectedRoute() {
+export default function ProtectedRoute({ allowedRoles, children }) {
   const { user, loading } = useAuth();
   const location = useLocation();
 
@@ -20,5 +21,13 @@ export default function ProtectedRoute() {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  return <Outlet />;
+  if (allowedRoles && allowedRoles.length > 0) {
+    const userRole = (user.role || '').toLowerCase();
+    const normalizedAllowed = allowedRoles.map((r) => r.toLowerCase());
+    if (!normalizedAllowed.includes(userRole)) {
+      return <AccessDenied requiredRoles={allowedRoles} />;
+    }
+  }
+
+  return children ? children : <Outlet />;
 }

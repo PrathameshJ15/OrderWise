@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import {
   FileText,
   Download,
@@ -104,14 +105,30 @@ export default function Reports() {
           </p>
         </div>
 
-        <button
-          onClick={fetchReports}
-          disabled={loading}
-          className="inline-flex items-center space-x-2 px-3 py-2 border border-arcade-border bg-arcade-surface hover:border-arcade-accent text-arcade-primary text-xs uppercase tracking-wider font-bold transition-colors disabled:opacity-50"
-        >
-          <RefreshCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
-          <span>Refresh Analytics</span>
-        </button>
+        <div className="flex flex-wrap items-center gap-2">
+          <Link
+            to="/admin/allocation"
+            className="inline-flex items-center space-x-1.5 px-3 py-2 border border-arcade-border bg-arcade-surface hover:border-arcade-accent text-arcade-primary text-xs uppercase tracking-wider font-bold transition-colors"
+          >
+            <Cpu className="h-3.5 w-3.5 text-arcade-accent" />
+            <span>Allocation Center</span>
+          </Link>
+          <Link
+            to="/admin/inventory"
+            className="inline-flex items-center space-x-1.5 px-3 py-2 border border-arcade-border bg-arcade-surface hover:border-arcade-accent text-arcade-primary text-xs uppercase tracking-wider font-bold transition-colors"
+          >
+            <Database className="h-3.5 w-3.5 text-arcade-accent" />
+            <span>Inventory Hub</span>
+          </Link>
+          <button
+            onClick={fetchReports}
+            disabled={loading}
+            className="inline-flex items-center space-x-2 px-3 py-2 bg-arcade-accent text-arcade-surface text-xs uppercase tracking-wider font-bold transition-opacity hover:opacity-90 disabled:opacity-50"
+          >
+            <RefreshCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
+            <span>Refresh Analytics</span>
+          </button>
+        </div>
       </div>
 
       {/* CSV Export Bar */}

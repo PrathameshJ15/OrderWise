@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { Link, useInRouterContext } from 'react-router-dom';
 import {
   Layers,
   ArrowRight,
@@ -15,6 +16,7 @@ import {
   Calendar,
   CheckCircle2,
   ExternalLink,
+  FlaskConical,
 } from 'lucide-react';
 import {
   BarChart,
@@ -29,6 +31,14 @@ import {
 import apiClient from '../../api/client';
 import { ImpactBadge, CauseAttributionBadge } from '../../components/allocation/ImpactBadge';
 import { StatusPill } from '../../components/ui/StatusPill';
+
+function SafeLink({ to, className, children }) {
+  const inRouter = useInRouterContext();
+  if (inRouter) {
+    return <Link to={to} className={className}>{children}</Link>;
+  }
+  return <a href={to} className={className}>{children}</a>;
+}
 
 export default function ImpactAnalyzer() {
   const [runs, setRuns] = useState([]);
@@ -214,6 +224,13 @@ export default function ImpactAnalyzer() {
           </div>
 
           <div className="flex items-center space-x-2">
+            <SafeLink
+              to="/admin/simulations"
+              className="px-3.5 py-2 border border-arcade-border text-arcade-primary hover:border-arcade-accent hover:text-arcade-accent font-bold text-xs uppercase tracking-wider flex items-center space-x-1.5 transition-colors"
+            >
+              <FlaskConical className="w-3.5 h-3.5 text-arcade-accent" />
+              <span>Simulation Lab &rarr;</span>
+            </SafeLink>
             <button
               onClick={handleCompareLatest}
               disabled={comparing}

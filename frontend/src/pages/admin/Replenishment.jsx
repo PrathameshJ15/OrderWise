@@ -15,6 +15,7 @@ import {
   ArrowRight,
   TrendingDown,
   Info,
+  Database,
 } from 'lucide-react';
 import apiClient from '../../api/client';
 import Modal from '../../components/ui/Modal';
@@ -192,6 +193,13 @@ export default function Replenishment() {
               </select>
             </div>
 
+            <Link
+              to="/admin/inventory"
+              className="px-3.5 py-2 border border-arcade-border text-arcade-primary hover:border-arcade-accent hover:text-arcade-accent font-bold text-xs uppercase tracking-wider flex items-center space-x-1.5 transition-colors"
+            >
+              <Database className="w-3.5 h-3.5 text-arcade-accent" />
+              <span>Inventory Hub &rarr;</span>
+            </Link>
             <button
               onClick={() => fetchRecommendations(demandPeriod)}
               disabled={loading}

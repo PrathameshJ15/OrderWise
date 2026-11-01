@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Database,
   Search,
@@ -10,6 +11,7 @@ import {
   CheckCircle2,
   AlertCircle,
   ArrowRight,
+  Cpu,
 } from 'lucide-react';
 import apiClient from '../../api/client';
 import Modal from '../../components/ui/Modal';
@@ -132,16 +134,24 @@ export default function InventoryManagement() {
           </p>
         </div>
 
-        {/* Search */}
-        <div className="flex items-center space-x-2 border border-arcade-border bg-arcade-surface px-3 py-2 text-xs w-full md:w-64">
-          <Search className="h-3.5 w-3.5 text-arcade-secondary" />
-          <input
-            type="text"
-            placeholder="Search SKU or name..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="bg-transparent text-arcade-primary focus:outline-none text-xs w-full placeholder-arcade-secondary/60"
-          />
+        <div className="flex flex-wrap items-center gap-3">
+          <Link
+            to="/admin/allocation"
+            className="flex items-center space-x-1.5 px-3 py-2 bg-arcade-accent text-arcade-surface font-bold text-xs uppercase tracking-wider hover:opacity-90 transition-opacity shadow-[0_0_10px_rgba(200,255,58,0.2)]"
+          >
+            <Cpu className="h-3.5 w-3.5" />
+            <span>Allocation Center &rarr;</span>
+          </Link>
+          <div className="flex items-center space-x-2 border border-arcade-border bg-arcade-surface px-3 py-2 text-xs w-full md:w-64">
+            <Search className="h-3.5 w-3.5 text-arcade-secondary" />
+            <input
+              type="text"
+              placeholder="Search SKU or name..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="bg-transparent text-arcade-primary focus:outline-none text-xs w-full placeholder-arcade-secondary/60"
+            />
+          </div>
         </div>
       </div>
 

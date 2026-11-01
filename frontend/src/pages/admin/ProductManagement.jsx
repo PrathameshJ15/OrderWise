@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Package,
   Plus,
@@ -10,6 +11,7 @@ import {
   AlertCircle,
   ToggleLeft,
   ToggleRight,
+  Database,
 } from 'lucide-react';
 import apiClient from '../../api/client';
 import Modal from '../../components/ui/Modal';
@@ -156,13 +158,22 @@ export default function ProductManagement() {
           </p>
         </div>
 
-        <button
-          onClick={() => setCreateModalOpen(true)}
-          className="flex items-center space-x-2 px-4 py-2.5 bg-arcade-accent text-arcade-surface font-bold text-xs uppercase tracking-wider hover:opacity-90 transition-opacity self-start md:self-auto shadow-[0_0_12px_rgba(200,255,58,0.25)]"
-        >
-          <Plus className="h-4 w-4" />
-          <span>Add New Product</span>
-        </button>
+        <div className="flex flex-wrap items-center gap-2 self-start md:self-auto">
+          <Link
+            to="/admin/inventory"
+            className="flex items-center space-x-1.5 px-3 py-2.5 border border-arcade-border text-arcade-primary hover:border-arcade-accent hover:text-arcade-accent text-xs uppercase tracking-wider transition-colors"
+          >
+            <Database className="h-4 w-4 text-arcade-accent" />
+            <span>Inventory Hub &rarr;</span>
+          </Link>
+          <button
+            onClick={() => setCreateModalOpen(true)}
+            className="flex items-center space-x-2 px-4 py-2.5 bg-arcade-accent text-arcade-surface font-bold text-xs uppercase tracking-wider hover:opacity-90 transition-opacity shadow-[0_0_12px_rgba(200,255,58,0.25)]"
+          >
+            <Plus className="h-4 w-4" />
+            <span>Add New Product</span>
+          </button>
+        </div>
       </div>
 
       {error && (

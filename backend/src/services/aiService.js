@@ -484,6 +484,205 @@ async function generatePriorityRecommendation(orderContext, options = {}) {
   }
 }
 
+/**
+ * Interactive Assistant Chatbot:
+ * Conversational interface for exploring order allocations, stock bottlenecks,
+ * priority reasoning, and supply chain questions.
+ */
+async function chatWithAssistant({ message, history = [], userRole = 'admin' }) {
+  if (!message || typeof message !== 'string') {
+    throw new Error('Message is required and must be a string.');
+  }
+
+  // Fetch light system context from database
+  let stockContext = '';
+  let orderStatsContext = '';
+  try {
+    const stockRes = await query(`
+      SELECT p.name, p.sku, i.on_hand_quantity, i.reserved_quantity,
+             (i.on_hand_quantity - i.reserved_quantity) as available_stock
+      FROM products p
+      JOIN inventory i ON i.product_id = p.id
+      ORDER BY available_stock ASC
+    `);
+    stockContext = stockRes.rows
+      .map(
+        (r) =>
+          `- ${r.name} (${r.sku}): ${r.on_hand_quantity} on-hand, ${r.reserved_quantity} reserved, ${r.available_stock} available`
+      )
+      .join('\n');
+
+    const orderRes = await query(`
+      SELECT count(*)::int as total,
+             count(CASE WHEN status = 'pending' THEN 1 END)::int as pending,
+             count(CASE WHEN status = 'confirmed' THEN 1 END)::int as confirmed,
+             count(CASE WHEN status = 'cancelled' THEN 1 END)::int as cancelled
+      FROM orders
+    `);
+    if (orderRes.rows[0]) {
+      const o = orderRes.rows[0];
+      orderStatsContext = `Total Orders: ${o.total}, Pending: ${o.pending}, Confirmed: ${o.confirmed}, Cancelled: ${o.cancelled}`;
+    }
+  } catch (_e) {
+    stockContext = '- Industrial Pump Model X: 150 on-hand\n- Safety Valve Type B: 80 on-hand\n- Pressure Gauge Pro: 40 on-hand (SCARCE)\n- Control Panel Unit: 200 on-hand';
+    orderStatsContext = 'Demo dataset loaded.';
+  }
+
+  const systemInstructions = `You are the OrderWise AI Assistant Chatbot, an intelligent conversational co-pilot for supply chain, deterministic inventory allocation, and order priority intelligence.
+Core Business Rules:
+- Golden Rule: AI recommends. Business rules validate. Authorized humans approve. OrderWise allocates and explains.
+- Priority Sorting Key: 1) Approved Priority DESC (Critical=4 > High=3 > Medium=2 > Low=1), 2) Promised Delivery Date ASC, 3) Created At ASC, 4) Order ID ASC.
+- Allocation Logic: Full fulfillment when stock >= requested; Partial fulfillment ONLY if partial_delivery_allowed is true AND remaining stock >= minimum_acceptable_quantity; otherwise Deferred.
+- Scarce Bottleneck: Pressure Gauge Pro (GAUGE-P300) has only 40 units in stock. In the demo conflict: Charlie gets 30 units (High priority, earlier date), Alice is deferred (needs min 15, only 10 left), Bob is deferred (Medium priority, 0 left).
+Current Live Context:
+${stockContext}
+${orderStatsContext}
+
+Respond in clean, well-formatted JSON with this exact schema:
+{
+  "reply": "Clear, markdown-formatted conversational explanation answering the user's query.",
+  "suggestions": ["Relevant follow-up question 1", "Relevant follow-up question 2", "Relevant follow-up question 3"]
+}`;
+
+  const apiKey = process.env.GROQ_API_KEY || env.GROQ_API_KEY;
+  const isKeyMissing =
+    !apiKey ||
+    apiKey === 'your_groq_api_key_here' ||
+    apiKey === 'mock_or_pending_groq_key' ||
+    apiKey.trim() === '';
+
+  if (!isKeyMissing) {
+    try {
+      const messages = [{ role: 'system', content: systemInstructions }];
+      if (Array.isArray(history)) {
+        for (const item of history.slice(-4)) {
+          if (item.sender === 'user' || item.role === 'user') {
+            messages.push({ role: 'user', content: sanitizeUserText(item.text || item.content) });
+          } else if (item.sender === 'assistant' || item.role === 'assistant') {
+            messages.push({ role: 'assistant', content: String(item.text || item.content).slice(0, 500) });
+          }
+        }
+      }
+      messages.push({ role: 'user', content: sanitizeUserText(message) });
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 8000);
+
+      const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: env.GROQ_MODEL || 'llama3-70b-8192',
+          messages,
+          temperature: 0.3,
+          max_tokens: 600,
+          response_format: { type: 'json_object' },
+        }),
+        signal: controller.signal,
+      });
+      clearTimeout(timeoutId);
+
+      if (response.ok) {
+        const data = await response.json();
+        const rawJson = data.choices?.[0]?.message?.content;
+        if (rawJson) {
+          const parsed = JSON.parse(rawJson);
+          if (parsed && parsed.reply) {
+            return {
+              reply: parsed.reply,
+              suggestions: Array.isArray(parsed.suggestions) ? parsed.suggestions : [],
+              provider: 'groq',
+              model: env.GROQ_MODEL || 'llama3-70b-8192',
+            };
+          }
+        }
+      }
+    } catch (_groqErr) {
+      // Fallback gracefully below
+    }
+  }
+
+  // Intelligent conversational fallback engine
+  const lower = message.toLowerCase();
+  let reply = '';
+  let suggestions = [];
+
+  if (lower.includes('pressure gauge') || lower.includes('gauge') || lower.includes('bottleneck') || lower.includes('scarce')) {
+    reply = `**Pressure Gauge Pro (SKU: GAUGE-P300)** is the primary inventory bottleneck.
+- **On-Hand Stock:** 40 units
+- **Total Competing Demand:** 75 units (Alice: 25, Bob: 20, Charlie: 30)
+- **Allocation Result:** Charlie receives 30 units due to HIGH priority and earlier delivery date. Alice requires a minimum of 15 units, but only 10 remain, so she is deferred. Bob (MEDIUM) is deferred with 0 remaining stock.
+- **Recommendation:** Restock at least 35 units or execute a simulated inventory increase in the Simulation Lab.`;
+    suggestions = [
+      'Why was Alice’s order deferred?',
+      'How does the allocation engine break priority ties?',
+      'How can I simulate adding 50 units of Pressure Gauge Pro?',
+    ];
+  } else if (lower.includes('alice') || lower.includes('defer') || lower.includes('why')) {
+    reply = `### Why Order Deferrals Occurred:
+In the Pressure Gauge Pro allocation run:
+1. **Charlie** (HIGH priority, promised earlier) was evaluated first and claimed **30 units** (leaving 10 units).
+2. **Alice** (HIGH priority) requested 25 units with **partial delivery allowed** and **minimum acceptable quantity of 15**. Because only 10 units remained (< minimum 15), the business rule prevented sub-threshold delivery and deferred the order.
+3. **Bob** (MEDIUM priority) requested 20 units with **no partial delivery allowed**. Available stock was 0, resulting in deferral.`;
+    suggestions = [
+      'What are the 4 priority levels?',
+      'Where can I approve AI priority recommendations?',
+      'How do I run the allocation engine?',
+    ];
+  } else if (lower.includes('priority') || lower.includes('rule') || lower.includes('sort') || lower.includes('tie')) {
+    reply = `### Deterministic Allocation Engine Rules:
+Every allocation run evaluates orders in this exact deterministic order:
+1. **Approved Priority DESC:** CRITICAL (4) > HIGH (3) > MEDIUM (2) > LOW (1)
+2. **Promised Delivery Date ASC:** Earlier promised dates fulfilled first
+3. **Created Date ASC:** First-come, first-served for identical dates
+4. **Order ID ASC:** Final tie-breaker for identical timestamps
+
+*Remember:* AI only suggests recommendations. Authorized admins must approve or override them before the allocation engine executes.`;
+    suggestions = [
+      'What happens if an order allows partial delivery?',
+      'Which product has the lowest available stock?',
+      'Can AI change inventory stock directly?',
+    ];
+  } else if (lower.includes('simulat') || lower.includes('what-if') || lower.includes('scenario')) {
+    reply = `### Simulation Lab Capabilities:
+Simulations run purely in memory without mutating live inventory or live orders:
+- **Inventory Increase:** Test adding stock to resolve bottlenecks.
+- **Demand Surge:** Test sudden +25% or +50% spikes in customer demand.
+- **Supplier Delay:** Model delayed inbound PO shipments.
+- **Priority Change:** Test outcome shifts when changing customer priority tiers.`;
+    suggestions = [
+      'Go to Simulation Lab',
+      'What is the status of Pressure Gauge Pro?',
+      'How do I approve AI priority recommendations?',
+    ];
+  } else {
+    reply = `Hello! I am your **OrderWise AI Assistant Chatbot**.
+I can assist you with:
+- Explaining order fulfillment, partial shipments, and deferral reasons
+- Analyzing inventory bottlenecks (like Pressure Gauge Pro)
+- Guidance on deterministic allocation rules and tie-breakers
+- AI priority recommendations and human approval governance
+- What-if simulations in the Simulation Lab
+
+How can I help you today?`;
+    suggestions = [
+      'Which product is our biggest inventory bottleneck?',
+      'Why was Alice’s order deferred?',
+      'Explain the deterministic allocation rules',
+    ];
+  }
+
+  return {
+    reply,
+    suggestions,
+    provider: 'fallback-engine',
+    model: 'orderwise-assistant-v1',
+  };
+}
+
 module.exports = {
   PROMPT_VERSION,
   SUPPORTED_GROQ_MODELS,
@@ -496,4 +695,5 @@ module.exports = {
   callGroqChat,
   parseAndValidateAiOutput,
   generatePriorityRecommendation,
+  chatWithAssistant,
 };

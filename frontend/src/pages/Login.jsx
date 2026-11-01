@@ -15,6 +15,23 @@ export default function Login() {
 
   const from = location.state?.from?.pathname;
 
+  const getDestination = (loggedInUser) => {
+    const role = (loggedInUser?.role || '').toLowerCase();
+    if (role === 'customer') {
+      if (from && !from.startsWith('/admin') && from !== '/login' && from !== '/') {
+        return from;
+      }
+      return '/dashboard';
+    }
+    if (role === 'admin' || role === 'inventory_manager') {
+      if (from && from.startsWith('/admin')) {
+        return from;
+      }
+      return '/admin';
+    }
+    return '/dashboard';
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLocalError(null);
@@ -22,13 +39,7 @@ export default function Login() {
 
     try {
       const user = await login(email, password);
-      if (from) {
-        navigate(from, { replace: true });
-      } else if (user.role === 'admin' || user.role === 'inventory_manager') {
-        navigate('/admin', { replace: true });
-      } else {
-        navigate('/dashboard', { replace: true });
-      }
+      navigate(getDestination(user), { replace: true });
     } catch (err) {
       setLocalError(err?.error?.message || err?.message || 'Authentication failed');
     } finally {
@@ -44,13 +55,7 @@ export default function Login() {
 
     try {
       const user = await login(demoEmail, demoPassword);
-      if (from) {
-        navigate(from, { replace: true });
-      } else if (user.role === 'admin' || user.role === 'inventory_manager') {
-        navigate('/admin', { replace: true });
-      } else {
-        navigate('/dashboard', { replace: true });
-      }
+      navigate(getDestination(user), { replace: true });
     } catch (err) {
       setLocalError(err?.error?.message || err?.message || 'Authentication failed');
     } finally {

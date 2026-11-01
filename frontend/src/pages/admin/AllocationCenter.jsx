@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Cpu,
   Play,
@@ -9,6 +10,7 @@ import {
   Hash,
   Layers,
   Filter,
+  Sparkles,
 } from 'lucide-react';
 import apiClient from '../../api/client';
 import StatusPill from '../../components/ui/StatusPill';
@@ -158,14 +160,30 @@ export default function AllocationCenter() {
           </p>
         </div>
 
-        <button
-          onClick={() => setRunModalOpen(true)}
-          aria-label="Run Engine"
-          className="flex items-center space-x-2 px-5 py-3 bg-arcade-accent text-arcade-surface font-extrabold text-xs uppercase tracking-wider hover:opacity-90 transition-opacity self-start md:self-auto shadow-[0_0_15px_rgba(200,255,58,0.3)]"
-        >
-          <Play className="h-4 w-4 fill-current" />
-          <span>Run Engine</span>
-        </button>
+        <div className="flex flex-wrap items-center gap-2 self-start md:self-auto">
+          <Link
+            to="/admin/ai"
+            className="flex items-center space-x-1.5 px-3 py-2.5 border border-arcade-border text-arcade-primary hover:border-arcade-accent hover:text-arcade-accent text-xs uppercase tracking-wider transition-colors"
+          >
+            <Sparkles className="h-3.5 w-3.5 text-arcade-accent" />
+            <span>AI Priorities</span>
+          </Link>
+          <Link
+            to="/admin/impact"
+            className="flex items-center space-x-1.5 px-3 py-2.5 border border-arcade-border text-arcade-primary hover:border-arcade-accent hover:text-arcade-accent text-xs uppercase tracking-wider transition-colors"
+          >
+            <Layers className="h-3.5 w-3.5 text-arcade-accent" />
+            <span>Impact Analyzer</span>
+          </Link>
+          <button
+            onClick={() => setRunModalOpen(true)}
+            aria-label="Run Engine"
+            className="flex items-center space-x-2 px-4 py-2.5 bg-arcade-accent text-arcade-surface font-extrabold text-xs uppercase tracking-wider hover:opacity-90 transition-opacity shadow-[0_0_15px_rgba(200,255,58,0.3)]"
+          >
+            <Play className="h-4 w-4 fill-current" />
+            <span>Run Engine</span>
+          </button>
+        </div>
       </div>
 
       {error && (
