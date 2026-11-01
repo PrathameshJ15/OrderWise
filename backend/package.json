@@ -16,7 +16,8 @@
     "format:check": "prettier --check \"src/**/*.{js,json}\" \"tests/**/*.{js,json}\"",
     "build": "echo Backend does not require separate build step",
     "migrate": "node-pg-migrate --migrations-dir src/db/migrations up",
-    "seed": "node src/db/seeds/demo.js"
+    "seed": "node src/db/seeds/demo.js",
+    "seed:mock": "node src/db/seeds/mockData.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

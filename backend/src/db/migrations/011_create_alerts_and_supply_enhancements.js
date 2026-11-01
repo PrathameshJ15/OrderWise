@@ -34,7 +34,7 @@ exports.up = (pgm) => {
     -- Ensure condition_key has a default if null
     UPDATE alerts SET condition_key = 'alert:' || id WHERE condition_key IS NULL;
     UPDATE alerts SET status = 'active' WHERE status IS NULL;
-    UPDATE alerts SET recommended_action = COALESCE(suggested_action, '') WHERE recommended_action IS NULL;
+    UPDATE alerts SET recommended_action = '' WHERE recommended_action IS NULL;
 
     -- Update alert_type check constraint to support all alert types
     ALTER TABLE alerts DROP CONSTRAINT IF EXISTS alerts_alert_type_check;

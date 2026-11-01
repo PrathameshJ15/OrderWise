@@ -79,7 +79,6 @@ export default function Login() {
               <span>Secure Access Point</span>
             </div>
           </div>
-          <div className="text-xl font-black text-arcade-accent tracking-wider uppercase mb-1">OrderWise</div>
           <h1 className="font-display font-extrabold text-2xl tracking-tight uppercase text-arcade-primary">
             Sign In to OrderWise
           </h1>

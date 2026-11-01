@@ -13,6 +13,32 @@ const TOKENS = {
 };
 
 describe('Phase 14: Security Hardening & OWASP Compliance Tests', () => {
+  beforeAll(async () => {
+    const { query } = require('../src/config/db');
+    await query(`
+      DELETE FROM inventory WHERE product_id IN (SELECT id FROM products WHERE sku = 'TEST-SKU-99');
+      DELETE FROM products WHERE sku = 'TEST-SKU-99';
+    `);
+    await query(`
+      INSERT INTO orders (id, customer_id, status, promised_delivery_date, business_notes)
+      VALUES 
+        (101, 3, 'pending', '2026-10-25', 'Alice Security Test Order'),
+        (102, 4, 'pending', '2026-10-22', 'Bob Security Test Order')
+      ON CONFLICT (id) DO UPDATE SET customer_id = EXCLUDED.customer_id, status = 'pending';
+    `);
+    await query(`
+      INSERT INTO order_items (order_id, product_id, requested_quantity, minimum_acceptable_quantity, partial_delivery_allowed)
+      VALUES 
+        (101, 1, 10, 5, true),
+        (102, 1, 10, 5, true)
+      ON CONFLICT (order_id, product_id) DO NOTHING;
+    `);
+    await query(`
+      INSERT INTO ai_recommendations (id, order_id, suggested_priority, suggested_rank, confidence, explanation, status)
+      VALUES (1, 101, 'HIGH', 3, 'high', 'Security test recommendation', 'pending')
+      ON CONFLICT (id) DO UPDATE SET status = 'pending';
+    `);
+  });
 
   describe('1. OWASP Top 10 Security Headers & Configuration', () => {
     it('returns strict security headers from Helmet', async () => {

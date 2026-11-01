@@ -536,7 +536,7 @@ router.get('/:id', auth, async (req, res) => {
     return res.status(200).json({
       success: true,
       order: orderPayload,
-      data: { order: orderPayload },
+      data: orderPayload,
     });
   } catch (err) {
     console.error('Get order by id error:', err);
