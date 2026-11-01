@@ -23,7 +23,7 @@ export const ADMIN_NAV_ITEMS = [
   { name: 'Inventory Management', to: '/admin/inventory', icon: Database, roles: ['admin', 'inventory_manager'] },
   { name: 'Order Management', to: '/admin/orders', icon: ShoppingBag, roles: ['admin', 'inventory_manager'] },
   { name: 'Allocation Center', to: '/admin/allocation', icon: Cpu, roles: ['admin'] },
-  { name: 'AI Recommendations', to: '/admin/ai', icon: Sparkles, roles: ['admin'] },
+  { name: 'AI Recommendations', to: '/admin/ai', icon: Sparkles, roles: ['admin'], badge: 'Chatbot' },
   { name: 'Impact Analyzer', to: '/admin/impact', icon: Layers, roles: ['admin'] },
   { name: 'Simulation Lab', to: '/admin/simulations', icon: FlaskConical, roles: ['admin'] },
   { name: 'Alerts', to: '/admin/alerts', icon: ShieldAlert, roles: ['admin', 'inventory_manager'] },
@@ -110,7 +110,12 @@ export default function Sidebar({ mobileOpen = false, onCloseMobile = () => {} }
                 }
               >
                 <Icon className="h-4 w-4 shrink-0" />
-                <span className="truncate">{item.name}</span>
+                <span className="truncate flex-1">{item.name}</span>
+                {item.badge && (
+                  <span className="text-[9px] px-1.5 py-0.2 rounded bg-arcade-accent/20 text-arcade-accent font-mono uppercase font-normal ml-auto">
+                    {item.badge}
+                  </span>
+                )}
               </NavLink>
             );
           })}

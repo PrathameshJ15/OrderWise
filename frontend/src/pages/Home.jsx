@@ -23,7 +23,61 @@ export default function Home() {
   const { user } = useAuth();
 
   return (
-    <div className="space-y-12 py-4 font-mono">
+    <div className="min-h-screen bg-arcade-bg text-arcade-primary font-mono flex flex-col selection:bg-arcade-accent selection:text-arcade-surface">
+      {/* 0. Top Landing Navigation Bar */}
+      <header className="border-b border-arcade-border bg-arcade-neutral/90 backdrop-blur sticky top-0 z-50 px-4 sm:px-8 py-3.5">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="w-8 h-8 border border-arcade-accent bg-arcade-accent/15 text-arcade-accent flex items-center justify-center font-display font-black text-sm shadow-[0_0_12px_rgba(200,255,58,0.3)]">
+              OW
+            </div>
+            <div>
+              <span className="font-display font-black text-lg uppercase tracking-wider text-arcade-primary block leading-none">
+                Order<span className="text-arcade-accent">Wise</span>
+              </span>
+              <span className="text-[9px] uppercase tracking-widest text-arcade-secondary block mt-0.5">
+                Supply Chain &amp; Allocation Intelligence
+              </span>
+            </div>
+          </div>
+
+          {/* Quick links & CTA */}
+          <div className="flex items-center space-x-3 sm:space-x-4">
+            <Link
+              to="/login"
+              className="text-xs uppercase tracking-wider text-arcade-secondary hover:text-arcade-primary font-bold px-2 sm:px-3 py-1.5 transition-colors"
+            >
+              Sign In
+            </Link>
+            <Link
+              to="/register"
+              className="text-xs uppercase tracking-wider border border-arcade-border hover:border-arcade-accent text-arcade-primary px-3 py-1.5 transition-colors hidden sm:inline-block"
+            >
+              Register
+            </Link>
+            {user ? (
+              <Link
+                to={user.role === 'customer' ? '/dashboard' : '/admin'}
+                className="text-xs uppercase tracking-wider bg-arcade-accent text-arcade-surface font-extrabold px-3.5 sm:px-4 py-1.5 hover:opacity-90 shadow-[0_0_12px_rgba(200,255,58,0.3)] transition-all flex items-center space-x-1.5"
+              >
+                <span>Console</span>
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            ) : (
+              <Link
+                to="/login"
+                className="text-xs uppercase tracking-wider bg-arcade-accent text-arcade-surface font-extrabold px-3.5 sm:px-4 py-1.5 hover:opacity-90 shadow-[0_0_12px_rgba(200,255,58,0.3)] transition-all flex items-center space-x-1.5"
+              >
+                <span>Launch Portal</span>
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            )}
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content Container */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12 flex-1 w-full">
       {/* 1. Hero Section */}
       <section className="relative border border-arcade-border bg-arcade-neutral p-8 sm:p-12 overflow-hidden shadow-2xl">
         <div className="absolute -top-24 -right-24 w-96 h-96 bg-arcade-accent/10 rounded-full blur-3xl pointer-events-none" />
@@ -229,6 +283,24 @@ export default function Home() {
           <ArrowRight className="h-4 w-4" />
         </Link>
       </section>
+      </main>
+
+      {/* 5. Footer */}
+      <footer className="border-t border-arcade-border bg-arcade-neutral/80 py-6 px-4 sm:px-8 mt-12 text-xs text-arcade-secondary">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center space-x-2">
+            <span className="font-display font-black text-arcade-primary uppercase">OrderWise</span>
+            <span>•</span>
+            <span>Deterministic Inventory Allocation Engine</span>
+          </div>
+          <div className="flex items-center space-x-4 text-[11px]">
+            <Link to="/login" className="hover:text-arcade-accent transition-colors">Login</Link>
+            <Link to="/register" className="hover:text-arcade-accent transition-colors">Register</Link>
+            <Link to="/admin" className="hover:text-arcade-accent transition-colors">Admin Console</Link>
+            <Link to="/dashboard" className="hover:text-arcade-accent transition-colors">Customer Portal</Link>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

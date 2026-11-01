@@ -4,6 +4,8 @@
   "private": true,
   "description": "OrderWise - AI-Assisted Priority-Based Order Allocation Platform",
   "scripts": {
+    "dev": "npm run dev:frontend",
+    "dev:all": "npm run dev:backend & npm run dev:frontend",
     "dev:backend": "npm --prefix backend run dev",
     "dev:frontend": "npm --prefix frontend run dev",
     "test:backend": "npm --prefix backend run test",
