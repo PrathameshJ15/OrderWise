@@ -170,7 +170,6 @@ export default function CreateOrder() {
 
     setSubmitting(true);
     try {
-      // Generate unique idempotency key
       const idempotencyKey = `ord-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
 
       const payload = {
@@ -206,62 +205,62 @@ export default function CreateOrder() {
   };
 
   return (
-    <div className="space-y-6 font-mono py-4 max-w-4xl mx-auto">
-      {/* Header */}
-      <div className="border border-arcade-border bg-arcade-neutral p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="space-y-6 font-sans py-2 max-w-4xl mx-auto">
+      {/* Header Card */}
+      <div className="card-base flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center space-x-2 text-xs text-arcade-secondary mb-2">
-            <Link to="/orders" className="hover:text-arcade-primary flex items-center space-x-1">
+          <div className="flex items-center space-x-2 text-[12px] font-mono text-t2 mb-1.5">
+            <Link to="/orders" className="hover:text-white flex items-center space-x-1">
               <ArrowLeft className="h-3 w-3" />
               <span>Orders</span>
             </Link>
             <span>/</span>
-            <span className="text-arcade-accent">New Order</span>
+            <span className="text-white">New order</span>
           </div>
-          <h1 className="font-display text-3xl font-extrabold uppercase text-arcade-primary">
+          <h1 className="text-[34px] font-bold tracking-[-0.02em] text-white">
             Create Order Requisition
           </h1>
-          <p className="text-xs text-arcade-secondary mt-1">
+          <p className="text-[14px] text-t2 mt-0.5">
             Specify requested quantities and minimum partial thresholds for the allocation engine.
           </p>
         </div>
       </div>
 
       {error && (
-        <div className="p-4 border border-arcade-danger/40 bg-arcade-danger/10 text-arcade-danger text-xs flex items-center justify-between">
+        <div className="p-4 rounded-card border border-no/30 bg-[#291313] text-no text-[13px] flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <AlertCircle className="h-4 w-4 shrink-0" />
             <span>{error}</span>
           </div>
-          <button onClick={() => setError(null)} className="underline hover:text-white text-[11px]">
+          <button onClick={() => setError(null)} className="underline hover:text-white text-[12px]">
             Dismiss
           </button>
         </div>
       )}
 
       {loadingProducts ? (
-        <div className="border border-arcade-border bg-arcade-neutral p-12 text-center text-arcade-secondary flex items-center justify-center space-x-2">
-          <RefreshCw className="h-5 w-5 animate-spin text-arcade-accent" />
-          <span>Loading catalog...</span>
+        <div className="card-base p-12 text-center text-t2 flex items-center justify-center space-x-2">
+          <RefreshCw className="h-5 w-5 animate-spin text-ac" />
+          <span className="font-mono text-[12px]">Loading catalog...</span>
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Line Items Section */}
-          <div className="border border-arcade-border bg-arcade-neutral p-5 space-y-4">
-            <div className="flex items-center justify-between border-b border-arcade-border pb-3">
+          <div className="card-base space-y-4">
+            <div className="flex items-center justify-between border-b border-bd pb-4">
               <div className="flex items-center space-x-2">
-                <ShoppingBag className="h-4 w-4 text-arcade-accent" />
-                <h2 className="font-display text-base uppercase font-bold text-arcade-primary">
-                  Order Line Items ({items.length})
+                <ShoppingBag className="h-4 w-4 text-ac" />
+                <h2 className="text-[20px] font-bold text-white">
+                  Order line items ({items.length})
                 </h2>
               </div>
               <button
                 type="button"
                 onClick={handleAddItem}
-                className="flex items-center space-x-1 text-xs text-arcade-accent hover:underline uppercase tracking-wider"
+                className="btn-secondary min-h-[38px] px-3.5 text-[13px] flex items-center space-x-1"
               >
                 <Plus className="h-3.5 w-3.5" />
-                <span>Add Item Line</span>
+                <span>Add item line</span>
               </button>
             </div>
 
@@ -269,18 +268,18 @@ export default function CreateOrder() {
               {items.map((item, idx) => (
                 <div
                   key={idx}
-                  className="border border-arcade-border bg-arcade-surface p-4 flex flex-col md:flex-row md:items-center justify-between gap-4"
+                  className="bg-s2 border border-bd rounded-card p-4 flex flex-col md:flex-row md:items-center justify-between gap-4"
                 >
                   <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 flex-1">
                     {/* Product Selector */}
                     <div className="sm:col-span-2">
-                      <label className="block text-[10px] uppercase text-arcade-secondary mb-1">
+                      <label className="block text-[12px] font-mono text-t2 mb-1.5">
                         Product (SKU)
                       </label>
                       <select
                         value={item.productId}
                         onChange={(e) => handleItemChange(idx, 'productId', e.target.value)}
-                        className="w-full bg-arcade-neutral border border-arcade-border p-2 text-xs text-arcade-primary focus:border-arcade-accent focus:outline-none"
+                        className="w-full bg-s border border-bd rounded-pill px-4 py-2.5 text-[14px] text-white focus:border-white focus:outline-none font-sans"
                       >
                         {products.map((p) => (
                           <option key={p.id} value={p.id}>
@@ -292,7 +291,7 @@ export default function CreateOrder() {
 
                     {/* Requested Quantity */}
                     <div>
-                      <label htmlFor={`req-qty-${idx}`} className="block text-[10px] uppercase text-arcade-secondary mb-1">
+                      <label htmlFor={`req-qty-${idx}`} className="block text-[12px] font-mono text-t2 mb-1.5">
                         Requested Quantity
                       </label>
                       <input
@@ -301,13 +300,13 @@ export default function CreateOrder() {
                         min="1"
                         value={item.requestedQuantity}
                         onChange={(e) => handleItemChange(idx, 'requestedQuantity', e.target.value)}
-                        className="w-full bg-arcade-neutral border border-arcade-border p-2 text-xs text-arcade-primary focus:border-arcade-accent focus:outline-none"
+                        className="w-full bg-s border border-bd rounded-pill px-4 py-2.5 text-[14px] text-white focus:border-white focus:outline-none font-mono"
                       />
                     </div>
 
                     {/* Minimum Acceptable Quantity */}
                     <div>
-                      <label htmlFor={`min-qty-${idx}`} className="block text-[10px] uppercase text-arcade-secondary mb-1">
+                      <label htmlFor={`min-qty-${idx}`} className="block text-[12px] font-mono text-t2 mb-1.5">
                         Min Acceptable Quantity
                       </label>
                       <input
@@ -319,7 +318,7 @@ export default function CreateOrder() {
                         onChange={(e) =>
                           handleItemChange(idx, 'minimumAcceptableQuantity', e.target.value)
                         }
-                        className="w-full bg-arcade-neutral border border-arcade-border p-2 text-xs text-arcade-primary focus:border-arcade-accent focus:outline-none disabled:opacity-50"
+                        className="w-full bg-s border border-bd rounded-pill px-4 py-2.5 text-[14px] text-white focus:border-white focus:outline-none font-mono disabled:opacity-40"
                       />
                     </div>
                   </div>
@@ -333,9 +332,9 @@ export default function CreateOrder() {
                         onChange={(e) =>
                           handleItemChange(idx, 'partialDeliveryAllowed', e.target.checked)
                         }
-                        className="accent-arcade-accent h-4 w-4"
+                        className="accent-ac h-4 w-4 rounded cursor-pointer"
                       />
-                      <span className="text-[11px] text-arcade-secondary">Partial OK</span>
+                      <span className="text-[12px] font-mono text-t2">Partial OK</span>
                     </label>
 
                     {items.length > 1 && (
@@ -343,7 +342,7 @@ export default function CreateOrder() {
                         type="button"
                         onClick={() => handleRemoveItem(idx)}
                         title="Remove Line"
-                        className="p-1.5 text-arcade-secondary hover:text-arcade-danger transition-colors"
+                        className="p-1.5 rounded-full text-t2 hover:text-no hover:bg-s transition-colors"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
@@ -355,31 +354,31 @@ export default function CreateOrder() {
           </div>
 
           {/* Delivery & Notes Section */}
-          <div className="border border-arcade-border bg-arcade-neutral p-5 space-y-4">
-            <h2 className="font-display text-base uppercase font-bold text-arcade-primary border-b border-arcade-border pb-3">
-              Delivery Commitments &amp; Notes
+          <div className="card-base space-y-4">
+            <h2 className="text-[20px] font-bold text-white border-b border-bd pb-4">
+              Delivery commitments &amp; notes
             </h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs uppercase text-arcade-secondary mb-1 flex items-center space-x-1">
-                  <Calendar className="h-3 w-3 text-arcade-accent" />
+                <label className="block text-[12px] font-mono text-t2 mb-1.5 flex items-center space-x-1.5">
+                  <Calendar className="h-3.5 w-3.5 text-ac" />
                   <span>Promised Delivery Date</span>
                 </label>
                 <input
                   type="date"
                   value={promisedDeliveryDate}
                   onChange={(e) => setPromisedDeliveryDate(e.target.value)}
-                  className="w-full bg-arcade-surface border border-arcade-border p-2.5 text-xs text-arcade-primary focus:border-arcade-accent focus:outline-none"
+                  className="w-full bg-s2 border border-bd rounded-pill px-4 py-2.5 text-[14px] text-white focus:border-white focus:outline-none font-sans"
                 />
-                <span className="text-[10px] text-arcade-secondary mt-1 block">
+                <span className="text-[11px] font-mono text-t2 mt-1 block">
                   Delivery priority tie-breaks favor earlier committed dates.
                 </span>
               </div>
 
               <div>
-                <label className="block text-xs uppercase text-arcade-secondary mb-1 flex items-center space-x-1">
-                  <FileText className="h-3 w-3 text-arcade-accent" />
+                <label className="block text-[12px] font-mono text-t2 mb-1.5 flex items-center space-x-1.5">
+                  <FileText className="h-3.5 w-3.5 text-ac" />
                   <span>Business Notes / Contract Context</span>
                 </label>
                 <textarea
@@ -387,33 +386,33 @@ export default function CreateOrder() {
                   placeholder="e.g. Turnaround milestone delivery; penalty clause if deferred."
                   value={businessNotes}
                   onChange={(e) => setBusinessNotes(e.target.value)}
-                  className="w-full bg-arcade-surface border border-arcade-border p-2.5 text-xs text-arcade-primary focus:border-arcade-accent focus:outline-none placeholder-arcade-secondary/50"
+                  className="w-full bg-s2 border border-bd rounded-card p-3 text-[14px] text-white focus:border-white focus:outline-none placeholder-t2/50 font-sans"
                 />
-                <span className="text-[10px] text-arcade-secondary mt-1 block">
-                  Reviewed by AI Priority Assistant and Operations Team.
+                <span className="text-[11px] font-mono text-t2 mt-1 block">
+                  Reviewed by AI Priority Assistant and operations team.
                 </span>
               </div>
             </div>
           </div>
 
           {/* Submission Panel */}
-          <div className="border border-arcade-border bg-arcade-neutral p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="text-xs text-arcade-secondary flex items-center space-x-2">
-              <Check className="h-4 w-4 text-arcade-accent" />
+          <div className="card-base flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="text-[12px] font-mono text-t2 flex items-center space-x-2">
+              <Check className="h-4 w-4 text-ok" />
               <span>
-                Protected with Idempotency Key • Default queue status is pending.
+                Protected with idempotency key • Default queue status is pending.
               </span>
             </div>
 
             <button
               type="submit"
               disabled={submitting}
-              className="w-full sm:w-auto flex items-center justify-center space-x-2 px-6 py-3 bg-arcade-accent text-arcade-surface font-extrabold text-xs uppercase tracking-wider hover:opacity-90 disabled:opacity-50 transition-opacity shadow-[0_0_12px_rgba(200,255,58,0.3)]"
+              className="btn-primary w-full sm:w-auto px-6 py-3 space-x-2 disabled:opacity-50"
             >
               {submitting ? (
                 <>
                   <RefreshCw className="h-4 w-4 animate-spin" />
-                  <span>Submitting Order...</span>
+                  <span>Submitting order...</span>
                 </>
               ) : (
                 <>

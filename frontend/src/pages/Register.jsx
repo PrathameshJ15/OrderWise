@@ -46,28 +46,29 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-[85vh] flex flex-col justify-center items-center px-4 font-mono py-8">
-      <div className="max-w-md w-full bg-arcade-neutral border border-arcade-border p-8 shadow-2xl relative">
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-arcade-accent via-arcade-secondary to-arcade-accent" />
-
+    <div className="min-h-[85vh] flex flex-col justify-center items-center px-4 font-sans py-8">
+      <div className="max-w-md w-full bg-s border border-bd rounded-card p-8 shadow-none relative">
         <div className="mb-6">
-          <div className="flex items-center space-x-2 text-arcade-accent text-xs mb-1 uppercase tracking-widest">
+          <Link to="/" className="inline-block mb-3">
+            <img src="/logo.png" alt="OrderWise" className="h-8 w-auto object-contain" />
+          </Link>
+          <div className="flex items-center space-x-2 text-ac text-[12px] font-mono mb-1 font-medium">
             <UserPlus className="h-3.5 w-3.5" />
-            <span>Customer Onboarding</span>
+            <span>Customer onboarding</span>
           </div>
-          <h1 className="font-display font-extrabold text-3xl tracking-tight uppercase text-arcade-primary">
+          <h1 className="text-[26px] font-bold tracking-tight text-white">
             Create OrderWise Account
           </h1>
-          <p className="text-xs text-arcade-secondary mt-1">
+          <p className="text-[14px] text-t2 mt-1">
             Register your enterprise or organization to place priority orders.
           </p>
         </div>
 
         {localError && (
-          <div className="mb-6 p-3 bg-arcade-danger/10 border border-arcade-danger/40 text-arcade-danger text-xs flex items-start space-x-2">
+          <div className="mb-6 p-4 bg-[#291313] border border-no/30 text-no rounded-card text-[13px] flex items-start space-x-2.5">
             <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5" />
             <div>
-              <span className="font-bold block uppercase tracking-wider">Registration Error</span>
+              <span className="font-semibold block">Registration error</span>
               <span>{localError}</span>
             </div>
           </div>
@@ -75,101 +76,101 @@ export default function Register() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs uppercase tracking-wider text-arcade-secondary mb-1">
+            <label className="block text-[12px] font-mono text-t2 mb-1.5">
               Company / Full Name
             </label>
             <div className="relative">
-              <User className="absolute left-3 top-3 h-4 w-4 text-arcade-secondary" />
+              <User className="absolute left-3.5 top-3.5 h-4 w-4 text-t2" />
               <input
                 type="text"
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Acme Industrial Corp"
-                className="w-full bg-arcade-surface border border-arcade-border px-9 py-2.5 text-xs text-arcade-primary placeholder-arcade-secondary/40 focus:outline-none focus:border-arcade-accent transition-colors"
+                className="w-full bg-s2 border border-bd rounded-pill pl-10 pr-4 py-2.5 text-[14px] text-white placeholder-t2/50 focus:outline-none focus:border-white transition-colors font-sans"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs uppercase tracking-wider text-arcade-secondary mb-1">
+            <label className="block text-[12px] font-mono text-t2 mb-1.5">
               Enterprise Email
             </label>
             <div className="relative">
-              <Mail className="absolute left-3 top-3 h-4 w-4 text-arcade-secondary" />
+              <Mail className="absolute left-3.5 top-3.5 h-4 w-4 text-t2" />
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="purchasing@acme.example"
-                className="w-full bg-arcade-surface border border-arcade-border px-9 py-2.5 text-xs text-arcade-primary placeholder-arcade-secondary/40 focus:outline-none focus:border-arcade-accent transition-colors"
+                className="w-full bg-s2 border border-bd rounded-pill pl-10 pr-4 py-2.5 text-[14px] text-white placeholder-t2/50 focus:outline-none focus:border-white transition-colors font-sans"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs uppercase tracking-wider text-arcade-secondary mb-1">
+            <label className="block text-[12px] font-mono text-t2 mb-1.5">
               Password
             </label>
             <div className="relative">
-              <KeyRound className="absolute left-3 top-3 h-4 w-4 text-arcade-secondary" />
+              <KeyRound className="absolute left-3.5 top-3.5 h-4 w-4 text-t2" />
               <input
                 type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••••••"
-                className="w-full bg-arcade-surface border border-arcade-border px-9 py-2.5 text-xs text-arcade-primary placeholder-arcade-secondary/40 focus:outline-none focus:border-arcade-accent transition-colors"
+                className="w-full bg-s2 border border-bd rounded-pill pl-10 pr-4 py-2.5 text-[14px] text-white placeholder-t2/50 focus:outline-none focus:border-white transition-colors font-sans"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs uppercase tracking-wider text-arcade-secondary mb-1">
+            <label className="block text-[12px] font-mono text-t2 mb-1.5">
               Confirm Password
             </label>
             <div className="relative">
-              <KeyRound className="absolute left-3 top-3 h-4 w-4 text-arcade-secondary" />
+              <KeyRound className="absolute left-3.5 top-3.5 h-4 w-4 text-t2" />
               <input
                 type="password"
                 required
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="••••••••••••"
-                className="w-full bg-arcade-surface border border-arcade-border px-9 py-2.5 text-xs text-arcade-primary placeholder-arcade-secondary/40 focus:outline-none focus:border-arcade-accent transition-colors"
+                className="w-full bg-s2 border border-bd rounded-pill pl-10 pr-4 py-2.5 text-[14px] text-white placeholder-t2/50 focus:outline-none focus:border-white transition-colors font-sans"
               />
             </div>
           </div>
 
-          {/* Password Policy Tracker */}
-          <div className="bg-arcade-surface border border-arcade-border p-3 text-[11px] space-y-1">
-            <span className="block text-arcade-secondary font-semibold uppercase text-[10px] tracking-wider mb-1">
-              Password Security Policy:
-            </span>
-            <div className={`flex items-center space-x-1.5 ${isLengthValid ? 'text-arcade-accent' : 'text-arcade-secondary'}`}>
-              <CheckCircle2 className="h-3 w-3" />
-              <span>At least 8 characters long</span>
-            </div>
-            <div className={`flex items-center space-x-1.5 ${hasLetter ? 'text-arcade-accent' : 'text-arcade-secondary'}`}>
-              <CheckCircle2 className="h-3 w-3" />
-              <span>Contains letters</span>
-            </div>
-            <div className={`flex items-center space-x-1.5 ${hasNumber ? 'text-arcade-accent' : 'text-arcade-secondary'}`}>
-              <CheckCircle2 className="h-3 w-3" />
-              <span>Contains at least one number</span>
+          {/* Password policy requirements */}
+          <div className="bg-s2/60 border border-bd rounded-card p-4 space-y-2 text-[12px] font-mono">
+            <span className="block font-medium text-white">Password Security Policy:</span>
+            <div className="space-y-1.5">
+              <div className={`flex items-center space-x-2 ${isLengthValid ? 'text-ok' : 'text-t2'}`}>
+                <CheckCircle2 className="h-3.5 w-3.5" />
+                <span>At least 8 characters long</span>
+              </div>
+              <div className={`flex items-center space-x-2 ${hasLetter ? 'text-ok' : 'text-t2'}`}>
+                <CheckCircle2 className="h-3.5 w-3.5" />
+                <span>Contains letters</span>
+              </div>
+              <div className={`flex items-center space-x-2 ${hasNumber ? 'text-ok' : 'text-t2'}`}>
+                <CheckCircle2 className="h-3.5 w-3.5" />
+                <span>Contains at least one number</span>
+              </div>
             </div>
           </div>
 
           <button
             type="submit"
             disabled={submitting}
-            className="w-full bg-arcade-accent text-arcade-surface font-bold text-xs uppercase tracking-wider py-3 flex items-center justify-center space-x-2 hover:opacity-95 transition-opacity disabled:opacity-50"
+            className="btn-primary w-full py-3 space-x-2 disabled:opacity-50"
           >
             {submitting ? (
               <>
                 <RefreshCw className="h-4 w-4 animate-spin" />
-                <span>Creating Account...</span>
+                <span>Creating account...</span>
               </>
             ) : (
               <>
@@ -180,10 +181,10 @@ export default function Register() {
           </button>
         </form>
 
-        <div className="mt-6 text-center text-xs text-arcade-secondary">
-          <span>Already registered? </span>
-          <Link to="/login" className="text-arcade-accent hover:underline font-bold">
-            Sign in
+        <div className="mt-6 text-center text-[13px] text-t2">
+          <span>Already have an account? </span>
+          <Link to="/login" className="text-white hover:underline font-semibold ml-1">
+            Sign in here
           </Link>
         </div>
       </div>

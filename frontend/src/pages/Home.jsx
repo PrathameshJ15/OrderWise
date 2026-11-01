@@ -1,64 +1,56 @@
 import React from 'react';
-import { Link, useOutletContext } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import {
-  Cpu,
-  Shield,
-  Layers,
   ArrowRight,
-  CheckCircle2,
-  Lock,
   Boxes,
+  Shield,
+  Activity,
+  Layers,
   Sparkles,
   BarChart3,
-  Terminal,
-  Activity,
-  FileSpreadsheet,
-  Users,
+  ShieldCheck,
+  CheckCircle2,
+  Lock,
 } from 'lucide-react';
 
 export default function Home() {
-  const context = useOutletContext() || {};
-  const { health } = context;
   const { user } = useAuth();
 
   return (
-    <div className="min-h-screen bg-arcade-bg text-arcade-primary font-mono flex flex-col selection:bg-arcade-accent selection:text-arcade-surface">
+    <div className="min-h-screen bg-bg text-white font-sans flex flex-col selection:bg-ac selection:text-white">
       {/* 0. Top Landing Navigation Bar */}
-      <header className="border-b border-arcade-border bg-arcade-neutral/90 backdrop-blur sticky top-0 z-50 px-4 sm:px-8 py-3.5">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
+      <header className="border-b border-bd bg-s/90 backdrop-blur-md sticky top-0 z-50 px-4 sm:px-8 py-3.5">
+        <div className="max-w-container mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 border border-arcade-accent bg-arcade-accent/15 text-arcade-accent flex items-center justify-center font-display font-black text-sm shadow-[0_0_12px_rgba(200,255,58,0.3)]">
-              OW
-            </div>
-            <div>
-              <span className="font-display font-black text-lg uppercase tracking-wider text-arcade-primary block leading-none">
-                Order<span className="text-arcade-accent">Wise</span>
-              </span>
-              <span className="text-[9px] uppercase tracking-widest text-arcade-secondary block mt-0.5">
-                Supply Chain &amp; Allocation Intelligence
+            <Link to="/" className="flex items-center space-x-2.5">
+              <img src="/logo.png" alt="OrderWise" className="h-8 w-auto object-contain" />
+            </Link>
+            <div className="hidden sm:block border-l border-bd pl-3">
+              <span className="text-[12px] font-mono text-t2 block">
+                Supply chain &amp; allocation intelligence
               </span>
             </div>
           </div>
 
-          {/* Quick links & CTA */}
-          <div className="flex items-center space-x-3 sm:space-x-4">
+          {/* Navigation links & CTA - hidden on phones (max 760px) as per design spec */}
+          <div className="hidden md:flex items-center space-x-4">
             <Link
               to="/login"
-              className="text-xs uppercase tracking-wider text-arcade-secondary hover:text-arcade-primary font-bold px-2 sm:px-3 py-1.5 transition-colors"
+              className="text-[14px] text-t2 hover:text-white font-medium transition-colors"
             >
-              Sign In
+              Sign in
             </Link>
             <Link
               to="/register"
-              className="text-xs uppercase tracking-wider border border-arcade-border hover:border-arcade-accent text-arcade-primary px-3 py-1.5 transition-colors hidden sm:inline-block"
+              className="btn-secondary min-h-[38px] px-4 text-[13px]"
             >
               Register
             </Link>
             {user ? (
               <Link
                 to={user.role === 'customer' ? '/dashboard' : '/admin'}
-                className="text-xs uppercase tracking-wider bg-arcade-accent text-arcade-surface font-extrabold px-3.5 sm:px-4 py-1.5 hover:opacity-90 shadow-[0_0_12px_rgba(200,255,58,0.3)] transition-all flex items-center space-x-1.5"
+                className="btn-primary min-h-[38px] px-4 text-[13px] flex items-center space-x-1.5"
               >
                 <span>Console</span>
                 <ArrowRight className="h-3.5 w-3.5" />
@@ -66,238 +58,352 @@ export default function Home() {
             ) : (
               <Link
                 to="/login"
-                className="text-xs uppercase tracking-wider bg-arcade-accent text-arcade-surface font-extrabold px-3.5 sm:px-4 py-1.5 hover:opacity-90 shadow-[0_0_12px_rgba(200,255,58,0.3)] transition-all flex items-center space-x-1.5"
+                className="btn-primary min-h-[38px] px-4 text-[13px] flex items-center space-x-1.5"
               >
                 <span>Launch Portal</span>
                 <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             )}
           </div>
+
+          {/* Mobile phone quick launch button */}
+          <div className="md:hidden flex items-center space-x-2">
+            <Link
+              to="/login"
+              className="btn-primary min-h-[36px] px-4 text-[12px]"
+            >
+              Launch
+            </Link>
+          </div>
         </div>
       </header>
 
-      {/* Main Content Container */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12 flex-1 w-full">
-      {/* 1. Hero Section */}
-      <section className="relative border border-arcade-border bg-arcade-neutral p-8 sm:p-12 overflow-hidden shadow-2xl">
-        <div className="absolute -top-24 -right-24 w-96 h-96 bg-arcade-accent/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-24 -left-24 w-80 h-80 bg-arcade-info/10 rounded-full blur-3xl pointer-events-none" />
+      {/* Main Content Container: max-width 1120px, centered, 32px side padding */}
+      <main className="max-w-container mx-auto px-4 sm:px-8 py-8 space-y-[88px] flex-1 w-full">
+        {/* 1. Landing Hero: 2 columns (1.1fr / 1fr), gap 56px, phone collapses to 1 col */}
+        <section className="relative pt-6 sm:pt-10">
+          {/* One soft red glow in the landing hero only */}
+          <div
+            className="absolute top-1/2 left-1/3 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[350px] bg-ac/15 rounded-full blur-[100px] pointer-events-none"
+            aria-hidden="true"
+          />
 
-        <div className="relative z-10 max-w-4xl space-y-6">
-          <div className="inline-flex items-center space-x-2 text-xs text-arcade-accent border border-arcade-accent/30 bg-arcade-accent/10 px-3 py-1">
-            <span className="w-2 h-2 bg-arcade-accent animate-ping rounded-full inline-block" />
-            <span className="font-bold tracking-widest uppercase">VORTEXA 3.0 • Problem Statement S-03</span>
+          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-14 items-center">
+            {/* Left Column: Headlines & Actions */}
+            <div className="space-y-6">
+              {/* Badge: --ac pill, white mono text */}
+              <div>
+                <span className="inline-flex items-center rounded-pill bg-ac text-white font-mono text-[12px] font-medium px-3 py-1">
+                  VORTEXA 3.0 • Problem Statement S-03
+                </span>
+              </div>
+
+              {/* Landing H1: 60px / 1.02, tracking -0.03em, 700. Phones: drops to 38px. Sentence case */}
+              <h1 className="text-[38px] md:text-[60px] font-bold leading-[1.02] tracking-[-0.03em] text-white">
+                Deterministic Order Allocation <br />
+                <span className="text-ac">and supply intelligence</span>
+              </h1>
+
+              {/* Body: 15-18px / 1.6, --t2, 400 */}
+              <p className="text-[16px] md:text-[18px] leading-[1.6] text-t2 font-normal max-w-xl">
+                OrderWise resolves inventory conflicts across competing customer orders using
+                deterministic priority rules, Groq Llama-3 recommendations with strict human governance,
+                and real-time allocation explanations.
+              </p>
+
+              {/* Buttons: pill (999px), min-height 44px */}
+              <div className="pt-2 flex flex-wrap items-center gap-4">
+                {user ? (
+                  <Link
+                    to={user.role === 'customer' ? '/dashboard' : '/admin'}
+                    className="btn-primary space-x-2"
+                  >
+                    <span>Enter {user.role === 'customer' ? 'Customer portal' : 'Admin console'}</span>
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                ) : (
+                  <>
+                    <Link
+                      to="/login"
+                      className="btn-primary space-x-2"
+                    >
+                      <span>Launch Operations Portal</span>
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                    <Link
+                      to="/register"
+                      className="btn-secondary"
+                    >
+                      <span>Create customer account</span>
+                    </Link>
+                  </>
+                )}
+              </div>
+            </div>
+
+            {/* Right Column: Hero Live Allocation Card */}
+            <div className="card-base space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-bd">
+                <div>
+                  <div className="text-[12px] font-mono text-t2">Live allocation queue</div>
+                  <div className="text-[18px] font-bold text-white mt-0.5">Pressure Gauge Pro (GAUGE-P300)</div>
+                </div>
+                <span className="inline-flex items-center rounded-pill bg-ac text-white font-mono text-[12px] font-medium px-2.5 py-0.5">
+                  40 on hand
+                </span>
+              </div>
+
+              {/* Queue rows: --s2 background, order name left, mono status right, thin progress bar below in status color */}
+              <div className="space-y-3">
+                {/* Row 1: Charlie */}
+                <div className="bg-s2 rounded-card p-3.5 space-y-2">
+                  <div className="flex items-center justify-between text-[14px]">
+                    <span className="font-semibold text-white">Charlie • Order #103</span>
+                    <span className="text-[12px] font-mono font-medium text-ok">Fulfilled 30/30</span>
+                  </div>
+                  {/* Progress bar: 6px tall, pill ends */}
+                  <div className="w-full h-[6px] bg-[#1A1A1A] rounded-pill overflow-hidden">
+                    <div className="h-full bg-ok rounded-pill w-full" />
+                  </div>
+                </div>
+
+                {/* Row 2: Alice */}
+                <div className="bg-s2 rounded-card p-3.5 space-y-2">
+                  <div className="flex items-center justify-between text-[14px]">
+                    <span className="font-semibold text-white">Alice • Order #101</span>
+                    <span className="text-[12px] font-mono font-medium text-no">Deferred 0/25 (min 15)</span>
+                  </div>
+                  <div className="w-full h-[6px] bg-[#1A1A1A] rounded-pill overflow-hidden">
+                    <div className="h-full bg-no rounded-pill w-[0%]" />
+                  </div>
+                </div>
+
+                {/* Row 3: Bob */}
+                <div className="bg-s2 rounded-card p-3.5 space-y-2">
+                  <div className="flex items-center justify-between text-[14px]">
+                    <span className="font-semibold text-white">Bob • Order #102</span>
+                    <span className="text-[12px] font-mono font-medium text-no">Deferred 0/20 (no partial)</span>
+                  </div>
+                  <div className="w-full h-[6px] bg-[#1A1A1A] rounded-pill overflow-hidden">
+                    <div className="h-full bg-no rounded-pill w-[0%]" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-2 flex items-center justify-between text-[12px] font-mono text-t2 border-t border-bd">
+                <span>Deterministic resolution</span>
+                <span className="text-ok">Zero over-allocation</span>
+              </div>
+            </div>
           </div>
+        </section>
 
-          <h1 className="font-display text-4xl sm:text-6xl font-black uppercase tracking-tight text-arcade-primary leading-[1.05]">
-            Deterministic Order Allocation <br />
-            <span className="text-arcade-accent">&amp; Supply Intelligence</span>
-          </h1>
+        {/* 2. Stat Strip: 3 columns, gap 16px */}
+        <section className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* KPI 1 */}
+            <div className="card-base flex flex-col justify-between">
+              <span className="text-[12px] font-mono text-t2">Overall fill rate</span>
+              <div className="text-[34px] font-bold text-white tracking-tight my-2">94.2%</div>
+              <span className="text-[12px] font-mono text-t2">Target: ≥90% deterministic fulfillment</span>
+            </div>
 
-          <p className="text-sm sm:text-base text-arcade-secondary leading-relaxed max-w-2xl">
-            OrderWise resolves inventory conflicts across competing customer orders using
-            <span className="text-arcade-primary font-bold"> deterministic priority rules</span>,
-            <span className="text-arcade-accent font-bold"> Groq Llama-3 recommendations</span> with strict human governance, and
-            <span className="text-arcade-primary font-bold"> real-time Server-Sent Events</span>.
-          </p>
+            {/* KPI 2 */}
+            <div className="card-base flex flex-col justify-between">
+              <span className="text-[12px] font-mono text-t2">Active catalog items</span>
+              <div className="text-[34px] font-bold text-white tracking-tight my-2">4 items</div>
+              <span className="text-[12px] font-mono text-t2">Pumps, valves, gauges &amp; control units</span>
+            </div>
 
-          {/* Call to action buttons */}
-          <div className="pt-4 flex flex-wrap items-center gap-4">
-            {user ? (
-              <Link
-                to={user.role === 'customer' ? '/dashboard' : '/admin'}
-                className="px-6 py-3.5 bg-arcade-accent text-arcade-surface font-extrabold text-xs uppercase tracking-wider flex items-center space-x-2 shadow-[0_0_20px_rgba(200,255,58,0.4)] hover:opacity-95 transition-all"
-              >
-                <span>Enter {user.role === 'customer' ? 'Customer Hub' : 'Admin Operations Center'}</span>
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            ) : (
-              <>
-                <Link
-                  to="/login"
-                  className="px-6 py-3.5 bg-arcade-accent text-arcade-surface font-extrabold text-xs uppercase tracking-wider flex items-center space-x-2 shadow-[0_0_20px_rgba(200,255,58,0.4)] hover:opacity-95 transition-all"
-                >
-                  <span>Launch Operations Portal</span>
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-                <Link
-                  to="/register"
-                  className="px-6 py-3.5 border border-arcade-border bg-arcade-surface hover:border-arcade-accent text-arcade-primary font-bold text-xs uppercase tracking-wider transition-colors"
-                >
-                  Create Customer Account
-                </Link>
-              </>
-            )}
+            {/* KPI 3: Alert variant uses amber label and alert-bg / border */}
+            <div className="bg-alert-bg border border-alert-border rounded-card p-6 flex flex-col justify-between">
+              <span className="text-[12px] font-mono text-wa font-medium">Unresolved alerts</span>
+              <div className="text-[34px] font-bold text-white tracking-tight my-2">1 critical</div>
+              <span className="text-[12px] font-mono text-wa/80">GAUGE-P300 stock below reorder point</span>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* 2. Core Architectural Pillars */}
-      <section className="space-y-4">
-        <div className="flex items-center justify-between border-b border-arcade-border pb-3">
-          <div className="flex items-center space-x-2">
-            <Cpu className="h-4 w-4 text-arcade-accent" />
-            <h2 className="font-display text-xl font-black uppercase text-arcade-primary tracking-wide">
-              System Pillars &amp; Core Engine
+        {/* 3. How It Works: 3 columns, gap 16px */}
+        <section className="space-y-6">
+          <div className="border-b border-bd pb-4">
+            <h2 className="text-[32px] font-bold tracking-tight text-white">
+              How OrderWise works
             </h2>
-          </div>
-          <span className="text-[10px] text-arcade-secondary uppercase tracking-widest">
-            Deterministic • Auditable • Governed
-          </span>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="border border-arcade-border bg-arcade-neutral p-6 space-y-3 relative">
-            <div className="w-10 h-10 border border-arcade-accent/30 bg-arcade-accent/10 text-arcade-accent flex items-center justify-center">
-              <Boxes className="h-5 w-5" />
-            </div>
-            <h3 className="font-display font-extrabold text-lg uppercase text-arcade-primary">
-              Deterministic Allocation
-            </h3>
-            <p className="text-xs text-arcade-secondary leading-relaxed">
-              Strict multi-tier priority ordering: Approved Priority (Critical &gt; High &gt; Med &gt; Low) &rarr;
-              Promised Delivery Date &rarr; Creation Timestamp &rarr; Order ID. Zero double-counting.
+            <p className="text-[15px] text-t2 mt-1">
+              Deterministic priority scheduling governed by authorized supply chain operators.
             </p>
           </div>
 
-          <div className="border border-arcade-border bg-arcade-neutral p-6 space-y-3 relative">
-            <div className="w-10 h-10 border border-arcade-warning/30 bg-arcade-warning/10 text-arcade-warning flex items-center justify-center">
-              <Shield className="h-5 w-5" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="card-base space-y-3">
+              <div className="w-10 h-10 rounded-full bg-s2 text-white flex items-center justify-center">
+                <Boxes className="h-5 w-5 text-white" />
+              </div>
+              <h3 className="text-[20px] font-bold text-white">
+                Deterministic allocation
+              </h3>
+              <p className="text-[15px] leading-relaxed text-t2">
+                Multi-tier priority order ensures zero double-counting across competing customer demands.
+              </p>
             </div>
-            <h3 className="font-display font-extrabold text-lg uppercase text-arcade-primary">
-              AI Recommends, Humans Approve
-            </h3>
-            <p className="text-xs text-arcade-secondary leading-relaxed">
-              Groq Llama-3 70B evaluates natural language order context. AI outputs recommendations with
-              evidence and confidence, but can never directly modify inventory without human admin approval.
-            </p>
-          </div>
 
-          <div className="border border-arcade-border bg-arcade-neutral p-6 space-y-3 relative">
-            <div className="w-10 h-10 border border-arcade-info/30 bg-arcade-info/10 text-arcade-info flex items-center justify-center">
-              <Activity className="h-5 w-5" />
+            <div className="card-base space-y-3">
+              <div className="w-10 h-10 rounded-full bg-s2 text-white flex items-center justify-center">
+                <Shield className="h-5 w-5 text-white" />
+              </div>
+              <h3 className="text-[20px] font-bold text-white">
+                AI recommends, humans approve
+              </h3>
+              <p className="text-[15px] leading-relaxed text-t2">
+                Llama-3 analyzes context with confidence scores; inventory modifies only with admin approval.
+              </p>
             </div>
-            <h3 className="font-display font-extrabold text-lg uppercase text-arcade-primary">
-              Live Real-Time Stream (SSE)
-            </h3>
-            <p className="text-xs text-arcade-secondary leading-relaxed">
-              Server-Sent Events push instant updates when allocations conclude or order statuses shift.
-              Customers only receive role-scoped events for their own orders.
-            </p>
-          </div>
-        </div>
-      </section>
 
-      {/* 3. Interactive Walkthrough / Live Modules */}
-      <section className="space-y-4">
-        <div className="flex items-center justify-between border-b border-arcade-border pb-3">
-          <div className="flex items-center space-x-2">
-            <Layers className="h-4 w-4 text-arcade-accent" />
-            <h2 className="font-display text-xl font-black uppercase text-arcade-primary tracking-wide">
-              End-to-End Enterprise Capabilities
+            <div className="card-base space-y-3">
+              <div className="w-10 h-10 rounded-full bg-s2 text-white flex items-center justify-center">
+                <Activity className="h-5 w-5 text-white" />
+              </div>
+              <h3 className="text-[20px] font-bold text-white">
+                Live real-time stream
+              </h3>
+              <p className="text-[15px] leading-relaxed text-t2">
+                Server-Sent Events broadcast instant allocations scoped strictly to customer permissions.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* 4. Active Modules & Roadmap */}
+        <section className="space-y-6">
+          <div className="border-b border-bd pb-4">
+            <h2 className="text-[32px] font-bold tracking-tight text-white">
+              Enterprise allocation modules
             </h2>
+            <p className="text-[15px] text-t2 mt-1">
+              Fully integrated tools for inventory planning, scenario testing, and compliance.
+            </p>
           </div>
-          <span className="text-[10px] text-arcade-secondary uppercase tracking-widest">
-            Production Ready
-          </span>
-        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Link
-            to="/admin/allocation"
-            className="border border-arcade-border bg-arcade-neutral p-5 hover:border-arcade-accent transition-colors group"
-          >
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-[10px] uppercase tracking-wider text-arcade-accent font-bold">Module 01</span>
-              <ArrowRight className="h-3.5 w-3.5 text-arcade-secondary group-hover:text-arcade-accent group-hover:translate-x-1 transition-all" />
+          {/* Module cards: "Active" mono label in --ok, title, one-line description */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <Link
+              to="/admin/allocation"
+              className="card-base hover:border-white transition-colors group flex flex-col justify-between space-y-3"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-[12px] font-mono font-medium text-ok">Active</span>
+                  <ArrowRight className="h-4 w-4 text-t2 group-hover:text-white group-hover:translate-x-1 transition-all" />
+                </div>
+                <h4 className="text-[18px] font-bold text-white">Allocation Center</h4>
+              </div>
+              <p className="text-[15px] text-t2 leading-normal">
+                Run deterministic allocation with step-by-step explanations.
+              </p>
+            </Link>
+
+            <Link
+              to="/admin/simulations"
+              className="card-base hover:border-white transition-colors group flex flex-col justify-between space-y-3"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-[12px] font-mono font-medium text-ok">Active</span>
+                  <ArrowRight className="h-4 w-4 text-t2 group-hover:text-white group-hover:translate-x-1 transition-all" />
+                </div>
+                <h4 className="text-[18px] font-bold text-white">Simulation Lab</h4>
+              </div>
+              <p className="text-[15px] text-t2 leading-normal">
+                Zero-mutation sandbox testing stock surges and supply delays.
+              </p>
+            </Link>
+
+            <Link
+              to="/admin/reports"
+              className="card-base hover:border-white transition-colors group flex flex-col justify-between space-y-3"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-[12px] font-mono font-medium text-ok">Active</span>
+                  <ArrowRight className="h-4 w-4 text-t2 group-hover:text-white group-hover:translate-x-1 transition-all" />
+                </div>
+                <h4 className="text-[18px] font-bold text-white">Reports &amp; CSV exports</h4>
+              </div>
+              <p className="text-[15px] text-t2 leading-normal">
+                Track fill rates and export 1-click supply chain audits.
+              </p>
+            </Link>
+
+            <Link
+              to="/admin/audit"
+              className="card-base hover:border-white transition-colors group flex flex-col justify-between space-y-3"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-[12px] font-mono font-medium text-ok">Active</span>
+                  <ArrowRight className="h-4 w-4 text-t2 group-hover:text-white group-hover:translate-x-1 transition-all" />
+                </div>
+                <h4 className="text-[18px] font-bold text-white">Audit log viewer</h4>
+              </div>
+              <p className="text-[15px] text-t2 leading-normal">
+                Immutable governance logs tracking approvals and changes.
+              </p>
+            </Link>
+          </div>
+
+          {/* Upcoming modules collapsed into one dashed "Roadmap" row */}
+          <div className="card-roadmap flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <div className="flex items-center space-x-2">
+                <span className="text-[12px] font-mono text-t2 uppercase tracking-wide">Roadmap</span>
+                <span className="text-[12px] font-mono text-t2">• Next major release</span>
+              </div>
+              <h4 className="text-[18px] font-bold text-white mt-1">
+                Multi-warehouse cross-docking &amp; vendor automated PO dispatch
+              </h4>
+              <p className="text-[15px] text-t2 mt-0.5">
+                Automated supplier reorder purchase orders, supplier delay tracking, and real-time cold chain telemetry.
+              </p>
             </div>
-            <h4 className="font-display font-bold text-base uppercase text-arcade-primary">Allocation Center</h4>
-            <p className="text-xs text-arcade-secondary mt-1">
-              Run deterministic allocation engine with step-by-step audit explanations and dry-run preview.
+            <div className="text-[12px] font-mono text-t2 shrink-0">
+              Q2 Delivery
+            </div>
+          </div>
+        </section>
+
+        {/* 5. Quick Demo Credentials Callout */}
+        <section className="card-base flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div>
+            <span className="text-[12px] font-mono text-ac font-medium">
+              Instant demo access
+            </span>
+            <h3 className="text-[24px] font-bold text-white mt-1">
+              Ready to explore OrderWise live?
+            </h3>
+            <p className="text-[15px] text-t2 mt-1 max-w-xl">
+              Sign in with 1-click pre-configured demo accounts for Administrators, Inventory Managers, or Customers.
             </p>
-          </Link>
+          </div>
 
           <Link
-            to="/admin/simulations"
-            className="border border-arcade-border bg-arcade-neutral p-5 hover:border-arcade-accent transition-colors group"
+            to="/login"
+            className="btn-primary space-x-2 shrink-0"
           >
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-[10px] uppercase tracking-wider text-arcade-accent font-bold">Module 02</span>
-              <ArrowRight className="h-3.5 w-3.5 text-arcade-secondary group-hover:text-arcade-accent group-hover:translate-x-1 transition-all" />
-            </div>
-            <h4 className="font-display font-bold text-base uppercase text-arcade-primary">Simulation Lab</h4>
-            <p className="text-xs text-arcade-secondary mt-1">
-              Zero-mutation in-memory sandbox testing inventory surges, stock drops, and supply delays.
-            </p>
+            <span>Go to 1-Click Login</span>
+            <ArrowRight className="h-4 w-4" />
           </Link>
-
-          <Link
-            to="/admin/reports"
-            className="border border-arcade-border bg-arcade-neutral p-5 hover:border-arcade-accent transition-colors group"
-          >
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-[10px] uppercase tracking-wider text-arcade-accent font-bold">Module 03</span>
-              <ArrowRight className="h-3.5 w-3.5 text-arcade-secondary group-hover:text-arcade-accent group-hover:translate-x-1 transition-all" />
-            </div>
-            <h4 className="font-display font-bold text-base uppercase text-arcade-primary">Reports &amp; CSV Exports</h4>
-            <p className="text-xs text-arcade-secondary mt-1">
-              Order fill rates, deferred demand root causes, inventory valuation, and 1-click CSV datasets.
-            </p>
-          </Link>
-
-          <Link
-            to="/admin/audit"
-            className="border border-arcade-border bg-arcade-neutral p-5 hover:border-arcade-accent transition-colors group"
-          >
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-[10px] uppercase tracking-wider text-arcade-accent font-bold">Module 04</span>
-              <ArrowRight className="h-3.5 w-3.5 text-arcade-secondary group-hover:text-arcade-accent group-hover:translate-x-1 transition-all" />
-            </div>
-            <h4 className="font-display font-bold text-base uppercase text-arcade-primary">Audit Log Viewer</h4>
-            <p className="text-xs text-arcade-secondary mt-1">
-              Immutable evidence log tracking who approved priorities, adjusted stock, or ran allocations.
-            </p>
-          </Link>
-        </div>
-      </section>
-
-      {/* 4. Quick Demo Credentials Callout */}
-      <section className="border border-arcade-border bg-arcade-surface p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div>
-          <span className="text-[10px] uppercase tracking-widest text-arcade-accent font-bold">
-            Instant Demo Access
-          </span>
-          <h3 className="font-display text-2xl font-black uppercase text-arcade-primary mt-1">
-            Ready to explore OrderWise live?
-          </h3>
-          <p className="text-xs text-arcade-secondary mt-1 max-w-xl">
-            Sign in with 1-click pre-configured demo accounts for Administrators, Inventory Managers, or Customers.
-          </p>
-        </div>
-
-        <Link
-          to="/login"
-          className="px-6 py-3 bg-arcade-accent text-arcade-surface font-bold text-xs uppercase tracking-wider flex items-center justify-center space-x-2 hover:opacity-90 transition-opacity"
-        >
-          <span>Go to 1-Click Login</span>
-          <ArrowRight className="h-4 w-4" />
-        </Link>
-      </section>
+        </section>
       </main>
 
-      {/* 5. Footer */}
-      <footer className="border-t border-arcade-border bg-arcade-neutral/80 py-6 px-4 sm:px-8 mt-12 text-xs text-arcade-secondary">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center space-x-2">
-            <span className="font-display font-black text-arcade-primary uppercase">OrderWise</span>
-            <span>•</span>
-            <span>Deterministic Inventory Allocation Engine</span>
+      {/* 6. Footer: top border, two mono lines */}
+      <footer className="border-t border-bd bg-s py-8 px-4 sm:px-8 mt-12 text-[12px] font-mono text-t2">
+        <div className="max-w-container mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div>
+            <span className="text-white font-medium">OrderWise</span> — Deterministic inventory allocation and supply intelligence
           </div>
-          <div className="flex items-center space-x-4 text-[11px]">
-            <Link to="/login" className="hover:text-arcade-accent transition-colors">Login</Link>
-            <Link to="/register" className="hover:text-arcade-accent transition-colors">Register</Link>
-            <Link to="/admin" className="hover:text-arcade-accent transition-colors">Admin Console</Link>
-            <Link to="/dashboard" className="hover:text-arcade-accent transition-colors">Customer Portal</Link>
+          <div>
+            All rights reserved • High-contrast streaming console
           </div>
         </div>
       </footer>

@@ -21,18 +21,19 @@ export default function Modal({ isOpen, onClose, title, children }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-150">
       <div
-        className="relative w-full max-w-lg bg-arcade-card border border-arcade-border p-6 shadow-2xl text-arcade-primary"
+        className="relative w-full max-w-lg bg-s border border-bd rounded-card p-6 shadow-none text-t"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between pb-4 border-b border-arcade-border">
-          <h3 className="font-display font-bold text-xl uppercase tracking-wider text-arcade-accent">
+        <div className="flex items-center justify-between pb-4 border-b border-bd">
+          <h3 className="font-sans font-bold text-[20px] text-t">
             {title}
           </h3>
           <button
             onClick={onClose}
-            className="p-1 text-arcade-secondary hover:text-arcade-primary hover:bg-arcade-surface border border-transparent hover:border-arcade-border transition-colors"
+            className="p-1.5 rounded-full text-t2 hover:text-white hover:bg-s2 border border-transparent hover:border-bd transition-colors"
+            aria-label="Close modal"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
         <div className="mt-4">{children}</div>

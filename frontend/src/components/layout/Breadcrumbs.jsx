@@ -16,7 +16,7 @@ const ROUTE_LABELS = {
   alerts: 'Supply Alerts',
   replenishment: 'Replenishment Advisor',
   reports: 'Reports & Analytics',
-  audit: 'Security Audit Log',
+  audit: 'Audit Log Viewer',
 };
 
 export default function Breadcrumbs() {
@@ -26,10 +26,10 @@ export default function Breadcrumbs() {
   if (pathnames.length === 0) return null;
 
   return (
-    <nav aria-label="Breadcrumb" className="font-mono text-xs flex items-center space-x-1.5 text-arcade-secondary">
+    <nav aria-label="Breadcrumb" className="font-mono text-[12px] flex items-center space-x-1.5 text-t2">
       <Link
         to={pathnames[0] === 'admin' ? '/admin' : '/dashboard'}
-        className="hover:text-arcade-accent transition-colors flex items-center space-x-1"
+        className="hover:text-white transition-colors flex items-center space-x-1"
         title="Dashboard Root"
       >
         <Home className="h-3 w-3" />
@@ -43,11 +43,11 @@ export default function Breadcrumbs() {
 
         return (
           <React.Fragment key={to}>
-            <ChevronRight className="h-3 w-3 opacity-40 shrink-0" />
+            <ChevronRight className="h-3 w-3 text-t2/50 shrink-0" />
             {isLast ? (
-              <span className="text-arcade-accent font-bold truncate max-w-[180px]">{label}</span>
+              <span className="text-white font-medium truncate max-w-[180px]">{label}</span>
             ) : (
-              <Link to={to} className="hover:text-arcade-primary transition-colors truncate max-w-[140px]">
+              <Link to={to} className="hover:text-white transition-colors truncate max-w-[140px]">
                 {label}
               </Link>
             )}

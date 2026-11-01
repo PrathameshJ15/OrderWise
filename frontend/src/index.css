@@ -4,30 +4,76 @@
 
 :root {
   color-scheme: dark;
+  --bg: #0A0A0A;
+  --s: #161616;
+  --s2: #232323;
+  --bd: #2A2A2A;
+  --t: #FFFFFF;
+  --t2: #A8A8A8;
+  --ac: #E50914;
+  --series: #8A8A8A;
+  --ok: #4ADE80;
+  --wa: #F5B544;
+  --no: #FF7A7A;
+  --alert-bg: #2B2010;
+  --alert-border: #5A4210;
 }
 
 body {
   margin: 0;
-  background-color: #0a0b08;
-  color: #eef0e6;
-  font-family: 'JetBrains Mono', monospace;
+  background-color: var(--bg);
+  color: var(--t);
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom scrollbars for Arcade Night theme */
+/* Custom scrollbars for OrderWise Dark Streaming Theme */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0a0b08;
+  background: #0A0A0A;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1e201b;
-  border-radius: 0px;
+  background: #2A2A2A;
+  border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #c8ff3a;
+  background: #E50914;
+}
+
+/* Common Design System Utility Classes */
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-pill min-h-[44px] px-6 text-[15px] font-semibold text-white bg-ac hover:bg-ac-hover transition-colors;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-pill min-h-[44px] px-6 text-[15px] font-semibold text-white border border-white hover:bg-white/10 transition-colors;
+  }
+  .btn-header {
+    @apply inline-flex items-center justify-center rounded-pill px-4 py-2 text-[14px] font-medium text-white border border-[#555] hover:border-white transition-colors;
+  }
+  .card-base {
+    @apply bg-s border border-bd rounded-card p-6 shadow-none;
+  }
+  .card-roadmap {
+    @apply bg-s border border-dashed border-bd rounded-card p-6;
+  }
+  .badge-ac {
+    @apply inline-flex items-center rounded-pill bg-ac text-white font-mono text-[12px] font-medium px-3 py-1;
+  }
+  .badge-ok {
+    @apply inline-flex items-center rounded-pill bg-ok/15 text-ok border border-ok/30 font-mono text-[12px] font-medium px-3 py-1;
+  }
+  .badge-wa {
+    @apply inline-flex items-center rounded-pill bg-wa/15 text-wa border border-wa/30 font-mono text-[12px] font-medium px-3 py-1;
+  }
+  .badge-no {
+    @apply inline-flex items-center rounded-pill bg-no/15 text-no border border-no/30 font-mono text-[12px] font-medium px-3 py-1;
+  }
 }

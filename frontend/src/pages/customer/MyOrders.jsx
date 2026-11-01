@@ -61,25 +61,25 @@ export default function MyOrders() {
   });
 
   return (
-    <div className="space-y-6 font-mono py-4">
-      {/* Header */}
-      <div className="border border-arcade-border bg-arcade-neutral p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="space-y-6 font-sans py-2">
+      {/* Header Card */}
+      <div className="card-base flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center space-x-1.5 text-xs text-arcade-accent bg-arcade-accent/10 border border-arcade-accent/20 px-2 py-0.5 mb-2">
-            <Clock className="h-3 w-3" />
-            <span>ORDER DISPATCH &amp; ALLOCATIONS</span>
+          <div className="inline-flex items-center space-x-1.5 text-[12px] font-mono text-ac font-medium mb-1">
+            <Clock className="h-3.5 w-3.5" />
+            <span>Order dispatch &amp; allocations</span>
           </div>
-          <h1 className="font-display text-3xl font-extrabold uppercase text-arcade-primary">
+          <h1 className="text-[34px] font-bold tracking-[-0.02em] text-white">
             My Orders
           </h1>
-          <p className="text-xs text-arcade-secondary mt-1">
+          <p className="text-[14px] text-t2 mt-0.5">
             Track your demand submissions, allocation decisions, and promised delivery timelines.
           </p>
         </div>
 
         <Link
           to="/orders/new"
-          className="flex items-center space-x-2 px-4 py-2.5 bg-arcade-accent text-arcade-surface font-bold text-xs uppercase tracking-wider hover:opacity-90 transition-opacity self-start md:self-auto shadow-[0_0_12px_rgba(200,255,58,0.25)]"
+          className="btn-primary space-x-2 self-start md:self-auto"
         >
           <PlusCircle className="h-4 w-4" />
           <span>New Order</span>
@@ -87,7 +87,7 @@ export default function MyOrders() {
       </div>
 
       {error && (
-        <div className="p-4 border border-arcade-danger/40 bg-arcade-danger/10 text-arcade-danger text-xs flex items-center justify-between">
+        <div className="p-4 rounded-card border border-no/30 bg-[#291313] text-no text-[13px] flex items-center justify-between">
           <span>{error}</span>
           <button onClick={() => setError(null)} className="underline hover:text-white">
             Dismiss
@@ -96,18 +96,18 @@ export default function MyOrders() {
       )}
 
       {/* Filter and Search Bar */}
-      <div className="border border-arcade-border bg-arcade-neutral p-4 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+      <div className="card-base flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
         {/* Status Filter Tabs */}
-        <div className="flex items-center space-x-1 border border-arcade-border bg-arcade-surface p-1 overflow-x-auto">
+        <div className="flex items-center space-x-1.5 border border-bd rounded-pill bg-s2 p-1 overflow-x-auto">
           {['all', 'pending', 'confirmed', 'allocated', 'partially_allocated', 'cancelled'].map(
             (st) => (
               <button
                 key={st}
                 onClick={() => setStatusFilter(st)}
-                className={`px-3 py-1 text-xs uppercase tracking-wider whitespace-nowrap transition-colors ${
+                className={`px-3.5 py-1 text-[12px] font-mono font-medium rounded-pill whitespace-nowrap transition-colors ${
                   statusFilter === st
-                    ? 'bg-arcade-neutral text-arcade-accent font-bold border border-arcade-border'
-                    : 'text-arcade-secondary hover:text-arcade-primary'
+                    ? 'bg-ac text-white'
+                    : 'text-t2 hover:text-white'
                 }`}
               >
                 {st.replace(/_/g, ' ')}
@@ -117,31 +117,31 @@ export default function MyOrders() {
         </div>
 
         {/* Search */}
-        <div className="flex items-center space-x-2 border border-arcade-border bg-arcade-surface px-3 py-1.5 text-xs w-full md:w-64">
-          <Search className="h-3.5 w-3.5 text-arcade-secondary" />
+        <div className="flex items-center space-x-2 border border-bd rounded-pill bg-s2 px-4 py-2 text-sm w-full md:w-72">
+          <Search className="h-4 w-4 text-t2" />
           <input
             type="text"
             placeholder="Search order ID..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="bg-transparent text-arcade-primary focus:outline-none text-xs w-full placeholder-arcade-secondary/60"
+            className="bg-transparent text-white focus:outline-none text-[14px] w-full placeholder-t2/50 font-sans"
           />
         </div>
       </div>
 
       {/* Orders Table */}
       {loading ? (
-        <div className="border border-arcade-border bg-arcade-neutral p-12 text-center text-arcade-secondary flex flex-col items-center justify-center space-y-3">
-          <RefreshCw className="h-6 w-6 animate-spin text-arcade-accent" />
-          <span className="text-xs uppercase tracking-wider">Loading your order history...</span>
+        <div className="card-base p-12 text-center text-t2 flex flex-col items-center justify-center space-y-3">
+          <RefreshCw className="h-6 w-6 animate-spin text-ac" />
+          <span className="text-[12px] font-mono">Loading your order history...</span>
         </div>
       ) : filteredOrders.length === 0 ? (
-        <div className="border border-arcade-border bg-arcade-neutral p-12 text-center text-arcade-secondary space-y-3">
-          <Package className="h-8 w-8 text-arcade-secondary mx-auto opacity-50" />
-          <h3 className="font-display text-base uppercase text-arcade-primary font-bold">
+        <div className="card-base p-12 text-center text-t2 space-y-3">
+          <Package className="h-8 w-8 text-t2 mx-auto opacity-50" />
+          <h3 className="text-[18px] text-white font-bold">
             No Orders Found
           </h3>
-          <p className="text-xs max-w-sm mx-auto">
+          <p className="text-[14px] max-w-sm mx-auto">
             {statusFilter !== 'all'
               ? `No orders matching status filter "${statusFilter}".`
               : "You haven't submitted any customer orders yet."}
@@ -149,17 +149,17 @@ export default function MyOrders() {
           <div className="pt-2">
             <Link
               to="/orders/new"
-              className="inline-block px-4 py-2 bg-arcade-accent text-arcade-surface font-bold text-xs uppercase"
+              className="btn-primary"
             >
               Create New Order
             </Link>
           </div>
         </div>
       ) : (
-        <div className="border border-arcade-border bg-arcade-neutral overflow-x-auto">
-          <table className="w-full text-left text-xs border-collapse">
+        <div className="card-base overflow-x-auto p-0">
+          <table className="w-full text-left text-sm border-collapse">
             <thead>
-              <tr className="border-b border-arcade-border bg-arcade-surface/60 text-arcade-secondary uppercase text-[10px] tracking-wider">
+              <tr className="border-b border-bd text-t2 font-mono text-[12px]">
                 <th className="py-3 px-4">Order ID</th>
                 <th className="py-3 px-3">Date Submitted</th>
                 <th className="py-3 px-3">Promised Date</th>
@@ -169,27 +169,27 @@ export default function MyOrders() {
                 <th className="py-3 px-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-arcade-border/50">
+            <tbody className="divide-y divide-bd/60">
               {filteredOrders.map((ord) => (
                 <tr
                   key={ord.id}
-                  className="hover:bg-arcade-surface/50 transition-colors group cursor-pointer"
+                  className="hover:bg-s2/50 transition-colors group"
                 >
-                  <td className="py-3.5 px-4 font-bold text-arcade-primary group-hover:text-arcade-accent">
-                    <Link to={`/orders/${ord.id}`} className="block">
+                  <td className="py-3.5 px-4 font-bold text-white font-mono">
+                    <Link to={`/orders/${ord.id}`} className="block hover:text-ac">
                       {`#${ord.id}`}
                     </Link>
                   </td>
-                  <td className="py-3.5 px-3 text-arcade-secondary">
+                  <td className="py-3.5 px-3 text-t2 font-mono text-[12px]">
                     {new Date(ord.created_at).toLocaleDateString()}
                   </td>
-                  <td className="py-3.5 px-3 text-arcade-secondary">
+                  <td className="py-3.5 px-3 text-t2 font-mono text-[12px]">
                     {ord.promised_delivery_date || 'Standard'}
                   </td>
-                  <td className="py-3.5 px-3 text-right font-semibold text-arcade-primary">
+                  <td className="py-3.5 px-3 text-right font-mono text-white">
                     {ord.item_count || 1}
                   </td>
-                  <td className="py-3.5 px-3 text-right font-semibold text-arcade-primary">
+                  <td className="py-3.5 px-3 text-right font-mono text-white">
                     {ord.total_requested_quantity || '—'}
                   </td>
                   <td className="py-3.5 px-3 text-center">
@@ -198,7 +198,7 @@ export default function MyOrders() {
                   <td className="py-3.5 px-4 text-right">
                     <Link
                       to={`/orders/${ord.id}`}
-                      className="inline-flex items-center space-x-1 px-2.5 py-1 border border-arcade-border text-arcade-primary hover:border-arcade-accent hover:text-arcade-accent text-[11px] uppercase tracking-wider transition-colors"
+                      className="btn-header py-1 text-[12px] font-mono inline-flex items-center space-x-1"
                     >
                       <span>View</span>
                       <ChevronRight className="h-3 w-3" />

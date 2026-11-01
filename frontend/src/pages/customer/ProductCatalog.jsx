@@ -37,37 +37,37 @@ export default function ProductCatalog() {
   });
 
   return (
-    <div className="space-y-6 font-mono py-4">
-      {/* Header */}
-      <div className="border border-arcade-border bg-arcade-neutral p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="space-y-6 font-sans py-2">
+      {/* Header Card */}
+      <div className="card-base flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center space-x-1.5 text-xs text-arcade-accent bg-arcade-accent/10 border border-arcade-accent/20 px-2 py-0.5 mb-2">
-            <Package className="h-3 w-3" />
-            <span>AVAILABLE INDUSTRIAL CATALOG</span>
+          <div className="inline-flex items-center space-x-1.5 text-[12px] font-mono text-ac font-medium mb-1">
+            <Package className="h-3.5 w-3.5" />
+            <span>Available industrial catalog</span>
           </div>
-          <h1 className="font-display text-3xl font-extrabold uppercase text-arcade-primary">
+          <h1 className="text-[34px] font-bold tracking-[-0.02em] text-white">
             Product Catalog
           </h1>
-          <p className="text-xs text-arcade-secondary mt-1">
+          <p className="text-[14px] text-t2 mt-0.5">
             Certified industrial hardware with live warehouse availability indicators.
           </p>
         </div>
 
         {/* Search */}
-        <div className="flex items-center space-x-2 border border-arcade-border bg-arcade-surface px-3 py-2 text-xs w-full md:w-72">
-          <Search className="h-3.5 w-3.5 text-arcade-secondary" />
+        <div className="flex items-center space-x-2 border border-bd rounded-pill bg-s2 px-4 py-2.5 text-sm w-full md:w-80">
+          <Search className="h-4 w-4 text-t2" />
           <input
             type="text"
             placeholder="Search catalog by product name or SKU..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="bg-transparent text-arcade-primary focus:outline-none text-xs w-full placeholder-arcade-secondary/60"
+            className="bg-transparent text-white focus:outline-none text-[14px] w-full placeholder-t2/50 font-sans"
           />
         </div>
       </div>
 
       {error && (
-        <div className="p-4 border border-arcade-danger/40 bg-arcade-danger/10 text-arcade-danger text-xs flex items-center justify-between">
+        <div className="p-4 rounded-card border border-no/30 bg-[#291313] text-no text-[13px] flex items-center justify-between">
           <span>{error}</span>
           <button onClick={() => setError(null)} className="underline hover:text-white">
             Dismiss
@@ -77,17 +77,17 @@ export default function ProductCatalog() {
 
       {/* Catalog Grid */}
       {loading ? (
-        <div className="border border-arcade-border bg-arcade-neutral p-12 text-center text-arcade-secondary flex flex-col items-center justify-center space-y-3">
-          <RefreshCw className="h-6 w-6 animate-spin text-arcade-accent" />
-          <span className="text-xs tracking-wider uppercase">Loading catalog components...</span>
+        <div className="card-base p-12 text-center text-t2 flex flex-col items-center justify-center space-y-3">
+          <RefreshCw className="h-6 w-6 animate-spin text-ac" />
+          <span className="text-[12px] font-mono">Loading catalog components...</span>
         </div>
       ) : filteredProducts.length === 0 ? (
-        <div className="border border-arcade-border bg-arcade-neutral p-12 text-center text-arcade-secondary space-y-2">
-          <Package className="h-8 w-8 text-arcade-secondary mx-auto opacity-50" />
-          <h3 className="font-display text-base uppercase text-arcade-primary font-bold">
-            No Matching Products
+        <div className="card-base p-12 text-center text-t2 space-y-2">
+          <Package className="h-8 w-8 text-t2 mx-auto opacity-50" />
+          <h3 className="text-[18px] text-white font-bold">
+            No matching products
           </h3>
-          <p className="text-xs">No active products match your current search query.</p>
+          <p className="text-[14px]">No active products match your current search query.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -95,18 +95,16 @@ export default function ProductCatalog() {
             const onHand = product.on_hand_quantity || product.stock || 0;
             const available = product.available_quantity ?? onHand;
 
-            // Availability rating based on FRONTEND_SPEC.md:
-            // green (>20%), yellow (5-20%), red (<5% or 0)
-            let indicatorColor = 'border-arcade-accent text-arcade-accent bg-arcade-accent/10';
+            let indicatorColor = 'border-ok/30 text-ok bg-ok/10';
             let indicatorText = 'In Stock';
             let IndicatorIcon = CheckCircle2;
 
             if (available <= 0) {
-              indicatorColor = 'border-arcade-danger text-arcade-danger bg-arcade-danger/10';
+              indicatorColor = 'border-no/30 text-no bg-no/10';
               indicatorText = 'Scarce / Exhausted';
               IndicatorIcon = AlertOctagon;
             } else if (available < 15) {
-              indicatorColor = 'border-arcade-warning text-arcade-warning bg-arcade-warning/10';
+              indicatorColor = 'border-wa/30 text-wa bg-wa/10';
               indicatorText = 'Limited Supply';
               IndicatorIcon = AlertTriangle;
             }
@@ -114,44 +112,41 @@ export default function ProductCatalog() {
             return (
               <div
                 key={product.id}
-                className="border border-arcade-border bg-arcade-neutral p-5 flex flex-col justify-between hover:border-arcade-accent/60 transition-colors group relative"
+                className="card-base flex flex-col justify-between hover:border-white transition-colors group relative space-y-4"
               >
                 <div>
                   <div className="flex items-start justify-between gap-2 mb-2">
-                    <span className="text-[10px] text-arcade-accent font-bold px-1.5 py-0.5 bg-arcade-surface border border-arcade-border">
+                    <span className="font-mono text-[12px] text-t2 px-2.5 py-0.5 rounded-pill bg-s2 border border-bd">
                       {product.sku}
                     </span>
                     <span
-                      className={`inline-flex items-center space-x-1 text-[9px] uppercase font-bold px-1.5 py-0.5 border ${indicatorColor}`}
+                      className={`inline-flex items-center space-x-1 px-2.5 py-0.5 text-[11px] font-mono font-medium rounded-pill border ${indicatorColor}`}
                     >
-                      <IndicatorIcon className="h-2.5 w-2.5" />
+                      <IndicatorIcon className="h-3 w-3" />
                       <span>{indicatorText}</span>
                     </span>
                   </div>
 
-                  <h3 className="font-display text-lg font-bold text-arcade-primary group-hover:text-arcade-accent transition-colors">
+                  <h3 className="text-[18px] font-bold text-white group-hover:text-ac transition-colors">
                     {product.name}
                   </h3>
-
-                  <p className="text-xs text-arcade-secondary mt-1 mb-4 line-clamp-3 leading-relaxed">
-                    {product.description || 'Standard precision industrial hardware component.'}
+                  <p className="text-[13px] text-t2 mt-1 line-clamp-2 leading-relaxed">
+                    {product.description || 'Industrial equipment component with standard enterprise specifications.'}
                   </p>
                 </div>
 
-                <div className="pt-3 border-t border-arcade-border/60 space-y-3">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-arcade-secondary text-[11px]">Warehouse Units:</span>
-                    <span className="font-semibold text-arcade-primary">
-                      {available} <span className="text-[10px] text-arcade-secondary">{product.unit || 'units'}</span>
-                    </span>
+                <div className="pt-3 border-t border-bd space-y-3">
+                  <div className="flex items-center justify-between text-[12px] font-mono text-t2">
+                    <span>Available stock:</span>
+                    <span className="text-white font-semibold text-[14px]">{available} units</span>
                   </div>
 
                   <Link
                     to={`/orders/new?product_id=${product.id}`}
-                    className="w-full flex items-center justify-center space-x-2 py-2 px-3 bg-arcade-accent text-arcade-surface font-bold text-xs uppercase tracking-wider hover:opacity-90 transition-opacity shadow-[0_0_8px_rgba(200,255,58,0.2)]"
+                    className="btn-primary w-full py-2.5 space-x-2 text-[14px]"
                   >
-                    <ShoppingCart className="h-3.5 w-3.5" />
-                    <span>Order Now</span>
+                    <ShoppingCart className="h-4 w-4" />
+                    <span>Request In Order</span>
                   </Link>
                 </div>
               </div>

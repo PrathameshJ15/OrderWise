@@ -48,7 +48,6 @@ export default function AllocationCenter() {
       const runList = runsRes.data || [];
       setRuns(runList);
 
-      // If past runs exist, load the latest run's results
       if (runList.length > 0) {
         loadRunDetails(runList[0].id);
       }
@@ -91,7 +90,6 @@ export default function AllocationCenter() {
       setRunModalOpen(false);
 
       if (dryRun) {
-        // Display dry run simulated results directly
         setSelectedRun({
           id: 'DRY-RUN',
           status: 'simulated',
@@ -102,7 +100,6 @@ export default function AllocationCenter() {
         });
         setRunResults(outcome.results || []);
       } else {
-        // Real run completed -> refresh history and load details
         await fetchCatalogAndHistory();
         if (outcome.run_id) {
           await loadRunDetails(outcome.run_id);
@@ -144,41 +141,41 @@ export default function AllocationCenter() {
   });
 
   return (
-    <div className="space-y-6 font-mono py-4">
-      {/* Header */}
-      <div className="border border-arcade-border bg-arcade-neutral p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="space-y-6 font-sans py-2">
+      {/* Header Card */}
+      <div className="card-base flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center space-x-1.5 text-xs text-arcade-accent bg-arcade-accent/10 border border-arcade-accent/20 px-2 py-0.5 mb-2">
-            <Cpu className="h-3 w-3" />
-            <span>DETERMINISTIC ALLOCATION ENGINE</span>
+          <div className="inline-flex items-center space-x-1.5 text-[12px] font-mono text-ac font-medium mb-1">
+            <Cpu className="h-3.5 w-3.5" />
+            <span>Deterministic allocation engine</span>
           </div>
-          <h1 className="font-display text-3xl font-extrabold uppercase text-arcade-primary">
+          <h1 className="text-[34px] font-bold tracking-[-0.02em] text-white">
             Allocation Center
           </h1>
-          <p className="text-xs text-arcade-secondary mt-1">
+          <p className="text-[14px] text-t2 mt-0.5">
             Execute deterministic multi-tier order allocations across competing customer demand queues.
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 self-start md:self-auto">
+        <div className="flex flex-wrap items-center gap-3 self-start md:self-auto">
           <Link
             to="/admin/ai"
-            className="flex items-center space-x-1.5 px-3 py-2.5 border border-arcade-border text-arcade-primary hover:border-arcade-accent hover:text-arcade-accent text-xs uppercase tracking-wider transition-colors"
+            className="btn-secondary min-h-[44px] px-4 text-[14px] flex items-center space-x-1.5"
           >
-            <Sparkles className="h-3.5 w-3.5 text-arcade-accent" />
+            <Sparkles className="h-4 w-4 text-ac" />
             <span>AI Priorities</span>
           </Link>
           <Link
             to="/admin/impact"
-            className="flex items-center space-x-1.5 px-3 py-2.5 border border-arcade-border text-arcade-primary hover:border-arcade-accent hover:text-arcade-accent text-xs uppercase tracking-wider transition-colors"
+            className="btn-secondary min-h-[44px] px-4 text-[14px] flex items-center space-x-1.5"
           >
-            <Layers className="h-3.5 w-3.5 text-arcade-accent" />
+            <Layers className="h-4 w-4 text-ac" />
             <span>Impact Analyzer</span>
           </Link>
           <button
             onClick={() => setRunModalOpen(true)}
             aria-label="Run Engine"
-            className="flex items-center space-x-2 px-4 py-2.5 bg-arcade-accent text-arcade-surface font-extrabold text-xs uppercase tracking-wider hover:opacity-90 transition-opacity shadow-[0_0_15px_rgba(200,255,58,0.3)]"
+            className="btn-primary space-x-2"
           >
             <Play className="h-4 w-4 fill-current" />
             <span>Run Engine</span>
@@ -187,12 +184,12 @@ export default function AllocationCenter() {
       </div>
 
       {error && (
-        <div className="p-4 border border-arcade-danger/40 bg-arcade-danger/10 text-arcade-danger text-xs flex items-center justify-between">
+        <div className="p-4 rounded-card border border-no/30 bg-[#291313] text-no text-[13px] flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <AlertTriangle className="h-4 w-4 shrink-0" />
             <span>{error}</span>
           </div>
-          <button onClick={() => setError(null)} className="underline hover:text-white text-[11px]">
+          <button onClick={() => setError(null)} className="underline hover:text-white text-[12px]">
             Dismiss
           </button>
         </div>
@@ -200,22 +197,22 @@ export default function AllocationCenter() {
 
       {/* Latest Run Metric Card */}
       {selectedRun && (
-        <div className="border border-arcade-border bg-arcade-neutral p-5 space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-arcade-border pb-3">
+        <div className="card-base space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-bd pb-3">
             <div>
-              <span className="text-[10px] uppercase font-bold text-arcade-accent tracking-wider block">
-                Active Inspection Run
+              <span className="text-[12px] font-mono font-medium text-ac block">
+                Active inspection run
               </span>
-              <div className="flex items-center space-x-2">
-                <span className="font-display text-xl uppercase font-bold text-arcade-primary">
+              <div className="flex flex-wrap items-center gap-2 mt-0.5">
+                <span className="text-[20px] font-bold text-white">
                   Run #{selectedRun.id}
                 </span>
-                <span className="text-[10px] px-1.5 py-0.5 bg-arcade-surface border border-arcade-border text-arcade-secondary">
+                <span className="text-[12px] font-mono px-2.5 py-0.5 rounded-pill bg-s2 border border-bd text-t2">
                   {new Date(selectedRun.created_at).toLocaleString()}
                 </span>
                 {selectedRun.input_hash && (
-                  <span className="text-[9px] px-1.5 py-0.5 border border-arcade-accent/30 text-arcade-accent flex items-center space-x-1">
-                    <Hash className="h-2.5 w-2.5" />
+                  <span className="text-[12px] font-mono px-2.5 py-0.5 rounded-pill border border-ac/30 text-white bg-ac/10 flex items-center space-x-1">
+                    <Hash className="h-3 w-3 text-ac" />
                     <span>{selectedRun.input_hash.slice(0, 10)}...</span>
                   </span>
                 )}
@@ -225,7 +222,7 @@ export default function AllocationCenter() {
             <div className="flex items-center space-x-2">
               <button
                 onClick={handleExportCSV}
-                className="flex items-center space-x-1.5 px-3 py-1.5 border border-arcade-border hover:border-arcade-accent text-arcade-primary hover:text-arcade-accent text-xs uppercase tracking-wider transition-colors"
+                className="btn-secondary min-h-[38px] px-4 text-[13px] flex items-center space-x-1.5"
               >
                 <Download className="h-3.5 w-3.5" />
                 <span>Export CSV</span>
@@ -233,71 +230,71 @@ export default function AllocationCenter() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
-            <div className="p-3 bg-arcade-surface border border-arcade-border">
-              <span className="text-[10px] uppercase text-arcade-secondary block">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div className="p-4 rounded-card bg-s2 border border-bd">
+              <span className="text-[12px] font-mono text-t2 block">
                 Total Evaluated
               </span>
-              <span className="text-2xl font-bold text-arcade-primary">
+              <span className="text-[34px] font-bold text-white block my-0.5">
                 {runResults.length}
               </span>
-              <span className="text-[10px] text-arcade-secondary">Order items</span>
+              <span className="text-[11px] font-mono text-t2">Order items</span>
             </div>
 
-            <div className="p-3 bg-arcade-surface border border-arcade-accent/30">
-              <span className="text-[10px] uppercase text-arcade-accent block">
+            <div className="p-4 rounded-card bg-s2 border border-ok/30">
+              <span className="text-[12px] font-mono text-ok font-medium block">
                 Fulfilled
               </span>
-              <span className="text-2xl font-bold text-arcade-accent">
+              <span className="text-[34px] font-bold text-ok block my-0.5">
                 {runResults.filter((r) => r.status === 'fulfilled').length}
               </span>
-              <span className="text-[10px] text-arcade-accent/80">100% satisfied</span>
+              <span className="text-[11px] font-mono text-ok/80">100% satisfied</span>
             </div>
 
-            <div className="p-3 bg-arcade-surface border border-arcade-warning/30">
-              <span className="text-[10px] uppercase text-arcade-warning block">
+            <div className="p-4 rounded-card bg-s2 border border-wa/30">
+              <span className="text-[12px] font-mono text-wa font-medium block">
                 Partially Fulfilled
               </span>
-              <span className="text-2xl font-bold text-arcade-warning">
+              <span className="text-[34px] font-bold text-wa block my-0.5">
                 {runResults.filter((r) => r.status === 'partially_fulfilled').length}
               </span>
-              <span className="text-[10px] text-arcade-warning/80">Minimum met</span>
+              <span className="text-[11px] font-mono text-wa/80">Minimum met</span>
             </div>
 
-            <div className="p-3 bg-arcade-surface border border-arcade-danger/30">
-              <span className="text-[10px] uppercase text-arcade-danger block">
+            <div className="p-4 rounded-card bg-s2 border border-no/30">
+              <span className="text-[12px] font-mono text-no font-medium block">
                 Deferred
               </span>
-              <span className="text-2xl font-bold text-arcade-danger">
+              <span className="text-[34px] font-bold text-no block my-0.5">
                 {runResults.filter((r) => r.status === 'deferred').length}
               </span>
-              <span className="text-[10px] text-arcade-danger/80">0 units allocated</span>
+              <span className="text-[11px] font-mono text-no/80">0 units allocated</span>
             </div>
           </div>
         </div>
       )}
 
-      {/* Results Matrix Table */}
-      <div className="border border-arcade-border bg-arcade-neutral p-5 space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-arcade-border pb-3">
+      {/* Results Matrix Table Card */}
+      <div className="card-base space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-bd pb-4">
           <div className="flex items-center space-x-2">
-            <Layers className="h-4 w-4 text-arcade-accent" />
-            <h2 className="font-display text-base uppercase font-bold text-arcade-primary">
-              Allocation Decisions &amp; Explanations ({filteredResults.length})
+            <Layers className="h-4 w-4 text-ac" />
+            <h2 className="text-[20px] font-bold text-white">
+              Allocation decisions &amp; explanations ({filteredResults.length})
             </h2>
           </div>
 
           {/* Status Filter */}
-          <div className="flex items-center space-x-1 border border-arcade-border bg-arcade-surface p-1 text-xs">
-            <Filter className="h-3 w-3 text-arcade-secondary ml-1" />
+          <div className="flex items-center space-x-1 border border-bd rounded-pill bg-s2 p-1 text-xs">
+            <Filter className="h-3.5 w-3.5 text-t2 ml-2" />
             {['all', 'fulfilled', 'partially_fulfilled', 'deferred'].map((st) => (
               <button
                 key={st}
                 onClick={() => setStatusFilter(st)}
-                className={`px-2.5 py-0.5 uppercase tracking-wider text-[10px] transition-colors ${
+                className={`px-3 py-1 rounded-pill font-mono text-[11px] font-medium transition-colors ${
                   statusFilter === st
-                    ? 'bg-arcade-neutral text-arcade-accent font-bold border border-arcade-border'
-                    : 'text-arcade-secondary hover:text-arcade-primary'
+                    ? 'bg-ac text-white'
+                    : 'text-t2 hover:text-white'
                 }`}
               >
                 {st.replace(/_/g, ' ')}
@@ -307,19 +304,19 @@ export default function AllocationCenter() {
         </div>
 
         {loadingResults ? (
-          <div className="p-12 text-center text-arcade-secondary flex items-center justify-center space-x-2">
-            <RefreshCw className="h-5 w-5 animate-spin text-arcade-accent" />
-            <span>Loading run decision log...</span>
+          <div className="p-12 text-center text-t2 flex items-center justify-center space-x-2">
+            <RefreshCw className="h-5 w-5 animate-spin text-ac" />
+            <span className="font-mono text-[12px]">Loading run decision log...</span>
           </div>
         ) : filteredResults.length === 0 ? (
-          <div className="p-12 text-center text-arcade-secondary">
+          <div className="p-12 text-center text-t2 font-sans text-[14px]">
             No allocation decisions match the current filter.
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs border-collapse">
+            <table className="w-full text-left text-sm border-collapse">
               <thead>
-                <tr className="border-b border-arcade-border bg-arcade-surface/60 text-arcade-secondary uppercase text-[10px] tracking-wider">
+                <tr className="border-b border-bd text-t2 font-mono text-[12px]">
                   <th className="py-3 px-3">Order #</th>
                   <th className="py-3 px-3">Customer</th>
                   <th className="py-3 px-3">Product</th>
@@ -330,31 +327,31 @@ export default function AllocationCenter() {
                   <th className="py-3 px-4">Deterministic Explanation</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-arcade-border/50">
+              <tbody className="divide-y divide-bd/60">
                 {filteredResults.map((res) => (
-                  <tr key={res.id || `${res.order_id}-${res.product_id}`} className="hover:bg-arcade-surface/50 transition-colors">
-                    <td className="py-3 px-3 font-bold text-arcade-primary">
+                  <tr key={res.id || `${res.order_id}-${res.product_id}`} className="hover:bg-s2/50 transition-colors">
+                    <td className="py-3.5 px-3 font-bold text-white font-mono text-[13px]">
                       #{res.order_id}
                     </td>
-                    <td className="py-3 px-3 text-arcade-primary">
+                    <td className="py-3.5 px-3 text-white">
                       {res.customer_name || 'Customer'}
                     </td>
-                    <td className="py-3 px-3">
-                      <span className="font-semibold text-arcade-primary">{res.product_name}</span>
+                    <td className="py-3.5 px-3">
+                      <span className="font-semibold text-white">{res.product_name}</span>
                     </td>
-                    <td className="py-3 px-3 text-center">
+                    <td className="py-3.5 px-3 text-center">
                       <Badge priority={res.approved_priority || 'MEDIUM'} />
                     </td>
-                    <td className="py-3 px-3 text-right font-semibold text-arcade-primary">
+                    <td className="py-3.5 px-3 text-right font-mono text-white">
                       {res.requested_quantity}
                     </td>
-                    <td className="py-3 px-3 text-right font-bold text-arcade-accent">
+                    <td className="py-3.5 px-3 text-right font-mono font-bold text-ac">
                       {res.allocated_quantity}
                     </td>
-                    <td className="py-3 px-3 text-center">
+                    <td className="py-3.5 px-3 text-center">
                       <StatusPill status={res.status} />
                     </td>
-                    <td className="py-3 px-4 text-arcade-secondary text-[11px] max-w-md leading-relaxed">
+                    <td className="py-3.5 px-4 text-t2 text-[13px] max-w-md leading-relaxed">
                       {typeof res.explanation === 'object' && res.explanation !== null
                         ? res.explanation.reason || JSON.stringify(res.explanation)
                         : (res.explanation || '—')}
@@ -368,25 +365,25 @@ export default function AllocationCenter() {
       </div>
 
       {/* Past Run History */}
-      <div className="border border-arcade-border bg-arcade-neutral p-5 space-y-4">
-        <div className="flex items-center space-x-2 border-b border-arcade-border pb-3">
-          <History className="h-4 w-4 text-arcade-accent" />
-          <h2 className="font-display text-base uppercase font-bold text-arcade-primary">
-            Past Allocation Runs ({runs.length})
+      <div className="card-base space-y-4">
+        <div className="flex items-center space-x-2 border-b border-bd pb-4">
+          <History className="h-4 w-4 text-ac" />
+          <h2 className="text-[20px] font-bold text-white">
+            Past allocation runs ({runs.length})
           </h2>
         </div>
 
         {loadingHistory ? (
-          <div className="p-8 text-center text-arcade-secondary">Loading history...</div>
+          <div className="p-8 text-center text-t2 font-mono text-[12px]">Loading history...</div>
         ) : runs.length === 0 ? (
-          <div className="p-8 text-center text-arcade-secondary">
-            No allocation runs recorded yet. Click &ldquo;Run Allocation Engine&rdquo; to execute the first run.
+          <div className="p-8 text-center text-t2 text-[14px]">
+            No allocation runs recorded yet. Click &ldquo;Run Engine&rdquo; to execute the first run.
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs border-collapse">
+            <table className="w-full text-left text-sm border-collapse">
               <thead>
-                <tr className="border-b border-arcade-border bg-arcade-surface/60 text-arcade-secondary uppercase text-[10px] tracking-wider">
+                <tr className="border-b border-bd text-t2 font-mono text-[12px]">
                   <th className="py-2.5 px-3">Run ID</th>
                   <th className="py-2.5 px-3">Execution Time</th>
                   <th className="py-2.5 px-3">Initiated By</th>
@@ -395,34 +392,34 @@ export default function AllocationCenter() {
                   <th className="py-2.5 px-4 text-right">Inspect</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-arcade-border/40">
+              <tbody className="divide-y divide-bd/50">
                 {runs.map((r) => (
                   <tr
                     key={r.id}
                     onClick={() => loadRunDetails(r.id)}
-                    className={`hover:bg-arcade-surface/50 cursor-pointer transition-colors ${
-                      selectedRun?.id === r.id ? 'bg-arcade-surface/70' : ''
+                    className={`hover:bg-s2/60 cursor-pointer transition-colors ${
+                      selectedRun?.id === r.id ? 'bg-s2' : ''
                     }`}
                   >
-                    <td className="py-3 px-3 font-bold text-arcade-accent">
+                    <td className="py-3.5 px-3 font-mono font-bold text-white">
                       #{r.id}
                     </td>
-                    <td className="py-3 px-3 text-arcade-secondary">
+                    <td className="py-3.5 px-3 text-t2 font-mono text-[12px]">
                       {new Date(r.created_at).toLocaleString()}
                     </td>
-                    <td className="py-3 px-3 text-arcade-primary">
+                    <td className="py-3.5 px-3 text-white">
                       {r.initiated_by_name || 'Administrator'}
                     </td>
-                    <td className="py-3 px-3 text-arcade-secondary font-mono text-[10px]">
+                    <td className="py-3.5 px-3 text-t2 font-mono text-[12px]">
                       {r.input_hash ? r.input_hash.slice(0, 16) : '—'}
                     </td>
-                    <td className="py-3 px-3 text-center">
-                      <span className="text-[9px] uppercase font-bold px-2 py-0.5 border border-arcade-accent/30 text-arcade-accent bg-arcade-accent/10">
+                    <td className="py-3.5 px-3 text-center">
+                      <span className="text-[12px] font-mono font-medium px-2.5 py-0.5 rounded-pill border border-ok/30 text-ok bg-ok/10">
                         {r.status || 'completed'}
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-right">
-                      <span className="text-arcade-accent text-[11px] font-bold uppercase hover:underline">
+                    <td className="py-3.5 px-4 text-right">
+                      <span className="text-white hover:text-ac text-[12px] font-mono font-medium transition-colors">
                         View &rarr;
                       </span>
                     </td>
@@ -440,24 +437,24 @@ export default function AllocationCenter() {
         onClose={() => setRunModalOpen(false)}
         title="Execute Order Allocation Engine"
       >
-        <div className="space-y-4 text-xs font-mono">
-          <div className="p-3 bg-arcade-surface border border-arcade-accent/20 text-arcade-secondary space-y-1">
-            <span className="font-bold uppercase text-arcade-accent block">
+        <div className="space-y-4 text-sm font-sans">
+          <div className="p-4 rounded-card bg-s2 border border-bd text-t2 space-y-1.5">
+            <span className="font-semibold text-white block">
               Deterministic Invariant Guarantee
             </span>
-            <p>
+            <p className="text-[13px] leading-relaxed">
               Order items will be sorted by Approved Priority DESC &gt; Promised Delivery Date ASC &gt; Order Created Date ASC. Physical warehouse reservations will be updated within a strict database transaction.
             </p>
           </div>
 
           <div>
-            <label className="block text-[10px] uppercase text-arcade-secondary mb-1">
+            <label className="block text-[12px] font-mono text-t2 mb-1.5">
               Product Scope
             </label>
             <select
               value={selectedProductIds}
               onChange={(e) => setSelectedProductIds(e.target.value)}
-              className="w-full bg-arcade-surface border border-arcade-border p-2 text-arcade-primary focus:border-arcade-accent focus:outline-none"
+              className="w-full bg-s2 border border-bd rounded-pill px-4 py-2.5 text-white focus:border-white focus:outline-none font-sans text-[14px]"
             >
               <option value="all">All Active Catalog Products</option>
               {products.map((p) => (
@@ -469,7 +466,7 @@ export default function AllocationCenter() {
           </div>
 
           <div>
-            <label className="block text-[10px] uppercase text-arcade-secondary mb-1">
+            <label className="block text-[12px] font-mono text-t2 mb-1.5">
               Audit Notes
             </label>
             <input
@@ -477,14 +474,14 @@ export default function AllocationCenter() {
               placeholder="e.g. Scheduled morning allocation batch run"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className="w-full bg-arcade-surface border border-arcade-border p-2 text-arcade-primary focus:border-arcade-accent focus:outline-none"
+              className="w-full bg-s2 border border-bd rounded-pill px-4 py-2.5 text-white placeholder-t2/50 focus:border-white focus:outline-none font-sans text-[14px]"
             />
           </div>
 
-          <div className="p-3 bg-arcade-surface border border-arcade-border flex items-center justify-between">
+          <div className="p-4 rounded-card bg-s2 border border-bd flex items-center justify-between">
             <div>
-              <span className="font-bold text-arcade-primary uppercase block">Dry-Run Simulation Mode</span>
-              <span className="text-[11px] text-arcade-secondary">
+              <span className="font-semibold text-white block">Dry-Run Simulation Mode</span>
+              <span className="text-[12px] text-t2">
                 Compute allocations without modifying database reservations
               </span>
             </div>
@@ -492,14 +489,14 @@ export default function AllocationCenter() {
               type="checkbox"
               checked={dryRun}
               onChange={(e) => setDryRun(e.target.checked)}
-              className="accent-arcade-accent h-4 w-4 cursor-pointer"
+              className="accent-ac h-4 w-4 cursor-pointer"
             />
           </div>
 
-          <div className="flex items-center justify-end space-x-2 pt-3 border-t border-arcade-border">
+          <div className="flex items-center justify-end space-x-3 pt-3 border-t border-bd">
             <button
               onClick={() => setRunModalOpen(false)}
-              className="px-3 py-1.5 border border-arcade-border text-arcade-secondary uppercase text-xs"
+              className="btn-secondary min-h-[40px] px-4 text-[13px]"
             >
               Cancel
             </button>
@@ -507,7 +504,7 @@ export default function AllocationCenter() {
               onClick={handleExecuteAllocation}
               disabled={executing}
               aria-label="Execute Allocation"
-              className="px-5 py-2 bg-arcade-accent text-arcade-surface font-extrabold uppercase text-xs hover:opacity-90 disabled:opacity-50 shadow-[0_0_10px_rgba(200,255,58,0.25)]"
+              className="btn-primary min-h-[40px] px-5 text-[13px] disabled:opacity-50"
             >
               {executing ? 'Executing Run...' : dryRun ? 'Run Dry Simulation' : 'Execute Allocation'}
             </button>

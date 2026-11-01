@@ -7,7 +7,7 @@ export function AdminLayout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-arcade-surface text-arcade-primary flex font-mono selection:bg-arcade-accent selection:text-arcade-surface">
+    <div className="min-h-screen bg-bg text-white flex font-sans selection:bg-ac selection:text-white">
       {/* Sidebar Navigation */}
       <Sidebar
         mobileOpen={mobileMenuOpen}
@@ -20,9 +20,21 @@ export function AdminLayout() {
         <Navbar onOpenMobile={() => setMobileMenuOpen(true)} />
 
         {/* Page Content Viewport */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">
+        <main className="flex-1 max-w-container w-full mx-auto p-4 sm:p-6 lg:p-8">
           <Outlet />
         </main>
+
+        {/* Footer: top border, two mono lines */}
+        <footer className="border-t border-bd bg-s py-6 px-4 sm:px-8 mt-12 text-[12px] font-mono text-t2">
+          <div className="max-w-container mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+              <span className="text-white font-medium">OrderWise</span> — Deterministic inventory allocation and supply intelligence
+            </div>
+            <div className="text-t2">
+              All rights reserved • High-contrast streaming console
+            </div>
+          </div>
+        </footer>
       </div>
     </div>
   );

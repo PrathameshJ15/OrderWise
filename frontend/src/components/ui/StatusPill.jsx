@@ -1,50 +1,50 @@
 import React from 'react';
 
-// ─── Status Pill (branch_1: customer portal allocation statuses) ─────────────
+// ─── Status Pill ─────────────────────────────────────────────────────────────
 
 const STATUS_CONFIGS = {
   fulfilled: {
     label: 'Fulfilled',
-    classes: 'bg-green-100 text-green-800 border-green-200',
-    dotClass: 'bg-green-500',
+    classes: 'bg-ok/15 text-ok border border-ok/30',
+    dotClass: 'bg-ok',
   },
   partially_fulfilled: {
     label: 'Partially Fulfilled',
-    classes: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-    dotClass: 'bg-yellow-500',
+    classes: 'bg-wa/15 text-wa border border-wa/30',
+    dotClass: 'bg-wa',
   },
   deferred: {
     label: 'Deferred',
-    classes: 'bg-red-100 text-red-800 border-red-200',
-    dotClass: 'bg-red-500',
+    classes: 'bg-no/15 text-no border border-no/30',
+    dotClass: 'bg-no',
   },
   pending: {
     label: 'Pending Allocation',
-    classes: 'bg-gray-100 text-gray-700 border-gray-200',
-    dotClass: 'bg-gray-400',
+    classes: 'bg-[#232323] text-t2 border border-bd',
+    dotClass: 'bg-series',
   },
   cancelled: {
     label: 'Cancelled',
-    classes: 'bg-zinc-100 text-zinc-600 border-zinc-200',
-    dotClass: 'bg-zinc-400',
+    classes: 'bg-[#1E1E1E] text-t2/70 border border-bd/60',
+    dotClass: 'bg-t2/50',
   },
   shipped: {
     label: 'Shipped',
-    classes: 'bg-blue-100 text-blue-800 border-blue-200',
-    dotClass: 'bg-blue-500',
+    classes: 'bg-blue-500/15 text-blue-400 border border-blue-500/30',
+    dotClass: 'bg-blue-400',
   },
   completed: {
     label: 'Completed',
-    classes: 'bg-emerald-100 text-emerald-800 border-emerald-200',
-    dotClass: 'bg-emerald-500',
+    classes: 'bg-ok/15 text-ok border border-ok/30',
+    dotClass: 'bg-ok',
   },
 };
 
 const PRIORITY_CONFIGS = {
-  critical: { label: 'CRITICAL', classes: 'bg-red-600 text-white font-semibold' },
-  high: { label: 'HIGH', classes: 'bg-orange-500 text-white font-semibold' },
-  medium: { label: 'MEDIUM', classes: 'bg-blue-500 text-white' },
-  low: { label: 'LOW', classes: 'bg-gray-500 text-white' },
+  critical: { label: 'CRITICAL', classes: 'bg-no/15 text-no border border-no/30' },
+  high: { label: 'HIGH', classes: 'bg-wa/15 text-wa border border-wa/30' },
+  medium: { label: 'MEDIUM', classes: 'bg-[#2A2A2A] text-white border border-[#3A3A3A]' },
+  low: { label: 'LOW', classes: 'bg-[#1F1F1F] text-t2 border border-bd' },
 };
 
 export function StatusPill({ status, type = 'status', size = 'md' }) {
@@ -52,13 +52,13 @@ export function StatusPill({ status, type = 'status', size = 'md' }) {
     const key = (status || '').toLowerCase();
     const config = PRIORITY_CONFIGS[key] || {
       label: status || 'UNKNOWN',
-      classes: 'bg-gray-200 text-gray-700',
+      classes: 'bg-[#232323] text-t2 border border-bd',
     };
-    const sizeClasses = size === 'sm' ? 'px-2 py-0.5 text-xs' : 'px-2.5 py-1 text-xs';
+    const sizeClasses = size === 'sm' ? 'px-2 py-0.5 text-[11px]' : 'px-3 py-1 text-[12px]';
 
     return (
       <span
-        className={`inline-flex items-center rounded-full uppercase tracking-wider ${sizeClasses} ${config.classes}`}
+        className={`inline-flex items-center rounded-pill font-mono font-medium tracking-wide ${sizeClasses} ${config.classes}`}
         aria-label={`Priority ${config.label}`}
       >
         {config.label}
@@ -69,15 +69,15 @@ export function StatusPill({ status, type = 'status', size = 'md' }) {
   const key = (status || 'pending').toLowerCase();
   const config = STATUS_CONFIGS[key] || {
     label: status,
-    classes: 'bg-gray-100 text-gray-700 border-gray-200',
-    dotClass: 'bg-gray-400',
+    classes: 'bg-[#232323] text-t2 border border-bd',
+    dotClass: 'bg-series',
   };
 
-  const sizeClasses = size === 'sm' ? 'px-2 py-0.5 text-xs' : 'px-2.5 py-1 text-sm';
+  const sizeClasses = size === 'sm' ? 'px-2 py-0.5 text-[11px]' : 'px-3 py-1 text-[12px]';
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full border font-medium ${sizeClasses} ${config.classes}`}
+      className={`inline-flex items-center gap-1.5 rounded-pill font-mono font-medium ${sizeClasses} ${config.classes}`}
       aria-label={`Status: ${config.label}`}
     >
       <span className={`h-1.5 w-1.5 rounded-full ${config.dotClass}`} aria-hidden="true" />
@@ -86,69 +86,66 @@ export function StatusPill({ status, type = 'status', size = 'md' }) {
   );
 }
 
-// ─── Priority Pill (HEAD/main: admin AI recommendations panel) ────────────────
-
 export function PriorityPill({ priority, className = '' }) {
   const p = (priority || 'MEDIUM').toUpperCase();
 
   const styles = {
-    CRITICAL: 'bg-arcade-danger/15 text-arcade-danger border-arcade-danger/40',
-    HIGH: 'bg-arcade-warning/15 text-arcade-warning border-arcade-warning/40',
-    MEDIUM: 'bg-cyan-500/15 text-cyan-400 border-cyan-500/40',
-    LOW: 'bg-arcade-secondary/15 text-arcade-secondary border-arcade-border',
+    CRITICAL: 'bg-no/15 text-no border border-no/30',
+    HIGH: 'bg-wa/15 text-wa border border-wa/30',
+    MEDIUM: 'bg-[#2A2A2A] text-white border border-[#3A3A3A]',
+    LOW: 'bg-[#1F1F1F] text-t2 border border-bd',
   };
-
-  const currentStyle = styles[p] || styles.MEDIUM;
 
   return (
     <span
-      className={`inline-flex items-center px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider border ${currentStyle} ${className}`}
+      className={`inline-flex items-center rounded-pill font-mono font-medium text-[12px] px-2.5 py-0.5 border ${
+        styles[p] || 'bg-[#232323] text-t2 border-bd'
+      } ${className}`}
     >
-      <span className="w-1.5 h-1.5 rounded-full bg-current mr-1.5" />
       {p}
     </span>
   );
 }
 
-// ─── Confidence Pill (HEAD/main: AI recommendation confidence indicator) ──────
+// ─── Confidence Pill (AI recommendation confidence indicator) ────────────────
 
 export function ConfidencePill({ confidence, className = '' }) {
   const c = (confidence || 'low').toLowerCase();
 
   const styles = {
-    high: 'bg-arcade-success/15 text-arcade-success border-arcade-success/40',
-    medium: 'bg-arcade-warning/15 text-arcade-warning border-arcade-warning/40',
-    low: 'bg-arcade-secondary/15 text-arcade-secondary border-arcade-border',
+    high: 'bg-ok/15 text-ok border border-ok/30',
+    medium: 'bg-wa/15 text-wa border border-wa/30',
+    low: 'bg-[#232323] text-t2 border border-bd',
   };
 
   const currentStyle = styles[c] || styles.low;
 
   return (
     <span
-      className={`inline-flex items-center px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider border ${currentStyle} ${className}`}
+      className={`inline-flex items-center px-2.5 py-0.5 text-[12px] font-mono font-medium rounded-pill border ${currentStyle} ${className}`}
     >
       Confidence: {c}
     </span>
   );
 }
 
-// ─── Recommendation Status Pill (HEAD/main: AI approval workflow) ─────────────
+// ─── Recommendation Status Pill (AI approval workflow) ────────────────────────
 
 export function RecommendationStatusPill({ status, className = '' }) {
   const s = (status || 'pending').toLowerCase();
 
   const styles = {
-    pending: 'bg-arcade-warning/10 text-arcade-warning border-arcade-warning/40 animate-pulse',
-    approved: 'bg-arcade-success/15 text-arcade-success border-arcade-success/40',
-    overridden: 'bg-arcade-accent/15 text-arcade-accent border-arcade-accent/40',
-    rejected: 'bg-arcade-danger/15 text-arcade-danger border-arcade-danger/40',
+    pending: 'bg-wa/15 text-wa border border-wa/30 animate-pulse',
+    approved: 'bg-ok/15 text-ok border border-ok/30',
+    overridden: 'bg-white/10 text-white border border-[#555]',
+    rejected: 'bg-no/15 text-no border border-no/30',
   };
 
   const currentStyle = styles[s] || styles.pending;
 
   return (
     <span
-      className={`inline-flex items-center px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider border ${currentStyle} ${className}`}
+      className={`inline-flex items-center px-2.5 py-0.5 text-[12px] font-mono font-medium rounded-pill border ${currentStyle} ${className}`}
     >
       {s === 'overridden' ? 'Modified' : s}
     </span>

@@ -60,26 +60,26 @@ export default function OrderDetail() {
 
   if (loading) {
     return (
-      <div className="border border-arcade-border bg-arcade-neutral p-12 text-center text-arcade-secondary flex flex-col items-center justify-center space-y-3 font-mono my-8">
-        <RefreshCw className="h-6 w-6 animate-spin text-arcade-accent" />
-        <span className="text-xs uppercase tracking-wider">Loading order details...</span>
+      <div className="card-base p-12 text-center text-t2 flex flex-col items-center justify-center space-y-3 font-sans my-8">
+        <RefreshCw className="h-6 w-6 animate-spin text-ac" />
+        <span className="text-[12px] font-mono">Loading order details...</span>
       </div>
     );
   }
 
   if (!order) {
     return (
-      <div className="border border-arcade-border bg-arcade-neutral p-12 text-center text-arcade-secondary space-y-3 font-mono my-8">
-        <AlertTriangle className="h-8 w-8 text-arcade-warning mx-auto" />
-        <h2 className="font-display text-xl uppercase font-bold text-arcade-primary">
+      <div className="card-base p-12 text-center text-t2 space-y-3 font-sans my-8">
+        <AlertTriangle className="h-8 w-8 text-wa mx-auto" />
+        <h2 className="text-[20px] font-bold text-white">
           Order #{id} Not Found
         </h2>
-        <p className="text-xs">
+        <p className="text-[14px]">
           This order does not exist or you do not have permission to view it.
         </p>
         <Link
           to="/orders"
-          className="inline-block px-4 py-2 bg-arcade-accent text-arcade-surface font-bold text-xs uppercase"
+          className="btn-primary"
         >
           Back to My Orders
         </Link>
@@ -87,7 +87,6 @@ export default function OrderDetail() {
     );
   }
 
-  // Determine Timeline Progress
   const isCancelled = order.status === 'cancelled';
   const isPending = order.status === 'pending';
   const isConfirmed = order.status === 'confirmed';
@@ -125,25 +124,25 @@ export default function OrderDetail() {
   ];
 
   return (
-    <div className="space-y-6 font-mono py-4">
-      {/* Header */}
-      <div className="border border-arcade-border bg-arcade-neutral p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="space-y-6 font-sans py-2">
+      {/* Header Card */}
+      <div className="card-base flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center space-x-2 text-xs text-arcade-secondary mb-2">
-            <Link to="/orders" className="hover:text-arcade-primary flex items-center space-x-1">
+          <div className="flex items-center space-x-2 text-[12px] font-mono text-t2 mb-1.5">
+            <Link to="/orders" className="hover:text-white flex items-center space-x-1">
               <ArrowLeft className="h-3 w-3" />
               <span>Orders</span>
             </Link>
             <span>/</span>
-            <span className="text-arcade-accent">Order #{order.id}</span>
+            <span className="text-white">Order #{order.id}</span>
           </div>
           <div className="flex flex-wrap items-center gap-3">
-            <h1 className="font-display text-3xl font-extrabold uppercase text-arcade-primary">
+            <h1 className="text-[34px] font-bold tracking-[-0.02em] text-white">
               {`Order #${order.id}`}
             </h1>
             <StatusPill status={order.status} />
           </div>
-          <p className="text-xs text-arcade-secondary mt-1">
+          <p className="text-[14px] text-t2 mt-0.5">
             Submitted on {new Date(order.created_at).toLocaleString()} • Customer: {order.customer_name || 'You'}
           </p>
         </div>
@@ -153,14 +152,14 @@ export default function OrderDetail() {
           {(order.status === 'pending' || order.status === 'confirmed') && (
             <button
               onClick={() => setCancelModalOpen(true)}
-              className="px-3.5 py-2 border border-arcade-danger/60 text-arcade-danger hover:bg-arcade-danger/10 text-xs uppercase tracking-wider transition-colors"
+              className="btn-secondary min-h-[40px] px-4 text-[13px] border-no text-no hover:bg-no/10"
             >
               Cancel Order
             </button>
           )}
           <Link
             to="/orders/new"
-            className="px-3.5 py-2 bg-arcade-accent text-arcade-surface font-bold text-xs uppercase tracking-wider hover:opacity-90 transition-opacity"
+            className="btn-primary min-h-[40px] px-4 text-[13px]"
           >
             Reorder Similar
           </Link>
@@ -168,7 +167,7 @@ export default function OrderDetail() {
       </div>
 
       {error && (
-        <div className="p-4 border border-arcade-danger/40 bg-arcade-danger/10 text-arcade-danger text-xs flex items-center justify-between">
+        <div className="p-4 rounded-card border border-no/30 bg-[#291313] text-no text-[13px] flex items-center justify-between">
           <span>{error}</span>
           <button onClick={() => setError(null)} className="underline hover:text-white">
             Dismiss
@@ -176,51 +175,51 @@ export default function OrderDetail() {
         </div>
       )}
 
-      {/* Customer-Friendly Status Timeline */}
-      <div className="border border-arcade-border bg-arcade-neutral p-6 space-y-4">
-        <h2 className="font-display text-base uppercase font-bold text-arcade-primary flex items-center space-x-2">
-          <Clock className="h-4 w-4 text-arcade-accent" />
-          <span>Fulfillment Progress Timeline</span>
+      {/* Fulfillment Progress Timeline Card */}
+      <div className="card-base space-y-4">
+        <h2 className="text-[20px] font-bold text-white flex items-center space-x-2">
+          <Clock className="h-4 w-4 text-ac" />
+          <span>Fulfillment progress timeline</span>
         </h2>
 
         {isCancelled ? (
-          <div className="p-4 border border-arcade-danger/40 bg-arcade-danger/10 text-arcade-danger text-xs flex items-center space-x-3">
+          <div className="p-4 rounded-card border border-no/30 bg-[#291313] text-no text-[13px] flex items-center space-x-3">
             <XCircle className="h-5 w-5 shrink-0" />
             <div>
-              <span className="font-bold uppercase block">Order Cancelled</span>
+              <span className="font-semibold block">Order cancelled</span>
               <span>This order has been cancelled and will not receive inventory allocation.</span>
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 pt-2">
+          <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 pt-1">
             {timelineSteps.map((step, idx) => (
               <div
                 key={idx}
-                className={`p-4 border transition-all ${
+                className={`p-4 rounded-card border transition-all ${
                   step.completed
-                    ? 'border-arcade-accent/60 bg-arcade-accent/5'
-                    : 'border-arcade-border bg-arcade-surface/40 opacity-50'
+                    ? 'border-ok/30 bg-ok/5'
+                    : 'border-bd bg-s2/40 opacity-50'
                 }`}
               >
-                <div className="flex items-center space-x-2 mb-1.5">
+                <div className="flex items-center space-x-2.5 mb-1.5">
                   <div
-                    className={`w-5 h-5 flex items-center justify-center text-[10px] font-bold border ${
+                    className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-mono font-bold ${
                       step.completed
-                        ? 'border-arcade-accent bg-arcade-accent text-arcade-surface'
-                        : 'border-arcade-border text-arcade-secondary'
+                        ? 'bg-ok text-black'
+                        : 'border border-bd text-t2'
                     }`}
                   >
                     {step.completed ? <CheckCircle2 className="h-3.5 w-3.5" /> : idx + 1}
                   </div>
                   <span
-                    className={`text-xs uppercase font-bold tracking-wider ${
-                      step.completed ? 'text-arcade-primary' : 'text-arcade-secondary'
+                    className={`text-[13px] font-semibold ${
+                      step.completed ? 'text-white' : 'text-t2'
                     }`}
                   >
                     {step.title}
                   </span>
                 </div>
-                <p className="text-[11px] text-arcade-secondary">{step.desc}</p>
+                <p className="text-[12px] text-t2 font-sans">{step.desc}</p>
               </div>
             ))}
           </div>
@@ -228,38 +227,38 @@ export default function OrderDetail() {
       </div>
 
       {/* Commitments & Business Notes */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-        <div className="border border-arcade-border bg-arcade-neutral p-5 space-y-2">
-          <div className="flex items-center space-x-2 text-arcade-secondary uppercase text-[10px] tracking-wider">
-            <Calendar className="h-3.5 w-3.5 text-arcade-accent" />
-            <span>Promised Delivery Date</span>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="card-base space-y-2">
+          <div className="flex items-center space-x-2 text-t2 text-[12px] font-mono">
+            <Calendar className="h-3.5 w-3.5 text-ac" />
+            <span>Promised delivery date</span>
           </div>
-          <div className="text-base font-bold text-arcade-primary">
-            {order.promised_delivery_date || 'Standard Commercial Delivery Schedule'}
+          <div className="text-[18px] font-bold text-white">
+            {order.promised_delivery_date || 'Standard commercial delivery schedule'}
           </div>
-          <p className="text-[11px] text-arcade-secondary">
+          <p className="text-[13px] text-t2">
             Priority-based allocation resolves customer delivery commitments using strict date sequencing.
           </p>
         </div>
 
-        <div className="border border-arcade-border bg-arcade-neutral p-5 space-y-2">
-          <div className="flex items-center space-x-2 text-arcade-secondary uppercase text-[10px] tracking-wider">
-            <FileText className="h-3.5 w-3.5 text-arcade-accent" />
-            <span>Business Context &amp; Notes</span>
+        <div className="card-base space-y-2">
+          <div className="flex items-center space-x-2 text-t2 text-[12px] font-mono">
+            <FileText className="h-3.5 w-3.5 text-ac" />
+            <span>Business context &amp; notes</span>
           </div>
-          <div className="text-arcade-primary text-xs leading-relaxed italic">
+          <div className="text-white text-[14px] leading-relaxed italic">
             &ldquo;{order.business_notes || 'No customer business notes attached to this order submission.'}&rdquo;
           </div>
         </div>
       </div>
 
       {/* Order Items Breakdown & Allocation Explanations */}
-      <div className="border border-arcade-border bg-arcade-neutral p-5 space-y-4">
-        <div className="flex items-center justify-between border-b border-arcade-border pb-3">
+      <div className="card-base space-y-4">
+        <div className="flex items-center justify-between border-b border-bd pb-4">
           <div className="flex items-center space-x-2">
-            <Layers className="h-4 w-4 text-arcade-accent" />
-            <h2 className="font-display text-base uppercase font-bold text-arcade-primary">
-              Order Items &amp; Allocation Explanations ({order.items?.length || 0})
+            <Layers className="h-4 w-4 text-ac" />
+            <h2 className="text-[20px] font-bold text-white">
+              Order items &amp; allocation explanations ({order.items?.length || 0})
             </h2>
           </div>
         </div>
@@ -274,21 +273,21 @@ export default function OrderDetail() {
             return (
               <div
                 key={item.id}
-                className="border border-arcade-border bg-arcade-surface p-5 space-y-3"
+                className="bg-s2 border border-bd rounded-card p-5 space-y-4"
               >
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-arcade-border/60 pb-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-bd/60 pb-3">
                   <div>
-                    <div className="flex items-center space-x-2">
-                      <span className="font-bold text-base text-arcade-primary">
+                    <div className="flex items-center space-x-2.5">
+                      <span className="font-bold text-[16px] text-white">
                         {item.product_name}
                       </span>
-                      <span className="text-[10px] px-1.5 py-0.5 bg-arcade-neutral border border-arcade-border text-arcade-accent">
-                        {item.sku}
+                      <span className="font-mono text-[11px] px-2 py-0.5 rounded-pill bg-s border border-bd text-t2">
+                        {item.sku || item.product_sku}
                       </span>
                     </div>
-                    <span className="text-[11px] text-arcade-secondary mt-0.5 block">
-                      Unit: {item.unit || 'units'} • Partial Delivery Allowed:{' '}
-                      <span className="font-semibold text-arcade-primary">
+                    <span className="text-[12px] font-mono text-t2 mt-0.5 block">
+                      Unit: {item.unit || 'units'} • Partial delivery allowed:{' '}
+                      <span className="font-semibold text-white">
                         {item.partial_delivery_allowed ? 'Yes' : 'No'}
                       </span>
                     </span>
@@ -298,7 +297,7 @@ export default function OrderDetail() {
                     {hasAllocated ? (
                       <StatusPill status={item.allocation_status} />
                     ) : (
-                      <span className="inline-flex items-center space-x-1 px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider border border-arcade-border text-arcade-secondary bg-arcade-neutral">
+                      <span className="inline-flex items-center space-x-1.5 px-3 py-1 text-[12px] font-mono font-medium rounded-pill border border-bd text-t2 bg-s">
                         <Clock className="h-3 w-3" />
                         <span>Pending Run</span>
                       </span>
@@ -308,48 +307,48 @@ export default function OrderDetail() {
 
                 {/* Quantitative Breakdown Grid */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-                  <div className="p-2.5 bg-arcade-neutral border border-arcade-border">
-                    <span className="text-[10px] uppercase text-arcade-secondary block">
+                  <div className="p-3 bg-s rounded-card border border-bd">
+                    <span className="text-[11px] font-mono text-t2 block">
                       Requested
                     </span>
-                    <span className="text-base font-bold text-arcade-primary">
+                    <span className="text-[18px] font-bold text-white font-mono">
                       {item.requested_quantity}
                     </span>
                   </div>
 
-                  <div className="p-2.5 bg-arcade-neutral border border-arcade-border">
-                    <span className="text-[10px] uppercase text-arcade-secondary block">
+                  <div className="p-3 bg-s rounded-card border border-bd">
+                    <span className="text-[11px] font-mono text-t2 block">
                       Min Acceptable
                     </span>
-                    <span className="text-base font-bold text-arcade-primary">
+                    <span className="text-[18px] font-bold text-white font-mono">
                       {item.minimum_acceptable_quantity}
                     </span>
                   </div>
 
-                  <div className="p-2.5 bg-arcade-neutral border border-arcade-border">
-                    <span className="text-[10px] uppercase text-arcade-secondary block">
+                  <div className="p-3 bg-s rounded-card border border-bd">
+                    <span className="text-[11px] font-mono text-t2 block">
                       Allocated
                     </span>
                     <span
-                      className={`text-base font-bold ${
+                      className={`text-[18px] font-bold font-mono ${
                         isFulfilled
-                          ? 'text-arcade-accent'
+                          ? 'text-ok'
                           : isPartial
-                          ? 'text-arcade-warning'
+                          ? 'text-wa'
                           : isDeferred
-                          ? 'text-arcade-danger'
-                          : 'text-arcade-secondary'
+                          ? 'text-no'
+                          : 'text-t2'
                       }`}
                     >
                       {hasAllocated ? item.allocated_quantity : '—'}
                     </span>
                   </div>
 
-                  <div className="p-2.5 bg-arcade-neutral border border-arcade-border">
-                    <span className="text-[10px] uppercase text-arcade-secondary block">
+                  <div className="p-3 bg-s rounded-card border border-bd">
+                    <span className="text-[11px] font-mono text-t2 block">
                       Fulfillment Rate
                     </span>
-                    <span className="text-base font-bold text-arcade-primary">
+                    <span className="text-[18px] font-bold text-white font-mono">
                       {hasAllocated
                         ? `${Math.round((item.allocated_quantity / item.requested_quantity) * 100)}%`
                         : 'Pending'}
@@ -359,32 +358,32 @@ export default function OrderDetail() {
 
                 {/* Plain-English Allocation Explanation Callout */}
                 <div
-                  className={`p-3.5 border text-xs flex items-start space-x-2.5 ${
+                  className={`p-4 rounded-card border text-[13px] flex items-start space-x-3 ${
                     isFulfilled
-                      ? 'border-arcade-accent/30 bg-arcade-accent/5 text-arcade-primary'
+                      ? 'border-ok/30 bg-ok/5 text-white'
                       : isPartial
-                      ? 'border-arcade-warning/30 bg-arcade-warning/5 text-arcade-primary'
+                      ? 'border-wa/30 bg-wa/5 text-white'
                       : isDeferred
-                      ? 'border-arcade-danger/30 bg-arcade-danger/5 text-arcade-primary'
-                      : 'border-arcade-border bg-arcade-neutral text-arcade-secondary'
+                      ? 'border-no/30 bg-[#291313] text-white'
+                      : 'border-bd bg-s text-t2'
                   }`}
                 >
                   <Info
                     className={`h-4 w-4 shrink-0 mt-0.5 ${
                       isFulfilled
-                        ? 'text-arcade-accent'
+                        ? 'text-ok'
                         : isPartial
-                        ? 'text-arcade-warning'
+                        ? 'text-wa'
                         : isDeferred
-                        ? 'text-arcade-danger'
-                        : 'text-arcade-secondary'
+                        ? 'text-no'
+                        : 'text-t2'
                     }`}
                   />
                   <div>
-                    <span className="text-[10px] uppercase font-bold tracking-wider block mb-0.5 text-arcade-secondary">
+                    <span className="text-[11px] font-mono font-medium uppercase tracking-wider block mb-0.5 text-t2">
                       {hasAllocated
-                        ? 'Allocation Engine Explanation'
-                        : 'Allocation Engine Status'}
+                        ? 'Allocation engine explanation'
+                        : 'Allocation engine status'}
                     </span>
                     <p className="leading-relaxed">
                       {hasAllocated
@@ -409,35 +408,35 @@ export default function OrderDetail() {
         onClose={() => setCancelModalOpen(false)}
         title={`Cancel Order #${order.id}`}
       >
-        <div className="space-y-4 text-xs">
-          <p className="text-arcade-secondary">
+        <div className="space-y-4 text-sm font-sans">
+          <p className="text-t2">
             Are you sure you want to cancel Order #{order.id}? Once cancelled, any allocated stock will be released back to the warehouse.
           </p>
           <div>
-            <label className="block text-[10px] uppercase text-arcade-secondary mb-1">
-              Cancellation Reason (Optional)
+            <label className="block text-[12px] font-mono text-t2 mb-1.5">
+              Cancellation reason (optional)
             </label>
             <input
               type="text"
               placeholder="e.g. Project rescheduled, redundant order"
               value={cancelReason}
               onChange={(e) => setCancelReason(e.target.value)}
-              className="w-full bg-arcade-surface border border-arcade-border p-2 text-arcade-primary focus:border-arcade-accent focus:outline-none"
+              className="w-full bg-s2 border border-bd rounded-pill px-4 py-2.5 text-white focus:border-white focus:outline-none text-[14px]"
             />
           </div>
-          <div className="flex items-center justify-end space-x-2 pt-2">
+          <div className="flex items-center justify-end space-x-3 pt-2">
             <button
               onClick={() => setCancelModalOpen(false)}
-              className="px-3 py-1.5 border border-arcade-border text-arcade-secondary hover:text-arcade-primary uppercase text-xs"
+              className="btn-secondary min-h-[40px] px-4 text-[13px]"
             >
-              Keep Order
+              Keep order
             </button>
             <button
               onClick={handleCancelOrder}
               disabled={cancelling}
-              className="px-4 py-1.5 bg-arcade-danger text-white uppercase text-xs font-bold hover:opacity-90 disabled:opacity-50"
+              className="btn-primary min-h-[40px] px-4 text-[13px] bg-no hover:bg-no/90 disabled:opacity-50"
             >
-              {cancelling ? 'Cancelling...' : 'Confirm Cancellation'}
+              {cancelling ? 'Cancelling...' : 'Confirm cancellation'}
             </button>
           </div>
         </div>

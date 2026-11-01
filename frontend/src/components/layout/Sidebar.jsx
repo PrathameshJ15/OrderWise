@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import {
   LayoutDashboard,
@@ -45,7 +45,7 @@ export default function Sidebar({ mobileOpen = false, onCloseMobile = () => {} }
       {/* Mobile Backdrop */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 bg-black/60 z-40 lg:hidden backdrop-blur-xs"
+          className="fixed inset-0 bg-black/70 z-40 lg:hidden backdrop-blur-xs"
           onClick={onCloseMobile}
           aria-hidden="true"
         />
@@ -53,30 +53,20 @@ export default function Sidebar({ mobileOpen = false, onCloseMobile = () => {} }
 
       {/* Sidebar Container */}
       <aside
-        className={`fixed top-0 bottom-0 left-0 z-50 w-64 bg-arcade-neutral border-r border-arcade-border flex flex-col font-mono transition-transform duration-200 ease-in-out lg:translate-x-0 ${
+        className={`fixed top-0 bottom-0 left-0 z-50 w-64 bg-s border-r border-bd flex flex-col font-sans transition-transform duration-200 ease-in-out lg:translate-x-0 ${
           mobileOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         {/* Sidebar Header */}
-        <div className="h-16 flex items-center justify-between px-4 border-b border-arcade-border bg-arcade-surface/60">
-          <div className="flex items-center space-x-2.5">
-            <div className="w-8 h-8 border border-arcade-accent bg-arcade-accent/15 text-arcade-accent flex items-center justify-center font-display font-extrabold text-sm shadow-[0_0_10px_rgba(200,255,58,0.25)]">
-              OW
-            </div>
-            <div>
-              <span className="font-display font-black text-base uppercase tracking-wider text-arcade-primary block leading-none">
-                Order<span className="text-arcade-accent">Wise</span>
-              </span>
-              <span className="text-[9px] uppercase tracking-widest text-arcade-secondary block mt-0.5">
-                {userRole === 'inventory_manager' ? 'Manager Console' : 'Control Center'}
-              </span>
-            </div>
-          </div>
+        <div className="h-16 flex items-center justify-between px-4 border-b border-bd bg-bg/50">
+          <Link to="/admin" className="flex items-center space-x-2">
+            <img src="/logo.png" alt="OrderWise" className="h-7 w-auto object-contain" />
+          </Link>
 
           <button
             type="button"
             onClick={onCloseMobile}
-            className="lg:hidden p-1.5 text-arcade-secondary hover:text-arcade-primary"
+            className="lg:hidden p-1.5 rounded-full text-t2 hover:text-white"
             aria-label="Close sidebar"
           >
             <X className="h-4 w-4" />
@@ -84,15 +74,15 @@ export default function Sidebar({ mobileOpen = false, onCloseMobile = () => {} }
         </div>
 
         {/* Role Badge Subheader */}
-        <div className="px-4 py-2 border-b border-arcade-border bg-arcade-surface/30 flex items-center justify-between text-[10px]">
-          <span className="text-arcade-secondary uppercase tracking-widest">Active Role:</span>
-          <span className="text-arcade-accent uppercase font-bold px-1.5 py-0.2 bg-arcade-accent/10 border border-arcade-accent/20">
+        <div className="px-4 py-2 border-b border-bd bg-s2/40 flex items-center justify-between text-[12px] font-mono">
+          <span className="text-t2">Active role:</span>
+          <span className="text-ac font-medium px-2 py-0.5 rounded-pill bg-ac/10 border border-ac/20">
             {user?.role || 'admin'}
           </span>
         </div>
 
         {/* Navigation List */}
-        <nav className="flex-1 overflow-y-auto px-2 py-3 space-y-1" aria-label="Admin Sidebar">
+        <nav className="flex-1 overflow-y-auto px-3 py-3 space-y-1" aria-label="Admin Sidebar">
           {authorizedNavItems.map((item) => {
             const Icon = item.icon;
             return (
@@ -102,17 +92,17 @@ export default function Sidebar({ mobileOpen = false, onCloseMobile = () => {} }
                 end={item.exact}
                 onClick={onCloseMobile}
                 className={({ isActive }) =>
-                  `flex items-center space-x-2.5 px-3 py-2 text-xs font-bold uppercase tracking-wider border transition-colors ${
+                  `flex items-center space-x-3 px-3 py-2.5 rounded-pill text-[14px] font-medium transition-colors ${
                     isActive
-                      ? 'border-arcade-accent bg-arcade-accent/15 text-arcade-accent shadow-[0_0_8px_rgba(200,255,58,0.15)]'
-                      : 'border-transparent text-arcade-secondary hover:text-arcade-primary hover:border-arcade-border hover:bg-arcade-surface/50'
+                      ? 'bg-ac text-white'
+                      : 'text-t2 hover:text-white hover:bg-s2'
                   }`
                 }
               >
                 <Icon className="h-4 w-4 shrink-0" />
                 <span className="truncate flex-1">{item.name}</span>
                 {item.badge && (
-                  <span className="text-[9px] px-1.5 py-0.2 rounded bg-arcade-accent/20 text-arcade-accent font-mono uppercase font-normal ml-auto">
+                  <span className="text-[11px] px-2 py-0.5 rounded-pill bg-white/20 text-white font-mono font-medium ml-auto">
                     {item.badge}
                   </span>
                 )}
@@ -122,12 +112,12 @@ export default function Sidebar({ mobileOpen = false, onCloseMobile = () => {} }
         </nav>
 
         {/* Sidebar Footer */}
-        <div className="p-3 border-t border-arcade-border bg-arcade-surface/50 text-[10px] text-arcade-secondary flex items-center justify-between">
-          <div className="flex items-center space-x-1">
-            <span className="inline-block w-2 h-2 rounded-full bg-arcade-accent animate-pulse" />
-            <span>Deterministic Engine</span>
+        <div className="p-3 border-t border-bd bg-bg/40 text-[12px] font-mono text-t2 flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <span className="inline-block w-2 h-2 rounded-full bg-ok" />
+            <span>Deterministic engine</span>
           </div>
-          <span className="font-bold">v1.0.0</span>
+          <span className="text-white">v1.0</span>
         </div>
       </aside>
     </>

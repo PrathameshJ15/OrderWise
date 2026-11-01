@@ -16,7 +16,8 @@ import {
 
 /**
  * Visual badge for allocation impact classification
- * Classes: IMPROVED, DEGRADED, UNCHANGED, NEWLY_FULFILLED, NEWLY_DEFERRED, NEW_ITEM, REMOVED_ITEM
+ * Design System: Pill shape, IBM Plex Mono 12px font-medium.
+ * Status colors (ok, wa, no) separated from accent.
  */
 export function ImpactBadge({ classification, className = '' }) {
   const norm = (classification || 'UNCHANGED').toUpperCase();
@@ -25,9 +26,9 @@ export function ImpactBadge({ classification, className = '' }) {
     case 'NEWLY_FULFILLED':
       return (
         <span
-          className={`inline-flex items-center space-x-1 px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider border border-emerald-500/40 bg-emerald-500/15 text-emerald-400 ${className}`}
+          className={`inline-flex items-center space-x-1 px-2.5 py-0.5 text-[12px] font-mono font-medium rounded-pill border border-ok/30 bg-ok/15 text-ok ${className}`}
         >
-          <CheckCircle2 className="w-3 h-3" />
+          <CheckCircle2 className="w-3.5 h-3.5" />
           <span>Newly Fulfilled</span>
         </span>
       );
@@ -35,9 +36,9 @@ export function ImpactBadge({ classification, className = '' }) {
     case 'IMPROVED':
       return (
         <span
-          className={`inline-flex items-center space-x-1 px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider border border-cyan-500/40 bg-cyan-500/15 text-cyan-400 ${className}`}
+          className={`inline-flex items-center space-x-1 px-2.5 py-0.5 text-[12px] font-mono font-medium rounded-pill border border-ok/30 bg-ok/15 text-ok ${className}`}
         >
-          <TrendingUp className="w-3 h-3" />
+          <TrendingUp className="w-3.5 h-3.5" />
           <span>Improved</span>
         </span>
       );
@@ -45,9 +46,9 @@ export function ImpactBadge({ classification, className = '' }) {
     case 'DEGRADED':
       return (
         <span
-          className={`inline-flex items-center space-x-1 px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider border border-amber-500/40 bg-amber-500/15 text-amber-400 ${className}`}
+          className={`inline-flex items-center space-x-1 px-2.5 py-0.5 text-[12px] font-mono font-medium rounded-pill border border-wa/30 bg-wa/15 text-wa ${className}`}
         >
-          <TrendingDown className="w-3 h-3" />
+          <TrendingDown className="w-3.5 h-3.5" />
           <span>Degraded</span>
         </span>
       );
@@ -55,9 +56,9 @@ export function ImpactBadge({ classification, className = '' }) {
     case 'NEWLY_DEFERRED':
       return (
         <span
-          className={`inline-flex items-center space-x-1 px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider border border-rose-500/40 bg-rose-500/15 text-rose-400 ${className}`}
+          className={`inline-flex items-center space-x-1 px-2.5 py-0.5 text-[12px] font-mono font-medium rounded-pill border border-no/30 bg-no/15 text-no ${className}`}
         >
-          <AlertCircle className="w-3 h-3" />
+          <AlertCircle className="w-3.5 h-3.5" />
           <span>Newly Deferred</span>
         </span>
       );
@@ -65,9 +66,9 @@ export function ImpactBadge({ classification, className = '' }) {
     case 'NEW_ITEM':
       return (
         <span
-          className={`inline-flex items-center space-x-1 px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider border border-purple-500/40 bg-purple-500/15 text-purple-400 ${className}`}
+          className={`inline-flex items-center space-x-1 px-2.5 py-0.5 text-[12px] font-mono font-medium rounded-pill border border-[#3A3A3A] bg-[#232323] text-white ${className}`}
         >
-          <PlusCircle className="w-3 h-3" />
+          <PlusCircle className="w-3.5 h-3.5" />
           <span>New Item</span>
         </span>
       );
@@ -75,9 +76,9 @@ export function ImpactBadge({ classification, className = '' }) {
     case 'REMOVED_ITEM':
       return (
         <span
-          className={`inline-flex items-center space-x-1 px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider border border-zinc-600/40 bg-zinc-800 text-zinc-400 ${className}`}
+          className={`inline-flex items-center space-x-1 px-2.5 py-0.5 text-[12px] font-mono font-medium rounded-pill border border-bd bg-[#1B1B1B] text-t2 ${className}`}
         >
-          <MinusCircle className="w-3 h-3" />
+          <MinusCircle className="w-3.5 h-3.5" />
           <span>Removed Item</span>
         </span>
       );
@@ -86,9 +87,9 @@ export function ImpactBadge({ classification, className = '' }) {
     default:
       return (
         <span
-          className={`inline-flex items-center space-x-1 px-2 py-0.5 text-[11px] font-medium uppercase tracking-wider border border-arcade-border bg-arcade-surface text-arcade-secondary ${className}`}
+          className={`inline-flex items-center space-x-1 px-2.5 py-0.5 text-[12px] font-mono font-medium rounded-pill border border-bd bg-s2 text-t2 ${className}`}
         >
-          <Minus className="w-3 h-3" />
+          <Minus className="w-3.5 h-3.5" />
           <span>Unchanged</span>
         </span>
       );
@@ -103,42 +104,42 @@ export function CauseAttributionBadge({ causeType, description, triggerEvent }) 
 
   let Icon = Zap;
   let label = norm.replace(/_/g, ' ');
-  let colorStyles = 'border-arcade-accent/30 bg-arcade-accent/10 text-arcade-accent';
+  let colorStyles = 'border-ac/30 bg-ac/10 text-white';
 
   if (norm.includes('STOCK_INCREASED') || norm.includes('STOCK')) {
     Icon = Package;
-    colorStyles = 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400';
+    colorStyles = 'border-ok/30 bg-ok/10 text-ok';
   } else if (norm.includes('STOCK_DECREASED')) {
     Icon = Package;
-    colorStyles = 'border-rose-500/30 bg-rose-500/10 text-rose-400';
+    colorStyles = 'border-no/30 bg-no/10 text-no';
   } else if (norm.includes('PRIORITY')) {
     Icon = ShieldCheck;
-    colorStyles = 'border-cyan-500/30 bg-cyan-500/10 text-cyan-400';
+    colorStyles = 'border-[#3A3A3A] bg-[#232323] text-white';
   } else if (norm.includes('CANCELLED')) {
     Icon = Ban;
-    colorStyles = 'border-amber-500/30 bg-amber-500/10 text-amber-400';
+    colorStyles = 'border-wa/30 bg-wa/10 text-wa';
   } else if (norm.includes('COMPETING') || norm.includes('QUEUE')) {
     Icon = Users;
-    colorStyles = 'border-purple-500/30 bg-purple-500/10 text-purple-400';
+    colorStyles = 'border-bd bg-s text-t2';
   }
 
   return (
     <div className="space-y-1">
       <div className="flex items-center space-x-1.5">
         <span
-          className={`inline-flex items-center space-x-1 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider border ${colorStyles}`}
+          className={`inline-flex items-center space-x-1 px-2.5 py-0.5 text-[12px] font-mono font-medium rounded-pill border ${colorStyles}`}
         >
-          <Icon className="w-3 h-3" />
+          <Icon className="w-3.5 h-3.5" />
           <span>{label}</span>
         </span>
         {triggerEvent && (
-          <span className="text-[10px] font-mono text-arcade-secondary border border-arcade-border px-1.5 py-0.5 bg-arcade-surface">
+          <span className="text-[12px] font-mono text-t2 border border-bd px-2 py-0.5 rounded-pill bg-s2">
             {triggerEvent.source === 'audit_logs' ? `Audit #${triggerEvent.id}` : triggerEvent.decision || 'Triggered'}
           </span>
         )}
       </div>
       {description && (
-        <p className="text-xs text-arcade-primary leading-tight font-sans">
+        <p className="text-[14px] text-t leading-normal font-sans">
           {description}
         </p>
       )}

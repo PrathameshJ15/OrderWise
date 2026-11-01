@@ -15,6 +15,8 @@ import {
   RefreshCw,
   BarChart3,
   PieChart as PieIcon,
+  FlaskConical,
+  Sparkles,
 } from 'lucide-react';
 import {
   BarChart,
@@ -95,12 +97,12 @@ export default function AdminDashboard() {
           const deferred = results.filter((r) => r.status === 'deferred').length;
 
           setAllocationSummaryData([
-            { name: 'Fulfilled', value: fulfilled, color: '#c8ff3a' },
-            { name: 'Partial', value: partial, color: '#f59e0b' },
-            { name: 'Deferred', value: deferred, color: '#ef4444' },
+            { name: 'Fulfilled', value: fulfilled, color: '#4ADE80' },
+            { name: 'Partial', value: partial, color: '#F5B544' },
+            { name: 'Deferred', value: deferred, color: '#FF7A7A' },
           ]);
         } catch {
-          // Fallback demo summary
+          // Fallback
         }
       }
 
@@ -126,128 +128,138 @@ export default function AdminDashboard() {
     fetchDashboardData();
   }, []);
 
+  const totalAllocatedItems = allocationSummaryData.reduce((acc, d) => acc + d.value, 0);
+
   return (
-    <div className="space-y-6 font-mono py-4">
-      {/* Admin Header */}
-      <div className="border border-arcade-border bg-arcade-neutral p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="space-y-6 font-sans py-2">
+      {/* Admin Header Card: radius 14px, 1px border, no shadow */}
+      <div className="card-base flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center space-x-1.5 text-xs text-arcade-accent bg-arcade-accent/10 border border-arcade-accent/20 px-2 py-0.5 mb-2">
-            <ShieldCheck className="h-3 w-3" />
+          <div className="inline-flex items-center space-x-1.5 text-[12px] font-mono text-ac font-medium mb-1">
+            <ShieldCheck className="h-3.5 w-3.5" />
             <span>Admin Operations Command Center</span>
           </div>
-          <h1 className="font-display text-3xl font-extrabold uppercase text-arcade-primary">
-            Admin Console: {user?.name || 'Administrator'}
+          {/* Dashboard H1: 34px, tracking -0.02em, 700. Sentence case */}
+          <h1 className="text-[34px] font-bold tracking-[-0.02em] text-white">
+            Admin console: {user?.name || 'Administrator'}
           </h1>
-          <p className="text-xs text-arcade-secondary mt-1">
-            Logged in as {user?.email} • Authority Level: <span className="uppercase text-arcade-accent font-bold">{user?.role}</span>
+          <p className="text-[14px] text-t2 mt-0.5 font-sans">
+            Logged in as {user?.email} • Authority level: <span className="font-mono text-ac font-medium">{user?.role}</span>
           </p>
         </div>
 
+        {/* Header buttons (Refresh, Log out): secondary with #555 border */}
         <div className="flex items-center space-x-3 self-start md:self-auto">
           <button
             onClick={fetchDashboardData}
             disabled={loading}
-            className="flex items-center space-x-1.5 px-3 py-2 border border-arcade-border text-arcade-secondary hover:text-arcade-primary text-xs uppercase tracking-wider transition-colors"
+            className="btn-header space-x-2"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
             <span>Refresh</span>
           </button>
           <button
             onClick={logout}
-            className="flex items-center space-x-2 px-3 py-2 border border-arcade-border text-arcade-secondary hover:text-arcade-danger hover:border-arcade-danger text-xs uppercase tracking-wider transition-colors"
+            className="btn-header space-x-2"
           >
             <LogOut className="h-3.5 w-3.5" />
-            <span>Log Out</span>
+            <span>Log out</span>
           </button>
         </div>
       </div>
 
-      {/* Real KPI Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="border border-arcade-border bg-arcade-neutral p-4">
-          <div className="flex items-center justify-between text-arcade-secondary mb-1">
-            <span className="text-[11px] uppercase tracking-wider">Active Catalog</span>
-            <Package className="h-4 w-4 text-arcade-accent" />
+      {/* KPI Row: 4 columns, gap 16px. Small label, 34px value, mono caption. Alert variant uses amber label and alert-bg */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* KPI 1 */}
+        <div className="card-base flex flex-col justify-between">
+          <div className="flex items-center justify-between text-t2 mb-1">
+            <span className="text-[12px] font-mono font-medium">Active Catalog</span>
+            <Package className="h-4 w-4 text-t2" />
           </div>
-          <div className="text-2xl font-display font-extrabold text-arcade-primary">
+          <div className="text-[34px] font-bold text-white tracking-tight my-1">
             {stats.productCount}
           </div>
-          <span className="text-[10px] text-arcade-secondary">Monitored hardware SKUs</span>
+          <span className="text-[12px] font-mono text-t2">Monitored hardware SKUs</span>
         </div>
 
-        <div className="border border-arcade-border bg-arcade-neutral p-4">
-          <div className="flex items-center justify-between text-arcade-secondary mb-1">
-            <span className="text-[11px] uppercase tracking-wider">Customer Orders</span>
-            <ShoppingBag className="h-4 w-4 text-arcade-accent" />
+        {/* KPI 2 */}
+        <div className="card-base flex flex-col justify-between">
+          <div className="flex items-center justify-between text-t2 mb-1">
+            <span className="text-[12px] font-mono font-medium">Customer Orders</span>
+            <ShoppingBag className="h-4 w-4 text-t2" />
           </div>
-          <div className="text-2xl font-display font-extrabold text-arcade-primary">
+          <div className="text-[34px] font-bold text-white tracking-tight my-1">
             {stats.orderCount}
           </div>
-          <span className="text-[10px] text-arcade-secondary">Demand submissions</span>
+          <span className="text-[12px] font-mono text-t2">Demand submissions</span>
         </div>
 
-        <div className="border border-arcade-border bg-arcade-neutral p-4">
-          <div className="flex items-center justify-between text-arcade-secondary mb-1">
-            <span className="text-[11px] uppercase tracking-wider">Total On-Hand</span>
-            <Database className="h-4 w-4 text-arcade-accent" />
+        {/* KPI 3 */}
+        <div className="card-base flex flex-col justify-between">
+          <div className="flex items-center justify-between text-t2 mb-1">
+            <span className="text-[12px] font-mono font-medium">Total On-Hand</span>
+            <Database className="h-4 w-4 text-t2" />
           </div>
-          <div className="text-2xl font-display font-extrabold text-arcade-primary">
-            {stats.totalOnHand} <span className="text-xs text-arcade-secondary font-normal">units</span>
+          <div className="text-[34px] font-bold text-white tracking-tight my-1">
+            {stats.totalOnHand} <span className="text-[14px] text-t2 font-normal">units</span>
           </div>
-          <span className="text-[10px] text-arcade-secondary">Physical warehouse inventory</span>
+          <span className="text-[12px] font-mono text-t2">Physical warehouse inventory</span>
         </div>
 
-        <div className="border border-arcade-warning/30 bg-arcade-warning/5 p-4">
-          <div className="flex items-center justify-between text-arcade-warning mb-1">
-            <span className="text-[11px] uppercase tracking-wider">Unresolved Alerts</span>
-            <AlertTriangle className="h-4 w-4 text-arcade-warning" />
+        {/* KPI 4: Alert variant uses amber label and alert-bg / alert-border */}
+        <div className="bg-alert-bg border border-alert-border rounded-card p-6 flex flex-col justify-between">
+          <div className="flex items-center justify-between text-wa mb-1">
+            <span className="text-[12px] font-mono font-medium">Unresolved Alerts</span>
+            <AlertTriangle className="h-4 w-4 text-wa" />
           </div>
-          <div className="text-2xl font-display font-extrabold text-arcade-warning">
+          <div className="text-[34px] font-bold text-white tracking-tight my-1">
             {stats.unresolvedAlerts}
           </div>
-          <span className="text-[10px] text-arcade-warning/80">Pending telemetry warnings</span>
+          <span className="text-[12px] font-mono text-wa/80">Pending telemetry warnings</span>
         </div>
       </div>
 
-      {/* Orders by Status Metrics */}
+      {/* Orders by status row */}
       {orderStatusChartData.length > 0 && (
-        <div className="border border-arcade-border bg-arcade-neutral p-4 flex flex-wrap items-center justify-between gap-3">
+        <div className="card-base flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center space-x-2">
-            <ShoppingBag className="h-4 w-4 text-arcade-accent" />
-            <span className="text-xs uppercase tracking-wider font-bold text-arcade-primary">Orders by Status:</span>
+            <ShoppingBag className="h-4 w-4 text-ac" />
+            <span className="text-[14px] font-bold text-white">Orders by status:</span>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             {orderStatusChartData.map((item) => (
               <span
                 key={item.status}
-                className="px-2.5 py-1 text-xs border border-arcade-border bg-arcade-surface flex items-center space-x-1.5"
+                className="px-3 py-1 rounded-pill text-[12px] font-mono border border-bd bg-s2 flex items-center space-x-1.5"
               >
-                <span className="uppercase text-arcade-secondary">{item.status}:</span>
-                <span className="font-bold text-arcade-accent">{item.count}</span>
+                <span className="text-t2 capitalize">{item.status}:</span>
+                <span className="font-semibold text-white">{item.count}</span>
               </span>
             ))}
           </div>
         </div>
       )}
 
-      {/* Visualizations Section: Stock vs Demand & Allocation Breakdown */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Stock vs Demand Bar Chart */}
-        <div className="lg:col-span-2 border border-arcade-border bg-arcade-neutral p-5 space-y-4">
-          <div className="flex items-center justify-between border-b border-arcade-border pb-3">
+      {/* Charts Section: 1.6fr / 1fr, gap 16px */}
+      <div className="grid grid-cols-1 lg:grid-cols-[1.6fr_1fr] gap-4">
+        {/* Left: Stock vs Reserved Allocation Bar Chart */}
+        <div className="card-base space-y-4">
+          <div className="flex items-center justify-between border-b border-bd pb-3">
             <div className="flex items-center space-x-2">
-              <BarChart3 className="h-4 w-4 text-arcade-accent" />
-              <h2 className="font-display text-base uppercase font-bold text-arcade-primary">
-                Stock vs Reserved Allocation by SKU
+              <BarChart3 className="h-4 w-4 text-ac" />
+              {/* Section H2: 24px (dashboard) */}
+              <h2 className="text-[20px] font-bold text-white">
+                Stock vs reserved allocation by SKU
               </h2>
             </div>
-            <div className="flex items-center space-x-4 text-[10px] text-arcade-secondary">
-              <span className="flex items-center space-x-1">
-                <span className="w-2.5 h-2.5 bg-arcade-accent inline-block" />
-                <span>On Hand</span>
+            {/* Legend: On Hand in --ac (#E50914), Reserved in series (#8A8A8A) */}
+            <div className="flex items-center space-x-4 text-[12px] font-mono text-t2">
+              <span className="flex items-center space-x-1.5">
+                <span className="w-2.5 h-2.5 rounded-xs bg-ac inline-block" />
+                <span className="text-white">On hand</span>
               </span>
-              <span className="flex items-center space-x-1">
-                <span className="w-2.5 h-2.5 bg-arcade-warning inline-block" />
+              <span className="flex items-center space-x-1.5">
+                <span className="w-2.5 h-2.5 rounded-xs bg-series inline-block" />
                 <span>Reserved</span>
               </span>
             </div>
@@ -256,47 +268,49 @@ export default function AdminDashboard() {
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={stockDemandChartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <XAxis dataKey="sku" stroke="#8a8f80" fontSize={11} tickLine={false} />
-                <YAxis stroke="#8a8f80" fontSize={11} tickLine={false} />
+                <XAxis dataKey="sku" stroke="#A8A8A8" fontSize={12} tickLine={false} fontFamily="IBM Plex Mono" />
+                <YAxis stroke="#A8A8A8" fontSize={12} tickLine={false} fontFamily="IBM Plex Mono" />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#11120f',
-                    borderColor: '#22231e',
-                    color: '#eef0e6',
-                    fontFamily: 'monospace',
+                    backgroundColor: '#161616',
+                    borderColor: '#2A2A2A',
+                    borderRadius: '8px',
+                    color: '#FFFFFF',
+                    fontFamily: 'IBM Plex Mono',
                     fontSize: '12px',
                   }}
                 />
-                <Bar dataKey="onHand" fill="#c8ff3a" name="On Hand" />
-                <Bar dataKey="reserved" fill="#f59e0b" name="Reserved" />
+                {/* Bars: 4px top radius */}
+                <Bar dataKey="onHand" fill="#E50914" name="On hand" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="reserved" fill="#8A8A8A" name="Reserved" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        {/* Allocation Outcomes Breakdown */}
-        <div className="border border-arcade-border bg-arcade-neutral p-5 space-y-4 flex flex-col justify-between">
+        {/* Right: Donut Chart: ring width 12, total orders centered, legend directly below */}
+        <div className="card-base space-y-4 flex flex-col justify-between" aria-label="Order allocation distribution">
           <div>
-            <div className="flex items-center justify-between border-b border-arcade-border pb-3 mb-4">
+            <div className="flex items-center justify-between border-b border-bd pb-3 mb-2">
               <div className="flex items-center space-x-2">
-                <PieIcon className="h-4 w-4 text-arcade-accent" />
-                <h2 className="font-display text-base uppercase font-bold text-arcade-primary">
-                  Allocation Engine Outcomes
+                <PieIcon className="h-4 w-4 text-ac" />
+                <h2 className="text-[20px] font-bold text-white">
+                  Allocation engine outcomes
                 </h2>
               </div>
             </div>
 
             {allocationSummaryData.length > 0 ? (
-              <div className="h-48 w-full">
+              <div className="relative h-48 w-full flex items-center justify-center">
                 <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
+                  <PieChart aria-label="Allocation outcomes donut">
                     <Pie
                       data={allocationSummaryData}
                       cx="50%"
                       cy="50%"
-                      innerRadius={45}
-                      outerRadius={70}
-                      paddingAngle={4}
+                      innerRadius={68}
+                      outerRadius={80}
+                      paddingAngle={3}
                       dataKey="value"
                     >
                       {allocationSummaryData.map((entry, index) => (
@@ -305,39 +319,49 @@ export default function AdminDashboard() {
                     </Pie>
                     <Tooltip
                       contentStyle={{
-                        backgroundColor: '#11120f',
-                        borderColor: '#22231e',
-                        color: '#eef0e6',
-                        fontFamily: 'monospace',
+                        backgroundColor: '#161616',
+                        borderColor: '#2A2A2A',
+                        borderRadius: '8px',
+                        color: '#FFFFFF',
+                        fontFamily: 'IBM Plex Mono',
                         fontSize: '12px',
                       }}
                     />
                   </PieChart>
                 </ResponsiveContainer>
+
+                {/* Total orders centered in the middle of donut */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
+                  <span className="text-[26px] font-bold text-white leading-none">
+                    {totalAllocatedItems}
+                  </span>
+                  <span className="text-[11px] font-mono text-t2 mt-1">Total items</span>
+                </div>
               </div>
             ) : (
-              <div className="h-48 flex items-center justify-center text-xs text-arcade-secondary text-center">
+              <div className="h-48 flex items-center justify-center text-[13px] text-t2 text-center">
                 Run the allocation engine to generate outcome metrics.
               </div>
             )}
           </div>
 
-          <div className="border-t border-arcade-border pt-3 flex justify-around text-center text-xs">
+          {/* Legend directly below */}
+          <div className="border-t border-bd pt-3 flex justify-around text-center text-xs">
             <div>
-              <span className="text-[10px] text-arcade-accent uppercase block">Fulfilled</span>
-              <span className="font-bold text-arcade-primary">
+              <span className="text-[12px] font-mono text-ok font-medium block">Fulfilled</span>
+              <span className="text-[18px] font-bold text-white">
                 {allocationSummaryData.find((d) => d.name === 'Fulfilled')?.value || 0}
               </span>
             </div>
             <div>
-              <span className="text-[10px] text-arcade-warning uppercase block">Partial</span>
-              <span className="font-bold text-arcade-primary">
+              <span className="text-[12px] font-mono text-wa font-medium block">Partial</span>
+              <span className="text-[18px] font-bold text-white">
                 {allocationSummaryData.find((d) => d.name === 'Partial')?.value || 0}
               </span>
             </div>
             <div>
-              <span className="text-[10px] text-arcade-danger uppercase block">Deferred</span>
-              <span className="font-bold text-arcade-primary">
+              <span className="text-[12px] font-mono text-no font-medium block">Deferred</span>
+              <span className="text-[18px] font-bold text-white">
                 {allocationSummaryData.find((d) => d.name === 'Deferred')?.value || 0}
               </span>
             </div>
@@ -345,233 +369,101 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* Operational Modules Navigation Grid with Badges */}
-      <div>
-        <h2 className="font-display text-lg uppercase font-bold text-arcade-primary mb-3">
-          Operations Command Modules
-        </h2>
+      {/* Modules row: 4 columns, gap 16px */}
+      <div className="space-y-4">
+        <div className="border-b border-bd pb-2">
+          <h2 className="text-[24px] font-bold tracking-tight text-white">
+            Operations command modules
+          </h2>
+        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* Allocation Center */}
+        {/* Module cards: "Active" mono label in --ok, title, one-line description */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Module 1: Allocation Center */}
           <Link
             to="/admin/allocation"
-            className="group border border-arcade-border bg-arcade-neutral p-5 hover:border-arcade-accent/60 transition-all block relative"
+            className="card-base hover:border-white transition-colors group flex flex-col justify-between space-y-3"
           >
-            <div className="flex items-center justify-between mb-3">
-              <div className="w-8 h-8 bg-arcade-accent/10 text-arcade-accent flex items-center justify-center">
-                <Cpu className="h-4 w-4" />
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[12px] font-mono font-medium text-ok">Active</span>
+                <ArrowRight className="h-4 w-4 text-t2 group-hover:text-white group-hover:translate-x-1 transition-all" />
               </div>
-              <Badge variant="active">Active Engine</Badge>
+              <h3 className="text-[18px] font-bold text-white">Allocation Center</h3>
             </div>
-            <h3 className="font-display text-lg uppercase font-bold text-arcade-primary group-hover:text-arcade-accent transition-colors flex items-center justify-between">
-              <span>Allocation Center</span>
-              <ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity text-arcade-accent" />
-            </h3>
-            <p className="text-xs text-arcade-secondary mt-1 mb-4">
-              Deterministic priority-based order allocation engine with live execution and run history.
+            <p className="text-[14px] text-t2 leading-normal">
+              Deterministic priority-based allocation engine with live execution.
             </p>
-            <span className="text-[10px] uppercase tracking-wider text-arcade-accent font-bold">
-              Open Control Center &rarr;
-            </span>
           </Link>
 
-          {/* Product Management */}
+          {/* Module 2: Product Management */}
           <Link
             to="/admin/products"
-            className="group border border-arcade-border bg-arcade-neutral p-5 hover:border-arcade-accent/60 transition-all block relative"
+            className="card-base hover:border-white transition-colors group flex flex-col justify-between space-y-3"
           >
-            <div className="flex items-center justify-between mb-3">
-              <div className="w-8 h-8 bg-arcade-accent/10 text-arcade-accent flex items-center justify-center">
-                <Package className="h-4 w-4" />
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[12px] font-mono font-medium text-ok">Active</span>
+                <ArrowRight className="h-4 w-4 text-t2 group-hover:text-white group-hover:translate-x-1 transition-all" />
               </div>
-              <Badge variant="active">Active Hub</Badge>
+              <h3 className="text-[18px] font-bold text-white">Product Management</h3>
             </div>
-            <h3 className="font-display text-lg uppercase font-bold text-arcade-primary group-hover:text-arcade-accent transition-colors flex items-center justify-between">
-              <span>Product Management</span>
-              <ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity text-arcade-accent" />
-            </h3>
-            <p className="text-xs text-arcade-secondary mt-1 mb-4">
-              Catalog creation, hardware updates, SKU definitions, and soft-delete lifecycle controls.
+            <p className="text-[14px] text-t2 leading-normal">
+              Catalog creation, hardware updates, SKU definitions, and lifecycle controls.
             </p>
-            <span className="text-[10px] uppercase tracking-wider text-arcade-accent font-bold">
-              Manage Catalog &rarr;
-            </span>
           </Link>
 
-          {/* Inventory Management */}
+          {/* Module 3: Inventory Hub */}
           <Link
             to="/admin/inventory"
-            className="group border border-arcade-border bg-arcade-neutral p-5 hover:border-arcade-accent/60 transition-all block relative"
+            className="card-base hover:border-white transition-colors group flex flex-col justify-between space-y-3"
           >
-            <div className="flex items-center justify-between mb-3">
-              <div className="w-8 h-8 bg-arcade-accent/10 text-arcade-accent flex items-center justify-center">
-                <Database className="h-4 w-4" />
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[12px] font-mono font-medium text-ok">Active</span>
+                <ArrowRight className="h-4 w-4 text-t2 group-hover:text-white group-hover:translate-x-1 transition-all" />
               </div>
-              <Badge variant="active">Active Hub</Badge>
+              <h3 className="text-[18px] font-bold text-white">Inventory Hub</h3>
             </div>
-            <h3 className="font-display text-lg uppercase font-bold text-arcade-primary group-hover:text-arcade-accent transition-colors flex items-center justify-between">
-              <span>Inventory Hub</span>
-              <ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity text-arcade-accent" />
-            </h3>
-            <p className="text-xs text-arcade-secondary mt-1 mb-4">
-              Manage on-hand quantities, safety buffers, optimistic concurrency, and audit ledger logs.
+            <p className="text-[14px] text-t2 leading-normal">
+              Manage on-hand quantities, safety buffers, concurrency, and audit logs.
             </p>
-            <span className="text-[10px] uppercase tracking-wider text-arcade-accent font-bold">
-              Manage Stock &rarr;
-            </span>
           </Link>
 
-          {/* Order Management */}
+          {/* Module 4: Order Management */}
           <Link
             to="/admin/orders"
-            className="group border border-arcade-border bg-arcade-neutral p-5 hover:border-arcade-accent/60 transition-all block relative"
+            className="card-base hover:border-white transition-colors group flex flex-col justify-between space-y-3"
           >
-            <div className="flex items-center justify-between mb-3">
-              <div className="w-8 h-8 bg-arcade-accent/10 text-arcade-accent flex items-center justify-center">
-                <ShoppingBag className="h-4 w-4" />
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[12px] font-mono font-medium text-ok">Active</span>
+                <ArrowRight className="h-4 w-4 text-t2 group-hover:text-white group-hover:translate-x-1 transition-all" />
               </div>
-              <Badge variant="active">Active Hub</Badge>
+              <h3 className="text-[18px] font-bold text-white">Order Management</h3>
             </div>
-            <h3 className="font-display text-lg uppercase font-bold text-arcade-primary group-hover:text-arcade-accent transition-colors flex items-center justify-between">
-              <span>Order Management</span>
-              <ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity text-arcade-accent" />
-            </h3>
-            <p className="text-xs text-arcade-secondary mt-1 mb-4">
-              Filter and inspect customer orders, confirm state transitions, and enforce priority ranks.
+            <p className="text-[14px] text-t2 leading-normal">
+              Filter and inspect customer orders, confirm states, and enforce priorities.
             </p>
-            <span className="text-[10px] uppercase tracking-wider text-arcade-accent font-bold">
-              View Orders &rarr;
-            </span>
           </Link>
+        </div>
 
-          {/* Simulation Lab (Coming Soon) */}
-          <Link
-            to="/admin/simulations"
-            className="group border border-arcade-border bg-arcade-neutral p-5 hover:border-arcade-border/80 transition-all block relative opacity-85"
-          >
-            <div className="flex items-center justify-between mb-3">
-              <div className="w-8 h-8 bg-arcade-surface text-arcade-secondary flex items-center justify-center">
-                <Layers className="h-4 w-4" />
-              </div>
-              <Badge variant="coming-soon">Coming Soon</Badge>
+        {/* Upcoming modules collapsed into one dashed "Roadmap" row */}
+        <div className="card-roadmap flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center space-x-2">
+              <span className="text-[12px] font-mono text-t2 uppercase tracking-wide">Roadmap</span>
+              <span className="text-[12px] font-mono text-t2">• Advanced intelligence modules</span>
             </div>
-            <h3 className="font-display text-lg uppercase font-bold text-arcade-primary group-hover:text-arcade-secondary transition-colors flex items-center justify-between">
-              <span>Simulation Lab</span>
-              <ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity text-arcade-secondary" />
-            </h3>
-            <p className="text-xs text-arcade-secondary mt-1 mb-4">
-              Run what-if scenario experiments (surges, shrinkage, delays) without mutating live data.
+            <h4 className="text-[18px] font-bold text-white mt-1">
+              Simulation Lab, Groq Llama-3 priorities, and replenishment advisory
+            </h4>
+            <p className="text-[14px] text-t2 mt-0.5">
+              What-if scenario sandboxes, automated stockout alerts, and demand velocity reorder recommendations.
             </p>
-            <span className="text-[10px] uppercase tracking-wider text-arcade-secondary font-semibold">
-              Simulation Pipeline &rarr;
-            </span>
-          </Link>
-
-          {/* Supply Alerts (Coming Soon) */}
-          <Link
-            to="/admin/alerts"
-            className="group border border-arcade-border bg-arcade-neutral p-5 hover:border-arcade-border/80 transition-all block relative opacity-85"
-          >
-            <div className="flex items-center justify-between mb-3">
-              <div className="w-8 h-8 bg-arcade-surface text-arcade-secondary flex items-center justify-center">
-                <AlertTriangle className="h-4 w-4" />
-              </div>
-              <Badge variant="coming-soon">Coming Soon</Badge>
-            </div>
-            <h3 className="font-display text-lg uppercase font-bold text-arcade-primary group-hover:text-arcade-secondary transition-colors flex items-center justify-between">
-              <span>Supply Alerts</span>
-              <ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity text-arcade-secondary" />
-            </h3>
-            <p className="text-xs text-arcade-secondary mt-1 mb-4">
-              Proactive diagnostic telemetry flagging stockouts, safety buffer breaches, and delayed POs.
-            </p>
-            <span className="text-[10px] uppercase tracking-wider text-arcade-secondary font-semibold">
-              Telemetry Pipeline &rarr;
-            </span>
-          </Link>
-
-          {/* Replenishment Advisor (Coming Soon) */}
-          <Link
-            to="/admin/replenishment"
-            className="group border border-arcade-border bg-arcade-neutral p-5 hover:border-arcade-border/80 transition-all block relative opacity-85"
-          >
-            <div className="flex items-center justify-between mb-3">
-              <div className="w-8 h-8 bg-arcade-surface text-arcade-secondary flex items-center justify-center">
-                <Truck className="h-4 w-4" />
-              </div>
-              <Badge variant="coming-soon">Coming Soon</Badge>
-            </div>
-            <h3 className="font-display text-lg uppercase font-bold text-arcade-primary group-hover:text-arcade-secondary transition-colors flex items-center justify-between">
-              <span>Replenishment Advisor</span>
-              <ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity text-arcade-secondary" />
-            </h3>
-            <p className="text-xs text-arcade-secondary mt-1 mb-4">
-              Algorithmic reorder points and suggested replenishment orders based on demand velocity.
-            </p>
-            <span className="text-[10px] uppercase tracking-wider text-arcade-secondary font-semibold">
-              Advisor Models &rarr;
-            </span>
-          </Link>
-
-          {/* AI Priority Review (Coming Soon) */}
-          <Link
-            to="/admin/ai"
-            className="group border border-arcade-border bg-arcade-neutral p-5 hover:border-arcade-border/80 transition-all block relative opacity-85"
-          >
-            <div className="flex items-center justify-between mb-3">
-              <div className="w-8 h-8 bg-arcade-surface text-arcade-secondary flex items-center justify-center">
-                <ShieldCheck className="h-4 w-4" />
-              </div>
-              <Badge variant="coming-soon">Coming Soon</Badge>
-            </div>
-            <h3 className="font-display text-lg uppercase font-bold text-arcade-primary group-hover:text-arcade-secondary transition-colors flex items-center justify-between">
-              <span>AI Priorities</span>
-              <ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity text-arcade-secondary" />
-            </h3>
-            <p className="text-xs text-arcade-secondary mt-1 mb-4">
-              Groq Llama-3 NLP recommendation assistant for customer business notes.
-            </p>
-            <span className="text-[10px] uppercase tracking-wider text-arcade-secondary font-semibold">
-              NLP Engine &rarr;
-            </span>
-          </Link>
-
-          {/* Impact Analyzer (Coming Soon) */}
-          <div className="border border-arcade-border bg-arcade-neutral p-5 opacity-75 relative">
-            <div className="flex items-center justify-between mb-3">
-              <div className="w-8 h-8 bg-arcade-surface text-arcade-secondary flex items-center justify-center">
-                <Layers className="h-4 w-4" />
-              </div>
-              <Badge variant="coming-soon">Coming Soon</Badge>
-            </div>
-            <h3 className="font-display text-lg uppercase font-bold text-arcade-secondary">
-              Impact Analyzer
-            </h3>
-            <p className="text-xs text-arcade-secondary mt-1 mb-4">
-              Before/after diff inspection measuring changes between allocation runs.
-            </p>
-            <span className="text-[10px] uppercase tracking-wider text-arcade-secondary font-semibold">
-              Diff Pipeline
-            </span>
           </div>
-
-          {/* Executive Reports (Coming Soon) */}
-          <div className="border border-arcade-border bg-arcade-neutral p-5 opacity-75 relative">
-            <div className="flex items-center justify-between mb-3">
-              <div className="w-8 h-8 bg-arcade-surface text-arcade-secondary flex items-center justify-center">
-                <BarChart3 className="h-4 w-4" />
-              </div>
-              <Badge variant="coming-soon">Coming Soon</Badge>
-            </div>
-            <h3 className="font-display text-lg uppercase font-bold text-arcade-secondary">
-              Executive Reports
-            </h3>
-            <p className="text-xs text-arcade-secondary mt-1 mb-4">
-              Cross-period fulfillment metrics, SLA violation analysis, and warehouse audits.
-            </p>
-            <span className="text-[10px] uppercase tracking-wider text-arcade-secondary font-semibold">
-              Reporting Pipeline
-            </span>
+          <div className="text-[12px] font-mono text-t2 shrink-0">
+            Roadmap view
           </div>
         </div>
       </div>
