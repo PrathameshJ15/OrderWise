@@ -5,6 +5,9 @@ const { query } = require('../config/db');
 const PROMPT_VERSION = 'v1.0.0';
 
 const SUPPORTED_GROQ_MODELS = [
+  'qwen/qwen3.8-27b',
+  'openai/gpt-oss-120b',
+  'openai/gpt-oss-20b',
   'llama3-70b-8192',
   'llama3-8b-8192',
   'llama-3.3-70b-versatile',
@@ -40,7 +43,7 @@ function validateGroqModel(modelName = env.GROQ_MODEL) {
 
   const trimmed = modelName.trim();
   const isKnown = SUPPORTED_GROQ_MODELS.includes(trimmed);
-  const isValidFormat = /^[a-z0-9_.-]+$/i.test(trimmed);
+  const isValidFormat = /^[a-z0-9_./-]+$/i.test(trimmed);
 
   if (!isValidFormat) {
     throw new Error(`Invalid Groq model identifier format: "${trimmed}".`);
