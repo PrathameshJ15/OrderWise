@@ -85,17 +85,17 @@ export default function Reports() {
 
   return (
     <div className="space-y-6 font-sans py-2">
-      {/* Header Banner */}
-      <div className="card-base flex flex-col md:flex-row md:items-center justify-between gap-4">
+      {/* Clean Page Header (No excessive bordered box) */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2">
         <div>
-          <div className="inline-flex items-center space-x-1.5 text-[12px] font-mono text-ac font-medium mb-1">
+          <div className="inline-flex items-center space-x-2 text-[12px] font-mono text-ac font-semibold tracking-wider uppercase mb-1">
             <FileText className="h-3.5 w-3.5" />
-            <span>Phase 13 • Operational Reports &amp; Exports Hub</span>
+            <span>Operational Reports &amp; Exports Hub</span>
           </div>
-          <h1 className="text-[34px] font-bold tracking-[-0.02em] text-white">
+          <h1 className="font-display text-[34px] font-bold tracking-tight text-white">
             Supply Chain &amp; Allocation Analytics
           </h1>
-          <p className="text-[14px] text-t2 mt-0.5 max-w-2xl">
+          <p className="text-[14px] text-t2 font-sans mt-0.5 max-w-2xl">
             Audit-ready evidence: deterministic fill rates, deferred demand root causes, inventory valuation, and governance metrics.
           </p>
         </div>
@@ -118,7 +118,7 @@ export default function Reports() {
           <button
             onClick={fetchReports}
             disabled={loading}
-            className="btn-primary flex items-center space-x-2 disabled:opacity-50"
+            className="btn-primary flex items-center space-x-2 disabled:opacity-50 shadow-[0_0_20px_rgba(229,9,20,0.35)]"
           >
             <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
             <span>Refresh Analytics</span>
@@ -148,21 +148,21 @@ export default function Reports() {
           <button
             onClick={() => handleExportCSV('orders')}
             disabled={exportingType !== null}
-            className="btn-header px-4 py-2 text-[12px] font-mono disabled:opacity-50"
+            className="btn-secondary px-4 py-2 text-[13px] font-sans font-medium disabled:opacity-50"
           >
             <span>Orders CSV</span>
           </button>
           <button
             onClick={() => handleExportCSV('allocation_runs')}
             disabled={exportingType !== null}
-            className="btn-header px-4 py-2 text-[12px] font-mono disabled:opacity-50"
+            className="btn-secondary px-4 py-2 text-[13px] font-sans font-medium disabled:opacity-50"
           >
             <span>Allocation Runs CSV</span>
           </button>
           <button
             onClick={() => handleExportCSV('inventory_movements')}
             disabled={exportingType !== null}
-            className="btn-header px-4 py-2 text-[12px] font-mono disabled:opacity-50"
+            className="btn-secondary px-4 py-2 text-[13px] font-sans font-medium disabled:opacity-50"
           >
             <span>Inventory Movements CSV</span>
           </button>
@@ -286,7 +286,7 @@ export default function Reports() {
           <div className="overflow-x-auto">
             <table className="w-full text-[14px] text-left">
               <thead>
-                <tr className="border-b border-bd text-t2 text-[12px] font-mono">
+                <tr className="border-b border-bd text-t2 text-[12px] font-sans font-medium uppercase tracking-wider">
                   <th className="pb-3">SKU / Product</th>
                   <th className="pb-3 text-right">On-Hand</th>
                   <th className="pb-3 text-right">Unit Est.</th>

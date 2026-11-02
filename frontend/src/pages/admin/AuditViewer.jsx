@@ -77,17 +77,17 @@ export default function AuditViewer() {
 
   return (
     <div className="space-y-6 font-sans py-2">
-      {/* Header Banner */}
-      <div className="card-base flex flex-col md:flex-row md:items-center justify-between gap-4">
+      {/* Clean Page Header (No excessive bordered box) */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2">
         <div>
-          <div className="inline-flex items-center space-x-1.5 text-[12px] font-mono text-ac font-medium mb-1">
+          <div className="inline-flex items-center space-x-2 text-[12px] font-mono text-ac font-semibold tracking-wider uppercase mb-1">
             <ShieldCheck className="h-3.5 w-3.5" />
-            <span>Phase 13 • Immutable Governance &amp; Audit Trail</span>
+            <span>Immutable Governance &amp; Audit Trail</span>
           </div>
-          <h1 className="text-[34px] font-bold tracking-[-0.02em] text-white">
+          <h1 className="font-display text-[34px] font-bold tracking-tight text-white">
             Audit Log Viewer
           </h1>
-          <p className="text-[14px] text-t2 mt-0.5 max-w-2xl">
+          <p className="text-[14px] text-t2 font-sans mt-0.5 max-w-2xl">
             Read-only evidence log: track who approved which priority, who adjusted stock levels, and who executed allocation runs.
           </p>
         </div>
@@ -95,7 +95,7 @@ export default function AuditViewer() {
         <button
           onClick={fetchLogs}
           disabled={loading}
-          className="btn-header flex items-center space-x-2 px-4 py-2 text-[14px] disabled:opacity-50"
+          className="btn-secondary min-h-[42px] flex items-center space-x-2 px-4 py-2 text-[13px] disabled:opacity-50"
         >
           <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           <span>Refresh Logs</span>
@@ -165,7 +165,7 @@ export default function AuditViewer() {
         <div className="overflow-x-auto">
           <table className="w-full text-[14px] text-left">
             <thead>
-              <tr className="border-b border-bd text-t2 text-[12px] font-mono bg-s2/30">
+              <tr className="border-b border-bd text-t2 text-[12px] font-sans font-medium uppercase tracking-wider bg-s2/30">
                 <th className="p-3.5">Timestamp</th>
                 <th className="p-3.5">Actor / User</th>
                 <th className="p-3.5">Action</th>
