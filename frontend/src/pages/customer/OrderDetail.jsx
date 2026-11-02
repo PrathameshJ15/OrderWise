@@ -159,7 +159,7 @@ export default function OrderDetail() {
           )}
           <Link
             to="/orders/new"
-            className="btn-primary min-h-[40px] px-4 text-[13px] shadow-[0_0_20px_rgba(229,9,20,0.35)]"
+            className="btn-primary min-h-[40px] px-4 text-[13px] shadow-[0_6px_24px_rgba(229,9,20,0.4)]"
           >
             Reorder Similar
           </Link>

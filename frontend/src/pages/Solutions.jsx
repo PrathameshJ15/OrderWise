@@ -6,7 +6,7 @@ import PublicNavbar from '../components/layout/PublicNavbar';
 export default function Solutions() {
   return (
     <div className="min-h-screen bg-bg text-t font-sans flex flex-col selection:bg-ac selection:text-white relative overflow-x-hidden">
-      {/* Recreate exact soft ambient red lighting from reference video */}
+      {/* Soft ambient lighting */}
       <AmbientLighting withGrid={false} />
 
       {/* Top Navigation */}
@@ -29,26 +29,26 @@ export default function Solutions() {
 
         {/* Section 1: By Role */}
         <section className="space-y-5 relative z-10">
-          <h2 className="font-display text-[24px] font-bold text-t tracking-tight">By role</h2>
+          <h2 className="font-display text-[24px] font-bold text-t tracking-tight">By operational role</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="card-base p-7 space-y-3">
               <h3 className="text-[18px] font-display font-bold text-t">Administrators</h3>
               <p className="text-[14px] text-t2 leading-relaxed">
-                Run allocations, review AI recommendations with strict confidence thresholds, and inspect immutable audit trails.
+                Run deterministic allocations, review governed AI priority suggestions, and inspect immutable audit trails.
               </p>
             </div>
 
             <div className="card-base p-7 space-y-3">
               <h3 className="text-[18px] font-display font-bold text-t">Inventory managers</h3>
               <p className="text-[14px] text-t2 leading-relaxed">
-                Track on-hand vs. reserved stock, manage safety buffers, and act on shortage alerts before stockouts impact delivery.
+                Monitor on-hand inventory, maintain safety buffers, and resolve shortage alerts before stockouts occur.
               </p>
             </div>
 
             <div className="card-base p-7 space-y-3">
-              <h3 className="text-[18px] font-display font-bold text-t">Customers</h3>
+              <h3 className="text-[18px] font-display font-bold text-t">Commercial buyers</h3>
               <p className="text-[14px] text-t2 leading-relaxed">
-                See transparent order status, promised delivery dates, and clear fulfillment explanations for their own accounts.
+                Track live order status, promised delivery windows, and clear fulfillment explanations in real time.
               </p>
             </div>
           </div>
@@ -56,29 +56,29 @@ export default function Solutions() {
 
         {/* Section 2: By Industry */}
         <section className="space-y-5 relative z-10">
-          <h2 className="font-display text-[24px] font-bold text-t tracking-tight">By industry</h2>
+          <h2 className="font-display text-[24px] font-bold text-t tracking-tight">By industry domain</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="card-base p-7 space-y-3">
-              <span className="text-ac font-mono text-[11px] uppercase tracking-wider block font-semibold">Hardware distribution</span>
+              <span className="text-ac font-mono text-[11px] uppercase tracking-wider block font-semibold">Industrial equipment</span>
               <h3 className="text-[18px] font-display font-bold text-t">Pumps, valves &amp; gauges</h3>
               <p className="text-[14px] text-t2 leading-relaxed">
-                Scarce SKUs compete across major contractors. Priority rules resolve conflicts deterministically without favoritism.
+                Resolve high-demand SKU bottlenecks fairly across competing commercial contractors.
               </p>
             </div>
 
             <div className="card-base p-7 space-y-3">
-              <span className="text-ac font-mono text-[11px] uppercase tracking-wider block font-semibold">Manufacturing</span>
+              <span className="text-ac font-mono text-[11px] uppercase tracking-wider block font-semibold">Discrete manufacturing</span>
               <h3 className="text-[18px] font-display font-bold text-t">Production line components</h3>
               <p className="text-[14px] text-t2 leading-relaxed">
-                Protect critical assembly operations and prevent costly plant downtime when supply chain disruptions emerge.
+                Protect active assembly schedules and eliminate costly plant downtime from delayed shipments.
               </p>
             </div>
 
             <div className="card-base p-7 space-y-3">
-              <span className="text-ac font-mono text-[11px] uppercase tracking-wider block font-semibold">Wholesale and retail</span>
+              <span className="text-ac font-mono text-[11px] uppercase tracking-wider block font-semibold">Wholesale supply</span>
               <h3 className="text-[18px] font-display font-bold text-t">Multi-tier distribution</h3>
               <p className="text-[14px] text-t2 leading-relaxed">
-                Balance delivery commitments and partial shipment rules across key commercial accounts and standard buyers.
+                Enforce contract SLAs and minimum delivery thresholds with automated zero-bias allocation.
               </p>
             </div>
           </div>
@@ -87,7 +87,7 @@ export default function Solutions() {
         {/* Callout Banner: See it on your own orders */}
         <section className="card-base p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
           <div className="space-y-2 max-w-xl">
-            <h3 className="font-display text-[24px] font-bold text-white">
+            <h3 className="font-display text-[24px] font-bold text-t">
               See it on your own orders
             </h3>
             <p className="text-[14px] text-t2 leading-relaxed">
@@ -97,7 +97,7 @@ export default function Solutions() {
 
           <Link
             to="/login"
-            className="btn-primary min-h-[44px] px-6 text-[14px] shadow-[0_0_20px_rgba(229,9,20,0.35)] shrink-0"
+            className="btn-primary min-h-[44px] px-6 text-[14px] shadow-[0_6px_24px_rgba(229,9,20,0.4)] shrink-0"
           >
             <span>Launch Operations Portal &rarr;</span>
           </Link>

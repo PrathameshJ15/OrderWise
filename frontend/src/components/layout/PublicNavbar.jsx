@@ -118,7 +118,7 @@ export default function PublicNavbar({ active = '' }) {
             {user ? (
               <Link
                 to={user.role === 'customer' ? '/dashboard' : '/admin'}
-                className="btn-primary min-h-[38px] px-5 text-[13px] shadow-[0_0_20px_rgba(229,9,20,0.35)] flex items-center space-x-1.5"
+                className="btn-primary min-h-[38px] px-5 text-[13px] shadow-[0_6px_24px_rgba(229,9,20,0.4)] flex items-center space-x-1.5"
               >
                 <span>Console</span>
                 <ArrowRight className="h-3.5 w-3.5" />
@@ -126,7 +126,7 @@ export default function PublicNavbar({ active = '' }) {
             ) : (
               <Link
                 to="/login"
-                className="btn-primary min-h-[38px] px-5 text-[13px] shadow-[0_0_20px_rgba(229,9,20,0.35)] flex items-center space-x-1.5"
+                className="btn-primary min-h-[38px] px-5 text-[13px] shadow-[0_6px_24px_rgba(229,9,20,0.4)] flex items-center space-x-1.5"
               >
                 <span>Launch Portal</span>
                 <ArrowRight className="h-3.5 w-3.5" />
@@ -141,7 +141,7 @@ export default function PublicNavbar({ active = '' }) {
             {user ? (
               <Link
                 to={user.role === 'customer' ? '/dashboard' : '/admin'}
-                className="btn-primary min-h-[36px] px-3.5 text-[12px] shadow-[0_0_15px_rgba(229,9,20,0.3)] flex items-center space-x-1"
+                className="btn-primary min-h-[36px] px-3.5 text-[12px] shadow-[0_4px_16px_rgba(229,9,20,0.4)] flex items-center space-x-1"
               >
                 <span>Console</span>
                 <ArrowRight className="h-3 w-3" />
@@ -149,7 +149,7 @@ export default function PublicNavbar({ active = '' }) {
             ) : (
               <Link
                 to="/login"
-                className="btn-primary min-h-[36px] px-3.5 text-[12px] shadow-[0_0_15px_rgba(229,9,20,0.3)] flex items-center space-x-1"
+                className="btn-primary min-h-[36px] px-3.5 text-[12px] shadow-[0_4px_16px_rgba(229,9,20,0.4)] flex items-center space-x-1"
               >
                 <span>Sign in</span>
               </Link>
@@ -259,7 +259,7 @@ export default function PublicNavbar({ active = '' }) {
                 <Link
                   to={user.role === 'customer' ? '/dashboard' : '/admin'}
                   onClick={() => setMobileOpen(false)}
-                  className="btn-primary w-full min-h-[46px] text-[14px] flex items-center justify-center space-x-2 shadow-[0_0_20px_rgba(229,9,20,0.35)]"
+                  className="btn-primary w-full min-h-[46px] text-[14px] flex items-center justify-center space-x-2 shadow-[0_6px_24px_rgba(229,9,20,0.4)]"
                 >
                   <span>Enter Operations Console ({user.role})</span>
                   <ArrowRight className="h-4 w-4" />
@@ -269,7 +269,7 @@ export default function PublicNavbar({ active = '' }) {
                   <Link
                     to="/login"
                     onClick={() => setMobileOpen(false)}
-                    className="btn-primary w-full min-h-[46px] text-[14px] flex items-center justify-center space-x-2 shadow-[0_0_20px_rgba(229,9,20,0.35)]"
+                    className="btn-primary w-full min-h-[46px] text-[14px] flex items-center justify-center space-x-2 shadow-[0_6px_24px_rgba(229,9,20,0.4)]"
                   >
                     <span>Launch Operations Portal</span>
                     <ArrowRight className="h-4 w-4" />

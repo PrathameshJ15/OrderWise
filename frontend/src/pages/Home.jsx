@@ -11,7 +11,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-bg text-t font-sans flex flex-col selection:bg-ac selection:text-white relative overflow-x-hidden">
-      {/* Subtle upper-right ambient red lighting matching reference video & HTML */}
+      {/* Subtle upper-right ambient lighting */}
       <div
         className="fixed top-[-240px] right-[-180px] w-[760px] h-[760px] pointer-events-none rounded-full blur-[60px] -z-0"
         style={{
@@ -25,28 +25,26 @@ export default function Home() {
 
       {/* Main Content Container: max-width 1120px matching reference specs */}
       <main className="max-w-container mx-auto px-4 sm:px-8 py-6 space-y-16 flex-1 w-full relative z-10">
-        {/* 1. Landing Hero: 2 columns (1.15fr / 1fr), gap 56px matching Image 1 */}
+        {/* 1. Landing Hero: 2 columns (1.15fr / 1fr), gap 56px */}
         <section className="relative pt-6 sm:pt-10">
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-[1.15fr_1fr] gap-12 lg:gap-14 items-center">
             {/* Left Column: Headlines & Actions */}
             <div className="space-y-6">
-              {/* Badge: --ac pill, white mono text */}
-              <div>
-                <span className="inline-flex items-center rounded-pill bg-ac text-white font-mono text-[12px] font-bold px-3.5 py-1.5 shadow-sm">
+              {/* Badge: Red pill matching reference image */}
+              <div className="flex items-center space-x-2">
+                <span className="font-mono text-[12px] font-medium text-white bg-ac px-3.5 py-1.5 rounded-pill shadow-xs inline-block">
                   VORTEXA 3.0 • Problem Statement S-03
                 </span>
               </div>
 
-              {/* Exact Landing H1 */}
+              {/* Product Hero Heading matching reference */}
               <h1 className="font-display text-[44px] sm:text-[60px] font-bold leading-[1.04] tracking-[-0.03em] text-t">
                 Deterministic order allocation <span className="text-ac">and supply intelligence</span>
               </h1>
 
-              {/* Subhead */}
+              {/* Supporting description */}
               <p className="text-[17px] sm:text-[18px] leading-[1.6] text-t2 font-normal max-w-[520px]">
-                OrderWise resolves inventory conflicts across competing customer orders using
-                deterministic priority rules, Groq Llama-3 recommendations with strict human governance,
-                and real-time allocation explanations.
+                OrderWise resolves inventory conflicts across competing customer orders using deterministic priority rules, Groq Llama-3 recommendations with strict human governance, and real-time allocation explanations.
               </p>
 
               {/* Action Buttons */}
@@ -77,7 +75,7 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Right Column: Hero Visual Switcher (Live Queue matching Image 1 / 3D Warehouse) */}
+            {/* Right Column: Hero Visual Switcher */}
             <div className="w-full flex flex-col items-center space-y-3">
               <div className="w-full flex items-center justify-between">
                 <div
@@ -92,7 +90,7 @@ export default function Home() {
                     onClick={() => setHeroRightTab('queue')}
                     className={`px-3 py-1 rounded-pill font-mono text-[11px] font-medium transition-colors ${
                       heroRightTab === 'queue'
-                        ? 'bg-ac text-white shadow-sm'
+                        ? 'bg-ac text-white font-semibold shadow-xs'
                         : 'text-t2 hover:text-t'
                     }`}
                   >
@@ -105,7 +103,7 @@ export default function Home() {
                     onClick={() => setHeroRightTab('3d')}
                     className={`px-3 py-1 rounded-pill font-mono text-[11px] font-medium transition-colors ${
                       heroRightTab === '3d'
-                        ? 'bg-ac text-white shadow-sm'
+                        ? 'bg-ac text-white font-semibold shadow-xs'
                         : 'text-t2 hover:text-t'
                     }`}
                   >
@@ -179,7 +177,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 2. Capability / Fill Rate KPI Strip matching Image 2 */}
+        {/* 2. Capability / Fill Rate KPI Strip */}
         <section>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="card-base p-6 flex flex-col justify-between">
@@ -202,7 +200,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 3. How OrderWise Works: Calm cards with red accent underline */}
+        {/* 3. How OrderWise Works: Matching reference image */}
         <section id="how-it-works" className="space-y-6">
           <div>
             <h2 className="text-[34px] font-display font-bold tracking-tight text-t">
@@ -244,7 +242,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 4. Enterprise Allocation Modules & Roadmap matching Image 3 */}
+        {/* 4. Enterprise Allocation Modules: 4 columns matching reference */}
         <section id="modules" className="space-y-6">
           <div>
             <h2 className="text-[34px] font-display font-bold tracking-tight text-t">
@@ -256,7 +254,7 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Module cards: matching Image 3 with ● Active green indicator */}
+          {/* Module cards: 4 columns matching reference image */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <Link
               to="/admin/allocation"
@@ -346,7 +344,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 5. Callout Banner: Ready to explore OrderWise live? matching Image 3 */}
+        {/* 5. Callout Banner */}
         <section className="card-base p-8 sm:p-10 flex flex-col md:flex-row md:items-center justify-between gap-6 border-ac/40">
           <div className="space-y-2 max-w-xl">
             <span className="text-[12px] font-mono text-t2 block">Instant demo access</span>
@@ -368,7 +366,7 @@ export default function Home() {
         </section>
       </main>
 
-      {/* 6. Footer: Clean matching reference */}
+      {/* 6. Footer */}
       <footer className="border-t border-bd bg-s py-10 px-4 sm:px-8 mt-16 text-[13px] text-t2 relative z-10">
         <div className="max-w-container mx-auto flex flex-col sm:flex-row items-center justify-between text-[12px] font-mono text-t2 gap-4">
           <span>OrderWise &mdash; Deterministic inventory allocation and supply intelligence</span>

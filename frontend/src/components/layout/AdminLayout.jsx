@@ -12,7 +12,7 @@ export function AdminLayout() {
       <div
         className="fixed top-0 right-0 w-[650px] h-[500px] pointer-events-none rounded-full blur-[90px] z-0"
         style={{
-          background: 'radial-gradient(ellipse at 85% 5%, rgba(229, 9, 20, 0.15), transparent 50%)',
+          background: 'radial-gradient(ellipse at 85% 5%, rgba(229, 9, 20, 0.14), transparent 50%)',
         }}
         aria-hidden="true"
       />

@@ -343,3 +343,33 @@
 - **Production Build:** `vite build` completed cleanly in **5.37s** with **0 errors**.
 
 
+---
+
+## 🚀 Phase 20: Light Mode & OrderWise Red Design System (100% Complete & Verified)
+
+### Objectives & User Alignment
+1. **Light Mode as Default with Two-Way Theme Toggle:**
+   - Default theme initialized to Light mode (#F7F7F8 background, #FFFFFF cards, #E4E4E7 borders) matching [orderwise-light-preview.html](file:///c:/Users/jadha/OneDrive/Desktop/OrderWise/orderwise-light-preview.html).
+   - Preserved full theme toggling across Light, Dark, and System modes with anti-FOUT head script.
+2. **OrderWise Red Brand Accent (#E50914):**
+   - Soft top-right ambient red lighting (
+adial-gradient(closest-side, rgba(229, 9, 20, 0.13), transparent)) replacing previous glow colors.
+   - Restored brand red tokens (--ac: #E50914, hover: #C00811, tint: 
+gba(229,9,20,0.08)) with zero amber residue across all customer, admin, and public layouts.
+   - Primary action buttons: pill radius 999px, brand red background with soft red glow shadow (shadow-[0_6px_24px_rgba(229,9,20,0.4)]).
+3. **Exact Visual Alignment with User Reference Screenshots:**
+   - **Hero (Home.jsx):** Red badge VORTEXA 3.0 • Problem Statement S-03; H1 with 'and supply intelligence' in red; Live Allocation Queue card with red glowing indicator, Charlie fulfilled (green bar), Alice/Bob deferred (red stub on gray bar), and deterministic resolution footer.
+   - **Capability KPI Strip:** 3 cards (94.2% fill rate, 4 items, 1 critical alert with red border and inset glow).
+   - **How OrderWise Works:** Red underline accent bar (w-10 h-[3px] bg-ac) with 3 clean white cards.
+   - **Enterprise Allocation Modules:** 4 cards (Allocation Center, Simulation Lab, Reports & CSV exports, Audit log viewer) with green ● Active indicators, followed by the dashed roadmap card.
+   - **Instant Demo Access CTA:** Clean card with red border, red accent underline, and red Go to 1-Click Login → button.
+   - **Admin Operations Overview (AdminDashboard.jsx):** 4 KPI cards; Stock vs reserved chart with red on-hand bars (#E50914) and gray reserved bars (#8A8A8A); Allocation outcomes donut chart with centered order counter; Modules section with red underline bar, 4 active cards (● Active), and dashed roadmap bar.
+
+### Quality Verification & Gate Checks
+- **Automated Frontend Test Suite:** **42 / 42 PASSED** across all 11 test files (
+pm --prefix frontend test -- --run).
+- **Pure Allocation Unit Tests:** **18 / 18 PASSED** (
+pm --prefix backend test -- tests/allocation.pure.test.js).
+- **Production Vite Build:** Built cleanly with **0 errors** (dist/ generated).
+- **Backend Protection:** Zero backend allocation algorithms, database schemas, or business rules altered.
+- **Development Server:** Active and responding on http://localhost:5173/ (HTTP 200).

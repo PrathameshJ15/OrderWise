@@ -51,7 +51,7 @@ export default function Register() {
       <div
         className="fixed top-0 right-0 w-[500px] h-[400px] pointer-events-none rounded-full blur-[120px] -z-0"
         style={{
-          background: 'radial-gradient(ellipse at 85% 5%, rgba(229,9,20,0.18), transparent 50%)',
+          background: 'radial-gradient(ellipse at 85% 5%, rgba(229, 9, 20, 0.14), transparent 50%)',
         }}
         aria-hidden="true"
       />

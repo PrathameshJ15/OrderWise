@@ -21,7 +21,10 @@
   --t2-rgb: 82 82 91;
   --ac: #E50914;
   --ac-rgb: 229 9 20;
-  --ac-hover: #c90812;
+  --ac-hover: #C00811;
+  --ac-bright: #E50914;
+  --ac-tint-bg: rgba(229, 9, 20, 0.08);
+  --ac-tint-text: #E50914;
   --series: #8A8A8A;
   --ok: #15803D;
   --ok-rgb: 21 128 61;
@@ -57,7 +60,10 @@
   --t2-rgb: 168 168 168;
   --ac: #E50914;
   --ac-rgb: 229 9 20;
-  --ac-hover: #c90812;
+  --ac-hover: #C00811;
+  --ac-bright: #E50914;
+  --ac-tint-bg: rgba(229, 9, 20, 0.15);
+  --ac-tint-text: #FF7A7A;
   --series: #8A8A8A;
   --ok: #4ADE80;
   --ok-rgb: 74 222 128;
@@ -122,14 +128,18 @@ p {
 /* Common Design System Utility Classes */
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center min-h-[44px] px-6 text-[15px] font-semibold text-white transition-all cursor-pointer;
+    @apply inline-flex items-center justify-center min-h-[44px] px-6 text-[15px] font-semibold transition-all cursor-pointer;
     border-radius: 999px;
-    background-color: var(--ac);
-    box-shadow: 0 6px 24px rgba(229, 9, 20, 0.35);
+    background-color: #E50914 !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 6px 24px rgba(229, 9, 20, 0.4);
+  }
+  .btn-primary * {
+    color: #FFFFFF !important;
   }
   .btn-primary:hover {
-    background-color: var(--ac-hover);
-    box-shadow: 0 8px 30px rgba(229, 9, 20, 0.5);
+    background-color: #C00811 !important;
+    box-shadow: 0 8px 30px rgba(229, 9, 20, 0.6);
   }
   .btn-secondary {
     @apply inline-flex items-center justify-center min-h-[44px] px-6 text-[15px] font-semibold transition-colors cursor-pointer;
@@ -173,9 +183,10 @@ p {
     transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
   }
   .badge-ac {
-    @apply inline-flex items-center text-white font-mono text-[12px] font-medium px-3 py-1;
+    @apply inline-flex items-center font-mono text-[12px] font-medium px-3 py-1;
     border-radius: 999px;
-    background-color: var(--ac);
+    background-color: var(--ac) !important;
+    color: #FFFFFF !important;
   }
   .badge-ok {
     @apply inline-flex items-center font-mono text-[12px] font-medium px-3 py-1;
@@ -225,8 +236,8 @@ p {
   max-width: 95vw;
   background: radial-gradient(
     ellipse 960px 520px at 50% 50%,
-    rgba(229, 9, 20, 0.135) 0%,
-    rgba(229, 9, 20, 0.075) 32%,
+    rgba(229, 9, 20, 0.14) 0%,
+    rgba(229, 9, 20, 0.08) 32%,
     rgba(229, 9, 20, 0.025) 58%,
     rgba(229, 9, 20, 0.005) 78%,
     transparent 100%
@@ -237,8 +248,10 @@ p {
 }
 
 :root[data-theme="light"] .ambient-glow-red {
-  top: 10%;
-  left: 70%;
+  top: -240px;
+  right: -180px;
+  left: auto;
+  transform: none;
   width: 760px;
   height: 760px;
   background: radial-gradient(closest-side, rgba(229, 9, 20, 0.13), transparent);

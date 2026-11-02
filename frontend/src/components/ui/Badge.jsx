@@ -35,7 +35,7 @@ export default function Badge({ priority, variant = 'default', className = '', c
     );
   }
 
-  let variantStyle = 'bg-ac text-white';
+  let variantStyle = 'bg-ac text-ac-tint-text font-semibold';
 
   if (variant === 'active' || variant === 'success') {
     variantStyle = 'bg-ok/15 text-ok border border-ok/30';

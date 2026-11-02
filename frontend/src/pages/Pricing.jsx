@@ -6,7 +6,7 @@ import PublicNavbar from '../components/layout/PublicNavbar';
 export default function Pricing() {
   return (
     <div className="min-h-screen bg-bg text-t font-sans flex flex-col selection:bg-ac selection:text-white relative overflow-x-hidden">
-      {/* Recreate exact soft ambient red lighting from reference video */}
+      {/* Soft ambient lighting */}
       <AmbientLighting withGrid={false} />
 
       {/* Top Navigation */}
@@ -20,10 +20,10 @@ export default function Pricing() {
             Pricing
           </span>
           <h1 className="font-display text-[36px] sm:text-[48px] font-bold tracking-tight text-t leading-tight">
-            Simple plans that scale with your operation
+            Transparent plans for high-stakes fulfillment
           </h1>
           <p className="text-[16px] text-t2 leading-relaxed">
-            Start with the demo, grow into an enterprise governed allocation platform.
+            Predictable pricing designed for single-facility operations up to multi-tier enterprises.
           </p>
         </div>
 
@@ -51,10 +51,10 @@ export default function Pricing() {
 
             <div className="space-y-3 pt-3 border-t border-bd text-[14px]">
               {[
-                'Allocation engine',
-                'Dry-run preview',
-                'Live order updates',
-                'CSV exports',
+                'Deterministic allocation',
+                'Live stock tracking',
+                'Allocation dry-runs',
+                'Audit CSV exports',
               ].map((feat, i) => (
                 <div key={i} className="flex items-center space-x-2.5 text-t">
                   <span className="text-ok font-bold text-[15px]">&check;</span>
@@ -64,25 +64,25 @@ export default function Pricing() {
             </div>
           </div>
 
-          {/* Card 2: Business (Most popular, highlighted with red border) */}
-          <div className="bg-s border-2 border-ac rounded-card flex flex-col justify-between p-7 space-y-6 relative shadow-[0_0_30px_rgba(229,9,20,0.15)]">
+          {/* Card 2: Growth (Featured tier, red border & badge) */}
+          <div className="bg-s border-2 border-ac rounded-card flex flex-col justify-between p-7 space-y-6 relative shadow-[0_12px_40px_rgba(229,9,20,0.18)]">
             <div className="space-y-4">
-              <span className="inline-block rounded-pill bg-ac text-white font-mono text-[11px] font-semibold px-3 py-1">
+              <span className="badge-ac text-[11px] font-semibold px-3 py-1">
                 Most popular
               </span>
-              <span className="text-[15px] font-semibold text-white block">Business</span>
-              <div className="font-display text-[40px] font-bold text-white tracking-tight leading-none flex items-baseline space-x-1.5">
+              <span className="text-[15px] font-semibold text-t block">Growth</span>
+              <div className="font-display text-[40px] font-bold text-t tracking-tight leading-none flex items-baseline space-x-1.5">
                 <span>$799</span>
                 <span className="text-[14px] font-normal text-t2 font-sans">/month</span>
               </div>
               <p className="text-[14px] text-t2 leading-normal">
-                For multi-facility supply chains requiring AI recommendations and full audit trails.
+                For multi-facility supply chains requiring AI recommendations and audit logs.
               </p>
             </div>
 
             <Link
               to="/login"
-              className="btn-primary w-full text-center flex items-center justify-center min-h-[44px] text-[14px] shadow-[0_0_20px_rgba(229,9,20,0.35)]"
+              className="btn-primary w-full text-center flex items-center justify-center min-h-[44px] text-[14px] shadow-[0_6px_24px_rgba(229,9,20,0.35)]"
             >
               Book a demo
             </Link>
@@ -90,10 +90,10 @@ export default function Pricing() {
             <div className="space-y-3 pt-3 border-t border-bd text-[14px]">
               {[
                 'Everything in Team',
-                'AI recommendations with approval',
-                'Simulation lab',
-                'Immutable audit log',
-                'Supply alerts',
+                'AI recommendations',
+                'Human approval flow',
+                'What-if simulations',
+                'Shortage alerts',
               ].map((feat, i) => (
                 <div key={i} className="flex items-center space-x-2.5 text-t">
                   <span className="text-ok font-bold text-[15px]">&check;</span>
@@ -111,7 +111,7 @@ export default function Pricing() {
                 <span>Custom</span>
               </div>
               <p className="text-[14px] text-t2 leading-normal">
-                For enterprise distribution networks with custom SLA and ERP integration requirements.
+                For complex distribution networks with custom SLA and ERP integration requirements.
               </p>
             </div>
 
@@ -124,11 +124,11 @@ export default function Pricing() {
 
             <div className="space-y-3 pt-3 border-t border-bd text-[14px]">
               {[
-                'Everything in Business',
-                'Single sign-on',
-                'API and webhooks',
-                'Dedicated support',
-                'Custom retention',
+                'Everything in Growth',
+                'SSO & custom RBAC',
+                'REST API & webhooks',
+                'Dedicated SLA support',
+                'Custom data retention',
               ].map((feat, i) => (
                 <div key={i} className="flex items-center space-x-2.5 text-t">
                   <span className="text-ok font-bold text-[15px]">&check;</span>

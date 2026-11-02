@@ -81,7 +81,7 @@ export default function CustomerDashboard() {
         <div className="flex items-center space-x-3">
           <Link
             to="/orders/new"
-            className="btn-primary space-x-2 shadow-[0_0_20px_rgba(229,9,20,0.35)]"
+            className="btn-primary space-x-2 shadow-[0_6px_24px_rgba(229,9,20,0.4)]"
           >
             <PlusCircle className="h-4 w-4" />
             <span>Create New Order</span>

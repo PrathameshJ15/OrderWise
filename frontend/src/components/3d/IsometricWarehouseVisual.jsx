@@ -6,7 +6,7 @@ import { useTheme } from '../../hooks/useTheme';
  *
  * Built directly from the reference geometry in `docs/reference/orderwise-3d-hero.svg`.
  * Exact axonometric 30-degree isometric projection, warehouse platform slab,
- * 11 inventory boxes with authentic facet shading, red priority order boxes,
+ * 11 inventory boxes with authentic facet shading, amber priority order boxes,
  * dashed supply routes, pill labels, and animated route indicator.
  * Seamlessly adapts between dark and light themes.
  */
@@ -101,7 +101,7 @@ export default function IsometricWarehouseVisual() {
       role="region"
       aria-label="Isometric illustration of warehouse inventory storage racks, priority fulfillment boxes, and supply route"
     >
-      {/* Soft red radial ambient lighting in upper-right corner */}
+      {/* Soft amber radial ambient lighting in upper-right corner */}
       <div
         className="absolute top-0 right-0 w-[300px] h-[240px] pointer-events-none rounded-full blur-[70px]"
         style={{
@@ -115,7 +115,7 @@ export default function IsometricWarehouseVisual() {
       {/* Top Header Strip inside Card */}
       <div className="relative z-10 flex items-center justify-between px-5 py-3 border-b border-bd bg-s/90 backdrop-blur-sm">
         <div className="flex items-center space-x-2">
-          <span className="w-2 h-2 rounded-full bg-ac inline-block animate-pulse" />
+          <span className="w-2 h-2 rounded-full bg-[#E50914] inline-block animate-pulse" />
           <span className="text-[12px] font-mono text-t2 tracking-wide">
             Automated Facility &bull; Priority Routing
           </span>
@@ -131,7 +131,7 @@ export default function IsometricWarehouseVisual() {
           viewBox="-333 -268 667 618"
           className="w-full h-full overflow-visible select-none"
           role="img"
-          aria-label="Isometric warehouse with red priority orders"
+          aria-label="Isometric warehouse with amber priority orders"
         >
           {/* Layer 0: Ground Platform Slab & Isometric Grid */}
           <g className="l0">
@@ -182,7 +182,7 @@ export default function IsometricWarehouseVisual() {
             <polyline points="282.7,129.2 -17.7,302.6" stroke={slab.grid} strokeWidth=".7" fill="none" />
             <polyline points="-282.7,129.2 17.7,302.6" stroke={slab.grid} strokeWidth=".7" fill="none" />
 
-            {/* Primary Red Supply Route */}
+            {/* Primary Amber Supply Route */}
             <polyline
               points="0.0,71.4 88.3,122.4 0.0,173.4 97.2,229.5"
               fill="none"
@@ -232,11 +232,11 @@ export default function IsometricWarehouseVisual() {
               <polygon points="176.7,34.0 235.6,68.0 176.7,102.0 117.8,68.0" fill={neutralBox.top} stroke={neutralBox.stroke} strokeWidth=".8" strokeLinejoin="round" />
             </g>
 
-            {/* Box 5: Priority Red Box (Critical Order) - Stays red in both themes */}
+            {/* Box 5: Priority Amber Box (Critical Order) */}
             <g>
-              <polygon points="-58.9,122.4 0.0,156.4 0.0,74.8 -58.9,40.8" fill="#c00811" stroke="#8f050c" strokeWidth=".8" strokeLinejoin="round" />
-              <polygon points="58.9,122.4 0.0,156.4 0.0,74.8 58.9,40.8" fill="#8f050c" stroke="#8f050c" strokeWidth=".8" strokeLinejoin="round" />
-              <polygon points="0.0,6.8 58.9,40.8 0.0,74.8 -58.9,40.8" fill="#e50914" stroke="#8f050c" strokeWidth=".8" strokeLinejoin="round" />
+              <polygon points="-58.9,122.4 0.0,156.4 0.0,74.8 -58.9,40.8" fill="#E50914" stroke="#E50914" strokeWidth=".8" strokeLinejoin="round" />
+              <polygon points="58.9,122.4 0.0,156.4 0.0,74.8 58.9,40.8" fill="#9E6412" stroke="#E50914" strokeWidth=".8" strokeLinejoin="round" />
+              <polygon points="0.0,6.8 58.9,40.8 0.0,74.8 -58.9,40.8" fill="#E50914" stroke="#E50914" strokeWidth=".8" strokeLinejoin="round" />
             </g>
 
             {/* Box 6 (Standard Neutral) */}
@@ -246,11 +246,11 @@ export default function IsometricWarehouseVisual() {
               <polygon points="-176.7,54.4 -117.8,88.4 -176.7,122.4 -235.6,88.4" fill={neutralBox.top} stroke={neutralBox.stroke} strokeWidth=".8" strokeLinejoin="round" />
             </g>
 
-            {/* Box 7: Priority Red Box (High Priority) */}
+            {/* Box 7: Priority Amber Box (High Priority) */}
             <g>
-              <polygon points="29.4,173.4 88.3,207.4 88.3,166.6 29.4,132.6" fill="#c00811" stroke="#8f050c" strokeWidth=".8" strokeLinejoin="round" />
-              <polygon points="147.2,173.4 88.3,207.4 88.3,166.6 147.2,132.6" fill="#8f050c" stroke="#8f050c" strokeWidth=".8" strokeLinejoin="round" />
-              <polygon points="88.3,98.6 147.2,132.6 88.3,166.6 29.4,132.6" fill="#e50914" stroke="#8f050c" strokeWidth=".8" strokeLinejoin="round" />
+              <polygon points="29.4,173.4 88.3,207.4 88.3,166.6 29.4,132.6" fill="#E50914" stroke="#E50914" strokeWidth=".8" strokeLinejoin="round" />
+              <polygon points="147.2,173.4 88.3,207.4 88.3,166.6 147.2,132.6" fill="#9E6412" stroke="#E50914" strokeWidth=".8" strokeLinejoin="round" />
+              <polygon points="88.3,98.6 147.2,132.6 88.3,166.6 29.4,132.6" fill="#E50914" stroke="#E50914" strokeWidth=".8" strokeLinejoin="round" />
             </g>
 
             {/* Box 8 (Standard Neutral) */}
@@ -284,25 +284,25 @@ export default function IsometricWarehouseVisual() {
 
           {/* Layer 2: Pill Labels & Route Indicator */}
           <g className="l2">
-            {/* Pill 1: Critical Order (Red) */}
+            {/* Pill 1: Critical Order (Amber Tint Badge) */}
             <g>
               <line x1="0.0" y1="40.8" x2="0.0" y2="26.8" stroke="#E50914" />
               <rect x="-54.2" y="4.8" width="108.4" height="22" rx="11" fill="#E50914" stroke="#E50914" />
-              <text x="0.0" y="19.8" textAnchor="middle" fontFamily="JetBrains Mono, IBM Plex Mono, monospace" fontSize="11" fill="#fff" fontWeight="500">
+              <text x="0.0" y="19.8" textAnchor="middle" fontFamily="JetBrains Mono, IBM Plex Mono, monospace" fontSize="11" fill="#fff" fontWeight="600">
                 Critical order
               </text>
             </g>
 
-            {/* Pill 2: High Priority (Neutral) */}
+            {/* Pill 2: High Priority (Amber Tint Badge) */}
             <g>
-              <line x1="88.3" y1="132.6" x2="88.3" y2="118.6" stroke={isLight ? '#D4D4D8' : '#3a3a3a'} />
-              <rect x="37.4" y="96.6" width="101.8" height="22" rx="11" fill={isLight ? '#FFFFFF' : '#161616'} stroke={isLight ? '#D4D4D8' : '#3a3a3a'} />
-              <text x="88.3" y="111.6" textAnchor="middle" fontFamily="JetBrains Mono, IBM Plex Mono, monospace" fontSize="11" fill={isLight ? '#0A0A0A' : '#ffffff'} fontWeight="500">
+              <line x1="88.3" y1="132.6" x2="88.3" y2="118.6" stroke="#E50914" />
+              <rect x="37.4" y="96.6" width="101.8" height="22" rx="11" fill="#E50914" stroke="#E50914" />
+              <text x="88.3" y="111.6" textAnchor="middle" fontFamily="JetBrains Mono, IBM Plex Mono, monospace" fontSize="11" fill="#fff" fontWeight="600">
                 High priority
               </text>
             </g>
 
-            {/* Moving Indicator along Red Route (paused if prefers-reduced-motion) */}
+            {/* Moving Indicator along Amber Route (paused if prefers-reduced-motion) */}
             {!prefersReducedMotion && (
               <circle r="3.5" fill="#E50914">
                 <animateMotion
@@ -320,7 +320,7 @@ export default function IsometricWarehouseVisual() {
       <div className="px-5 py-2.5 bg-s2/60 border-t border-bd flex items-center justify-between text-[11px] font-mono text-t2">
         <div className="flex items-center space-x-3">
           <span className="flex items-center space-x-1.5">
-            <span className="w-2 h-2 rounded-full bg-ac inline-block" />
+            <span className="w-2 h-2 rounded-full bg-[#E50914] inline-block" />
             <span>Priority route active</span>
           </span>
           <span className="hidden sm:inline text-t2/50">&bull;</span>

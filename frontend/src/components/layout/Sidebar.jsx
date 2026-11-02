@@ -97,7 +97,7 @@ export default function Sidebar({ mobileOpen = false, onCloseMobile = () => {} }
                 className={({ isActive }) =>
                   `flex items-center space-x-3 px-3.5 py-2.5 min-h-[44px] rounded-pill text-[14px] font-medium transition-colors active:scale-[0.99] ${
                     isActive
-                      ? 'bg-ac text-white'
+                      ? 'bg-ac text-white font-semibold shadow-xs'
                       : 'text-t2 hover:text-t hover:bg-s2'
                   }`
                 }
@@ -105,7 +105,7 @@ export default function Sidebar({ mobileOpen = false, onCloseMobile = () => {} }
                 <Icon className="h-4 w-4 shrink-0" />
                 <span className="flex-1 whitespace-nowrap">{item.name}</span>
                 {item.badge && (
-                  <span className="text-[10px] px-2 py-0.5 rounded-pill bg-white/15 text-white font-mono font-medium ml-auto">
+                  <span className="text-[10px] px-2 py-0.5 rounded-pill font-mono font-semibold ml-auto bg-ac/10 text-ac">
                     {item.badge}
                   </span>
                 )}

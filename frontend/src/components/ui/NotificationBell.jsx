@@ -28,7 +28,7 @@ export default function NotificationBell() {
       case 'order_status_changed':
         return {
           label: 'ORDER',
-          style: 'border-bd text-white bg-s2',
+          style: 'border-bd text-t bg-s2',
         };
       case 'priority_approved':
         return {
@@ -55,11 +55,11 @@ export default function NotificationBell() {
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         title="Notifications & Live Activity"
-        className="relative p-2 rounded-full border border-[#555] bg-s hover:border-white text-t2 hover:text-white transition-colors flex items-center justify-center"
+        className="relative p-2 rounded-full border border-bd bg-s hover:border-t text-t2 hover:text-t transition-colors flex items-center justify-center cursor-pointer"
       >
         <Bell className="h-4 w-4" />
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 bg-ac text-white font-mono font-bold text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
+          <span className="absolute -top-1 -right-1 bg-ac text-white font-mono font-bold text-[10px] w-4 h-4 rounded-full flex items-center justify-center shadow-xs">
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}
@@ -67,11 +67,11 @@ export default function NotificationBell() {
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="fixed inset-x-3 top-16 sm:absolute sm:inset-x-auto sm:right-0 sm:top-auto sm:mt-2 sm:w-96 max-h-[80vh] flex flex-col bg-s border border-bd rounded-card shadow-2xl z-50 text-white overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150">
+        <div className="fixed inset-x-3 top-16 sm:absolute sm:inset-x-auto sm:right-0 sm:top-auto sm:mt-2 sm:w-96 max-h-[80vh] flex flex-col bg-s border border-bd rounded-card shadow-2xl z-50 text-t overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150">
           {/* Header */}
           <div className="p-3.5 border-b border-bd flex items-center justify-between bg-s2/40">
             <div className="flex items-center space-x-2">
-              <span className="font-bold text-[15px] text-white">
+              <span className="font-bold text-[15px] text-t">
                 Activity Feed
               </span>
               <span
@@ -90,7 +90,7 @@ export default function NotificationBell() {
               <button
                 type="button"
                 onClick={() => markAsRead('all')}
-                className="text-[12px] font-mono text-white hover:underline flex items-center space-x-1"
+                className="text-[12px] font-mono text-t hover:underline flex items-center space-x-1 cursor-pointer"
               >
                 <CheckCheck className="h-3 w-3" />
                 <span>Mark all read</span>
@@ -137,7 +137,7 @@ export default function NotificationBell() {
                       </span>
                     </div>
 
-                    <div className="text-[14px] font-semibold text-white mb-0.5">
+                    <div className="text-[14px] font-semibold text-t mb-0.5">
                       {n.title}
                     </div>
                     <div className="text-[12px] text-t2 leading-relaxed">

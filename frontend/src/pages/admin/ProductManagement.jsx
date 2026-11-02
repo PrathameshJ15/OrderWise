@@ -168,7 +168,7 @@ export default function ProductManagement() {
           </Link>
           <button
             onClick={() => setCreateModalOpen(true)}
-            className="btn-primary space-x-2 shadow-[0_0_20px_rgba(229,9,20,0.35)]"
+            className="btn-primary space-x-2 shadow-[0_6px_24px_rgba(229,9,20,0.4)]"
           >
             <Plus className="h-4 w-4" />
             <span>Add New Product</span>

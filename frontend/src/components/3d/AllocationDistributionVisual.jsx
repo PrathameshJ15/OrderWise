@@ -182,7 +182,7 @@ export default function AllocationDistributionVisual({
         <div
           className="absolute -top-12 -right-12 w-[350px] h-[250px] pointer-events-none rounded-full blur-[80px]"
           style={{
-            background: 'radial-gradient(circle, rgba(229, 9, 20, 0.18), transparent 70%)',
+            background: 'radial-gradient(circle, rgba(229, 9, 20, 0.14), transparent 70%)',
           }}
           aria-hidden="true"
         />

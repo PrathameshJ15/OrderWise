@@ -226,7 +226,7 @@ export default function ImpactAnalyzer() {
           <button
             onClick={handleCompareLatest}
             disabled={comparing}
-            className="btn-primary flex items-center space-x-1.5 disabled:opacity-50 shadow-[0_0_20px_rgba(229,9,20,0.35)]"
+            className="btn-primary flex items-center space-x-1.5 disabled:opacity-50 shadow-[0_6px_24px_rgba(229,9,20,0.4)]"
           >
             <RefreshCw className={`w-4 h-4 ${comparing ? 'animate-spin' : ''}`} />
             <span>Compare Latest Runs</span>

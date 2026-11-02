@@ -48,7 +48,7 @@ export function CustomerLayout() {
       <div
         className="fixed top-0 right-0 w-[650px] h-[500px] pointer-events-none rounded-full blur-[90px] z-0"
         style={{
-          background: 'radial-gradient(ellipse at 85% 5%, rgba(229, 9, 20, 0.15), transparent 50%)',
+          background: 'radial-gradient(ellipse at 85% 5%, rgba(229, 9, 20, 0.14), transparent 50%)',
         }}
         aria-hidden="true"
       />
@@ -65,7 +65,7 @@ export function CustomerLayout() {
                   Order<span className="text-ac">Wise</span>
                 </span>
               </Link>
-              <span className="hidden sm:inline-block px-2.5 py-0.5 text-[11px] font-sans font-medium rounded-pill bg-ac/15 text-ac border border-ac/30">
+              <span className="hidden sm:inline-block px-2.5 py-0.5 text-[11px] font-sans font-medium rounded-pill bg-ac/10 text-ac border border-ac/20">
                 Customer portal
               </span>
             </div>
@@ -82,7 +82,7 @@ export function CustomerLayout() {
                     className={({ isActive }) =>
                       `flex items-center space-x-2 px-4 py-2 rounded-pill text-[14px] font-medium transition-colors ${
                         isActive
-                          ? 'bg-ac text-white'
+                          ? 'bg-ac text-white font-semibold shadow-xs'
                           : 'text-t2 hover:text-t hover:bg-s2'
                       }`
                     }
@@ -128,7 +128,7 @@ export function CustomerLayout() {
                   className={({ isActive }) =>
                     `flex items-center space-x-3 px-4 py-3 min-h-[44px] rounded-pill text-[14px] font-medium transition-colors active:scale-[0.99] ${
                       isActive
-                        ? 'bg-ac text-white'
+                        ? 'bg-ac text-white font-semibold'
                         : 'text-t2 hover:text-t hover:bg-s2'
                     }`
                   }

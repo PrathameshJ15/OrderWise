@@ -79,7 +79,7 @@ export default function MyOrders() {
 
         <Link
           to="/orders/new"
-          className="btn-primary space-x-2 self-start md:self-auto shadow-[0_0_20px_rgba(229,9,20,0.35)]"
+          className="btn-primary space-x-2 self-start md:self-auto shadow-[0_6px_24px_rgba(229,9,20,0.4)]"
         >
           <PlusCircle className="h-4 w-4" />
           <span>New Order</span>

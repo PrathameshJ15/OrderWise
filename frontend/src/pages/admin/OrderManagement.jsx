@@ -136,7 +136,7 @@ export default function OrderManagement() {
           </Link>
           <Link
             to="/admin/allocation"
-            className="btn-primary flex items-center space-x-1.5 shadow-[0_0_20px_rgba(229,9,20,0.35)]"
+            className="btn-primary flex items-center space-x-1.5 shadow-[0_6px_24px_rgba(229,9,20,0.4)]"
           >
             <Cpu className="h-4 w-4" />
             <span>Allocate Stock &rarr;</span>

@@ -321,6 +321,7 @@ export default function AdminDashboard() {
           <h2 className="text-[24px] font-display font-bold tracking-tight text-t">
             Modules
           </h2>
+          <div className="w-10 h-[3px] bg-ac mt-2 mb-3 rounded-full" />
         </div>
 
         {/* Module cards: Title, description, and Active indicator matching Image 4 */}

@@ -6,7 +6,7 @@ import PublicNavbar from '../components/layout/PublicNavbar';
 export default function Security() {
   return (
     <div className="min-h-screen bg-bg text-t font-sans flex flex-col selection:bg-ac selection:text-white relative overflow-x-hidden">
-      {/* Recreate exact soft ambient red lighting from reference video */}
+      {/* Soft ambient lighting */}
       <AmbientLighting withGrid={false} />
 
       {/* Top Navigation */}
@@ -23,51 +23,51 @@ export default function Security() {
             Every decision is governed, scoped and logged
           </h1>
           <p className="text-[16px] text-t2 leading-relaxed">
-            OrderWise is built so no AI recommendation can change stock without an authorized human, and no action goes unrecorded.
+            OrderWise ensures AI cannot modify inventory without human approval, and every operational change is permanently recorded.
           </p>
         </div>
 
         {/* 6 Grid Security Pillar Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 relative z-10">
           <div className="card-base p-6 space-y-2">
-            <h3 className="text-[18px] font-display font-bold text-t">Human approval</h3>
+            <h3 className="text-[18px] font-display font-bold text-t">Human-in-the-loop</h3>
             <p className="text-[14px] text-t2 leading-relaxed">
-              AI outputs recommendations with evidence and confidence. It can never modify inventory without explicit admin approval.
+              AI recommends priorities with confidence scores; inventory modifies only after authorized administrator approval.
             </p>
           </div>
 
           <div className="card-base p-6 space-y-2">
             <h3 className="text-[18px] font-display font-bold text-t">Immutable audit log</h3>
             <p className="text-[14px] text-t2 leading-relaxed">
-              Cryptographically timestamped audit trail records who approved priorities, adjusted stock, or ran allocations.
+              Cryptographically timestamped ledger records all priority decisions, stock adjustments, and allocation runs.
             </p>
           </div>
 
           <div className="card-base p-6 space-y-2">
-            <h3 className="text-[18px] font-display font-bold text-t">Scoped real-time events</h3>
+            <h3 className="text-[18px] font-display font-bold text-t">Scoped live events</h3>
             <p className="text-[14px] text-t2 leading-relaxed">
-              Customers only receive Server-Sent Events strictly for their own orders. Zero cross-tenant data leakage.
+              Real-time telemetry feeds broadcast strictly to authorized accounts with zero cross-tenant data leakage.
             </p>
           </div>
 
           <div className="card-base p-6 space-y-2">
             <h3 className="text-[18px] font-display font-bold text-t">Role-based access</h3>
             <p className="text-[14px] text-t2 leading-relaxed">
-              Separate strict authority levels enforced at the database level for admins, inventory managers, and customers.
+              Granular authorization enforced at the database level for administrators, managers, and commercial customers.
             </p>
           </div>
 
           <div className="card-base p-6 space-y-2">
             <h3 className="text-[18px] font-display font-bold text-t">Safe concurrency</h3>
             <p className="text-[14px] text-t2 leading-relaxed">
-              Transactional row locking and optimistic concurrency protect stock from duplicate allocation runs or conflicting updates.
+              Row-level locking and ACID transactions eliminate double-allocation and concurrent fulfillment conflicts.
             </p>
           </div>
 
           <div className="card-base p-6 space-y-2">
-            <h3 className="text-[18px] font-display font-bold text-t">Soft-delete lifecycle</h3>
+            <h3 className="text-[18px] font-display font-bold text-t">Retention lifecycle</h3>
             <p className="text-[14px] text-t2 leading-relaxed">
-              Catalog items and customer orders are retired, not hard-deleted, so historical compliance records remain intact.
+              Audit trails preserve historical order records and SKU changes permanently for regulatory compliance.
             </p>
           </div>
         </div>
