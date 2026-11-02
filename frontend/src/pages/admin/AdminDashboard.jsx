@@ -135,16 +135,15 @@ export default function AdminDashboard() {
       {/* Admin Header Card: radius 14px, 1px border, no shadow */}
       <div className="card-base flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center space-x-1.5 text-[12px] font-mono text-ac font-medium mb-1">
-            <ShieldCheck className="h-3.5 w-3.5" />
-            <span>Admin Operations Command Center</span>
-          </div>
+          <span className="text-[12px] font-mono text-ac font-medium mb-1 block">
+            Admin console · Admin Operations Command
+          </span>
           {/* Dashboard H1: 34px, tracking -0.02em, 700. Sentence case */}
           <h1 className="text-[34px] font-bold tracking-[-0.02em] text-white">
-            Admin console: {user?.name || 'Administrator'}
+            Operations overview
           </h1>
           <p className="text-[14px] text-t2 mt-0.5 font-sans">
-            Logged in as {user?.email} • Authority level: <span className="font-mono text-ac font-medium">{user?.role}</span>
+            {user?.email || 'admin@orderwise.com'} · {user?.role === 'admin' ? 'Admin' : 'Inventory Manager'}
           </p>
         </div>
 
@@ -171,51 +170,39 @@ export default function AdminDashboard() {
       {/* KPI Row: 4 columns, gap 16px. Small label, 34px value, mono caption. Alert variant uses amber label and alert-bg */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* KPI 1 */}
-        <div className="card-base flex flex-col justify-between">
-          <div className="flex items-center justify-between text-t2 mb-1">
-            <span className="text-[12px] font-mono font-medium">Active Catalog</span>
-            <Package className="h-4 w-4 text-t2" />
-          </div>
+        <div className="card-base flex flex-col justify-between p-6">
+          <span className="text-[12px] font-mono font-medium text-t2">Active Catalog</span>
           <div className="text-[34px] font-bold text-white tracking-tight my-1">
             {stats.productCount}
           </div>
-          <span className="text-[12px] font-mono text-t2">Monitored hardware SKUs</span>
+          <span className="text-[12px] font-mono text-t2">SKUs monitored</span>
         </div>
 
         {/* KPI 2 */}
-        <div className="card-base flex flex-col justify-between">
-          <div className="flex items-center justify-between text-t2 mb-1">
-            <span className="text-[12px] font-mono font-medium">Customer Orders</span>
-            <ShoppingBag className="h-4 w-4 text-t2" />
-          </div>
+        <div className="card-base flex flex-col justify-between p-6">
+          <span className="text-[12px] font-mono font-medium text-t2">Customer Orders</span>
           <div className="text-[34px] font-bold text-white tracking-tight my-1">
             {stats.orderCount}
           </div>
-          <span className="text-[12px] font-mono text-t2">Demand submissions</span>
+          <span className="text-[12px] font-mono text-t2">3 pending · 2 confirmed</span>
         </div>
 
         {/* KPI 3 */}
-        <div className="card-base flex flex-col justify-between">
-          <div className="flex items-center justify-between text-t2 mb-1">
-            <span className="text-[12px] font-mono font-medium">Total On-Hand</span>
-            <Database className="h-4 w-4 text-t2" />
-          </div>
+        <div className="card-base flex flex-col justify-between p-6">
+          <span className="text-[12px] font-mono font-medium text-t2">Total On-Hand</span>
           <div className="text-[34px] font-bold text-white tracking-tight my-1">
-            {stats.totalOnHand} <span className="text-[14px] text-t2 font-normal">units</span>
+            {stats.totalOnHand} <span className="text-[14px] text-t2 font-normal font-mono">units</span>
           </div>
-          <span className="text-[12px] font-mono text-t2">Physical warehouse inventory</span>
+          <span className="text-[12px] font-mono text-t2">Warehouse inventory</span>
         </div>
 
         {/* KPI 4: Alert variant uses amber label and alert-bg / alert-border */}
         <div className="bg-alert-bg border border-alert-border rounded-card p-6 flex flex-col justify-between">
-          <div className="flex items-center justify-between text-wa mb-1">
-            <span className="text-[12px] font-mono font-medium">Unresolved Alerts</span>
-            <AlertTriangle className="h-4 w-4 text-wa" />
-          </div>
+          <span className="text-[12px] font-mono font-medium text-wa">Unresolved alerts</span>
           <div className="text-[34px] font-bold text-white tracking-tight my-1">
             {stats.unresolvedAlerts}
           </div>
-          <span className="text-[12px] font-mono text-wa/80">Pending telemetry warnings</span>
+          <span className="text-[12px] font-mono text-wa">Needs review</span>
         </div>
       </div>
 
@@ -371,99 +358,90 @@ export default function AdminDashboard() {
 
       {/* Modules row: 4 columns, gap 16px */}
       <div className="space-y-4">
-        <div className="border-b border-bd pb-2">
+        <div>
           <h2 className="text-[24px] font-bold tracking-tight text-white">
-            Operations command modules
+            Modules
           </h2>
         </div>
 
         {/* Module cards: "Active" mono label in --ok, title, one-line description */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Module 1: Allocation Center */}
+          {/* Module 1: Allocation center */}
           <Link
             to="/admin/allocation"
-            className="card-base hover:border-white transition-colors group flex flex-col justify-between space-y-3"
+            className="card-base hover:border-white transition-colors group flex flex-col justify-between space-y-3 p-6"
           >
             <div>
-              <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center space-x-1.5 mb-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-ok inline-block" />
                 <span className="text-[12px] font-mono font-medium text-ok">Active</span>
-                <ArrowRight className="h-4 w-4 text-t2 group-hover:text-white group-hover:translate-x-1 transition-all" />
               </div>
               <h3 className="text-[18px] font-bold text-white">Allocation Center</h3>
             </div>
             <p className="text-[14px] text-t2 leading-normal">
-              Deterministic priority-based allocation engine with live execution.
+              Run the engine and review run history.
             </p>
           </Link>
 
-          {/* Module 2: Product Management */}
+          {/* Module 2: Product management */}
           <Link
             to="/admin/products"
-            className="card-base hover:border-white transition-colors group flex flex-col justify-between space-y-3"
+            className="card-base hover:border-white transition-colors group flex flex-col justify-between space-y-3 p-6"
           >
             <div>
-              <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center space-x-1.5 mb-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-ok inline-block" />
                 <span className="text-[12px] font-mono font-medium text-ok">Active</span>
-                <ArrowRight className="h-4 w-4 text-t2 group-hover:text-white group-hover:translate-x-1 transition-all" />
               </div>
               <h3 className="text-[18px] font-bold text-white">Product Management</h3>
             </div>
             <p className="text-[14px] text-t2 leading-normal">
-              Catalog creation, hardware updates, SKU definitions, and lifecycle controls.
+              Catalog, SKUs and lifecycle controls.
             </p>
           </Link>
 
-          {/* Module 3: Inventory Hub */}
+          {/* Module 3: Inventory hub */}
           <Link
             to="/admin/inventory"
-            className="card-base hover:border-white transition-colors group flex flex-col justify-between space-y-3"
+            className="card-base hover:border-white transition-colors group flex flex-col justify-between space-y-3 p-6"
           >
             <div>
-              <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center space-x-1.5 mb-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-ok inline-block" />
                 <span className="text-[12px] font-mono font-medium text-ok">Active</span>
-                <ArrowRight className="h-4 w-4 text-t2 group-hover:text-white group-hover:translate-x-1 transition-all" />
               </div>
               <h3 className="text-[18px] font-bold text-white">Inventory Hub</h3>
             </div>
             <p className="text-[14px] text-t2 leading-normal">
-              Manage on-hand quantities, safety buffers, concurrency, and audit logs.
+              Stock levels, buffers and audit ledger.
             </p>
           </Link>
 
-          {/* Module 4: Order Management */}
+          {/* Module 4: Order management */}
           <Link
             to="/admin/orders"
-            className="card-base hover:border-white transition-colors group flex flex-col justify-between space-y-3"
+            className="card-base hover:border-white transition-colors group flex flex-col justify-between space-y-3 p-6"
           >
             <div>
-              <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center space-x-1.5 mb-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-ok inline-block" />
                 <span className="text-[12px] font-mono font-medium text-ok">Active</span>
-                <ArrowRight className="h-4 w-4 text-t2 group-hover:text-white group-hover:translate-x-1 transition-all" />
               </div>
               <h3 className="text-[18px] font-bold text-white">Order Management</h3>
             </div>
             <p className="text-[14px] text-t2 leading-normal">
-              Filter and inspect customer orders, confirm states, and enforce priorities.
+              Inspect orders and enforce priority.
             </p>
           </Link>
         </div>
 
-        {/* Upcoming modules collapsed into one dashed "Roadmap" row */}
-        <div className="card-roadmap flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <div className="flex items-center space-x-2">
-              <span className="text-[12px] font-mono text-t2 uppercase tracking-wide">Roadmap</span>
-              <span className="text-[12px] font-mono text-t2">• Advanced intelligence modules</span>
-            </div>
-            <h4 className="text-[18px] font-bold text-white mt-1">
-              Simulation Lab, Groq Llama-3 priorities, and replenishment advisory
-            </h4>
-            <p className="text-[14px] text-t2 mt-0.5">
-              What-if scenario sandboxes, automated stockout alerts, and demand velocity reorder recommendations.
-            </p>
-          </div>
-          <div className="text-[12px] font-mono text-t2 shrink-0">
-            Roadmap view
+        {/* Roadmap row: card with dashed border */}
+        <div className="card-roadmap flex flex-col md:flex-row md:items-center justify-between gap-4 p-5">
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[14px]">
+            <span className="font-semibold text-white">Roadmap</span>
+            <span className="text-t2">
+              Simulation lab · Supply alerts · Replenishment advisor · AI priorities · Impact analyzer · Executive reports
+            </span>
           </div>
         </div>
       </div>

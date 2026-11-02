@@ -33,6 +33,15 @@ export default function Home() {
             </div>
           </div>
 
+          {/* Navigation links */}
+          <nav className="hidden lg:flex items-center space-x-7 text-[14px] text-t2 font-medium">
+            <a href="#how-it-works" className="hover:text-white transition-colors">How it works</a>
+            <a href="#modules" className="hover:text-white transition-colors">Modules</a>
+            <Link to="/solutions" className="hover:text-white transition-colors">Solutions</Link>
+            <Link to="/pricing" className="hover:text-white transition-colors">Pricing</Link>
+            <Link to="/security" className="hover:text-white transition-colors">Security</Link>
+          </nav>
+
           {/* Navigation links & CTA - hidden on phones (max 760px) as per design spec */}
           <div className="hidden md:flex items-center space-x-4">
             <Link

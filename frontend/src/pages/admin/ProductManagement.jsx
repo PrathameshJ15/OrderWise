@@ -142,33 +142,33 @@ export default function ProductManagement() {
   };
 
   return (
-    <div className="space-y-6 font-mono py-4">
-      {/* Header */}
-      <div className="border border-arcade-border bg-arcade-neutral p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="space-y-6 font-sans py-2">
+      {/* Header Card */}
+      <div className="card-base flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center space-x-1.5 text-xs text-arcade-accent bg-arcade-accent/10 border border-arcade-accent/20 px-2 py-0.5 mb-2">
-            <Package className="h-3 w-3" />
-            <span>OPERATIONAL CATALOG CONTROL</span>
+          <div className="inline-flex items-center space-x-1.5 text-[12px] font-mono text-ac font-medium mb-1">
+            <Package className="h-3.5 w-3.5" />
+            <span>Operational catalog control</span>
           </div>
-          <h1 className="font-display text-3xl font-extrabold uppercase text-arcade-primary">
+          <h1 className="text-[34px] font-bold tracking-[-0.02em] text-white">
             Product Management
           </h1>
-          <p className="text-xs text-arcade-secondary mt-1">
+          <p className="text-[14px] text-t2 mt-0.5">
             Maintain catalog hardware specifications, SKU identifiers, and lifecycle activation states.
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 self-start md:self-auto">
+        <div className="flex flex-wrap items-center gap-3 self-start md:self-auto">
           <Link
             to="/admin/inventory"
-            className="flex items-center space-x-1.5 px-3 py-2.5 border border-arcade-border text-arcade-primary hover:border-arcade-accent hover:text-arcade-accent text-xs uppercase tracking-wider transition-colors"
+            className="btn-secondary min-h-[44px] px-4 text-[14px] flex items-center space-x-2"
           >
-            <Database className="h-4 w-4 text-arcade-accent" />
+            <Database className="h-4 w-4 text-ac" />
             <span>Inventory Hub &rarr;</span>
           </Link>
           <button
             onClick={() => setCreateModalOpen(true)}
-            className="flex items-center space-x-2 px-4 py-2.5 bg-arcade-accent text-arcade-surface font-bold text-xs uppercase tracking-wider hover:opacity-90 transition-opacity shadow-[0_0_12px_rgba(200,255,58,0.25)]"
+            className="btn-primary space-x-2"
           >
             <Plus className="h-4 w-4" />
             <span>Add New Product</span>
@@ -177,47 +177,47 @@ export default function ProductManagement() {
       </div>
 
       {error && (
-        <div className="p-4 border border-arcade-danger/40 bg-arcade-danger/10 text-arcade-danger text-xs flex items-center justify-between">
+        <div className="p-4 rounded-card border border-no/30 bg-[#291313] text-no text-[13px] flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <AlertCircle className="h-4 w-4 shrink-0" />
             <span>{error}</span>
           </div>
-          <button onClick={() => setError(null)} className="underline hover:text-white text-[11px]">
+          <button onClick={() => setError(null)} className="underline hover:text-white text-[12px]">
             Dismiss
           </button>
         </div>
       )}
 
       {/* Filter and Search Bar */}
-      <div className="border border-arcade-border bg-arcade-neutral p-4 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+      <div className="card-base flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
         {/* Active status filter */}
-        <div className="flex items-center space-x-1 border border-arcade-border bg-arcade-surface p-1">
+        <div className="flex items-center space-x-1.5 border border-bd rounded-pill bg-s2 p-1 overflow-x-auto">
           <button
             onClick={() => setActiveFilter('all')}
-            className={`px-3 py-1 text-xs uppercase tracking-wider transition-colors ${
+            className={`px-3.5 py-1 text-[12px] font-mono font-medium rounded-pill whitespace-nowrap transition-colors ${
               activeFilter === 'all'
-                ? 'bg-arcade-neutral text-arcade-accent font-bold border border-arcade-border'
-                : 'text-arcade-secondary hover:text-arcade-primary'
+                ? 'bg-ac text-white'
+                : 'text-t2 hover:text-white'
             }`}
           >
-            All Products ({products.length})
+            All products ({products.length})
           </button>
           <button
             onClick={() => setActiveFilter('true')}
-            className={`px-3 py-1 text-xs uppercase tracking-wider transition-colors ${
+            className={`px-3.5 py-1 text-[12px] font-mono font-medium rounded-pill whitespace-nowrap transition-colors ${
               activeFilter === 'true'
-                ? 'bg-arcade-neutral text-arcade-accent font-bold border border-arcade-border'
-                : 'text-arcade-secondary hover:text-arcade-primary'
+                ? 'bg-ac text-white'
+                : 'text-t2 hover:text-white'
             }`}
           >
-            Active Only
+            Active only
           </button>
           <button
             onClick={() => setActiveFilter('false')}
-            className={`px-3 py-1 text-xs uppercase tracking-wider transition-colors ${
+            className={`px-3.5 py-1 text-[12px] font-mono font-medium rounded-pill whitespace-nowrap transition-colors ${
               activeFilter === 'false'
-                ? 'bg-arcade-neutral text-arcade-accent font-bold border border-arcade-border'
-                : 'text-arcade-secondary hover:text-arcade-primary'
+                ? 'bg-ac text-white'
+                : 'text-t2 hover:text-white'
             }`}
           >
             Inactive
@@ -225,37 +225,37 @@ export default function ProductManagement() {
         </div>
 
         {/* Search */}
-        <div className="flex items-center space-x-2 border border-arcade-border bg-arcade-surface px-3 py-1.5 text-xs w-full md:w-64">
-          <Search className="h-3.5 w-3.5 text-arcade-secondary" />
+        <div className="flex items-center space-x-2 border border-bd rounded-pill bg-s2 px-4 py-2 text-sm w-full md:w-72">
+          <Search className="h-4 w-4 text-t2" />
           <input
             type="text"
             placeholder="Search SKU or name..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="bg-transparent text-arcade-primary focus:outline-none text-xs w-full placeholder-arcade-secondary/60"
+            className="bg-transparent text-white focus:outline-none text-[14px] w-full placeholder-t2/50 font-sans"
           />
         </div>
       </div>
 
       {/* Products Table */}
       {loading ? (
-        <div className="border border-arcade-border bg-arcade-neutral p-12 text-center text-arcade-secondary flex flex-col items-center justify-center space-y-3">
-          <RefreshCw className="h-6 w-6 animate-spin text-arcade-accent" />
-          <span className="text-xs uppercase tracking-wider">Loading product records...</span>
+        <div className="card-base p-12 text-center text-t2 flex flex-col items-center justify-center space-y-3">
+          <RefreshCw className="h-6 w-6 animate-spin text-ac" />
+          <span className="text-[12px] font-mono">Loading product records...</span>
         </div>
       ) : products.length === 0 ? (
-        <div className="border border-arcade-border bg-arcade-neutral p-12 text-center text-arcade-secondary space-y-3">
-          <Package className="h-8 w-8 text-arcade-secondary mx-auto opacity-50" />
-          <h3 className="font-display text-base uppercase text-arcade-primary font-bold">
-            No Products Found
+        <div className="card-base p-12 text-center text-t2 space-y-3">
+          <Package className="h-8 w-8 text-t2 mx-auto opacity-50" />
+          <h3 className="text-[18px] text-white font-bold">
+            No products found
           </h3>
-          <p className="text-xs">No catalog entries match your query.</p>
+          <p className="text-[14px]">No catalog entries match your query.</p>
         </div>
       ) : (
-        <div className="border border-arcade-border bg-arcade-neutral overflow-x-auto">
-          <table className="w-full text-left text-xs border-collapse">
+        <div className="card-base overflow-x-auto p-0">
+          <table className="w-full text-left text-sm border-collapse">
             <thead>
-              <tr className="border-b border-arcade-border bg-arcade-surface/60 text-arcade-secondary uppercase text-[10px] tracking-wider">
+              <tr className="border-b border-bd text-t2 font-mono text-[12px]">
                 <th className="py-3 px-4">SKU</th>
                 <th className="py-3 px-3">Product Name</th>
                 <th className="py-3 px-3">Unit</th>
@@ -265,43 +265,43 @@ export default function ProductManagement() {
                 <th className="py-3 px-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-arcade-border/50">
+            <tbody className="divide-y divide-bd/60">
               {products.map((p) => (
-                <tr key={p.id} className="hover:bg-arcade-surface/50 transition-colors">
-                  <td className="py-3.5 px-4 font-bold text-arcade-accent">
+                <tr key={p.id} className="hover:bg-s2/50 transition-colors">
+                  <td className="py-3.5 px-4 font-mono font-bold text-white">
                     {p.sku}
                   </td>
                   <td className="py-3.5 px-3">
-                    <div className="font-bold text-arcade-primary">{p.name}</div>
-                    <div className="text-[10px] text-arcade-secondary truncate max-w-sm">
+                    <div className="font-semibold text-white">{p.name}</div>
+                    <div className="text-[12px] text-t2 truncate max-w-sm">
                       {p.description || '—'}
                     </div>
                   </td>
-                  <td className="py-3.5 px-3 text-arcade-secondary">
+                  <td className="py-3.5 px-3 text-t2 font-mono text-[12px]">
                     {p.unit || 'units'}
                   </td>
-                  <td className="py-3.5 px-3 text-right font-semibold text-arcade-primary">
+                  <td className="py-3.5 px-3 text-right font-mono font-semibold text-white">
                     {p.on_hand_quantity ?? p.stock ?? '—'}
                   </td>
-                  <td className="py-3.5 px-3 text-right text-arcade-secondary">
+                  <td className="py-3.5 px-3 text-right font-mono text-t2">
                     {p.reserved_quantity ?? 0}
                   </td>
                   <td className="py-3.5 px-3 text-center">
                     <span
-                      className={`inline-flex items-center space-x-1 px-2 py-0.5 text-[9px] uppercase font-bold border tracking-wider ${
+                      className={`inline-flex items-center space-x-1.5 px-2.5 py-0.5 text-[11px] font-mono font-medium rounded-pill border ${
                         p.active
-                          ? 'border-arcade-accent/40 text-arcade-accent bg-arcade-accent/10'
-                          : 'border-arcade-border text-arcade-secondary bg-arcade-surface'
+                          ? 'border-ok/30 text-ok bg-ok/10'
+                          : 'border-bd text-t2 bg-s2'
                       }`}
                     >
-                      {p.active ? <CheckCircle2 className="h-2.5 w-2.5" /> : null}
+                      {p.active ? <CheckCircle2 className="h-3 w-3" /> : null}
                       <span>{p.active ? 'Active' : 'Inactive'}</span>
                     </span>
                   </td>
                   <td className="py-3.5 px-4 text-right space-x-2">
                     <button
                       onClick={() => openEditModal(p)}
-                      className="p-1 border border-arcade-border text-arcade-secondary hover:text-arcade-accent hover:border-arcade-accent transition-colors"
+                      className="p-1.5 rounded-full border border-bd text-t2 hover:text-white hover:border-white transition-colors"
                       title="Edit Product"
                     >
                       <Edit2 className="h-3.5 w-3.5" />
@@ -309,7 +309,7 @@ export default function ProductManagement() {
                     {p.active && (
                       <button
                         onClick={() => handleDeactivate(p.id)}
-                        className="p-1 border border-arcade-border text-arcade-secondary hover:text-arcade-danger hover:border-arcade-danger transition-colors"
+                        className="p-1.5 rounded-full border border-bd text-t2 hover:text-no hover:border-no transition-colors"
                         title="Deactivate Product"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
@@ -329,10 +329,10 @@ export default function ProductManagement() {
         onClose={() => setCreateModalOpen(false)}
         title="Add New Catalog Product"
       >
-        <form onSubmit={handleCreateProduct} className="space-y-4 text-xs">
+        <form onSubmit={handleCreateProduct} className="space-y-4 text-sm font-sans">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-[10px] uppercase text-arcade-secondary mb-1">
+              <label className="block text-[12px] font-mono text-t2 mb-1.5">
                 SKU Code *
               </label>
               <input
@@ -341,11 +341,11 @@ export default function ProductManagement() {
                 placeholder="e.g. SENSOR-T500"
                 value={createForm.sku}
                 onChange={(e) => setCreateForm({ ...createForm, sku: e.target.value })}
-                className="w-full bg-arcade-surface border border-arcade-border p-2 text-arcade-primary focus:border-arcade-accent focus:outline-none"
+                className="w-full bg-s2 border border-bd rounded-pill px-4 py-2.5 text-white focus:border-white focus:outline-none font-mono text-[14px]"
               />
             </div>
             <div>
-              <label className="block text-[10px] uppercase text-arcade-secondary mb-1">
+              <label className="block text-[12px] font-mono text-t2 mb-1.5">
                 Unit of Measure
               </label>
               <input
@@ -353,13 +353,13 @@ export default function ProductManagement() {
                 placeholder="e.g. units, kg, meters"
                 value={createForm.unit}
                 onChange={(e) => setCreateForm({ ...createForm, unit: e.target.value })}
-                className="w-full bg-arcade-surface border border-arcade-border p-2 text-arcade-primary focus:border-arcade-accent focus:outline-none"
+                className="w-full bg-s2 border border-bd rounded-pill px-4 py-2.5 text-white focus:border-white focus:outline-none font-sans text-[14px]"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-[10px] uppercase text-arcade-secondary mb-1">
+            <label className="block text-[12px] font-mono text-t2 mb-1.5">
               Product Name *
             </label>
             <input
@@ -368,12 +368,12 @@ export default function ProductManagement() {
               placeholder="e.g. Temperature Sensor Array"
               value={createForm.name}
               onChange={(e) => setCreateForm({ ...createForm, name: e.target.value })}
-              className="w-full bg-arcade-surface border border-arcade-border p-2 text-arcade-primary focus:border-arcade-accent focus:outline-none"
+              className="w-full bg-s2 border border-bd rounded-pill px-4 py-2.5 text-white focus:border-white focus:outline-none font-sans text-[14px]"
             />
           </div>
 
           <div>
-            <label className="block text-[10px] uppercase text-arcade-secondary mb-1">
+            <label className="block text-[12px] font-mono text-t2 mb-1.5">
               Description
             </label>
             <textarea
@@ -381,13 +381,13 @@ export default function ProductManagement() {
               placeholder="Hardware details, specifications..."
               value={createForm.description}
               onChange={(e) => setCreateForm({ ...createForm, description: e.target.value })}
-              className="w-full bg-arcade-surface border border-arcade-border p-2 text-arcade-primary focus:border-arcade-accent focus:outline-none"
+              className="w-full bg-s2 border border-bd rounded-card p-3 text-white focus:border-white focus:outline-none font-sans text-[14px]"
             />
           </div>
 
           <div className="grid grid-cols-3 gap-3">
             <div>
-              <label className="block text-[10px] uppercase text-arcade-secondary mb-1">
+              <label className="block text-[12px] font-mono text-t2 mb-1.5">
                 Initial Stock
               </label>
               <input
@@ -395,11 +395,11 @@ export default function ProductManagement() {
                 min="0"
                 value={createForm.initialStock}
                 onChange={(e) => setCreateForm({ ...createForm, initialStock: e.target.value })}
-                className="w-full bg-arcade-surface border border-arcade-border p-2 text-arcade-primary focus:border-arcade-accent focus:outline-none"
+                className="w-full bg-s2 border border-bd rounded-pill px-4 py-2 text-white focus:border-white focus:outline-none font-mono text-[14px]"
               />
             </div>
             <div>
-              <label className="block text-[10px] uppercase text-arcade-secondary mb-1">
+              <label className="block text-[12px] font-mono text-t2 mb-1.5">
                 Safety Stock
               </label>
               <input
@@ -407,11 +407,11 @@ export default function ProductManagement() {
                 min="0"
                 value={createForm.safetyStock}
                 onChange={(e) => setCreateForm({ ...createForm, safetyStock: e.target.value })}
-                className="w-full bg-arcade-surface border border-arcade-border p-2 text-arcade-primary focus:border-arcade-accent focus:outline-none"
+                className="w-full bg-s2 border border-bd rounded-pill px-4 py-2 text-white focus:border-white focus:outline-none font-mono text-[14px]"
               />
             </div>
             <div>
-              <label className="block text-[10px] uppercase text-arcade-secondary mb-1">
+              <label className="block text-[12px] font-mono text-t2 mb-1.5">
                 Reorder Point
               </label>
               <input
@@ -419,23 +419,23 @@ export default function ProductManagement() {
                 min="0"
                 value={createForm.reorderPoint}
                 onChange={(e) => setCreateForm({ ...createForm, reorderPoint: e.target.value })}
-                className="w-full bg-arcade-surface border border-arcade-border p-2 text-arcade-primary focus:border-arcade-accent focus:outline-none"
+                className="w-full bg-s2 border border-bd rounded-pill px-4 py-2 text-white focus:border-white focus:outline-none font-mono text-[14px]"
               />
             </div>
           </div>
 
-          <div className="flex items-center justify-end space-x-2 pt-3 border-t border-arcade-border">
+          <div className="flex items-center justify-end space-x-3 pt-3 border-t border-bd">
             <button
               type="button"
               onClick={() => setCreateModalOpen(false)}
-              className="px-3 py-1.5 border border-arcade-border text-arcade-secondary uppercase text-xs"
+              className="btn-secondary min-h-[40px] px-4 text-[13px]"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={creating}
-              className="px-4 py-1.5 bg-arcade-accent text-arcade-surface font-bold uppercase text-xs hover:opacity-90 disabled:opacity-50"
+              className="btn-primary min-h-[40px] px-5 text-[13px] disabled:opacity-50"
             >
               {creating ? 'Saving...' : 'Create Product'}
             </button>
@@ -449,9 +449,9 @@ export default function ProductManagement() {
         onClose={() => setEditModalOpen(false)}
         title={`Edit Product: ${editingProduct?.sku}`}
       >
-        <form onSubmit={handleUpdateProduct} className="space-y-4 text-xs">
+        <form onSubmit={handleUpdateProduct} className="space-y-4 text-sm font-sans">
           <div>
-            <label className="block text-[10px] uppercase text-arcade-secondary mb-1">
+            <label className="block text-[12px] font-mono text-t2 mb-1.5">
               Product Name *
             </label>
             <input
@@ -459,31 +459,31 @@ export default function ProductManagement() {
               required
               value={editForm.name}
               onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-              className="w-full bg-arcade-surface border border-arcade-border p-2 text-arcade-primary focus:border-arcade-accent focus:outline-none"
+              className="w-full bg-s2 border border-bd rounded-pill px-4 py-2.5 text-white focus:border-white focus:outline-none font-sans text-[14px]"
             />
           </div>
 
           <div>
-            <label className="block text-[10px] uppercase text-arcade-secondary mb-1">
+            <label className="block text-[12px] font-mono text-t2 mb-1.5">
               Unit of Measure
             </label>
             <input
               type="text"
               value={editForm.unit}
               onChange={(e) => setEditForm({ ...editForm, unit: e.target.value })}
-              className="w-full bg-arcade-surface border border-arcade-border p-2 text-arcade-primary focus:border-arcade-accent focus:outline-none"
+              className="w-full bg-s2 border border-bd rounded-pill px-4 py-2.5 text-white focus:border-white focus:outline-none font-sans text-[14px]"
             />
           </div>
 
           <div>
-            <label className="block text-[10px] uppercase text-arcade-secondary mb-1">
+            <label className="block text-[12px] font-mono text-t2 mb-1.5">
               Description
             </label>
             <textarea
               rows="3"
               value={editForm.description}
               onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
-              className="w-full bg-arcade-surface border border-arcade-border p-2 text-arcade-primary focus:border-arcade-accent focus:outline-none"
+              className="w-full bg-s2 border border-bd rounded-card p-3 text-white focus:border-white focus:outline-none font-sans text-[14px]"
             />
           </div>
 
@@ -491,31 +491,31 @@ export default function ProductManagement() {
             <button
               type="button"
               onClick={() => setEditForm({ ...editForm, active: !editForm.active })}
-              className="flex items-center space-x-2 text-xs"
+              className="flex items-center space-x-2 text-[13px]"
             >
               {editForm.active ? (
-                <ToggleRight className="h-6 w-6 text-arcade-accent" />
+                <ToggleRight className="h-6 w-6 text-ok" />
               ) : (
-                <ToggleLeft className="h-6 w-6 text-arcade-secondary" />
+                <ToggleLeft className="h-6 w-6 text-t2" />
               )}
-              <span className="uppercase text-[11px] text-arcade-primary">
+              <span className="font-medium text-white">
                 {editForm.active ? 'Product is Active' : 'Product is Inactive'}
               </span>
             </button>
           </div>
 
-          <div className="flex items-center justify-end space-x-2 pt-3 border-t border-arcade-border">
+          <div className="flex items-center justify-end space-x-3 pt-3 border-t border-bd">
             <button
               type="button"
               onClick={() => setEditModalOpen(false)}
-              className="px-3 py-1.5 border border-arcade-border text-arcade-secondary uppercase text-xs"
+              className="btn-secondary min-h-[40px] px-4 text-[13px]"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={updating}
-              className="px-4 py-1.5 bg-arcade-accent text-arcade-surface font-bold uppercase text-xs hover:opacity-90 disabled:opacity-50"
+              className="btn-primary min-h-[40px] px-5 text-[13px] disabled:opacity-50"
             >
               {updating ? 'Saving...' : 'Save Changes'}
             </button>

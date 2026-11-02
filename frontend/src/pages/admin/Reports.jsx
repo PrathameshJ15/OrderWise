@@ -3,16 +3,11 @@ import { Link } from 'react-router-dom';
 import {
   FileText,
   Download,
-  TrendingUp,
   Percent,
   AlertOctagon,
   DollarSign,
   Cpu,
   RefreshCw,
-  CheckCircle2,
-  Calendar,
-  Layers,
-  ArrowRight,
   Database,
 } from 'lucide-react';
 import apiClient from '../../api/client';
@@ -89,53 +84,62 @@ export default function Reports() {
   const deferredOrders = data?.deferred_breakdown || [];
 
   return (
-    <div className="space-y-6 font-mono py-4">
+    <div className="space-y-6 font-sans py-2">
       {/* Header Banner */}
-      <div className="border border-arcade-border bg-arcade-neutral p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="card-base flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center space-x-1.5 text-xs text-arcade-accent bg-arcade-accent/10 border border-arcade-accent/20 px-2 py-0.5 mb-2">
-            <FileText className="h-3 w-3" />
+          <div className="inline-flex items-center space-x-1.5 text-[12px] font-mono text-ac font-medium mb-1">
+            <FileText className="h-3.5 w-3.5" />
             <span>Phase 13 • Operational Reports &amp; Exports Hub</span>
           </div>
-          <h1 className="font-display text-3xl font-extrabold uppercase text-arcade-primary">
+          <h1 className="text-[34px] font-bold tracking-[-0.02em] text-white">
             Supply Chain &amp; Allocation Analytics
           </h1>
-          <p className="text-xs text-arcade-secondary mt-1 max-w-2xl">
+          <p className="text-[14px] text-t2 mt-0.5 max-w-2xl">
             Audit-ready evidence: deterministic fill rates, deferred demand root causes, inventory valuation, and governance metrics.
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2.5">
           <Link
             to="/admin/allocation"
-            className="inline-flex items-center space-x-1.5 px-3 py-2 border border-arcade-border bg-arcade-surface hover:border-arcade-accent text-arcade-primary text-xs uppercase tracking-wider font-bold transition-colors"
+            className="btn-secondary min-h-[44px] px-4 text-[14px] flex items-center space-x-1.5"
           >
-            <Cpu className="h-3.5 w-3.5 text-arcade-accent" />
+            <Cpu className="h-4 w-4 text-ac" />
             <span>Allocation Center</span>
           </Link>
           <Link
             to="/admin/inventory"
-            className="inline-flex items-center space-x-1.5 px-3 py-2 border border-arcade-border bg-arcade-surface hover:border-arcade-accent text-arcade-primary text-xs uppercase tracking-wider font-bold transition-colors"
+            className="btn-secondary min-h-[44px] px-4 text-[14px] flex items-center space-x-1.5"
           >
-            <Database className="h-3.5 w-3.5 text-arcade-accent" />
+            <Database className="h-4 w-4 text-ac" />
             <span>Inventory Hub</span>
           </Link>
           <button
             onClick={fetchReports}
             disabled={loading}
-            className="inline-flex items-center space-x-2 px-3 py-2 bg-arcade-accent text-arcade-surface text-xs uppercase tracking-wider font-bold transition-opacity hover:opacity-90 disabled:opacity-50"
+            className="btn-primary flex items-center space-x-2 disabled:opacity-50"
           >
-            <RefreshCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
             <span>Refresh Analytics</span>
           </button>
         </div>
       </div>
 
+      {error && (
+        <div className="p-4 rounded-card border border-no/40 bg-[#291313] text-no text-[13px] flex items-center justify-between">
+          <span>{error}</span>
+          <button onClick={() => setError(null)} className="underline hover:text-white text-[12px]">
+            Dismiss
+          </button>
+        </div>
+      )}
+
       {/* CSV Export Bar */}
-      <div className="border border-arcade-border bg-arcade-surface p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="card-base p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center space-x-2">
-          <Download className="h-4 w-4 text-arcade-accent" />
-          <span className="text-xs font-bold uppercase tracking-wider text-arcade-primary">
+          <Download className="h-4 w-4 text-ac" />
+          <span className="text-[14px] font-bold text-white">
             Export On-Screen Datasets (CSV)
           </span>
         </div>
@@ -144,21 +148,21 @@ export default function Reports() {
           <button
             onClick={() => handleExportCSV('orders')}
             disabled={exportingType !== null}
-            className="px-3 py-1.5 border border-arcade-border bg-arcade-neutral hover:border-arcade-accent text-arcade-primary text-xs uppercase tracking-wider font-semibold transition-colors disabled:opacity-50 flex items-center space-x-1.5"
+            className="btn-header px-4 py-2 text-[12px] font-mono disabled:opacity-50"
           >
             <span>Orders CSV</span>
           </button>
           <button
             onClick={() => handleExportCSV('allocation_runs')}
             disabled={exportingType !== null}
-            className="px-3 py-1.5 border border-arcade-border bg-arcade-neutral hover:border-arcade-accent text-arcade-primary text-xs uppercase tracking-wider font-semibold transition-colors disabled:opacity-50 flex items-center space-x-1.5"
+            className="btn-header px-4 py-2 text-[12px] font-mono disabled:opacity-50"
           >
             <span>Allocation Runs CSV</span>
           </button>
           <button
             onClick={() => handleExportCSV('inventory_movements')}
             disabled={exportingType !== null}
-            className="px-3 py-1.5 border border-arcade-border bg-arcade-neutral hover:border-arcade-accent text-arcade-primary text-xs uppercase tracking-wider font-semibold transition-colors disabled:opacity-50 flex items-center space-x-1.5"
+            className="btn-header px-4 py-2 text-[12px] font-mono disabled:opacity-50"
           >
             <span>Inventory Movements CSV</span>
           </button>
@@ -167,54 +171,54 @@ export default function Reports() {
 
       {/* KPI Cards Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="border border-arcade-border bg-arcade-neutral p-4">
-          <div className="flex items-center justify-between text-arcade-secondary text-xs uppercase mb-2">
+        <div className="card-base p-5">
+          <div className="flex items-center justify-between text-t2 text-[12px] font-mono mb-2">
             <span>Order Fill Rate</span>
-            <Percent className="h-4 w-4 text-arcade-accent" />
+            <Percent className="h-4 w-4 text-ok" />
           </div>
-          <div className="font-display text-3xl font-extrabold text-arcade-primary">
+          <div className="text-3xl font-bold font-mono text-white">
             {kpis.fill_rate_percent}%
           </div>
-          <div className="text-[11px] text-arcade-secondary mt-1">
+          <div className="text-[12px] text-t2 mt-1">
             {kpis.fulfilled_orders} of {kpis.total_orders} orders fulfilled
           </div>
         </div>
 
-        <div className="border border-arcade-border bg-arcade-neutral p-4">
-          <div className="flex items-center justify-between text-arcade-secondary text-xs uppercase mb-2">
+        <div className="p-5 rounded-card border border-no/40 bg-[#291313]">
+          <div className="flex items-center justify-between text-no text-[12px] font-mono mb-2">
             <span>Deferred Demand</span>
-            <AlertOctagon className="h-4 w-4 text-arcade-danger" />
+            <AlertOctagon className="h-4 w-4 text-no" />
           </div>
-          <div className="font-display text-3xl font-extrabold text-arcade-danger">
+          <div className="text-3xl font-bold font-mono text-no">
             {kpis.deferred_orders}
           </div>
-          <div className="text-[11px] text-arcade-secondary mt-1">
+          <div className="text-[12px] text-t2 mt-1">
             Orders constrained by stock
           </div>
         </div>
 
-        <div className="border border-arcade-border bg-arcade-neutral p-4">
-          <div className="flex items-center justify-between text-arcade-secondary text-xs uppercase mb-2">
+        <div className="card-base p-5">
+          <div className="flex items-center justify-between text-t2 text-[12px] font-mono mb-2">
             <span>Inventory Valuation</span>
-            <DollarSign className="h-4 w-4 text-arcade-info" />
+            <DollarSign className="h-4 w-4 text-ac" />
           </div>
-          <div className="font-display text-3xl font-extrabold text-arcade-primary">
+          <div className="text-3xl font-bold font-mono text-white">
             ${(kpis.inventory_valuation_usd || 0).toLocaleString()}
           </div>
-          <div className="text-[11px] text-arcade-secondary mt-1">
+          <div className="text-[12px] text-t2 mt-1">
             Physical on-hand asset value
           </div>
         </div>
 
-        <div className="border border-arcade-border bg-arcade-neutral p-4">
-          <div className="flex items-center justify-between text-arcade-secondary text-xs uppercase mb-2">
+        <div className="card-base p-5">
+          <div className="flex items-center justify-between text-t2 text-[12px] font-mono mb-2">
             <span>AI Governance</span>
-            <Cpu className="h-4 w-4 text-arcade-warning" />
+            <Cpu className="h-4 w-4 text-wa" />
           </div>
-          <div className="font-display text-3xl font-extrabold text-arcade-primary">
+          <div className="text-3xl font-bold font-mono text-white">
             {kpis.ai_approval_rate_percent}%
           </div>
-          <div className="text-[11px] text-arcade-secondary mt-1">
+          <div className="text-[12px] text-t2 mt-1">
             Human approval agreement rate
           </div>
         </div>
@@ -223,40 +227,40 @@ export default function Reports() {
       {/* Two Column Section: Deferred Orders & Inventory Valuation */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Deferred Demand Breakdown */}
-        <div className="border border-arcade-border bg-arcade-neutral p-5">
-          <div className="flex items-center justify-between mb-4 pb-3 border-b border-arcade-border">
+        <div className="card-base space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-bd">
             <div className="flex items-center space-x-2">
-              <AlertOctagon className="h-4 w-4 text-arcade-danger" />
-              <h2 className="font-display text-lg font-bold uppercase text-arcade-primary">
+              <AlertOctagon className="h-4 w-4 text-no" />
+              <h2 className="text-base font-bold text-white">
                 Deferred Orders &amp; Bottlenecks
               </h2>
             </div>
-            <span className="text-[10px] text-arcade-secondary uppercase tracking-widest">
+            <span className="text-[11px] font-mono text-t2">
               Root Causes
             </span>
           </div>
 
           <div className="space-y-3">
             {deferredOrders.length === 0 ? (
-              <div className="p-4 text-center text-xs text-arcade-secondary border border-arcade-border/50">
+              <div className="p-6 text-center text-[14px] text-t2 rounded-card border border-bd/40">
                 No orders deferred in current allocation run.
               </div>
             ) : (
               deferredOrders.map((d, idx) => (
                 <div
                   key={idx}
-                  className="p-3 border border-arcade-border bg-arcade-surface hover:border-arcade-danger/60 transition-colors"
+                  className="p-3.5 rounded-card border border-bd bg-s2 space-y-1"
                 >
-                  <div className="flex items-center justify-between text-xs font-bold text-arcade-primary mb-1">
+                  <div className="flex items-center justify-between text-[14px] font-bold text-white mb-1">
                     <span>Order #{d.order_id} • {d.customer_name}</span>
-                    <span className="text-arcade-danger text-[10px] uppercase px-1.5 py-0.5 border border-arcade-danger/40 bg-arcade-danger/10">
+                    <span className="text-no text-[11px] font-mono px-2 py-0.5 rounded-pill border border-no/40 bg-no/10">
                       Deferred
                     </span>
                   </div>
-                  <div className="text-xs text-arcade-secondary mb-1">
-                    Requested: <span className="text-arcade-primary font-semibold">{d.requested_quantity} units</span> of {d.product_name}
+                  <div className="text-[13px] text-t2">
+                    Requested: <span className="text-white font-medium">{d.requested_quantity} units</span> of {d.product_name}
                   </div>
-                  <div className="text-[11px] text-arcade-danger/90 leading-snug">
+                  <div className="text-[12px] text-no/90 pt-1">
                     Cause: {d.reason}
                   </div>
                 </div>
@@ -266,45 +270,45 @@ export default function Reports() {
         </div>
 
         {/* Inventory Valuation Breakdown */}
-        <div className="border border-arcade-border bg-arcade-neutral p-5">
-          <div className="flex items-center justify-between mb-4 pb-3 border-b border-arcade-border">
+        <div className="card-base space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-bd">
             <div className="flex items-center space-x-2">
-              <Database className="h-4 w-4 text-arcade-info" />
-              <h2 className="font-display text-lg font-bold uppercase text-arcade-primary">
+              <Database className="h-4 w-4 text-ac" />
+              <h2 className="text-base font-bold text-white">
                 Inventory Valuation by SKU
               </h2>
             </div>
-            <span className="text-[10px] text-arcade-secondary uppercase tracking-widest">
+            <span className="text-[11px] font-mono text-t2">
               Asset Position
             </span>
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full text-xs text-left">
+            <table className="w-full text-[14px] text-left">
               <thead>
-                <tr className="border-b border-arcade-border text-arcade-secondary uppercase text-[10px]">
-                  <th className="pb-2">SKU / Product</th>
-                  <th className="pb-2 text-right">On-Hand</th>
-                  <th className="pb-2 text-right">Unit Est.</th>
-                  <th className="pb-2 text-right">Total Value</th>
+                <tr className="border-b border-bd text-t2 text-[12px] font-mono">
+                  <th className="pb-3">SKU / Product</th>
+                  <th className="pb-3 text-right">On-Hand</th>
+                  <th className="pb-3 text-right">Unit Est.</th>
+                  <th className="pb-3 text-right">Total Value</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-arcade-border/40">
+              <tbody className="divide-y divide-bd/40">
                 {valuationProducts.map((p) => (
-                  <tr key={p.product_id} className="hover:bg-arcade-surface/50">
-                    <td className="py-2.5">
-                      <div className="font-bold text-arcade-primary">{p.sku}</div>
-                      <div className="text-[10px] text-arcade-secondary truncate max-w-[180px]">
+                  <tr key={p.product_id} className="hover:bg-s2/40 transition-colors">
+                    <td className="py-3">
+                      <div className="font-bold text-white">{p.sku}</div>
+                      <div className="text-[12px] text-t2 truncate max-w-[180px]">
                         {p.product_name}
                       </div>
                     </td>
-                    <td className="py-2.5 text-right font-mono text-arcade-primary">
+                    <td className="py-3 text-right font-mono text-white">
                       {p.on_hand_quantity}
                     </td>
-                    <td className="py-2.5 text-right text-arcade-secondary">
+                    <td className="py-3 text-right font-mono text-t2">
                       ${p.unit_cost || 100}
                     </td>
-                    <td className="py-2.5 text-right font-bold text-arcade-accent">
+                    <td className="py-3 text-right font-mono font-bold text-ok">
                       ${(p.total_value || 0).toLocaleString()}
                     </td>
                   </tr>

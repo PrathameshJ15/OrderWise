@@ -94,13 +94,127 @@ function calculateMovingAverage(series, windowSize = 3, periodsToForecast = 3) {
 }
 
 /**
+ * Calculate 7-day and 30-day forecast projections with widening confidence bounds
+ * and data quality confidence annotations.
+ */
+function calculateHorizonForecast(historicalSeries, alpha = 0.3) {
+  if (!historicalSeries || historicalSeries.length === 0) {
+    return {
+      forecast_7d: { point_forecast: 0, lower_bound_95: 0, upper_bound_95: 0, run_rate_daily: 0, standard_error: 0 },
+      forecast_30d: { point_forecast: 0, lower_bound_95: 0, upper_bound_95: 0, run_rate_monthly: 0, standard_error: 0 },
+      confidence: 'LOW',
+      data_quality: 'NO_HISTORICAL_DEMAND',
+      confidence_explanation: 'Zero historical order demand recorded for this product.',
+    };
+  }
+
+  const isSparse = historicalSeries.length < 5;
+  const dataQuality = isSparse ? 'SPARSE_DATA' : 'SUFFICIENT';
+  const confidence = isSparse ? 'LOW' : 'HIGH';
+  const confidenceExplanation = isSparse
+    ? `Sparse order history (${historicalSeries.length} points); confidence intervals carry wider variance.`
+    : `Historical time-series is sufficient (${historicalSeries.length} observations).`;
+
+  const ses = calculateExponentialSmoothing(historicalSeries, alpha, 1);
+  const pointNext = ses.forecast && ses.forecast.length > 0 ? ses.forecast[0].point_forecast : historicalSeries[historicalSeries.length - 1];
+  const stdError = ses.model_params ? ses.model_params.standard_error : 5;
+
+  const forecast_30d_point = Math.max(0, Math.round(pointNext));
+  const margin_30d = Math.round(1.96 * stdError);
+  const forecast_30d = {
+    point_forecast: forecast_30d_point,
+    lower_bound_95: Math.max(0, forecast_30d_point - margin_30d),
+    upper_bound_95: forecast_30d_point + margin_30d,
+    run_rate_monthly: forecast_30d_point,
+    standard_error: stdError,
+  };
+
+  const dailyRate = Math.round((forecast_30d_point / 30) * 10) / 10;
+  const forecast_7d_point = Math.max(0, Math.round(dailyRate * 7));
+  const margin_7d = Math.max(1, Math.round(margin_30d * Math.sqrt(7 / 30)));
+  const forecast_7d = {
+    point_forecast: forecast_7d_point,
+    lower_bound_95: Math.max(0, forecast_7d_point - margin_7d),
+    upper_bound_95: forecast_7d_point + margin_7d,
+    run_rate_daily: dailyRate,
+    standard_error: Math.round(stdError * Math.sqrt(7 / 30) * 10) / 10,
+  };
+
+  return {
+    forecast_7d,
+    forecast_30d,
+    confidence,
+    data_quality: dataQuality,
+    confidence_explanation: confidenceExplanation,
+  };
+}
+
+/**
+ * Shortage Risk Classifier based on available stock vs projected demand
+ */
+function assessShortageRisk(availableStock, forecast7dPoint, forecast30dPoint) {
+  const stock = Number(availableStock) || 0;
+  const f7 = Number(forecast7dPoint) || 0;
+  const f30 = Number(forecast30dPoint) || 0;
+
+  if (stock < f7) {
+    return {
+      level: 'SHORTAGE_RISK_HIGH',
+      projected_deficit: f7 - stock,
+      available_stock: stock,
+      message: `Critical shortage risk: Available stock (${stock}) is below projected 7-day demand (${f7}). Expected deficit of ${f7 - stock} units.`,
+    };
+  } else if (stock < f30) {
+    return {
+      level: 'SHORTAGE_RISK_MEDIUM',
+      projected_deficit: f30 - stock,
+      available_stock: stock,
+      message: `Moderate shortage risk: Available stock (${stock}) covers 7 days but is below projected 30-day demand (${f30}). Expected deficit of ${f30 - stock} units.`,
+    };
+  } else {
+    return {
+      level: 'STOCK_ADEQUATE',
+      projected_surplus: stock - f30,
+      available_stock: stock,
+      message: `Stock is adequate: Available stock (${stock}) satisfies projected 30-day demand (${f30}).`,
+    };
+  }
+}
+
+/**
  * Generate Demand Forecasts across products
  */
 async function getDemandForecasts({ productId = null, alpha = 0.3 } = {}) {
   let products = [];
+  const inventoryMap = new Map();
+  const dbDemandMap = new Map();
+
   try {
     const res = await query('SELECT id, sku, name FROM products WHERE active = true ORDER BY id ASC');
     products = res.rows;
+
+    const invRes = await query('SELECT product_id, on_hand_quantity, reserved_quantity FROM inventory');
+    invRes.rows.forEach((r) => {
+      inventoryMap.set(Number(r.product_id), {
+        on_hand: Number(r.on_hand_quantity),
+        reserved: Number(r.reserved_quantity),
+        available: Math.max(0, Number(r.on_hand_quantity) - Number(r.reserved_quantity)),
+      });
+    });
+
+    const demandRes = await query(`
+      SELECT oi.product_id, DATE_TRUNC('day', o.created_at) as day, SUM(oi.requested_quantity)::int as total_qty
+      FROM order_items oi
+      JOIN orders o ON o.id = oi.order_id
+      WHERE o.status != 'cancelled'
+      GROUP BY oi.product_id, DATE_TRUNC('day', o.created_at)
+      ORDER BY day ASC
+    `);
+    demandRes.rows.forEach((r) => {
+      const pid = Number(r.product_id);
+      if (!dbDemandMap.has(pid)) dbDemandMap.set(pid, []);
+      dbDemandMap.get(pid).push(Number(r.total_qty));
+    });
   } catch {
     products = demoStore.getProducts();
   }
@@ -110,9 +224,25 @@ async function getDemandForecasts({ productId = null, alpha = 0.3 } = {}) {
   }
 
   const results = products.map((prod) => {
-    const historical = HISTORICAL_DEMAND[prod.id] || [40, 45, 48, 52, 55, 60];
+    const realDbSeries = dbDemandMap.get(prod.id);
+    const historical = realDbSeries && realDbSeries.length > 0
+      ? realDbSeries
+      : (HISTORICAL_DEMAND[prod.id] || [40, 45, 48, 52, 55, 60]);
+
     const ses = calculateExponentialSmoothing(historical, alpha, 3);
     const sma = calculateMovingAverage(historical, 3, 3);
+    const horizon = calculateHorizonForecast(historical, alpha);
+
+    const inv = inventoryMap.get(prod.id) || {
+      on_hand: prod.id === 3 ? 40 : 100,
+      reserved: 0,
+      available: prod.id === 3 ? 40 : 100,
+    };
+    const shortageRisk = assessShortageRisk(
+      inv.available,
+      horizon.forecast_7d.point_forecast,
+      horizon.forecast_30d.point_forecast
+    );
 
     const latestActual = historical[historical.length - 1];
     const nextForecast = ses.forecast[0]?.point_forecast || latestActual;
@@ -128,6 +258,12 @@ async function getDemandForecasts({ productId = null, alpha = 0.3 } = {}) {
       trend,
       exponential_smoothing: ses,
       moving_average_forecast: sma,
+      forecast_7d: horizon.forecast_7d,
+      forecast_30d: horizon.forecast_30d,
+      shortage_risk: shortageRisk,
+      data_quality: horizon.data_quality,
+      confidence: horizon.confidence,
+      confidence_explanation: horizon.confidence_explanation,
     };
   });
 
@@ -433,6 +569,8 @@ module.exports = {
   getDemandForecasts,
   calculateExponentialSmoothing,
   calculateMovingAverage,
+  calculateHorizonForecast,
+  assessShortageRisk,
   getFairnessAndServiceMetrics,
   generateRunExplanation,
   getMultiWarehouseOverview,

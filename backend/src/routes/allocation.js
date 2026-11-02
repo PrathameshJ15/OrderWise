@@ -154,4 +154,49 @@ router.get(
   })
 );
 
+const {
+  checkReallocationOpportunities,
+  generateReallocationPreview,
+  applyControlledReallocation,
+} = require('../services/reallocationService');
+
+// GET /api/allocation/reallocation/opportunities (Admin only)
+router.get(
+  '/reallocation/opportunities',
+  asyncHandler(async (req, res) => {
+    const rawProductId = req.query.product_id || req.query.productId;
+    const productId = rawProductId ? Number(rawProductId) : null;
+    const data = await checkReallocationOpportunities({ productId });
+    return successResponse(res, data, 'Reallocation opportunities analyzed successfully');
+  })
+);
+
+// POST /api/allocation/reallocation/preview (Admin only)
+router.post(
+  '/reallocation/preview',
+  asyncHandler(async (req, res) => {
+    const productIds = req.body.product_ids ?? req.body.productIds ?? 'all';
+    const preview = await generateReallocationPreview({ productIds });
+    return successResponse(res, preview, 'Reallocation preview generated (No live modifications)');
+  })
+);
+
+// POST /api/allocation/reallocation/apply (Admin only)
+router.post(
+  '/reallocation/apply',
+  asyncHandler(async (req, res) => {
+    const { product_ids, productIds, reason, proposal_id, proposalId } = req.body;
+    const result = await applyControlledReallocation(
+      {
+        productIds: product_ids ?? productIds ?? 'all',
+        reason,
+        proposalId: proposal_id ?? proposalId,
+      },
+      req.user.userId,
+      { ip: req.ip, userAgent: req.headers['user-agent'] }
+    );
+    return successResponse(res, result, 'Controlled reallocation applied successfully', 200);
+  })
+);
+
 module.exports = router;

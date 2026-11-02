@@ -141,14 +141,14 @@ export default function Alerts() {
     switch (severity) {
       case 'critical':
         return (
-          <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-rose-500/15 text-rose-400 border border-rose-500/40 shadow-[0_0_8px_rgba(244,63,94,0.2)]">
+          <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-pill text-[11px] font-mono font-semibold uppercase bg-no/15 text-no border border-no/40">
             <AlertCircle className="w-3 h-3" />
             <span>Critical</span>
           </span>
         );
       case 'warning':
         return (
-          <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-amber-500/15 text-amber-400 border border-amber-500/40">
+          <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-pill text-[11px] font-mono font-semibold uppercase bg-wa/15 text-wa border border-wa/40">
             <AlertTriangle className="w-3 h-3" />
             <span>Warning</span>
           </span>
@@ -156,7 +156,7 @@ export default function Alerts() {
       case 'info':
       default:
         return (
-          <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-cyan-500/15 text-cyan-400 border border-cyan-500/40">
+          <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-pill text-[11px] font-mono font-semibold uppercase bg-s2 text-t2 border border-bd">
             <Info className="w-3 h-3" />
             <span>Info</span>
           </span>
@@ -168,20 +168,20 @@ export default function Alerts() {
     switch (status) {
       case 'active':
         return (
-          <span className="inline-flex items-center space-x-1 px-2 py-0.5 text-[10px] font-mono font-semibold uppercase bg-rose-500/10 text-rose-300 border border-rose-500/30">
+          <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-pill text-[11px] font-mono font-semibold uppercase bg-no/10 text-no border border-no/30">
             <span>Active</span>
           </span>
         );
       case 'acknowledged':
         return (
-          <span className="inline-flex items-center space-x-1 px-2 py-0.5 text-[10px] font-mono font-semibold uppercase bg-amber-500/10 text-amber-300 border border-amber-500/30">
+          <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-pill text-[11px] font-mono font-semibold uppercase bg-wa/10 text-wa border border-wa/30">
             <Check className="w-3 h-3" />
             <span>Acknowledged</span>
           </span>
         );
       case 'resolved':
         return (
-          <span className="inline-flex items-center space-x-1 px-2 py-0.5 text-[10px] font-mono font-semibold uppercase bg-emerald-500/10 text-emerald-300 border border-emerald-500/30">
+          <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-pill text-[11px] font-mono font-semibold uppercase bg-ok/10 text-ok border border-ok/30">
             <CheckCheck className="w-3 h-3" />
             <span>Resolved</span>
           </span>
@@ -192,41 +192,39 @@ export default function Alerts() {
   };
 
   return (
-    <div className="space-y-6 pb-12 font-mono">
+    <div className="space-y-6 pb-12 font-sans py-2">
       {/* Top Header */}
-      <div className="border border-arcade-border bg-arcade-neutral p-6 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-80 h-80 bg-rose-500/5 rounded-full blur-3xl pointer-events-none" />
-
+      <div className="card-base relative overflow-hidden">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
           <div>
-            <div className="inline-flex items-center space-x-2 text-xs text-rose-400 border border-rose-500/20 bg-rose-500/10 px-2.5 py-1 mb-2">
+            <div className="inline-flex items-center space-x-1.5 text-[12px] font-mono text-ac font-medium mb-1">
               <ShieldAlert className="w-3.5 h-3.5" />
               <span>PHASE 11 SUPPLY INTELLIGENCE</span>
             </div>
-            <h1 className="font-display text-3xl sm:text-4xl font-extrabold uppercase tracking-tight text-arcade-primary">
-              Supply Alerts <span className="text-arcade-accent">&amp;</span> Early Warnings
+            <h1 className="text-[34px] font-bold tracking-[-0.02em] text-white">
+              Supply Alerts <span className="text-ac">&amp;</span> Early Warnings
             </h1>
-            <p className="text-arcade-secondary text-xs sm:text-sm max-w-2xl mt-1 leading-relaxed">
+            <p className="text-[14px] text-t2 max-w-2xl mt-0.5 leading-relaxed">
               Proactive monitoring for low stock, potential stockouts, delayed supplier shipments, and orders at risk
               with deduplication and actionable mitigation guidance.
             </p>
           </div>
 
-          <div className="flex items-center space-x-2.5">
+          <div className="flex flex-wrap items-center gap-2.5">
             <button
               onClick={handleScan}
               disabled={scanning}
-              className="px-3.5 py-2 bg-arcade-accent text-arcade-surface font-bold text-xs uppercase tracking-wider hover:bg-opacity-90 flex items-center space-x-1.5 transition-all shadow-[0_0_12px_rgba(200,255,58,0.3)] disabled:opacity-50"
+              className="btn-primary flex items-center space-x-1.5 disabled:opacity-50"
             >
-              <RefreshCw className={`w-3.5 h-3.5 ${scanning ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`w-4 h-4 ${scanning ? 'animate-spin' : ''}`} />
               <span>{scanning ? 'Scanning...' : 'Scan Conditions Now'}</span>
             </button>
 
             <Link
               to="/admin/replenishment"
-              className="px-3 py-2 border border-arcade-border bg-arcade-surface text-arcade-primary font-bold text-xs uppercase tracking-wider hover:border-arcade-accent flex items-center space-x-1.5 transition-colors"
+              className="btn-secondary min-h-[44px] px-4 text-[14px] flex items-center space-x-1.5"
             >
-              <Truck className="w-3.5 h-3.5 text-arcade-accent" />
+              <Truck className="w-4 h-4 text-ac" />
               <span>Replenishment Lab</span>
             </Link>
           </div>
@@ -234,7 +232,7 @@ export default function Alerts() {
       </div>
 
       {error && (
-        <div className="border border-arcade-danger/30 bg-arcade-danger/10 p-4 text-arcade-danger text-xs flex items-center space-x-2">
+        <div className="p-4 rounded-card border border-no/40 bg-[#291313] text-no text-[13px] flex items-center space-x-2">
           <AlertCircle className="w-4 h-4 flex-shrink-0" />
           <span>{error}</span>
         </div>
@@ -244,117 +242,117 @@ export default function Alerts() {
       <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
         <button
           onClick={() => { setFilterStatus('ALL'); setFilterSeverity('critical'); }}
-          className="border border-rose-500/30 bg-rose-500/10 p-4 text-left hover:border-rose-500 transition-all"
+          className="p-4 rounded-card border border-[#5A4210] bg-[#2B2010] text-left hover:border-wa transition-all"
         >
-          <div className="text-[10px] uppercase tracking-wider text-rose-400 flex items-center justify-between">
+          <div className="text-[11px] font-mono text-wa flex items-center justify-between">
             <span>Critical Unresolved</span>
             <AlertCircle className="w-3.5 h-3.5" />
           </div>
-          <div className="text-2xl font-display font-black text-rose-400 mt-1">
+          <div className="text-2xl font-mono font-bold text-wa mt-1">
             {summary.critical_unresolved || 0}
           </div>
-          <div className="text-[10px] text-arcade-secondary mt-1">Requires urgent action</div>
+          <div className="text-[11px] font-mono text-t2 mt-1">Requires urgent action</div>
         </button>
 
         <button
           onClick={() => { setFilterStatus('active'); setFilterSeverity('ALL'); }}
-          className={`border p-4 text-left transition-all ${
+          className={`p-4 rounded-card border text-left transition-all ${
             filterStatus === 'active' && filterSeverity === 'ALL'
-              ? 'border-arcade-accent bg-arcade-accent/10'
-              : 'border-arcade-border bg-arcade-neutral hover:border-arcade-secondary'
+              ? 'border-ac bg-ac/10'
+              : 'border-bd bg-s hover:border-white'
           }`}
         >
-          <div className="text-[10px] uppercase tracking-wider text-arcade-secondary flex items-center justify-between">
+          <div className="text-[11px] font-mono text-t2 flex items-center justify-between">
             <span>Active Alerts</span>
-            <AlertTriangle className="w-3.5 h-3.5 text-arcade-accent" />
+            <AlertTriangle className="w-3.5 h-3.5 text-ac" />
           </div>
-          <div className="text-2xl font-display font-black text-arcade-primary mt-1">
+          <div className="text-2xl font-mono font-bold text-white mt-1">
             {summary.active_count || 0}
           </div>
-          <div className="text-[10px] text-arcade-secondary mt-1">Pending review</div>
+          <div className="text-[11px] font-mono text-t2 mt-1">Pending review</div>
         </button>
 
         <button
           onClick={() => { setFilterStatus('acknowledged'); setFilterSeverity('ALL'); }}
-          className={`border p-4 text-left transition-all ${
+          className={`p-4 rounded-card border text-left transition-all ${
             filterStatus === 'acknowledged'
-              ? 'border-amber-500 bg-amber-500/10'
-              : 'border-arcade-border bg-arcade-neutral hover:border-amber-500/50'
+              ? 'border-wa bg-wa/10'
+              : 'border-bd bg-s hover:border-wa/50'
           }`}
         >
-          <div className="text-[10px] uppercase tracking-wider text-amber-400 flex items-center justify-between">
+          <div className="text-[11px] font-mono text-wa flex items-center justify-between">
             <span>Acknowledged</span>
             <Check className="w-3.5 h-3.5" />
           </div>
-          <div className="text-2xl font-display font-black text-amber-400 mt-1">
+          <div className="text-2xl font-mono font-bold text-wa mt-1">
             {summary.acknowledged_count || 0}
           </div>
-          <div className="text-[10px] text-arcade-secondary mt-1">Under investigation</div>
+          <div className="text-[11px] font-mono text-t2 mt-1">Under investigation</div>
         </button>
 
         <button
           onClick={() => { setFilterStatus('resolved'); setFilterSeverity('ALL'); }}
-          className={`border p-4 text-left transition-all ${
+          className={`p-4 rounded-card border text-left transition-all ${
             filterStatus === 'resolved'
-              ? 'border-emerald-500 bg-emerald-500/10'
-              : 'border-arcade-border bg-arcade-neutral hover:border-emerald-500/50'
+              ? 'border-ok bg-ok/10'
+              : 'border-bd bg-s hover:border-ok/50'
           }`}
         >
-          <div className="text-[10px] uppercase tracking-wider text-emerald-400 flex items-center justify-between">
+          <div className="text-[11px] font-mono text-ok flex items-center justify-between">
             <span>Resolved</span>
             <CheckCheck className="w-3.5 h-3.5" />
           </div>
-          <div className="text-2xl font-display font-black text-emerald-400 mt-1">
+          <div className="text-2xl font-mono font-bold text-ok mt-1">
             {summary.resolved_count || 0}
           </div>
-          <div className="text-[10px] text-arcade-secondary mt-1">Conditions cleared</div>
+          <div className="text-[11px] font-mono text-t2 mt-1">Conditions cleared</div>
         </button>
 
         <button
           onClick={() => { setFilterStatus('ALL'); setFilterSeverity('ALL'); setFilterType('ALL'); }}
-          className={`border p-4 text-left transition-all ${
+          className={`p-4 rounded-card border text-left transition-all ${
             filterStatus === 'ALL' && filterSeverity === 'ALL'
-              ? 'border-cyan-500 bg-cyan-500/10'
-              : 'border-arcade-border bg-arcade-neutral hover:border-cyan-500/50'
+              ? 'border-bd bg-s2'
+              : 'border-bd bg-s hover:border-bd'
           }`}
         >
-          <div className="text-[10px] uppercase tracking-wider text-arcade-secondary flex items-center justify-between">
+          <div className="text-[11px] font-mono text-t2 flex items-center justify-between">
             <span>Total Logged</span>
-            <Layers className="w-3.5 h-3.5 text-cyan-400" />
+            <Layers className="w-3.5 h-3.5 text-t2" />
           </div>
-          <div className="text-2xl font-display font-black text-arcade-primary mt-1">
+          <div className="text-2xl font-mono font-bold text-white mt-1">
             {summary.total || 0}
           </div>
-          <div className="text-[10px] text-arcade-secondary mt-1">History records</div>
+          <div className="text-[11px] font-mono text-t2 mt-1">History records</div>
         </button>
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 bg-arcade-neutral border border-arcade-border p-3">
-        <div className="flex items-center space-x-2 flex-1">
-          <Search className="w-4 h-4 text-arcade-secondary ml-1" />
+      <div className="card-base p-3 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+        <div className="flex items-center space-x-2 flex-1 rounded-pill bg-s2 border border-bd px-4 py-2">
+          <Search className="w-4 h-4 text-t2 shrink-0" />
           <input
             type="text"
             placeholder="Search alerts by title, product SKU, action, or cause..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-transparent border-none text-xs text-arcade-primary placeholder-arcade-secondary outline-none"
+            className="w-full bg-transparent border-none text-[14px] text-white placeholder-t2/60 outline-none"
           />
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 text-xs">
+        <div className="flex flex-wrap items-center gap-2">
           <div className="flex items-center space-x-1.5">
-            <Filter className="w-3.5 h-3.5 text-arcade-secondary" />
+            <Filter className="w-4 h-4 text-t2" />
             <select
               aria-label="Filter by status"
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="bg-arcade-surface border border-arcade-border px-2.5 py-1 text-xs text-arcade-primary outline-none focus:border-arcade-accent"
+              className="bg-s2 rounded-pill border border-bd px-4 py-2 text-[14px] text-white outline-none focus:border-ac"
             >
-              <option value="ALL">All Statuses</option>
-              <option value="active">Active Only</option>
-              <option value="acknowledged">Acknowledged Only</option>
-              <option value="resolved">Resolved Only</option>
+              <option value="ALL" className="bg-s text-white">All Statuses</option>
+              <option value="active" className="bg-s text-white">Active Only</option>
+              <option value="acknowledged" className="bg-s text-white">Acknowledged Only</option>
+              <option value="resolved" className="bg-s text-white">Resolved Only</option>
             </select>
           </div>
 
@@ -362,27 +360,27 @@ export default function Alerts() {
             aria-label="Filter by severity"
             value={filterSeverity}
             onChange={(e) => setFilterSeverity(e.target.value)}
-            className="bg-arcade-surface border border-arcade-border px-2.5 py-1 text-xs text-arcade-primary outline-none focus:border-arcade-accent"
+            className="bg-s2 rounded-pill border border-bd px-4 py-2 text-[14px] text-white outline-none focus:border-ac"
           >
-            <option value="ALL">All Severities</option>
-            <option value="critical">Critical</option>
-            <option value="warning">Warning</option>
-            <option value="info">Info</option>
+            <option value="ALL" className="bg-s text-white">All Severities</option>
+            <option value="critical" className="bg-s text-white">Critical</option>
+            <option value="warning" className="bg-s text-white">Warning</option>
+            <option value="info" className="bg-s text-white">Info</option>
           </select>
 
           <select
             aria-label="Filter by alert type"
             value={filterType}
             onChange={(e) => setFilterType(e.target.value)}
-            className="bg-arcade-surface border border-arcade-border px-2.5 py-1 text-xs text-arcade-primary outline-none focus:border-arcade-accent"
+            className="bg-s2 rounded-pill border border-bd px-4 py-2 text-[14px] text-white outline-none focus:border-ac"
           >
-            <option value="ALL">All Types</option>
-            <option value="low_stock">Low Stock</option>
-            <option value="potential_stockout">Potential Stockout</option>
-            <option value="below_reorder_point">Below Reorder Point</option>
-            <option value="order_at_risk">Order At Risk</option>
-            <option value="supplier_delay">Supplier Delay</option>
-            <option value="allocation_change_competing">Allocation Shift</option>
+            <option value="ALL" className="bg-s text-white">All Types</option>
+            <option value="low_stock" className="bg-s text-white">Low Stock</option>
+            <option value="potential_stockout" className="bg-s text-white">Potential Stockout</option>
+            <option value="below_reorder_point" className="bg-s text-white">Below Reorder Point</option>
+            <option value="order_at_risk" className="bg-s text-white">Order At Risk</option>
+            <option value="supplier_delay" className="bg-s text-white">Supplier Delay</option>
+            <option value="allocation_change_competing" className="bg-s text-white">Allocation Shift</option>
           </select>
         </div>
       </div>
@@ -390,15 +388,15 @@ export default function Alerts() {
       {/* Alerts Stream List */}
       <div className="space-y-3">
         {loading ? (
-          <div className="border border-arcade-border bg-arcade-neutral p-12 text-center text-arcade-secondary text-xs">
-            <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2 text-arcade-accent" />
-            <span>Scanning supply telemetry &amp; inventory state...</span>
+          <div className="card-base p-12 text-center text-t2">
+            <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2 text-ac" />
+            <span className="font-mono text-[12px]">Scanning supply telemetry &amp; inventory state...</span>
           </div>
         ) : filteredAlerts.length === 0 ? (
-          <div className="border border-arcade-border bg-arcade-neutral p-12 text-center text-arcade-secondary text-xs">
-            <CheckCircle2 className="w-6 h-6 mx-auto mb-2 text-emerald-400" />
-            <p className="font-bold text-arcade-primary uppercase tracking-wide">No active supply alerts matching filter</p>
-            <p className="mt-1 text-arcade-secondary">Inventory positions and orders currently meet configured safety parameters.</p>
+          <div className="card-base p-12 text-center text-t2">
+            <CheckCircle2 className="w-6 h-6 mx-auto mb-2 text-ok" />
+            <p className="font-bold text-white">No active supply alerts matching filter</p>
+            <p className="mt-1 text-[14px] text-t2">Inventory positions and orders currently meet configured safety parameters.</p>
           </div>
         ) : (
           filteredAlerts.map((alert) => {
@@ -409,70 +407,70 @@ export default function Alerts() {
             return (
               <div
                 key={`alert-${alert.id}`}
-                className={`border p-4.5 transition-all ${
+                className={`card-base transition-all ${
                   isResolved
-                    ? 'border-arcade-border/40 bg-arcade-neutral/50 opacity-70'
+                    ? 'opacity-60 border-bd/40'
                     : isCritical
-                    ? 'border-rose-500/60 bg-arcade-neutral shadow-[0_0_15px_rgba(244,63,94,0.08)]'
-                    : 'border-arcade-border bg-arcade-neutral hover:border-arcade-secondary'
+                    ? 'border-no/50 bg-[#161616]'
+                    : ''
                 }`}
               >
                 <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
-                  <div className="space-y-1.5 flex-1">
+                  <div className="space-y-2 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
                       {getSeverityBadge(alert.severity)}
                       {getStatusBadge(alert.status)}
-                      <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 border border-arcade-border bg-arcade-surface text-arcade-secondary">
+                      <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-pill border border-bd bg-s2 text-t2">
                         {alert.alert_type.replace(/_/g, ' ')}
                       </span>
-                      <span className="text-[10px] text-arcade-secondary flex items-center space-x-1">
-                        <Clock className="w-3 h-3" />
+                      <span className="text-[12px] font-mono text-t2 flex items-center space-x-1">
+                        <Clock className="w-3.5 h-3.5" />
                         <span>{new Date(alert.created_at).toLocaleString()}</span>
                       </span>
                     </div>
 
-                    <h3 className="font-display font-bold text-base text-arcade-primary mt-1">
+                    <h3 className="text-base font-bold text-white mt-1">
                       {alert.title}
                     </h3>
 
-                    <p className="text-xs text-arcade-secondary leading-relaxed">
+                    <p className="text-[14px] text-t2 leading-relaxed">
                       {alert.description}
                     </p>
 
                     {/* Metadata Chips */}
-                    <div className="flex flex-wrap items-center gap-2 text-[10px] pt-1">
+                    <div className="flex flex-wrap items-center gap-2 text-[12px] pt-1">
                       {alert.product_name && (
-                        <span className="px-2 py-0.5 border border-cyan-500/30 bg-cyan-500/10 text-cyan-400 flex items-center space-x-1">
-                          <Package className="w-3 h-3" />
+                        <span className="px-3 py-0.5 rounded-pill border border-bd bg-s2 text-white font-mono flex items-center space-x-1.5">
+                          <Package className="w-3.5 h-3.5 text-ac" />
                           <span>{alert.product_name} ({alert.sku})</span>
                         </span>
                       )}
                       {alert.order_id && (
-                        <span className="px-2 py-0.5 border border-arcade-border bg-arcade-surface text-arcade-primary">
+                        <span className="px-3 py-0.5 rounded-pill border border-bd bg-s2 text-white font-mono">
                           Order #{alert.order_id} {alert.customer_name ? `(${alert.customer_name})` : ''}
                         </span>
                       )}
                       {alert.po_number && (
-                        <span className="px-2 py-0.5 border border-purple-500/30 bg-purple-500/10 text-purple-400 flex items-center space-x-1">
-                          <Truck className="w-3 h-3" />
+                        <span className="px-3 py-0.5 rounded-pill border border-bd bg-s2 text-white font-mono flex items-center space-x-1.5">
+                          <Truck className="w-3.5 h-3.5 text-wa" />
                           <span>PO #{alert.po_number} ({alert.supplier_name})</span>
                         </span>
                       )}
                       {alert.metadata?.inventoryPosition !== undefined && (
-                        <span className="px-2 py-0.5 border border-arcade-border bg-arcade-surface text-arcade-secondary">
-                          Position: <strong className="text-arcade-primary">{alert.metadata.inventoryPosition}</strong>
+                        <span className="px-3 py-0.5 rounded-pill border border-bd bg-s2 text-t2 font-mono">
+                          Position: <strong className="text-white">{alert.metadata.inventoryPosition}</strong>
                         </span>
                       )}
                     </div>
 
                     {/* Recommended Action Box */}
-                    <div className="mt-3 p-3 border border-arcade-accent/30 bg-arcade-accent/5 flex items-start space-x-2">
-                      <ArrowRight className="w-4 h-4 text-arcade-accent flex-shrink-0 mt-0.5" />
-                      <div className="text-xs">
-                        <span className="font-bold text-arcade-accent uppercase tracking-wider text-[10px] block mb-0.5">
+                    <div className="mt-3 p-3.5 rounded-card border border-bd bg-s2 flex items-start space-x-2.5">
+                      <ArrowRight className="w-4 h-4 text-ac flex-shrink-0 mt-0.5" />
+                      <div className="text-[13px]">
+                        <span className="font-mono text-ac text-[11px] block mb-0.5">
                           Recommended Action:
                         </span>
-                        <span className="text-arcade-primary">{alert.recommended_action}</span>
+                        <span className="text-white">{alert.recommended_action}</span>
                       </div>
                     </div>
                   </div>
@@ -485,18 +483,18 @@ export default function Alerts() {
                           <button
                             onClick={() => handleAcknowledge(alert.id)}
                             disabled={actionLoading[alert.id]}
-                            className="px-3 py-1.5 border border-amber-500/50 bg-amber-500/15 text-amber-300 font-semibold text-xs uppercase tracking-wider hover:bg-amber-500/25 transition-colors disabled:opacity-50 flex items-center space-x-1"
+                            className="btn-header inline-flex items-center space-x-1.5 px-3.5 py-1.5 text-[12px] font-bold text-wa border-wa/40 hover:bg-wa/10"
                           >
-                            <Check className="w-3 h-3" />
+                            <Check className="w-3.5 h-3.5" />
                             <span>Acknowledge</span>
                           </button>
                         )}
                         <button
                           onClick={() => handleResolve(alert.id)}
                           disabled={actionLoading[alert.id]}
-                          className="px-3 py-1.5 border border-emerald-500/50 bg-emerald-500/15 text-emerald-300 font-semibold text-xs uppercase tracking-wider hover:bg-emerald-500/25 transition-colors disabled:opacity-50 flex items-center space-x-1"
+                          className="btn-header inline-flex items-center space-x-1.5 px-3.5 py-1.5 text-[12px] font-bold text-ok border-ok/40 hover:bg-ok/10"
                         >
-                          <CheckCheck className="w-3 h-3" />
+                          <CheckCheck className="w-3.5 h-3.5" />
                           <span>Resolve</span>
                         </button>
                       </>
@@ -505,10 +503,10 @@ export default function Alerts() {
                     {alert.product_id && (
                       <Link
                         to="/admin/replenishment"
-                        className="text-[11px] text-arcade-secondary hover:text-arcade-accent underline flex items-center space-x-1 mt-1"
+                        className="text-[12px] text-t2 hover:text-white underline flex items-center space-x-1 mt-1"
                       >
                         <span>Replenish</span>
-                        <ExternalLink className="w-2.5 h-2.5" />
+                        <ExternalLink className="w-3 h-3" />
                       </Link>
                     )}
                   </div>
@@ -516,15 +514,15 @@ export default function Alerts() {
 
                 {/* Audit trail footer */}
                 {(alert.acknowledged_at || alert.resolved_at) && (
-                  <div className="mt-3 pt-2 border-t border-arcade-border/40 text-[10px] text-arcade-secondary flex flex-wrap gap-4">
+                  <div className="mt-3 pt-2.5 border-t border-bd/40 text-[12px] font-mono text-t2 flex flex-wrap gap-4">
                     {alert.acknowledged_at && (
                       <span>
-                        Acknowledged by <strong className="text-arcade-primary">{alert.acknowledged_by_name || 'Admin'}</strong> on {new Date(alert.acknowledged_at).toLocaleTimeString()}
+                        Acknowledged by <strong className="text-white">{alert.acknowledged_by_name || 'Admin'}</strong> on {new Date(alert.acknowledged_at).toLocaleTimeString()}
                       </span>
                     )}
                     {alert.resolved_at && (
                       <span>
-                        Resolved by <strong className="text-arcade-primary">{alert.resolved_by_name || 'Admin'}</strong> on {new Date(alert.resolved_at).toLocaleTimeString()}
+                        Resolved by <strong className="text-white">{alert.resolved_by_name || 'Admin'}</strong> on {new Date(alert.resolved_at).toLocaleTimeString()}
                       </span>
                     )}
                   </div>

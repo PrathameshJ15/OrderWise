@@ -11,6 +11,9 @@ import AdminLayout from './components/layout/AdminLayout';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Pricing from './pages/Pricing';
+import Solutions from './pages/Solutions';
+import Security from './pages/Security';
 import NotFound from './pages/NotFound';
 
 // Customer Pages
@@ -46,6 +49,9 @@ function App() {
               <Route path="/home" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/pricing" element={<Pricing />} />
+              <Route path="/solutions" element={<Solutions />} />
+              <Route path="/security" element={<Security />} />
 
               {/* Customer Portal Protected Routes */}
               <Route

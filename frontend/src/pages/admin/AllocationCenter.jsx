@@ -33,8 +33,25 @@ export default function AllocationCenter() {
   const [notes, setNotes] = useState('');
   const [executing, setExecuting] = useState(false);
 
+  // Controlled Reallocation State (Phase 19)
+  const [opportunities, setOpportunities] = useState([]);
+  const [reallocationModalOpen, setReallocationModalOpen] = useState(false);
+  const [reallocationPreview, setReallocationPreview] = useState(null);
+  const [reallocationLoading, setReallocationLoading] = useState(false);
+  const [applyingReallocation, setApplyingReallocation] = useState(false);
+  const [reallocationSuccessMsg, setReallocationSuccessMsg] = useState(null);
+
   // Results Filter
   const [statusFilter, setStatusFilter] = useState('all');
+
+  const fetchOpportunities = useCallback(async () => {
+    try {
+      const res = await apiClient.get('/allocation/reallocation/opportunities');
+      setOpportunities(res.data?.data?.opportunities || res.data?.opportunities || []);
+    } catch {
+      // Non-fatal
+    }
+  }, []);
 
   const fetchCatalogAndHistory = useCallback(async () => {
     setLoadingHistory(true);
@@ -51,12 +68,13 @@ export default function AllocationCenter() {
       if (runList.length > 0) {
         loadRunDetails(runList[0].id);
       }
+      fetchOpportunities();
     } catch (err) {
       setError(err?.error?.message || err?.message || 'Failed to initialize Allocation Center.');
     } finally {
       setLoadingHistory(false);
     }
-  }, []);
+  }, [fetchOpportunities]);
 
   useEffect(() => {
     fetchCatalogAndHistory();
@@ -135,6 +153,43 @@ export default function AllocationCenter() {
     document.body.removeChild(link);
   };
 
+  const handlePreviewReallocation = async () => {
+    setReallocationLoading(true);
+    setError(null);
+    try {
+      const res = await apiClient.post('/allocation/reallocation/preview', { product_ids: 'all' });
+      setReallocationPreview(res.data?.data || res.data);
+      setReallocationModalOpen(true);
+    } catch (err) {
+      setError(err?.error?.message || err?.message || 'Failed to generate reallocation preview.');
+    } finally {
+      setReallocationLoading(false);
+    }
+  };
+
+  const handleApplyReallocation = async () => {
+    if (!reallocationPreview) return;
+    setApplyingReallocation(true);
+    setError(null);
+    try {
+      const res = await apiClient.post('/allocation/reallocation/apply', {
+        product_ids: 'all',
+        proposal_id: reallocationPreview.proposal_id,
+        reason: 'Approved controlled automated reallocation following stock availability check',
+      });
+      setReallocationSuccessMsg('Controlled reallocation approved and committed to live inventory!');
+      setReallocationModalOpen(false);
+      await fetchCatalogAndHistory();
+      if (res.data?.run?.id) {
+        await loadRunDetails(res.data.run.id);
+      }
+    } catch (err) {
+      setError(err?.error?.message || err?.message || 'Failed to apply controlled reallocation.');
+    } finally {
+      setApplyingReallocation(false);
+    }
+  };
+
   const filteredResults = runResults.filter((r) => {
     if (statusFilter === 'all') return true;
     return r.status === statusFilter;
@@ -181,6 +236,48 @@ export default function AllocationCenter() {
             <span>Run Engine</span>
           </button>
         </div>
+      </div>
+
+      {reallocationSuccessMsg && (
+        <div className="p-4 rounded-card border border-ok/40 bg-[#102416] text-ok text-[13px] flex items-center justify-between">
+          <span>{reallocationSuccessMsg}</span>
+          <button onClick={() => setReallocationSuccessMsg(null)} className="underline hover:text-white text-[12px]">
+            Dismiss
+          </button>
+        </div>
+      )}
+
+      {/* Controlled Reallocation Opportunity Banner (Phase 19) */}
+      <div className="card-base p-4 border border-ac/40 bg-s2/40 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex items-center space-x-3">
+          <div className="w-9 h-9 rounded-full bg-ac/15 text-ac flex items-center justify-center shrink-0">
+            <Sparkles className="w-5 h-5" />
+          </div>
+          <div>
+            <div className="flex items-center space-x-2">
+              <span className="text-[14px] font-bold text-white">Controlled Automated Reallocation</span>
+              <span className="text-[11px] font-mono px-2 py-0.5 rounded-pill bg-ac/20 text-ac border border-ac/30">
+                Phase 19
+              </span>
+            </div>
+            <p className="text-[13px] text-t2 mt-0.5">
+              Inspect waiting deferred/pending orders against current physical inventory without mutating live state.
+            </p>
+          </div>
+        </div>
+
+        <button
+          onClick={handlePreviewReallocation}
+          disabled={reallocationLoading}
+          className="btn-secondary min-h-[40px] px-5 text-[13px] whitespace-nowrap self-start md:self-auto flex items-center space-x-2"
+        >
+          {reallocationLoading ? (
+            <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+          ) : (
+            <Sparkles className="w-3.5 h-3.5 text-ac" />
+          )}
+          <span>Preview Controlled Reallocation</span>
+        </button>
       </div>
 
       {error && (
@@ -509,6 +606,101 @@ export default function AllocationCenter() {
               {executing ? 'Executing Run...' : dryRun ? 'Run Dry Simulation' : 'Execute Allocation'}
             </button>
           </div>
+        </div>
+      </Modal>
+
+      {/* Controlled Reallocation Preview Modal (Phase 19) */}
+      <Modal
+        isOpen={reallocationModalOpen}
+        onClose={() => setReallocationModalOpen(false)}
+        title="Controlled Reallocation Simulation Preview"
+      >
+        <div className="space-y-4">
+          <div className="p-3.5 rounded-card bg-[#2B2010] border border-[#5A4210] text-wa text-[13px] space-y-1">
+            <div className="font-semibold flex items-center space-x-1.5">
+              <AlertTriangle className="w-4 h-4 text-wa shrink-0" />
+              <span>AWAITING AUTHORIZED HUMAN APPROVAL</span>
+            </div>
+            <p className="text-[12px] text-wa/90">
+              Live database has NOT been modified. This simulation computes deterministic fulfillment outcomes for eligible waiting orders. Explicit approval is required to commit.
+            </p>
+          </div>
+
+          {reallocationPreview && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+                <div className="p-3 rounded-card bg-s2 border border-bd">
+                  <div className="text-[11px] font-mono text-t2">Items Evaluated</div>
+                  <div className="text-[20px] font-bold text-white mt-1">
+                    {reallocationPreview.summary?.total_order_items_considered || 0}
+                  </div>
+                </div>
+                <div className="p-3 rounded-card bg-s2 border border-bd">
+                  <div className="text-[11px] font-mono text-ok">Proposed Fulfilled</div>
+                  <div className="text-[20px] font-bold text-ok mt-1">
+                    {reallocationPreview.summary?.proposed_fulfilled || 0}
+                  </div>
+                </div>
+                <div className="p-3 rounded-card bg-s2 border border-bd">
+                  <div className="text-[11px] font-mono text-wa">Proposed Partial</div>
+                  <div className="text-[20px] font-bold text-wa mt-1">
+                    {reallocationPreview.summary?.proposed_partially_fulfilled || 0}
+                  </div>
+                </div>
+                <div className="p-3 rounded-card bg-s2 border border-bd">
+                  <div className="text-[11px] font-mono text-no">Still Deferred</div>
+                  <div className="text-[20px] font-bold text-no mt-1">
+                    {reallocationPreview.summary?.proposed_deferred || 0}
+                  </div>
+                </div>
+              </div>
+
+              <div className="border border-bd rounded-card overflow-hidden">
+                <div className="p-3 bg-s2 border-b border-bd text-[13px] font-semibold text-white">
+                  Affected Customer Orders & Proposed Allocations
+                </div>
+                <div className="max-h-60 overflow-y-auto divide-y divide-bd text-[12px]">
+                  {reallocationPreview.affected_orders?.map((ord, idx) => (
+                    <div key={idx} className="p-3 flex items-center justify-between gap-3">
+                      <div>
+                        <div className="font-semibold text-white">Order #{ord.order_id} • {ord.customer_name || 'Customer'}</div>
+                        <div className="text-t2 text-[11px] font-mono">{ord.sku} - {ord.product_name}</div>
+                      </div>
+                      <div className="text-right">
+                        <StatusPill status={ord.proposed_status} />
+                        <div className="text-[11px] font-mono text-t2 mt-0.5">
+                          Allocating: {ord.proposed_allocated_quantity} of {ord.requested_quantity}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between pt-2 border-t border-bd">
+                <button
+                  type="button"
+                  onClick={() => setReallocationModalOpen(false)}
+                  className="btn-secondary px-5 py-2.5 text-[13px]"
+                >
+                  Discard Preview
+                </button>
+                <button
+                  type="button"
+                  onClick={handleApplyReallocation}
+                  disabled={applyingReallocation}
+                  className="btn-primary px-6 py-2.5 text-[13px] flex items-center space-x-2"
+                >
+                  {applyingReallocation ? (
+                    <RefreshCw className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Sparkles className="w-4 h-4" />
+                  )}
+                  <span>Approve & Apply Live Reallocation</span>
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </Modal>
     </div>

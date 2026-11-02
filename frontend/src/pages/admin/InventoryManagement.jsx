@@ -118,18 +118,18 @@ export default function InventoryManagement() {
   });
 
   return (
-    <div className="space-y-6 font-mono py-4">
+    <div className="space-y-6 font-sans py-2">
       {/* Header */}
-      <div className="border border-arcade-border bg-arcade-neutral p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="card-base flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center space-x-1.5 text-xs text-arcade-accent bg-arcade-accent/10 border border-arcade-accent/20 px-2 py-0.5 mb-2">
-            <Database className="h-3 w-3" />
+          <div className="inline-flex items-center space-x-1.5 text-[12px] font-mono text-ac font-medium mb-1">
+            <Database className="h-3.5 w-3.5" />
             <span>WAREHOUSE INVENTORY &amp; LEDGER</span>
           </div>
-          <h1 className="font-display text-3xl font-extrabold uppercase text-arcade-primary">
+          <h1 className="text-[34px] font-bold tracking-[-0.02em] text-white">
             Inventory Management
           </h1>
-          <p className="text-xs text-arcade-secondary mt-1">
+          <p className="text-[14px] text-t2 mt-0.5">
             Track on-hand, reserved, and available stock levels with optimistic concurrency locks.
           </p>
         </div>
@@ -137,31 +137,31 @@ export default function InventoryManagement() {
         <div className="flex flex-wrap items-center gap-3">
           <Link
             to="/admin/allocation"
-            className="flex items-center space-x-1.5 px-3 py-2 bg-arcade-accent text-arcade-surface font-bold text-xs uppercase tracking-wider hover:opacity-90 transition-opacity shadow-[0_0_10px_rgba(200,255,58,0.2)]"
+            className="btn-primary flex items-center space-x-1.5"
           >
-            <Cpu className="h-3.5 w-3.5" />
+            <Cpu className="h-4 w-4" />
             <span>Allocation Center &rarr;</span>
           </Link>
-          <div className="flex items-center space-x-2 border border-arcade-border bg-arcade-surface px-3 py-2 text-xs w-full md:w-64">
-            <Search className="h-3.5 w-3.5 text-arcade-secondary" />
+          <div className="flex items-center space-x-2 rounded-pill bg-s2 border border-bd px-4 py-2 text-[14px] w-full md:w-64">
+            <Search className="h-4 w-4 text-t2 shrink-0" />
             <input
               type="text"
               placeholder="Search SKU or name..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-transparent text-arcade-primary focus:outline-none text-xs w-full placeholder-arcade-secondary/60"
+              className="bg-transparent text-white focus:outline-none text-[14px] w-full placeholder-t2/60"
             />
           </div>
         </div>
       </div>
 
       {error && (
-        <div className="p-4 border border-arcade-danger/40 bg-arcade-danger/10 text-arcade-danger text-xs flex items-center justify-between">
+        <div className="p-4 rounded-card border border-no/40 bg-[#291313] text-no text-[13px] flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <AlertCircle className="h-4 w-4 shrink-0" />
             <span>{error}</span>
           </div>
-          <button onClick={() => setError(null)} className="underline hover:text-white text-[11px]">
+          <button onClick={() => setError(null)} className="underline hover:text-white text-[12px]">
             Dismiss
           </button>
         </div>
@@ -169,139 +169,135 @@ export default function InventoryManagement() {
 
       {/* Inventory Table */}
       {loading ? (
-        <div className="border border-arcade-border bg-arcade-neutral p-12 text-center text-arcade-secondary flex flex-col items-center justify-center space-y-3">
-          <RefreshCw className="h-6 w-6 animate-spin text-arcade-accent" />
-          <span className="text-xs uppercase tracking-wider">Loading inventory balances...</span>
+        <div className="card-base p-12 text-center text-t2 flex flex-col items-center justify-center space-y-3">
+          <RefreshCw className="h-6 w-6 animate-spin text-ac" />
+          <span className="text-[12px] font-mono tracking-wider">Loading inventory balances...</span>
         </div>
       ) : filteredInventory.length === 0 ? (
-        <div className="border border-arcade-border bg-arcade-neutral p-12 text-center text-arcade-secondary space-y-3">
-          <Database className="h-8 w-8 text-arcade-secondary mx-auto opacity-50" />
-          <h3 className="font-display text-base uppercase text-arcade-primary font-bold">
+        <div className="card-base p-12 text-center text-t2 space-y-3">
+          <Database className="h-8 w-8 text-t2 mx-auto opacity-40" />
+          <h3 className="text-base font-bold text-white">
             No Inventory Records
           </h3>
-          <p className="text-xs">No warehouse stock items match your search.</p>
+          <p className="text-[14px]">No warehouse stock items match your search.</p>
         </div>
       ) : (
-        <div className="border border-arcade-border bg-arcade-neutral overflow-x-auto">
-          <table className="w-full text-left text-xs border-collapse">
-            <thead>
-              <tr className="border-b border-arcade-border bg-arcade-surface/60 text-arcade-secondary uppercase text-[10px] tracking-wider">
-                <th className="py-3 px-4">Product / SKU</th>
-                <th className="py-3 px-3 text-right">Physical On Hand</th>
-                <th className="py-3 px-3 text-right">Reserved Stock</th>
-                <th className="py-3 px-3 text-right">Available Free</th>
-                <th className="py-3 px-3 text-right">Safety Buffer</th>
-                <th className="py-3 px-3 text-right">Reorder Point</th>
-                <th className="py-3 px-3 text-center">Version Lock</th>
-                <th className="py-3 px-3 text-center">Status</th>
-                <th className="py-3 px-4 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-arcade-border/50">
-              {filteredInventory.map((item) => {
-                const available = item.available_quantity ?? (item.on_hand_quantity - item.reserved_quantity);
-                const isSafetyBreached = available <= item.safety_stock;
-                const isReorderBreached = available <= item.reorder_point;
+        <div className="card-base p-0 overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-[14px] border-collapse">
+              <thead>
+                <tr className="border-b border-bd bg-s2/60 text-t2 text-[12px] font-mono">
+                  <th className="py-3.5 px-4">Product / SKU</th>
+                  <th className="py-3.5 px-3 text-right">Physical On Hand</th>
+                  <th className="py-3.5 px-3 text-right">Reserved Stock</th>
+                  <th className="py-3.5 px-3 text-right">Available Free</th>
+                  <th className="py-3.5 px-3 text-right">Safety Buffer</th>
+                  <th className="py-3.5 px-3 text-right">Reorder Point</th>
+                  <th className="py-3.5 px-3 text-center">Version Lock</th>
+                  <th className="py-3.5 px-3 text-center">Status</th>
+                  <th className="py-3.5 px-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-bd/50">
+                {filteredInventory.map((item) => {
+                  const available = item.available_quantity ?? (item.on_hand_quantity - item.reserved_quantity);
+                  const isSafetyBreached = available <= item.safety_stock;
+                  const isReorderBreached = available <= item.reorder_point;
 
-                return (
-                  <tr
-                    key={item.product_id}
-                    className={`hover:bg-arcade-surface/50 transition-colors ${
-                      isSafetyBreached
-                        ? 'bg-arcade-danger/[0.02]'
-                        : isReorderBreached
-                        ? 'bg-arcade-warning/[0.02]'
-                        : ''
-                    }`}
-                  >
-                    <td className="py-3.5 px-4">
-                      <div className="font-bold text-arcade-primary">{item.product_name}</div>
-                      <div className="text-[10px] text-arcade-accent font-bold mt-0.5">
-                        {item.sku}
-                      </div>
-                    </td>
+                  return (
+                    <tr
+                      key={item.product_id}
+                      className="hover:bg-s2/40 transition-colors"
+                    >
+                      <td className="py-3.5 px-4">
+                        <div className="font-bold text-white">{item.product_name}</div>
+                        <div className="text-[12px] font-mono text-t2 mt-0.5">
+                          {item.sku}
+                        </div>
+                      </td>
 
-                    <td className="py-3.5 px-3 text-right font-semibold text-arcade-primary">
-                      {item.on_hand_quantity}
-                    </td>
+                      <td className="py-3.5 px-3 text-right font-mono font-bold text-white">
+                        {item.on_hand_quantity}
+                      </td>
 
-                    <td className="py-3.5 px-3 text-right text-arcade-secondary">
-                      {item.reserved_quantity}
-                    </td>
+                      <td className="py-3.5 px-3 text-right font-mono text-series">
+                        {item.reserved_quantity}
+                      </td>
 
-                    <td className="py-3.5 px-3 text-right">
-                      <span
-                        className={`font-bold ${
-                          available <= 0
-                            ? 'text-arcade-danger'
-                            : isSafetyBreached
-                            ? 'text-arcade-warning'
-                            : 'text-arcade-accent'
-                        }`}
-                      >
-                        {available}
-                      </span>
-                    </td>
-
-                    <td className="py-3.5 px-3 text-right text-arcade-secondary">
-                      {item.safety_stock}
-                    </td>
-
-                    <td className="py-3.5 px-3 text-right text-arcade-secondary">
-                      {item.reorder_point}
-                    </td>
-
-                    <td className="py-3.5 px-3 text-center">
-                      <span className="text-[10px] px-1.5 py-0.5 bg-arcade-surface border border-arcade-border text-arcade-secondary">
-                        v{item.version}
-                      </span>
-                    </td>
-
-                    <td className="py-3.5 px-3 text-center">
-                      {available <= 0 ? (
-                        <span className="inline-flex items-center space-x-1 px-1.5 py-0.5 text-[9px] uppercase font-bold border border-arcade-danger/40 text-arcade-danger bg-arcade-danger/10">
-                          <AlertOctagon className="h-2.5 w-2.5" />
-                          <span>Stockout</span>
+                      <td className="py-3.5 px-3 text-right font-mono font-bold">
+                        <span
+                          className={
+                            available <= 0
+                              ? 'text-no'
+                              : isSafetyBreached
+                              ? 'text-wa'
+                              : 'text-ok'
+                          }
+                        >
+                          {available}
                         </span>
-                      ) : isSafetyBreached ? (
-                        <span className="inline-flex items-center space-x-1 px-1.5 py-0.5 text-[9px] uppercase font-bold border border-arcade-warning/40 text-arcade-warning bg-arcade-warning/10">
-                          <AlertTriangle className="h-2.5 w-2.5" />
-                          <span>Low Safety</span>
-                        </span>
-                      ) : isReorderBreached ? (
-                        <span className="inline-flex items-center space-x-1 px-1.5 py-0.5 text-[9px] uppercase font-bold border border-yellow-500/40 text-yellow-400 bg-yellow-500/10">
-                          <span>Reorder Alert</span>
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center space-x-1 px-1.5 py-0.5 text-[9px] uppercase font-bold border border-arcade-accent/30 text-arcade-accent bg-arcade-accent/10">
-                          <CheckCircle2 className="h-2.5 w-2.5" />
-                          <span>Healthy</span>
-                        </span>
-                      )}
-                    </td>
+                      </td>
 
-                    <td className="py-3.5 px-4 text-right space-x-2">
-                      <button
-                        onClick={() => openAdjustModal(item)}
-                        aria-label="Adjust Stock"
-                        className="inline-flex items-center space-x-1 px-2.5 py-1 border border-arcade-border text-arcade-primary hover:border-arcade-accent hover:text-arcade-accent text-[11px] uppercase tracking-wider transition-colors"
-                      >
-                        <Sliders className="h-3 w-3" />
-                        <span>Adjust Stock</span>
-                      </button>
-                      <button
-                        onClick={() => openLedgerModal(item)}
-                        className="p-1 border border-arcade-border text-arcade-secondary hover:text-arcade-primary transition-colors"
-                        title="View Movement Ledger"
-                      >
-                        <History className="h-3.5 w-3.5" />
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                      <td className="py-3.5 px-3 text-right font-mono text-t2">
+                        {item.safety_stock}
+                      </td>
+
+                      <td className="py-3.5 px-3 text-right font-mono text-t2">
+                        {item.reorder_point}
+                      </td>
+
+                      <td className="py-3.5 px-3 text-center">
+                        <span className="text-[11px] font-mono px-2 py-0.5 rounded-pill bg-s2 border border-bd text-t2">
+                          v{item.version}
+                        </span>
+                      </td>
+
+                      <td className="py-3.5 px-3 text-center">
+                        {available <= 0 ? (
+                          <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-pill text-[11px] font-mono font-semibold border border-no/40 text-no bg-no/10">
+                            <AlertOctagon className="h-3 w-3" />
+                            <span>Stockout</span>
+                          </span>
+                        ) : isSafetyBreached ? (
+                          <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-pill text-[11px] font-mono font-semibold border border-wa/40 text-wa bg-wa/10">
+                            <AlertTriangle className="h-3 w-3" />
+                            <span>Low Safety</span>
+                          </span>
+                        ) : isReorderBreached ? (
+                          <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-pill text-[11px] font-mono font-semibold border border-wa/40 text-wa bg-wa/10">
+                            <span>Reorder Alert</span>
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-pill text-[11px] font-mono font-semibold border border-ok/40 text-ok bg-ok/10">
+                            <CheckCircle2 className="h-3 w-3" />
+                            <span>Healthy</span>
+                          </span>
+                        )}
+                      </td>
+
+                      <td className="py-3.5 px-4 text-right space-x-2">
+                        <button
+                          onClick={() => openAdjustModal(item)}
+                          aria-label="Adjust Stock"
+                          className="btn-header inline-flex items-center space-x-1.5 px-3 py-1.5 text-[12px]"
+                        >
+                          <Sliders className="h-3.5 w-3.5" />
+                          <span>Adjust Stock</span>
+                        </button>
+                        <button
+                          onClick={() => openLedgerModal(item)}
+                          className="p-2 rounded-full border border-bd text-t2 hover:text-white hover:border-white transition-colors"
+                          title="View Movement Ledger"
+                        >
+                          <History className="h-3.5 w-3.5" />
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 
@@ -311,29 +307,29 @@ export default function InventoryManagement() {
         onClose={() => setAdjustModalOpen(false)}
         title={`Adjust Physical Inventory: ${adjustItem?.product_name} (${adjustItem?.sku})`}
       >
-        <form onSubmit={handleAdjustStock} className="space-y-4 text-xs">
-          <div className="p-3 bg-arcade-surface border border-arcade-border flex justify-between items-center text-xs">
+        <form onSubmit={handleAdjustStock} className="space-y-4 text-[14px]">
+          <div className="p-4 bg-s2 rounded-card border border-bd flex justify-between items-center">
             <div>
-              <span className="text-arcade-secondary text-[10px] uppercase block">
+              <span className="text-t2 text-[11px] font-mono block">
                 Current On Hand
               </span>
-              <span className="text-base font-bold text-arcade-primary">
+              <span className="text-base font-mono font-bold text-white">
                 {adjustItem?.on_hand_quantity} units
               </span>
             </div>
             <div>
-              <span className="text-arcade-secondary text-[10px] uppercase block">
+              <span className="text-t2 text-[11px] font-mono block">
                 Reserved Units
               </span>
-              <span className="text-base font-bold text-arcade-secondary">
+              <span className="text-base font-mono font-bold text-series">
                 {adjustItem?.reserved_quantity} units
               </span>
             </div>
             <div>
-              <span className="text-arcade-secondary text-[10px] uppercase block">
+              <span className="text-t2 text-[11px] font-mono block">
                 Available Free
               </span>
-              <span className="text-base font-bold text-arcade-accent">
+              <span className="text-base font-mono font-bold text-ok">
                 {adjustItem ? adjustItem.on_hand_quantity - adjustItem.reserved_quantity : 0} units
               </span>
             </div>
@@ -341,22 +337,22 @@ export default function InventoryManagement() {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label htmlFor="adjustment_type" className="block text-[10px] uppercase text-arcade-secondary mb-1">
+              <label htmlFor="adjustment_type" className="block text-[12px] font-mono text-t2 mb-1.5">
                 Adjustment Type
               </label>
               <select
                 id="adjustment_type"
                 value={adjustForm.adjustmentType}
                 onChange={(e) => setAdjustForm({ ...adjustForm, adjustmentType: e.target.value })}
-                className="w-full bg-arcade-surface border border-arcade-border p-2 text-arcade-primary focus:border-arcade-accent focus:outline-none uppercase text-xs"
+                className="w-full bg-s2 rounded-pill border border-bd px-4 py-2 text-white focus:border-ac focus:outline-none text-[14px]"
               >
-                <option value="delta">Delta Relative (+/-)</option>
-                <option value="set">Set Exact Count</option>
+                <option value="delta" className="bg-s text-white">Delta Relative (+/-)</option>
+                <option value="set" className="bg-s text-white">Set Exact Count</option>
               </select>
             </div>
 
             <div>
-              <label htmlFor="on_hand_quantity" className="block text-[10px] uppercase text-arcade-secondary mb-1">
+              <label htmlFor="on_hand_quantity" className="block text-[12px] font-mono text-t2 mb-1.5">
                 New On-Hand Quantity
               </label>
               <input
@@ -365,13 +361,13 @@ export default function InventoryManagement() {
                 required
                 value={adjustForm.quantity}
                 onChange={(e) => setAdjustForm({ ...adjustForm, quantity: e.target.value })}
-                className="w-full bg-arcade-surface border border-arcade-border p-2 text-arcade-primary focus:border-arcade-accent focus:outline-none"
+                className="w-full bg-s2 rounded-pill border border-bd px-4 py-2 text-white focus:border-ac focus:outline-none text-[14px]"
               />
             </div>
           </div>
 
           <div>
-            <label htmlFor="reason" className="block text-[10px] uppercase text-arcade-secondary mb-1">
+            <label htmlFor="reason" className="block text-[12px] font-mono text-t2 mb-1.5">
               Mandatory Audit Reason *
             </label>
             <textarea
@@ -381,22 +377,22 @@ export default function InventoryManagement() {
               placeholder="e.g. Physical inventory cycle count adjustment; damaged goods written off."
               value={adjustForm.reason}
               onChange={(e) => setAdjustForm({ ...adjustForm, reason: e.target.value })}
-              className="w-full bg-arcade-surface border border-arcade-border p-2 text-arcade-primary focus:border-arcade-accent focus:outline-none placeholder-arcade-secondary/50"
+              className="w-full bg-s2 rounded-card border border-bd p-3 text-white focus:border-ac focus:outline-none placeholder-t2/50 text-[14px]"
             />
           </div>
 
-          <div className="flex items-center justify-end space-x-2 pt-3 border-t border-arcade-border">
+          <div className="flex items-center justify-end space-x-3 pt-3 border-t border-bd">
             <button
               type="button"
               onClick={() => setAdjustModalOpen(false)}
-              className="px-3 py-1.5 border border-arcade-border text-arcade-secondary uppercase text-xs"
+              className="btn-header px-5 py-2 text-[14px]"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={adjusting}
-              className="px-4 py-1.5 bg-arcade-accent text-arcade-surface font-bold uppercase text-xs hover:opacity-90 disabled:opacity-50"
+              className="btn-primary px-6 py-2 text-[14px] disabled:opacity-50"
             >
               {adjusting ? 'Confirming...' : 'Confirm Adjustment'}
             </button>
@@ -410,45 +406,45 @@ export default function InventoryManagement() {
         onClose={() => setLedgerModalOpen(false)}
         title={`Audit Movement Ledger: ${ledgerItem?.sku}`}
       >
-        <div className="space-y-4 text-xs">
+        <div className="space-y-4 text-[14px]">
           {loadingMovements ? (
-            <div className="p-8 text-center text-arcade-secondary flex items-center justify-center space-x-2">
-              <RefreshCw className="h-4 w-4 animate-spin text-arcade-accent" />
-              <span>Fetching ledger transactions...</span>
+            <div className="p-8 text-center text-t2 flex items-center justify-center space-x-2">
+              <RefreshCw className="h-4 w-4 animate-spin text-ac" />
+              <span className="font-mono text-[12px]">Fetching ledger transactions...</span>
             </div>
           ) : movements.length === 0 ? (
-            <div className="p-8 text-center text-arcade-secondary">
+            <div className="p-8 text-center text-t2">
               No historical inventory movements logged for this SKU yet.
             </div>
           ) : (
-            <div className="max-h-96 overflow-y-auto space-y-2">
+            <div className="max-h-96 overflow-y-auto space-y-2.5">
               {movements.map((m) => (
                 <div
                   key={m.id}
-                  className="p-3 bg-arcade-surface border border-arcade-border flex flex-col space-y-1"
+                  className="p-3.5 bg-s2 rounded-card border border-bd flex flex-col space-y-1.5"
                 >
-                  <div className="flex items-center justify-between text-[11px]">
-                    <span className="font-bold uppercase text-arcade-accent">
+                  <div className="flex items-center justify-between text-[12px] font-mono">
+                    <span className="font-bold text-ac">
                       {m.movement_type}
                     </span>
-                    <span className="text-arcade-secondary">
+                    <span className="text-t2">
                       {new Date(m.created_at).toLocaleString()}
                     </span>
                   </div>
-                  <div className="flex items-center space-x-2 text-xs">
-                    <span className="text-arcade-secondary">Balance shift:</span>
-                    <span className="font-semibold text-arcade-primary">
+                  <div className="flex items-center space-x-2 text-[14px]">
+                    <span className="text-t2">Balance shift:</span>
+                    <span className="font-mono font-semibold text-white">
                       {m.previous_on_hand}
                     </span>
-                    <ArrowRight className="h-3 w-3 text-arcade-secondary" />
-                    <span className="font-bold text-arcade-accent">{m.new_on_hand}</span>
-                    <span className="text-[10px] text-arcade-secondary">
+                    <ArrowRight className="h-3.5 w-3.5 text-t2" />
+                    <span className="font-mono font-bold text-ok">{m.new_on_hand}</span>
+                    <span className="text-[12px] font-mono text-t2">
                       ({m.quantity > 0 ? `+${m.quantity}` : m.quantity})
                     </span>
                   </div>
                   {m.reference_type && (
-                    <div className="text-[10px] text-arcade-secondary">
-                      Reference: <span className="text-arcade-primary">{m.reference_type}</span>{' '}
+                    <div className="text-[12px] text-t2">
+                      Reference: <span className="text-white font-mono">{m.reference_type}</span>{' '}
                       {m.reference_id ? `#${m.reference_id}` : ''}
                     </div>
                   )}

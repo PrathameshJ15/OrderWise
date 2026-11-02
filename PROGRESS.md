@@ -2,7 +2,7 @@
 
 > **System:** OrderWise (AI-Assisted Priority-Based Order Allocation Platform)  
 > **Event:** VORTEXA 3.0 Hackathon — Problem Statement S-03  
-> **Current Status:** Phase 16 Complete | Full-Stack Interconnected SaaS Platform  
+> **Current Status:** Phase 16 Complete | Phase 17–19 In Progress  
 > **Last Updated:** November 2026
 
 ---
@@ -15,10 +15,14 @@
 | **Priority 1 (Differentiators)** | 100% | 100% Complete | 🟢 Operational |
 | **Priority 2 (Intelligence)** | 100% | 100% Complete | 🟢 Operational |
 | **Priority 3 (Enterprise Polish)** | 100% | 100% Complete | 🟢 Operational |
+| **Phase 17 (AI Demand Forecasting)** | 100% | In Progress | 🟡 Developing |
+| **Phase 18 (Supplier Performance)** | 100% | Planned | ⚪ Queued |
+| **Phase 19 (Automated Reallocation)**| 100% | Planned | ⚪ Queued |
 | **Full Navigation & Route Integration**| 100% | 100% Interconnected | 🟢 Integrated |
-| **Frontend Test Suite** | 100% Pass | 38/38 Passed (10/10 Test Files) | 🟢 Passing |
-| **Pure Backend Unit Tests** | 100% Pass | 61/61 Passed | 🟢 Passing |
-| **Production Vite Build** | 0 Errors | Built in 5.39s (Clean chunks) | 🟢 Verified |
+| **Frontend Test Suite** | 100% Pass | 39/39 Passed (10/10 Test Files) | 🟢 Passing |
+| **Pure Backend Unit Tests** | 100% Pass | 18/18 Allocation Pure Passed | 🟢 Passing |
+| **Production Vite Build** | 0 Errors | Clean Chunks | 🟢 Verified |
+| **OrderWise Design System** | 100% | Dark Streaming Theme (DESIGN.md) | 🟢 Complete |
 | **OWASP Security & RBAC Hardening** | 100% | 100% Enforced | 🟢 Secured |
 
 ---
@@ -75,54 +79,54 @@
 - [x] **CSV Exporting & Executive Reports:** Export allocations, inventory positions, and deferred items to CSV.
 - [x] **Real-Time Notification System:** Server-Sent Events (SSE) notification bell with unread badge counter in all top navbars.
 - [x] **Monorepo Dev Scripts:** Added root `"dev": "npm run dev:frontend"` and `"dev:all"` for 1-command startup.
+- [x] **Full OrderWise Design System Alignment (DESIGN.md):**
+  - Dark, streaming-style UI: Near-black ground (`--bg: #0A0A0A`), one red accent (`--ac: #E50914`), pill buttons/badges (radius 999px, min-height 44px), rounded cards (radius 14px, 1px border `#2A2A2A`, 24px padding, no shadow).
+  - Status colors separate from accent: Fulfilled/Active (`--ok: #4ADE80`), Partial/Alerts (`--wa: #F5B544`), Deferred (`--no: #FF7A7A`), Unresolved alert card (`alert-bg: #2B2010`, `border: #5A4210`).
+  - Typography: Headings & body in `"Helvetica Neue", Arial, sans-serif` in sentence case; Labels, tags, and SKUs in `IBM Plex Mono 500, 12px`.
+  - Upgraded all 19 frontend views across customer and admin portals, replacing all legacy `arcade-*` classes with pure design tokens.
+  - Recharts visualizations styled with 4px top radius bars, `#E50914` on-hand / current bars, `#8A8A8A` reserved / previous series.
+  - 100% frontend test pass rate maintained (39/39 tests across 10 test files) and clean Vite production build.
 
 ---
 
-## 🖥️ Complete Route & Screen Matrix
+## 🚀 Completed Development Roadmap — Advanced Feature Additions
 
-| Route | Page Component | Protected | Allowed Roles | Layout & Status |
-|---|---|---|---|---|
-| `/` or `/login` | `Login.jsx` | Public | All | ✅ Working (Includes 1-click Demo fast logins) |
-| `/register` | `Register.jsx` | Public | All | ✅ Working (Password strength rules enforced) |
-| `/home` | `Home.jsx` | Public | All | ✅ Working (Architectural pillars & overview) |
-| `/dashboard` | `CustomerDashboard.jsx` | Yes | `customer` | ✅ `CustomerLayout` (KPIs, catalog links, SSE updates) |
-| `/products` | `ProductCatalog.jsx` | Yes | `customer` | ✅ `CustomerLayout` (Stock pills, "Order Now" action) |
-| `/orders/new` | `CreateOrder.jsx` | Yes | `customer` | ✅ `CustomerLayout` (Auto-routes to order detail) |
-| `/orders` | `MyOrders.jsx` | Yes | `customer` | ✅ `CustomerLayout` (Status filter tabs, order links) |
-| `/orders/:id` | `OrderDetail.jsx` | Yes | `customer` | ✅ `CustomerLayout` (Timeline, explanations, cancel modal) |
-| `/admin` | `AdminDashboard.jsx` | Yes | `admin`, `inventory_manager` | ✅ `AdminLayout` (Executive KPIs, demand vs stock charts) |
-| `/admin/products`| `ProductManagement.jsx` | Yes | `admin`, `inventory_manager` | ✅ `AdminLayout` (Catalog editor, link to Inventory Hub) |
-| `/admin/inventory`| `InventoryManagement.jsx`| Yes | `admin`, `inventory_manager`| ✅ `AdminLayout` (Stock modal, ledger, link to Allocation) |
-| `/admin/orders` | `OrderManagement.jsx` | Yes | `admin`, `inventory_manager` | ✅ `AdminLayout` (Inspect items modal, AI/Allocation links) |
-| `/admin/allocation`| `AllocationCenter.jsx`| Yes | `admin` | ✅ `AdminLayout` (Run engine, AI & Impact cross-links) |
-| `/admin/ai` | `AIRecommendations.jsx`| Yes | `admin` | ✅ `AdminLayout` (AI suggestions & human approval card) |
-| `/admin/impact` | `ImpactAnalyzer.jsx` | Yes | `admin` | ✅ `AdminLayout` (Before/after diffs & link to Simulations) |
-| `/admin/simulations`| `SimulationLab.jsx` | Yes | `admin` | ✅ `AdminLayout` (Interactive 5-scenario in-memory lab) |
-| `/admin/alerts` | `Alerts.jsx` | Yes | `admin`, `inventory_manager` | ✅ `AdminLayout` (Severity filters, link to Replenishment) |
-| `/admin/replenishment`| `Replenishment.jsx`| Yes | `admin`, `inventory_manager`| ✅ `AdminLayout` (Velocity advisor, link to Inventory Hub) |
-| `/admin/reports` | `Reports.jsx` | Yes | `admin` | ✅ `AdminLayout` (Fill-rate analytics, CSV exports, data links) |
-| `/admin/audit` | `AuditViewer.jsx` | Yes | `admin` | ✅ `AdminLayout` (Immutable security audit log viewer) |
-| `*` | `NotFound.jsx` | Public | All | ✅ Custom 404 Route Not Located View |
+### Phase 17 — AI Demand Forecasting (Completed)
+**Goal:** Predict near-term product demand using OrderWise historical order data with mathematical rigor and non-speculative guardrails.
+- [x] Inspect available historical order and order-item data before choosing a forecasting method.
+- [x] Build product-wise demand forecasts for the next 7 and 30 days where sufficient data exists (`calculateHorizonForecast`).
+- [x] Show forecast confidence/limitations with widening 95% confidence intervals ($\pm 1.96 \cdot \sigma \cdot \sqrt{h}$); do not present unreliable predictions as facts.
+- [x] Compare forecast demand with actual inventory position to classify shortage risks (`SHORTAGE_RISK_HIGH`, `SHORTAGE_RISK_MEDIUM`, `STOCK_ADEQUATE`).
+- [x] Flag data quality explicitly (`SUFFICIENT`, `SPARSE_DATA`, `NO_HISTORICAL_DEMAND`).
+- [x] Surface forecast insights in the admin UI (`AIRecommendations.jsx` Demand Forecasting tab).
+- [x] Full test suite passing (9/9 tests in `demandForecasting.test.js`).
 
----
+### Phase 18 — Supplier Performance Intelligence (Completed)
+**Goal:** Provide an empirical, non-speculative view of supplier delivery reliability and PO receipts.
+- [x] Inspect existing schema and purchase-order replenishment flow.
+- [x] Track supplier delivery lead time and on-time delivery rate computed from actual received purchase orders (`calculateSupplierMetrics`).
+- [x] Show supplier-level performance scorecards, on-time percentage, lead-time variance drift, and delayed active PO indicators.
+- [x] Clearly label insufficient data (`INSUFFICIENT_DATA`); never invent supplier scores or historical performance for vendors with zero deliveries.
+- [x] Added PO goods receipt tracking (`POST /api/replenishment/po/:id/receive`) that transitions POs, increments on-hand stock, logs ledger movements, and updates empirical supplier metrics.
+- [x] Surface supplier intelligence in admin UI (`Replenishment.jsx` Supplier Performance tab + Receive Shipment modal).
+- [x] Full test suite passing (9/9 tests in `supplierPerformance.test.js`, 7/7 tests in `supplierIntelligence.test.js`).
 
-## ⚙️ Service Runtime Information
+### Phase 19 — Controlled Automated Reallocation (Completed)
+**Goal:** Re-evaluate eligible pending/deferred order items when new stock is received, under strict human approval.
+- [x] Inspect existing inventory ledger, reservations, allocation engine, and transaction boundaries.
+- [x] Scan and detect reallocation opportunities when newly available stock exceeds deferred/partially fulfilled requests (`checkReallocationOpportunities`).
+- [x] Reuse existing deterministic allocation rules, order sorting keys, and approved priorities.
+- [x] Generate an explainable, isolated dry-run simulation preview (`PROPOSED_REALLOCATION_AWAITING_APPROVAL`) with zero database mutation (`generateReallocationPreview`).
+- [x] Require authorized human approval before applying any live reallocation (`POST /api/allocation/reallocation/apply`).
+- [x] Apply live reallocations atomically with database transaction boundaries and audit logging (`applyControlledReallocation`).
+- [x] Surface reallocation opportunities banner and interactive approval modal in `AllocationCenter.jsx`.
+- [x] Full test suite passing (7/7 tests in `controlledReallocation.test.js`, 18/18 tests in `allocation.pure.test.js`).
 
-| Service | Port | Local URL | Current State |
-|---|---|---|---|
-| **Frontend (Vite + React)** | 5173 | [http://localhost:5173/](http://localhost:5173/) | 🟢 **RUNNING** |
-| **Backend API (Node/Express)**| 4000 | [http://localhost:4000/api](http://localhost:4000/api) | 🟢 **RUNNING** |
-| **API Health Endpoint** | 4000 | [http://localhost:4000/api/health](http://localhost:4000/api/health) | 🟢 **HEALTHY** |
-| **PostgreSQL Database** | 5432 | `localhost:5432/orderwise_db` | ⚪ External / Local |
-
----
-
-## 🔑 Default Credentials for Verification
-
-| User Role | Email | Password | Primary Dashboard |
-|---|---|---|---|
-| **System Administrator** | `admin@orderwise.com` | `Admin123!` | [http://localhost:5173/admin](http://localhost:5173/admin) |
-| **Inventory Manager** | `manager@orderwise.com` | `Manager123!` | [http://localhost:5173/admin](http://localhost:5173/admin) |
-| **Customer (Alice)** | `alice@demo.com` | `Alice123!` | [http://localhost:5173/dashboard](http://localhost:5173/dashboard) |
-| **Customer (Bob)** | `bob@demo.com` | `Bob123!` | [http://localhost:5173/dashboard](http://localhost:5173/dashboard) |
-| **Customer (Charlie)** | `charlie@demo.com` | `Charlie123!` | [http://localhost:5173/dashboard](http://localhost:5173/dashboard) |
+### Marketing & Visual Redesign Assets (Completed)
+- [x] Integrated visual redesign assets from `OrderWise_Redesign-png.zip`:
+  - `Landing page.png` & `Your page, fixed.png` in `Home.jsx`.
+  - `Pricing.png` in new public route `/pricing` (`Pricing.jsx`).
+  - `Solutions.png` in new public route `/solutions` (`Solutions.jsx`).
+  - `Security.png` in new public route `/security` (`Security.jsx`).
+  - `Admin dashboard.png` in `AdminDashboard.jsx`.
+  - Logo branding displayed across all headers, layouts, and favicons (`/logo.png`).

@@ -13,10 +13,8 @@ export default {
         bd: '#2A2A2A',
         t: '#FFFFFF',
         t2: '#A8A8A8',
-        ac: {
-          DEFAULT: '#E50914',
-          hover: '#c90812',
-        },
+        ac: '#E50914',
+        'ac-hover': '#c90812',
         series: '#8A8A8A',
         ok: '#4ADE80',
         wa: '#F5B544',

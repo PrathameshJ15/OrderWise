@@ -8,7 +8,9 @@ const {
   getReplenishmentRecommendations,
   createDraftPurchaseOrder,
   approvePurchaseOrder,
+  receivePurchaseOrder,
 } = require('../services/replenishmentService');
+const { getSupplierPerformanceOverview } = require('../services/supplierIntelligenceService');
 
 const router = express.Router();
 
@@ -166,6 +168,55 @@ router.post(
       purchase_order: po,
       message: `Purchase order ${po.po_number} has been officially approved and marked as 'ordered'.`,
     });
+  })
+);
+
+/**
+ * GET /api/replenishment/suppliers/performance
+ * Returns supplier performance scorecard, on-time delivery rates, and delayed-shipment indicators.
+ * Accessible to admin and inventory_manager.
+ */
+router.get(
+  '/suppliers/performance',
+  rbac('admin', 'inventory_manager'),
+  asyncHandler(async (req, res) => {
+    const rawSupplierId = req.query.supplier_id || req.query.supplierId;
+    const supplierId = rawSupplierId ? Number(rawSupplierId) : null;
+    const data = await getSupplierPerformanceOverview({ supplierId });
+    return successResponse(res, data, 'Supplier performance intelligence retrieved successfully');
+  })
+);
+
+/**
+ * POST /api/replenishment/po/:id/receive (and PATCH)
+ * Admin or Inventory Manager marks a purchase order as received, recording actual delivery date
+ * and updating on-hand stock atomically.
+ */
+router.post(
+  '/po/:id/receive',
+  rbac('admin', 'inventory_manager'),
+  asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const result = await receivePurchaseOrder(parseInt(id, 10), req.body, req.user.userId);
+    return successResponse(
+      res,
+      result,
+      `Purchase order #${id} has been marked as received. Physical stock updated.`
+    );
+  })
+);
+
+router.patch(
+  '/po/:id/receive',
+  rbac('admin', 'inventory_manager'),
+  asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const result = await receivePurchaseOrder(parseInt(id, 10), req.body, req.user.userId);
+    return successResponse(
+      res,
+      result,
+      `Purchase order #${id} has been marked as received. Physical stock updated.`
+    );
   })
 );
 

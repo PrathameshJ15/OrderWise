@@ -110,65 +110,65 @@ export default function OrderManagement() {
   });
 
   return (
-    <div className="space-y-6 font-mono py-4">
+    <div className="space-y-6 font-sans py-2">
       {/* Header */}
-      <div className="border border-arcade-border bg-arcade-neutral p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="card-base flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center space-x-1.5 text-xs text-arcade-accent bg-arcade-accent/10 border border-arcade-accent/20 px-2 py-0.5 mb-2">
-            <ShoppingBag className="h-3 w-3" />
+          <div className="inline-flex items-center space-x-1.5 text-[12px] font-mono text-ac font-medium mb-1">
+            <ShoppingBag className="h-3.5 w-3.5" />
             <span>CENTRAL ORDER OPERATIONS</span>
           </div>
-          <h1 className="font-display text-3xl font-extrabold uppercase text-arcade-primary">
+          <h1 className="text-[34px] font-bold tracking-[-0.02em] text-white">
             Order Management
           </h1>
-          <p className="text-xs text-arcade-secondary mt-1">
+          <p className="text-[14px] text-t2 mt-0.5">
             Review demand queue, customer delivery commitments, and assigned priority rankings.
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2.5">
           <Link
             to="/admin/ai"
-            className="flex items-center space-x-1.5 px-3 py-2 border border-arcade-border text-arcade-primary hover:border-arcade-accent hover:text-arcade-accent text-xs uppercase tracking-wider transition-colors"
+            className="btn-secondary min-h-[44px] px-4 text-[14px] flex items-center space-x-1.5"
           >
-            <Sparkles className="h-3.5 w-3.5 text-arcade-accent" />
+            <Sparkles className="h-4 w-4 text-ac" />
             <span>AI Priorities</span>
           </Link>
           <Link
             to="/admin/allocation"
-            className="flex items-center space-x-1.5 px-3 py-2 bg-arcade-accent text-arcade-surface font-bold text-xs uppercase tracking-wider hover:opacity-90 transition-opacity shadow-[0_0_8px_rgba(200,255,58,0.2)]"
+            className="btn-primary flex items-center space-x-1.5"
           >
-            <Cpu className="h-3.5 w-3.5" />
+            <Cpu className="h-4 w-4" />
             <span>Allocate Stock &rarr;</span>
           </Link>
-          <div className="flex items-center space-x-2 border border-arcade-border bg-arcade-surface px-3 py-2 text-xs w-full md:w-60">
-          <Search className="h-3.5 w-3.5 text-arcade-secondary" />
-          <input
-            type="text"
-            placeholder="Search order ID or customer..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="bg-transparent text-arcade-primary focus:outline-none text-xs w-full placeholder-arcade-secondary/60"
-          />
-        </div>
+          <div className="flex items-center space-x-2 rounded-pill bg-s2 border border-bd px-4 py-2 text-[14px] w-full md:w-60">
+            <Search className="h-4 w-4 text-t2 shrink-0" />
+            <input
+              type="text"
+              placeholder="Search order ID or customer..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="bg-transparent text-white focus:outline-none text-[14px] w-full placeholder-t2/60"
+            />
+          </div>
         </div>
       </div>
 
       {error && (
-        <div className="p-4 border border-arcade-danger/40 bg-arcade-danger/10 text-arcade-danger text-xs flex items-center justify-between">
+        <div className="p-4 rounded-card border border-no/40 bg-[#291313] text-no text-[13px] flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <AlertCircle className="h-4 w-4 shrink-0" />
             <span>{error}</span>
           </div>
-          <button onClick={() => setError(null)} className="underline hover:text-white text-[11px]">
+          <button onClick={() => setError(null)} className="underline hover:text-white text-[12px]">
             Dismiss
           </button>
         </div>
       )}
 
       {/* Filter Tabs */}
-      <div role="tablist" className="border border-arcade-border bg-arcade-neutral p-4 flex items-center space-x-1 overflow-x-auto">
-        <Filter className="h-3.5 w-3.5 text-arcade-secondary shrink-0 mr-2" />
+      <div role="tablist" className="card-base p-3 flex items-center space-x-2 overflow-x-auto">
+        <Filter className="h-4 w-4 text-t2 shrink-0 mr-2 ml-1" />
         {['all', 'pending', 'confirmed', 'allocated', 'partially_allocated', 'cancelled'].map((st) => (
           <div
             key={st}
@@ -177,10 +177,10 @@ export default function OrderManagement() {
             aria-selected={statusFilter === st}
             onClick={() => setStatusFilter(st)}
             onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setStatusFilter(st); }}
-            className={`cursor-pointer px-3 py-1 text-xs uppercase tracking-wider whitespace-nowrap transition-colors ${
+            className={`cursor-pointer px-4 py-1.5 rounded-pill text-[12px] font-mono uppercase tracking-wider whitespace-nowrap transition-colors ${
               statusFilter === st
-                ? 'bg-arcade-surface text-arcade-accent font-bold border border-arcade-border'
-                : 'text-arcade-secondary hover:text-arcade-primary'
+                ? 'bg-ac text-white font-bold'
+                : 'bg-s2 text-t2 hover:text-white border border-bd'
             }`}
           >
             {st.replace(/_/g, ' ')}
@@ -190,87 +190,89 @@ export default function OrderManagement() {
 
       {/* Orders Table */}
       {loading ? (
-        <div className="border border-arcade-border bg-arcade-neutral p-12 text-center text-arcade-secondary flex flex-col items-center justify-center space-y-3">
-          <RefreshCw className="h-6 w-6 animate-spin text-arcade-accent" />
-          <span className="text-xs uppercase tracking-wider">Loading orders directory...</span>
+        <div className="card-base p-12 text-center text-t2 flex flex-col items-center justify-center space-y-3">
+          <RefreshCw className="h-6 w-6 animate-spin text-ac" />
+          <span className="text-[12px] font-mono tracking-wider">Loading orders directory...</span>
         </div>
       ) : filteredOrders.length === 0 ? (
-        <div className="border border-arcade-border bg-arcade-neutral p-12 text-center text-arcade-secondary space-y-2">
-          <ShoppingBag className="h-8 w-8 text-arcade-secondary mx-auto opacity-50" />
-          <h3 className="font-display text-base uppercase text-arcade-primary font-bold">
+        <div className="card-base p-12 text-center text-t2 space-y-2">
+          <ShoppingBag className="h-8 w-8 text-t2 mx-auto opacity-40" />
+          <h3 className="text-base font-bold text-white">
             No Orders Match Filter
           </h3>
-          <p className="text-xs">Try selecting a different status filter.</p>
+          <p className="text-[14px]">Try selecting a different status filter.</p>
         </div>
       ) : (
-        <div className="border border-arcade-border bg-arcade-neutral overflow-x-auto">
-          <table className="w-full text-left text-xs border-collapse">
-            <thead>
-              <tr className="border-b border-arcade-border bg-arcade-surface/60 text-arcade-secondary uppercase text-[10px] tracking-wider">
-                <th className="py-3 px-4">Order ID</th>
-                <th className="py-3 px-3">Customer</th>
-                <th className="py-3 px-3">Promised Date</th>
-                <th className="py-3 px-3 text-center">Approved Priority</th>
-                <th className="py-3 px-3 text-right">Items</th>
-                <th className="py-3 px-3 text-right">Requested Qty</th>
-                <th className="py-3 px-3 text-center">Status</th>
-                <th className="py-3 px-4 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-arcade-border/50">
-              {filteredOrders.map((ord) => (
-                <tr key={ord.id} className="hover:bg-arcade-surface/50 transition-colors">
-                  <td className="py-3.5 px-4 font-bold text-arcade-primary">{`#${ord.id}`}</td>
-                  <td className="py-3.5 px-3">
-                    <div className="font-semibold text-arcade-primary">{ord.customer_name}</div>
-                    <div className="text-[10px] text-arcade-secondary">{ord.customer_email}</div>
-                  </td>
-                  <td className="py-3.5 px-3 text-arcade-secondary">
-                    {ord.promised_delivery_date || 'Standard'}
-                  </td>
-                  <td className="py-3.5 px-3 text-center">
-                    <Badge priority={ord.approved_priority || ord.priority_level || ord.priority || 'MEDIUM'} />
-                  </td>
-                  <td className="py-3.5 px-3 text-right font-semibold text-arcade-primary">
-                    {ord.item_count || 1}
-                  </td>
-                  <td className="py-3.5 px-3 text-right font-semibold text-arcade-primary">
-                    {ord.total_requested_quantity || '—'}
-                  </td>
-                  <td className="py-3.5 px-3 text-center">
-                    <StatusPill status={ord.status} />
-                  </td>
-                  <td className="py-3.5 px-4 text-right space-x-1.5">
-                    <button
-                      onClick={() => viewOrderDetails(ord.id)}
-                      className="p-1 border border-arcade-border text-arcade-secondary hover:text-arcade-accent hover:border-arcade-accent transition-colors"
-                      title="View Details"
-                    >
-                      <Eye className="h-3.5 w-3.5" />
-                    </button>
-                    {ord.status === 'pending' && (
-                      <button
-                        onClick={() => handleConfirmOrder(ord.id)}
-                        className="px-2 py-0.5 border border-arcade-accent/40 bg-arcade-accent/10 text-arcade-accent text-[10px] uppercase font-bold hover:bg-arcade-accent hover:text-arcade-surface transition-colors"
-                        title="Confirm Order"
-                      >
-                        Confirm
-                      </button>
-                    )}
-                    {ord.status !== 'cancelled' && ord.status !== 'completed' && (
-                      <button
-                        onClick={() => openCancelModal(ord.id)}
-                        className="p-1 border border-arcade-border text-arcade-secondary hover:text-arcade-danger hover:border-arcade-danger transition-colors"
-                        title="Cancel Order"
-                      >
-                        <XCircle className="h-3.5 w-3.5" />
-                      </button>
-                    )}
-                  </td>
+        <div className="card-base p-0 overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-[14px] border-collapse">
+              <thead>
+                <tr className="border-b border-bd bg-s2/60 text-t2 text-[12px] font-mono">
+                  <th className="py-3.5 px-4">Order ID</th>
+                  <th className="py-3.5 px-3">Customer</th>
+                  <th className="py-3.5 px-3">Promised Date</th>
+                  <th className="py-3.5 px-3 text-center">Approved Priority</th>
+                  <th className="py-3.5 px-3 text-right">Items</th>
+                  <th className="py-3.5 px-3 text-right">Requested Qty</th>
+                  <th className="py-3.5 px-3 text-center">Status</th>
+                  <th className="py-3.5 px-4 text-right">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-bd/50">
+                {filteredOrders.map((ord) => (
+                  <tr key={ord.id} className="hover:bg-s2/40 transition-colors">
+                    <td className="py-3.5 px-4 font-mono font-bold text-white">{`#${ord.id}`}</td>
+                    <td className="py-3.5 px-3">
+                      <div className="font-semibold text-white">{ord.customer_name}</div>
+                      <div className="text-[12px] font-mono text-t2">{ord.customer_email}</div>
+                    </td>
+                    <td className="py-3.5 px-3 text-t2 text-[13px]">
+                      {ord.promised_delivery_date || 'Standard'}
+                    </td>
+                    <td className="py-3.5 px-3 text-center">
+                      <Badge priority={ord.approved_priority || ord.priority_level || ord.priority || 'MEDIUM'} />
+                    </td>
+                    <td className="py-3.5 px-3 text-right font-mono font-semibold text-white">
+                      {ord.item_count || 1}
+                    </td>
+                    <td className="py-3.5 px-3 text-right font-mono font-semibold text-white">
+                      {ord.total_requested_quantity || '—'}
+                    </td>
+                    <td className="py-3.5 px-3 text-center">
+                      <StatusPill status={ord.status} />
+                    </td>
+                    <td className="py-3.5 px-4 text-right space-x-2">
+                      <button
+                        onClick={() => viewOrderDetails(ord.id)}
+                        className="p-2 rounded-full border border-bd text-t2 hover:text-white hover:border-white transition-colors"
+                        title="View Details"
+                      >
+                        <Eye className="h-3.5 w-3.5" />
+                      </button>
+                      {ord.status === 'pending' && (
+                        <button
+                          onClick={() => handleConfirmOrder(ord.id)}
+                          className="btn-header inline-flex items-center px-3 py-1.5 text-[12px] font-bold text-ok border-ok/40 hover:bg-ok/10"
+                          title="Confirm Order"
+                        >
+                          Confirm
+                        </button>
+                      )}
+                      {ord.status !== 'cancelled' && ord.status !== 'completed' && (
+                        <button
+                          onClick={() => openCancelModal(ord.id)}
+                          className="p-2 rounded-full border border-bd text-no/70 hover:text-no hover:border-no transition-colors"
+                          title="Cancel Order"
+                        >
+                          <XCircle className="h-3.5 w-3.5" />
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 
@@ -280,60 +282,60 @@ export default function OrderManagement() {
         onClose={() => setDetailModalOpen(false)}
         title={`Order Inspection: #${selectedOrder?.id}`}
       >
-        <div className="space-y-4 text-xs font-mono">
+        <div className="space-y-4 text-[14px]">
           {loadingDetail ? (
-            <div className="p-8 text-center text-arcade-secondary flex items-center justify-center space-x-2">
-              <RefreshCw className="h-4 w-4 animate-spin text-arcade-accent" />
-              <span>Fetching order items and allocations...</span>
+            <div className="p-8 text-center text-t2 flex items-center justify-center space-x-2">
+              <RefreshCw className="h-4 w-4 animate-spin text-ac" />
+              <span className="font-mono text-[12px]">Fetching order items and allocations...</span>
             </div>
           ) : selectedOrder ? (
             <>
-              <div className="p-3 bg-arcade-surface border border-arcade-border grid grid-cols-2 gap-2 text-xs">
+              <div className="p-4 bg-s2 rounded-card border border-bd grid grid-cols-2 gap-3 text-[14px]">
                 <div>
-                  <span className="text-[10px] uppercase text-arcade-secondary block">Customer</span>
-                  <span className="font-bold text-arcade-primary">{selectedOrder.customer_name}</span>
+                  <span className="text-[11px] font-mono text-t2 block">Customer</span>
+                  <span className="font-bold text-white">{selectedOrder.customer_name}</span>
                 </div>
                 <div>
-                  <span className="text-[10px] uppercase text-arcade-secondary block">Status</span>
+                  <span className="text-[11px] font-mono text-t2 block">Status</span>
                   <StatusPill status={selectedOrder.status} />
                 </div>
                 <div>
-                  <span className="text-[10px] uppercase text-arcade-secondary block">Promised Date</span>
-                  <span className="text-arcade-primary">{selectedOrder.promised_delivery_date || 'Standard'}</span>
+                  <span className="text-[11px] font-mono text-t2 block">Promised Date</span>
+                  <span className="text-white">{selectedOrder.promised_delivery_date || 'Standard'}</span>
                 </div>
                 <div>
-                  <span className="text-[10px] uppercase text-arcade-secondary block">Created At</span>
-                  <span className="text-arcade-secondary">{new Date(selectedOrder.created_at).toLocaleString()}</span>
+                  <span className="text-[11px] font-mono text-t2 block">Created At</span>
+                  <span className="text-t2 text-[13px]">{new Date(selectedOrder.created_at).toLocaleString()}</span>
                 </div>
               </div>
 
               {selectedOrder.business_notes && (
-                <div className="p-2.5 bg-arcade-surface border border-arcade-border text-xs">
-                  <span className="text-[10px] uppercase text-arcade-secondary block mb-0.5">Business Notes</span>
-                  <p className="text-arcade-primary italic">&ldquo;{selectedOrder.business_notes}&rdquo;</p>
+                <div className="p-3.5 bg-s2 rounded-card border border-bd">
+                  <span className="text-[11px] font-mono text-t2 block mb-1">Business Notes</span>
+                  <p className="text-white italic">&ldquo;{selectedOrder.business_notes}&rdquo;</p>
                 </div>
               )}
 
-              <div className="space-y-2">
-                <span className="text-[10px] uppercase font-bold text-arcade-secondary block">
+              <div className="space-y-2.5">
+                <span className="text-[12px] font-mono text-t2 block">
                   Line Items &amp; Allocation Explanations
                 </span>
-                <div className="space-y-2 max-h-64 overflow-y-auto">
+                <div className="space-y-2.5 max-h-64 overflow-y-auto">
                   {selectedOrder.items?.map((itm) => (
-                    <div key={itm.id} className="p-3 bg-arcade-surface border border-arcade-border space-y-1.5">
+                    <div key={itm.id} className="p-3.5 bg-s2 rounded-card border border-bd space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="font-bold text-arcade-primary">
-                          {itm.product_name} ({itm.sku})
+                        <span className="font-bold text-white">
+                          {itm.product_name} <span className="text-t2 font-mono text-[12px]">({itm.sku})</span>
                         </span>
                         <StatusPill status={itm.allocation_status} />
                       </div>
-                      <div className="text-[11px] text-arcade-secondary">
-                        Requested: <span className="font-bold text-arcade-primary">{itm.requested_quantity}</span> • Min:{' '}
+                      <div className="text-[13px] text-t2 font-mono">
+                        Requested: <span className="font-bold text-white">{itm.requested_quantity}</span> • Min:{' '}
                         {itm.minimum_acceptable_quantity} • Allocated:{' '}
-                        <span className="font-bold text-arcade-accent">{itm.allocated_quantity ?? '—'}</span>
+                        <span className="font-bold text-ok">{itm.allocated_quantity ?? '—'}</span>
                       </div>
                       {itm.allocation_explanation && (
-                        <p className="text-[10px] text-arcade-secondary pt-1 border-t border-arcade-border/40">
+                        <p className="text-[12px] text-t2 pt-2 border-t border-bd/40">
                           {itm.allocation_explanation}
                         </p>
                       )}
@@ -352,12 +354,12 @@ export default function OrderManagement() {
         onClose={() => setCancelModalOpen(false)}
         title={`Cancel Order #${cancellingId}`}
       >
-        <div className="space-y-4 text-xs font-mono">
-          <p className="text-arcade-secondary">
+        <div className="space-y-4 text-[14px]">
+          <p className="text-t2">
             Are you sure you want to cancel this customer order? All allocated quantities will be released back to free warehouse stock.
           </p>
           <div>
-            <label className="block text-[10px] uppercase text-arcade-secondary mb-1">
+            <label className="block text-[12px] font-mono text-t2 mb-1.5">
               Cancellation Reason
             </label>
             <input
@@ -365,19 +367,19 @@ export default function OrderManagement() {
               placeholder="e.g. Stock shortage, customer request"
               value={cancelReason}
               onChange={(e) => setCancelReason(e.target.value)}
-              className="w-full bg-arcade-surface border border-arcade-border p-2 text-arcade-primary focus:border-arcade-accent focus:outline-none"
+              className="w-full bg-s2 rounded-pill border border-bd px-4 py-2 text-white focus:border-ac focus:outline-none text-[14px]"
             />
           </div>
-          <div className="flex items-center justify-end space-x-2 pt-2">
+          <div className="flex items-center justify-end space-x-3 pt-3 border-t border-bd">
             <button
               onClick={() => setCancelModalOpen(false)}
-              className="px-3 py-1.5 border border-arcade-border text-arcade-secondary uppercase text-xs"
+              className="btn-header px-5 py-2 text-[14px]"
             >
               Keep Order
             </button>
             <button
               onClick={handleCancelOrder}
-              className="px-4 py-1.5 bg-arcade-danger text-white uppercase text-xs font-bold hover:opacity-90"
+              className="btn-primary bg-no border-no text-white hover:bg-no/90 px-6 py-2 text-[14px]"
             >
               Confirm Cancellation
             </button>

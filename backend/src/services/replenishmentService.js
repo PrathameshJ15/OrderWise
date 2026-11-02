@@ -330,10 +330,92 @@ async function approvePurchaseOrder(poId, userId, client = null) {
   return updatedPo;
 }
 
+/**
+ * Admin or Inventory Manager receives purchase order -> transitions to 'received', records actual_delivery_date,
+ * and updates physical inventory on-hand balance.
+ */
+async function receivePurchaseOrder(poId, { actualDeliveryDate = null } = {}, userId, client = null) {
+  const db = client || { query };
+
+  const checkRes = await db.query('SELECT * FROM purchase_orders WHERE id = $1', [poId]);
+  if (checkRes.rowCount === 0) {
+    throw new Error(`Purchase order #${poId} not found.`);
+  }
+
+  const currentPo = checkRes.rows[0];
+  if (currentPo.status === 'received') {
+    throw new Error(`Purchase order #${poId} is already marked as received.`);
+  }
+  if (currentPo.status !== 'ordered' && currentPo.status !== 'in_transit') {
+    throw new Error(`Cannot receive purchase order #${poId} because status is "${currentPo.status}" (must be "ordered" or "in_transit").`);
+  }
+
+  const actualDate = actualDeliveryDate || new Date().toISOString().slice(0, 10);
+
+  const updateRes = await db.query(
+    `UPDATE purchase_orders
+     SET status = 'received', actual_delivery_date = $1, updated_at = NOW()
+     WHERE id = $2
+     RETURNING *`,
+    [actualDate, poId]
+  );
+  const updatedPo = updateRes.rows[0];
+
+  const itemsRes = await db.query('SELECT * FROM purchase_order_items WHERE purchase_order_id = $1', [poId]);
+  const inventoryUpdates = [];
+
+  for (const item of itemsRes.rows) {
+    const qtyToReceive = item.quantity_ordered - item.quantity_received;
+    if (qtyToReceive > 0) {
+      await db.query(
+        `UPDATE purchase_order_items
+         SET quantity_received = quantity_ordered
+         WHERE id = $1`,
+        [item.id]
+      );
+
+      const invUpdate = await db.query(
+        `UPDATE inventory
+         SET on_hand_quantity = on_hand_quantity + $1, version = version + 1, updated_at = NOW(), updated_by = $2
+         WHERE product_id = $3
+         RETURNING *`,
+        [qtyToReceive, userId || null, item.product_id]
+      );
+
+      const previousOnHand = invUpdate.rows[0] ? invUpdate.rows[0].on_hand_quantity - qtyToReceive : 0;
+      const newOnHand = invUpdate.rows[0] ? invUpdate.rows[0].on_hand_quantity : qtyToReceive;
+
+      await db.query(
+        `INSERT INTO inventory_movements (product_id, movement_type, quantity, previous_on_hand, new_on_hand, reference_type, reference_id, created_by)
+         VALUES ($1, 'receipt', $2, $3, $4, 'purchase_order', $5, $6)`,
+        [item.product_id, qtyToReceive, previousOnHand, newOnHand, poId, userId || null]
+      );
+
+      inventoryUpdates.push({
+        product_id: item.product_id,
+        quantity_received: qtyToReceive,
+        new_on_hand: newOnHand,
+      });
+    }
+  }
+
+  await db.query(
+    `INSERT INTO audit_logs (actor_id, action, entity_type, entity_id, before_state, after_state)
+     VALUES ($1, 'PO_RECEIVED', 'purchase_orders', $2, $3, $4)`,
+    [userId, poId, JSON.stringify(currentPo), JSON.stringify({ po: updatedPo, inventoryUpdates })]
+  );
+
+  return {
+    purchase_order: updatedPo,
+    inventory_updates: inventoryUpdates,
+  };
+}
+
 module.exports = {
   validateSupplierData,
   validateDemandPeriod,
   getReplenishmentRecommendations,
   createDraftPurchaseOrder,
   approvePurchaseOrder,
+  receivePurchaseOrder,
 };

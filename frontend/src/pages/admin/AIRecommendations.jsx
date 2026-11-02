@@ -18,7 +18,8 @@ import {
   Bot,
   User,
   Trash2,
-  CornerDownLeft,
+  TrendingUp,
+  Layers,
 } from 'lucide-react';
 import apiClient from '../../api/client';
 import { PriorityPill, ConfidencePill, RecommendationStatusPill } from '../../components/ui/StatusPill';
@@ -59,6 +60,24 @@ export default function AIRecommendations() {
 
   // Expandable details state per order
   const [expandedOrders, setExpandedOrders] = useState({});
+
+  // Demand Forecasting state (Phase 17)
+  const [forecasts, setForecasts] = useState([]);
+  const [forecastLoading, setForecastLoading] = useState(false);
+  const [forecastAlpha, setForecastAlpha] = useState(0.3);
+
+  const fetchForecasts = useCallback(async (alpha = forecastAlpha) => {
+    setForecastLoading(true);
+    try {
+      await ensureAdminAuth();
+      const res = await apiClient.get(`/intelligence/forecast?alpha=${alpha}`);
+      setForecasts(res.data?.data?.forecasts || res.data?.forecasts || []);
+    } catch (err) {
+      console.warn('Forecast fetch error:', err);
+    } finally {
+      setForecastLoading(false);
+    }
+  }, [forecastAlpha]);
 
   // Auth helper: ensures token exists for admin demo
   const ensureAdminAuth = async () => {
@@ -284,25 +303,25 @@ export default function AIRecommendations() {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 font-sans py-2">
       {/* Header Banner */}
-      <div className="border border-arcade-border bg-arcade-card p-6">
+      <div className="card-base">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <div className="flex items-center space-x-3 mb-1">
-              <span className="p-2 bg-arcade-accent/10 border border-arcade-accent/30 text-arcade-accent">
+              <span className="p-2 rounded-full bg-ac/10 border border-ac/30 text-ac">
                 <Sparkles className="w-5 h-5" />
               </span>
-              <h1 className="font-display font-black text-2xl uppercase tracking-wider text-arcade-primary">
+              <h1 className="text-[34px] font-bold tracking-[-0.02em] text-white">
                 AI Priority Assistant
               </h1>
-              <span className="text-[10px] px-2 py-0.5 border border-arcade-accent/40 bg-arcade-accent/10 text-arcade-accent font-semibold uppercase">
+              <span className="text-[11px] font-mono px-3 py-1 rounded-pill border border-ac/40 bg-ac/10 text-ac font-semibold">
                 Groq Llama-3
               </span>
             </div>
-            <p className="text-xs text-arcade-secondary">
+            <p className="text-[14px] text-t2">
               Core Principle:{' '}
-              <span className="text-arcade-primary font-semibold">
+              <span className="text-white font-medium">
                 AI recommends. Business rules validate. Authorized humans approve. OrderWise allocates.
               </span>
             </p>
@@ -312,35 +331,35 @@ export default function AIRecommendations() {
             <button
               onClick={fetchOrders}
               disabled={loading}
-              className="flex items-center space-x-2 px-3 py-2 text-xs border border-arcade-border hover:border-arcade-accent text-arcade-primary bg-arcade-surface transition-colors"
+              className="btn-header flex items-center space-x-2 px-4 py-2 text-[14px]"
             >
-              <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
               <span>Refresh Orders</span>
             </button>
           </div>
         </div>
 
         {/* Stats Strip */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-6 border-t border-arcade-border text-xs">
-          <div className="p-3 bg-arcade-surface border border-arcade-border">
-            <span className="text-arcade-secondary block text-[10px] uppercase">Total Orders</span>
-            <span className="text-xl font-display font-black text-arcade-primary">{orders.length}</span>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-6 border-t border-bd text-[14px]">
+          <div className="p-4 bg-s2 rounded-card border border-bd">
+            <span className="text-t2 block text-[11px] font-mono">Total Orders</span>
+            <span className="text-2xl font-bold font-mono text-white mt-1 block">{orders.length}</span>
           </div>
-          <div className="p-3 bg-arcade-surface border border-arcade-warning/30">
-            <span className="text-arcade-warning block text-[10px] uppercase">Pending AI Review</span>
-            <span className="text-xl font-display font-black text-arcade-warning">
+          <div className="p-4 bg-[#2B2010] rounded-card border border-[#5A4210]">
+            <span className="text-wa block text-[11px] font-mono">Pending AI Review</span>
+            <span className="text-2xl font-bold font-mono text-wa mt-1 block">
               {orders.filter((o) => o.latest_recommendation?.status === 'pending').length}
             </span>
           </div>
-          <div className="p-3 bg-arcade-surface border border-arcade-success/30">
-            <span className="text-arcade-success block text-[10px] uppercase">Human Approved</span>
-            <span className="text-xl font-display font-black text-arcade-success">
+          <div className="p-4 bg-s2 rounded-card border border-ok/30">
+            <span className="text-ok block text-[11px] font-mono">Human Approved</span>
+            <span className="text-2xl font-bold font-mono text-ok mt-1 block">
               {orders.filter((o) => o.latest_recommendation?.status === 'approved').length}
             </span>
           </div>
-          <div className="p-3 bg-arcade-surface border border-arcade-accent/30">
-            <span className="text-arcade-accent block text-[10px] uppercase">Human Modified</span>
-            <span className="text-xl font-display font-black text-arcade-accent">
+          <div className="p-4 bg-s2 rounded-card border border-ac/30">
+            <span className="text-ac block text-[11px] font-mono">Human Modified</span>
+            <span className="text-2xl font-bold font-mono text-ac mt-1 block">
               {orders.filter((o) => o.latest_recommendation?.status === 'overridden').length}
             </span>
           </div>
@@ -349,70 +368,88 @@ export default function AIRecommendations() {
 
       {/* Feedback Alerts */}
       {error && (
-        <div className="p-4 bg-arcade-danger/10 border border-arcade-danger/40 text-arcade-danger text-xs flex items-center space-x-3">
+        <div className="p-4 bg-[#291313] border border-no/40 text-no rounded-card text-[13px] flex items-center space-x-3">
           <AlertTriangle className="w-5 h-5 flex-shrink-0" />
           <span>{error}</span>
         </div>
       )}
 
       {successMessage && (
-        <div className="p-4 bg-arcade-success/10 border border-arcade-success/40 text-arcade-success text-xs flex items-center space-x-3">
+        <div className="p-4 bg-[#102416] border border-ok/40 text-ok rounded-card text-[13px] flex items-center space-x-3">
           <CheckCircle className="w-5 h-5 flex-shrink-0" />
           <span>{successMessage}</span>
         </div>
       )}
 
       {/* Primary View Switcher: Approvals vs Chatbot */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-arcade-border pb-3">
+      <div className="flex flex-wrap items-center gap-2.5 pb-2">
         <button
           onClick={() => setActiveTab('review')}
-          className={`flex items-center space-x-2 px-4 py-2 text-xs font-semibold uppercase tracking-wider transition-colors border ${
+          className={`flex items-center space-x-2 px-5 py-2.5 rounded-pill text-[14px] font-semibold transition-colors border ${
             activeTab === 'review'
-              ? 'bg-arcade-accent text-arcade-neutral border-arcade-accent font-bold shadow-[0_0_12px_rgba(200,255,58,0.25)]'
-              : 'bg-arcade-surface text-arcade-secondary border-arcade-border hover:border-arcade-accent hover:text-arcade-primary'
+              ? 'bg-ac text-white border-ac'
+              : 'bg-s text-t2 border-bd hover:text-white hover:border-white'
           }`}
         >
           <Sparkles className="w-4 h-4" />
           <span>Priority Approvals & Review</span>
-          <span className="ml-1 px-1.5 py-0.2 text-[10px] rounded-full bg-black/20 font-mono">
+          <span className="ml-1 px-2 py-0.5 text-[11px] rounded-pill bg-black/30 font-mono">
             {orders.length}
           </span>
         </button>
 
         <button
           onClick={() => setActiveTab('chatbot')}
-          className={`flex items-center space-x-2 px-4 py-2 text-xs font-semibold uppercase tracking-wider transition-colors border ${
+          className={`flex items-center space-x-2 px-5 py-2.5 rounded-pill text-[14px] font-semibold transition-colors border ${
             activeTab === 'chatbot'
-              ? 'bg-arcade-accent text-arcade-neutral border-arcade-accent font-bold shadow-[0_0_12px_rgba(200,255,58,0.25)]'
-              : 'bg-arcade-surface text-arcade-secondary border-arcade-border hover:border-arcade-accent hover:text-arcade-primary'
+              ? 'bg-ac text-white border-ac'
+              : 'bg-s text-t2 border-bd hover:text-white hover:border-white'
           }`}
         >
           <MessageSquare className="w-4 h-4" />
           <span>Interactive AI Assistant Chatbot</span>
-          <span className="ml-1 px-1.5 py-0.2 text-[10px] rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 uppercase font-mono">
+          <span className="ml-1 px-2 py-0.5 text-[11px] rounded-pill bg-ok/20 text-ok border border-ok/30 font-mono">
             Live Copilot
+          </span>
+        </button>
+
+        <button
+          onClick={() => {
+            setActiveTab('forecast');
+            fetchForecasts();
+          }}
+          className={`flex items-center space-x-2 px-5 py-2.5 rounded-pill text-[14px] font-semibold transition-colors border ${
+            activeTab === 'forecast'
+              ? 'bg-ac text-white border-ac'
+              : 'bg-s text-t2 border-bd hover:text-white hover:border-white'
+          }`}
+        >
+          <TrendingUp className="w-4 h-4" />
+          <span>Demand Forecasting &amp; Shortage Risk</span>
+          <span className="ml-1 px-2 py-0.5 text-[11px] rounded-pill bg-ac/20 text-ac border border-ac/30 font-mono">
+            Phase 17
           </span>
         </button>
       </div>
 
       {activeTab === 'chatbot' ? (
-        <div className="border border-arcade-border bg-arcade-card flex flex-col h-[650px]">
+        <div className="card-base flex flex-col h-[650px] p-0 overflow-hidden">
           {/* Chatbot Top Toolbar */}
-          <div className="p-4 border-b border-arcade-border bg-arcade-surface/60 flex items-center justify-between">
+          <div className="p-4 border-b border-bd bg-s2/60 flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 rounded bg-arcade-accent/15 border border-arcade-accent text-arcade-accent flex items-center justify-center">
-                <Bot className="w-4 h-4" />
+              <div className="w-9 h-9 rounded-full bg-ac/15 border border-ac/40 text-ac flex items-center justify-center">
+                <Bot className="w-5 h-5" />
               </div>
               <div>
                 <div className="flex items-center space-x-2">
-                  <h2 className="font-display font-black text-sm uppercase tracking-wider text-arcade-primary">
+                  <h2 className="text-base font-bold text-white">
                     OrderWise Intelligent Co-Pilot Chatbot
                   </h2>
-                  <span className="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 uppercase font-mono">
+                  <span className="text-[10px] px-2 py-0.5 rounded-pill bg-ok/20 text-ok border border-ok/30 font-mono">
                     Online
                   </span>
                 </div>
-                <p className="text-[10px] text-arcade-secondary">
+                <p className="text-[12px] text-t2 mt-0.5">
                   Groq Llama-3-70b-8192 • Deterministic Allocation Engine Explainer • Live Inventory Grounding
                 </p>
               </div>
@@ -420,7 +457,7 @@ export default function AIRecommendations() {
 
             <button
               onClick={handleResetChat}
-              className="flex items-center space-x-1.5 px-2.5 py-1 text-xs border border-arcade-border hover:border-arcade-danger hover:text-arcade-danger text-arcade-secondary bg-arcade-surface transition-colors"
+              className="btn-header flex items-center space-x-1.5 px-3 py-1.5 text-[12px]"
               title="Reset conversation"
             >
               <Trash2 className="w-3.5 h-3.5" />
@@ -429,8 +466,8 @@ export default function AIRecommendations() {
           </div>
 
           {/* Quick Prompts Strip */}
-          <div className="px-4 py-2 border-b border-arcade-border bg-arcade-surface/30 flex items-center gap-2 overflow-x-auto text-[11px]">
-            <span className="text-arcade-secondary uppercase text-[9px] tracking-wider whitespace-nowrap">
+          <div className="px-4 py-2.5 border-b border-bd bg-s2/30 flex items-center gap-2 overflow-x-auto text-[13px]">
+            <span className="text-t2 text-[11px] font-mono whitespace-nowrap">
               Suggested:
             </span>
             {[
@@ -443,7 +480,7 @@ export default function AIRecommendations() {
                 key={i}
                 onClick={() => handleSendChat(prompt.replace(/^[^\s]+\s/, ''))}
                 disabled={chatLoading}
-                className="whitespace-nowrap px-2.5 py-1 bg-arcade-surface border border-arcade-border hover:border-arcade-accent hover:text-arcade-primary text-arcade-secondary transition-colors"
+                className="whitespace-nowrap px-3 py-1 rounded-pill bg-s2 border border-bd hover:border-white text-t2 hover:text-white transition-colors text-[12px]"
               >
                 {prompt}
               </button>
@@ -451,40 +488,40 @@ export default function AIRecommendations() {
           </div>
 
           {/* Messages Scroll Area */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          <div className="flex-1 overflow-y-auto p-5 space-y-4">
             {chatMessages.map((msg) => (
               <div
                 key={msg.id}
                 className={`flex gap-3 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 {msg.sender === 'assistant' && (
-                  <div className="w-7 h-7 rounded bg-arcade-accent/20 border border-arcade-accent/50 text-arcade-accent flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <div className="w-8 h-8 rounded-full bg-ac/20 border border-ac/50 text-ac flex items-center justify-center flex-shrink-0 mt-0.5">
                     <Bot className="w-4 h-4" />
                   </div>
                 )}
 
                 <div
-                  className={`max-w-[80%] rounded border p-3.5 text-xs ${
+                  className={`max-w-[80%] rounded-card border p-4 text-[14px] ${
                     msg.sender === 'user'
-                      ? 'bg-arcade-accent/15 border-arcade-accent/40 text-arcade-primary'
-                      : 'bg-arcade-surface border-arcade-border text-arcade-primary'
+                      ? 'bg-ac/15 border-ac/40 text-white'
+                      : 'bg-s2 border-bd text-white'
                   }`}
                 >
-                  <div className="flex items-center justify-between mb-1.5 pb-1 border-b border-arcade-border/40 text-[10px] text-arcade-secondary font-mono">
-                    <span className="font-bold uppercase tracking-wider text-arcade-accent">
+                  <div className="flex items-center justify-between mb-2 pb-1.5 border-b border-bd/40 text-[11px] text-t2 font-mono">
+                    <span className="font-bold text-ac">
                       {msg.sender === 'user' ? 'Admin (You)' : 'OrderWise AI Assistant'}
                     </span>
                     <span>{msg.time}</span>
                   </div>
 
-                  <div className="whitespace-pre-wrap leading-relaxed space-y-2">
+                  <div className="whitespace-pre-wrap leading-relaxed space-y-2 text-[14px]">
                     {msg.text}
                   </div>
 
                   {/* Follow-up question chips */}
                   {msg.suggestions && msg.suggestions.length > 0 && (
-                    <div className="mt-3 pt-2.5 border-t border-arcade-border/40 space-y-1.5">
-                      <span className="text-[10px] text-arcade-secondary uppercase tracking-wider block">
+                    <div className="mt-3 pt-2.5 border-t border-bd/40 space-y-1.5">
+                      <span className="text-[11px] text-t2 font-mono block">
                         Suggested Follow-ups:
                       </span>
                       <div className="flex flex-wrap gap-1.5">
@@ -493,7 +530,7 @@ export default function AIRecommendations() {
                             key={idx}
                             onClick={() => handleSendChat(sug)}
                             disabled={chatLoading}
-                            className="text-[11px] px-2 py-0.5 bg-arcade-neutral/40 hover:bg-arcade-accent/20 border border-arcade-border hover:border-arcade-accent text-arcade-primary transition-colors text-left"
+                            className="text-[12px] px-3 py-1 rounded-pill bg-s border border-bd hover:border-ac text-t2 hover:text-white transition-colors text-left"
                           >
                             → {sug}
                           </button>
@@ -504,7 +541,7 @@ export default function AIRecommendations() {
                 </div>
 
                 {msg.sender === 'user' && (
-                  <div className="w-7 h-7 rounded bg-arcade-surface border border-arcade-border text-arcade-primary flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <div className="w-8 h-8 rounded-full bg-s2 border border-bd text-white flex items-center justify-center flex-shrink-0 mt-0.5">
                     <User className="w-4 h-4" />
                   </div>
                 )}
@@ -512,12 +549,12 @@ export default function AIRecommendations() {
             ))}
 
             {chatLoading && (
-              <div className="flex gap-3 justify-start items-center text-xs text-arcade-secondary">
-                <div className="w-7 h-7 rounded bg-arcade-accent/20 border border-arcade-accent/50 text-arcade-accent flex items-center justify-center flex-shrink-0 animate-pulse">
+              <div className="flex gap-3 justify-start items-center text-[13px] text-t2">
+                <div className="w-8 h-8 rounded-full bg-ac/20 border border-ac/50 text-ac flex items-center justify-center flex-shrink-0 animate-pulse">
                   <Bot className="w-4 h-4" />
                 </div>
-                <div className="p-3 bg-arcade-surface border border-arcade-border rounded flex items-center space-x-2">
-                  <RefreshCw className="w-3.5 h-3.5 animate-spin text-arcade-accent" />
+                <div className="p-3.5 bg-s2 border border-bd rounded-card flex items-center space-x-2">
+                  <RefreshCw className="w-4 h-4 animate-spin text-ac" />
                   <span>OrderWise AI is analyzing allocation rules & generating response...</span>
                 </div>
               </div>
@@ -531,7 +568,7 @@ export default function AIRecommendations() {
               e.preventDefault();
               handleSendChat();
             }}
-            className="p-3 border-t border-arcade-border bg-arcade-surface/60 flex items-center gap-2"
+            className="p-3.5 border-t border-bd bg-s2/60 flex items-center gap-2.5"
           >
             <input
               type="text"
@@ -539,324 +576,506 @@ export default function AIRecommendations() {
               onChange={(e) => setInputMessage(e.target.value)}
               placeholder="Ask OrderWise AI (e.g. Why was Order #101 deferred? What is the Pressure Gauge bottleneck?)..."
               disabled={chatLoading}
-              className="flex-1 px-3 py-2 text-xs bg-arcade-neutral border border-arcade-border focus:border-arcade-accent text-arcade-primary focus:outline-none"
+              className="flex-1 px-4 py-2.5 rounded-pill text-[14px] bg-s border border-bd focus:border-ac text-white focus:outline-none placeholder-t2/60"
             />
             <button
               type="submit"
               disabled={chatLoading || !inputMessage.trim()}
-              className="px-4 py-2 bg-arcade-accent text-arcade-neutral font-bold text-xs uppercase tracking-wider flex items-center space-x-1.5 hover:bg-arcade-accent/90 disabled:opacity-50 transition-colors"
+              className="btn-primary flex items-center space-x-1.5 px-6 py-2.5 text-[14px] disabled:opacity-50"
             >
               {chatLoading ? (
-                <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                <RefreshCw className="w-4 h-4 animate-spin" />
               ) : (
-                <Send className="w-3.5 h-3.5" />
+                <Send className="w-4 h-4" />
               )}
               <span>Send</span>
             </button>
           </form>
         </div>
+      ) : activeTab === 'forecast' ? (
+        <div className="space-y-6">
+          {/* Phase 17 Header */}
+          <div className="card-base bg-s2/40 border border-bd">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <div className="inline-flex items-center space-x-1.5 text-[11px] font-mono text-ac uppercase font-bold tracking-wider">
+                  <TrendingUp className="w-3.5 h-3.5" />
+                  <span>Phase 17 AI Demand Forecasting &amp; Shortage Risk</span>
+                </div>
+                <h2 className="text-[20px] font-bold text-white mt-1">
+                  Horizon Projections &amp; Shortage Risk Radar
+                </h2>
+                <p className="text-[13px] text-t2 mt-0.5 max-w-3xl leading-relaxed">
+                  Deterministic exponential smoothing with expanding 95% confidence intervals (&plusmn;1.96 &times; &sigma; &times; &radic;h) over 7-day and 30-day projection horizons. Categorizes inventory shortage risks and exposes data sparsity flags.
+                </p>
+              </div>
+
+              <div className="flex items-center space-x-3 self-start md:self-auto">
+                <div className="flex items-center space-x-2 rounded-pill border border-bd bg-s px-3 py-1.5 text-[12px] text-t2">
+                  <span>Smoothing Factor (&alpha;):</span>
+                  <select
+                    value={forecastAlpha}
+                    onChange={(e) => {
+                      const newAlpha = parseFloat(e.target.value);
+                      setForecastAlpha(newAlpha);
+                      fetchForecasts(newAlpha);
+                    }}
+                    className="bg-transparent border-none text-white font-mono font-bold outline-none cursor-pointer"
+                  >
+                    <option value="0.1" className="bg-s text-white">0.1 (Slow/Stable)</option>
+                    <option value="0.3" className="bg-s text-white">0.3 (Standard)</option>
+                    <option value="0.5" className="bg-s text-white">0.5 (Responsive)</option>
+                    <option value="0.8" className="bg-s text-white">0.8 (Rapid Trend)</option>
+                  </select>
+                </div>
+
+                <button
+                  onClick={() => fetchForecasts(forecastAlpha)}
+                  disabled={forecastLoading}
+                  className="btn-secondary px-4 py-2 text-[13px] flex items-center space-x-1.5"
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 ${forecastLoading ? 'animate-spin' : ''}`} />
+                  <span>Recalculate</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Non-speculative Disclaimer Banner */}
+          <div className="p-4 rounded-card border border-ac/30 bg-[#241212] flex items-start space-x-3 text-[12px] text-white">
+            <ShieldAlert className="w-4 h-4 text-ac flex-shrink-0 mt-0.5" />
+            <div className="space-y-1">
+              <div className="font-mono font-bold text-ac uppercase tracking-wider text-[11px]">
+                EXPERIMENTAL_ESTIMATE &bull; Non-Speculative Predictive Advisory
+              </div>
+              <p className="text-t2 text-[12px] leading-relaxed">
+                Demand forecasting is an assistive mathematical model designed to highlight potential stockout risks. In accordance with OrderWise deterministic governance, forecasts <strong className="text-white">never trigger automated replenishment or allocation modifications</strong> without authoritative human review and approval.
+              </p>
+            </div>
+          </div>
+
+          {/* Forecasting Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {forecasts.map((f) => {
+              const riskColor =
+                f.shortage_risk_classification === 'SHORTAGE_RISK_HIGH'
+                  ? 'border-no/50 bg-[#2B1515] text-no'
+                  : f.shortage_risk_classification === 'SHORTAGE_RISK_MEDIUM'
+                  ? 'border-wa/50 bg-[#2B2010] text-wa'
+                  : 'border-ok/50 bg-[#102416] text-ok';
+
+              const riskBadgeText =
+                f.shortage_risk_classification === 'SHORTAGE_RISK_HIGH'
+                  ? 'CRITICAL SHORTAGE RISK'
+                  : f.shortage_risk_classification === 'SHORTAGE_RISK_MEDIUM'
+                  ? 'MEDIUM SHORTAGE RISK'
+                  : 'STOCK ADEQUATE';
+
+              return (
+                <div key={`fc-${f.product_id}`} className="card-base p-5 border border-bd flex flex-col justify-between">
+                  <div>
+                    {/* Header: Name, SKU, Risk Badge */}
+                    <div className="flex items-start justify-between gap-3 mb-3">
+                      <div>
+                        <h3 className="text-[17px] font-bold text-white">{f.product_name}</h3>
+                        <span className="text-[12px] font-mono text-t2">{f.sku}</span>
+                      </div>
+
+                      <span className={`px-2.5 py-1 rounded-pill text-[11px] font-mono font-bold uppercase border ${riskColor}`}>
+                        {riskBadgeText}
+                      </span>
+                    </div>
+
+                    {/* Stock & Velocity Strip */}
+                    <div className="grid grid-cols-3 gap-2 p-3 rounded-card bg-s2 border border-bd mb-4 text-center font-mono">
+                      <div>
+                        <div className="text-[10px] text-t2 uppercase">Available Stock</div>
+                        <div className="text-[18px] font-bold text-white mt-0.5">{f.available_inventory}</div>
+                      </div>
+                      <div>
+                        <div className="text-[10px] text-t2 uppercase">Daily Velocity</div>
+                        <div className="text-[18px] font-bold text-ac mt-0.5">{f.avg_daily_demand} <span className="text-[11px] text-t2">u/d</span></div>
+                      </div>
+                      <div>
+                        <div className="text-[10px] text-t2 uppercase">Daily Volatility</div>
+                        <div className="text-[18px] font-bold text-t2 mt-0.5">&plusmn;{f.daily_std_dev || 0}</div>
+                      </div>
+                    </div>
+
+                    {/* Horizons Breakdown */}
+                    <div className="space-y-3 font-mono text-[13px]">
+                      {/* 7-Day Horizon */}
+                      <div className="p-3 rounded-card border border-bd/70 bg-s">
+                        <div className="flex justify-between items-center mb-1.5">
+                          <span className="text-white font-bold flex items-center gap-1.5">
+                            <Calendar className="w-3.5 h-3.5 text-ac" />
+                            <span>7-Day Projected Horizon</span>
+                          </span>
+                          <span className="text-white font-bold text-[14px]">
+                            {f.horizon_7d?.projected_demand} units
+                          </span>
+                        </div>
+                        <div className="flex justify-between text-[11px] text-t2">
+                          <span>95% Confidence Interval:</span>
+                          <span className="text-t1 font-bold">
+                            [{f.horizon_7d?.lower_ci_95} &ndash; {f.horizon_7d?.upper_ci_95} units]
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* 30-Day Horizon */}
+                      <div className="p-3 rounded-card border border-bd/70 bg-s">
+                        <div className="flex justify-between items-center mb-1.5">
+                          <span className="text-white font-bold flex items-center gap-1.5">
+                            <Calendar className="w-3.5 h-3.5 text-ac" />
+                            <span>30-Day Projected Horizon</span>
+                          </span>
+                          <span className="text-white font-bold text-[14px]">
+                            {f.horizon_30d?.projected_demand} units
+                          </span>
+                        </div>
+                        <div className="flex justify-between text-[11px] text-t2">
+                          <span>95% Confidence Interval:</span>
+                          <span className="text-t1 font-bold">
+                            [{f.horizon_30d?.lower_ci_95} &ndash; {f.horizon_30d?.upper_ci_95} units]
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Footer: Data Quality Flag */}
+                  <div className="mt-4 pt-3 border-t border-bd/60 flex items-center justify-between text-[11px] font-mono text-t2">
+                    <div className="flex items-center space-x-1.5">
+                      <span>Data Quality:</span>
+                      <span className={`px-2 py-0.5 rounded-pill font-bold uppercase text-[10px] border ${
+                        f.data_quality_flag === 'SUFFICIENT'
+                          ? 'border-ok/40 bg-ok/10 text-ok'
+                          : f.data_quality_flag === 'SPARSE_DATA'
+                          ? 'border-wa/40 bg-wa/10 text-wa'
+                          : 'border-bd bg-s2 text-t2'
+                      }`}>
+                        {f.data_quality_flag}
+                      </span>
+                    </div>
+
+                    <span className="text-[10px] text-t2">
+                      &alpha; = {f.alpha_used || forecastAlpha} &bull; Exponential Smoothing
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {forecasts.length === 0 && (
+            <div className="card-base text-center py-12 text-t2">
+              {forecastLoading ? 'Calculating forecast horizons...' : 'No products available for forecasting.'}
+            </div>
+          )}
+        </div>
       ) : (
         <>
           {/* Filter Tabs */}
-          <div className="flex flex-wrap gap-2 border-b border-arcade-border pb-3">
-        {[
-          { key: 'all', label: 'All Orders' },
-          { key: 'pending', label: 'Pending Review' },
-          { key: 'approved', label: 'Approved' },
-          { key: 'overridden', label: 'Modified' },
-          { key: 'rejected', label: 'Rejected' },
-          { key: 'no_rec', label: 'Needs AI Analysis' },
-        ].map((t) => (
-          <button
-            key={t.key}
-            onClick={() => setFilter(t.key)}
-            className={`px-3 py-1.5 text-xs font-semibold uppercase tracking-wider border transition-colors ${
-              filter === t.key
-                ? 'border-arcade-accent bg-arcade-accent/15 text-arcade-accent'
-                : 'border-arcade-border bg-arcade-surface text-arcade-secondary hover:text-arcade-primary hover:border-arcade-border-light'
-            }`}
-          >
-            {t.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Orders & Recommendations List */}
-      {loading ? (
-        <div className="p-12 text-center text-arcade-secondary border border-arcade-border bg-arcade-card">
-          <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-3 text-arcade-accent" />
-          <p className="text-xs uppercase tracking-wider">Loading orders & AI priority recommendations...</p>
-        </div>
-      ) : filteredOrders.length === 0 ? (
-        <div className="p-12 text-center text-arcade-secondary border border-arcade-border bg-arcade-card">
-          <Info className="w-8 h-8 mx-auto mb-2 opacity-50" />
-          <p className="text-xs uppercase tracking-wider">No orders found for selected filter.</p>
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {filteredOrders.map((order) => {
-            const rec = order.latest_recommendation;
-            const isExpanded = !!expandedOrders[order.id];
-
-            return (
-              <div
-                key={order.id}
-                className="border border-arcade-border bg-arcade-card transition-all hover:border-arcade-border-light"
+          <div className="card-base p-3 flex flex-wrap gap-2">
+            {[
+              { key: 'all', label: 'All Orders' },
+              { key: 'pending', label: 'Pending Review' },
+              { key: 'approved', label: 'Approved' },
+              { key: 'overridden', label: 'Modified' },
+              { key: 'rejected', label: 'Rejected' },
+              { key: 'no_rec', label: 'Needs AI Analysis' },
+            ].map((t) => (
+              <button
+                key={t.key}
+                onClick={() => setFilter(t.key)}
+                className={`px-4 py-1.5 rounded-pill text-[12px] font-mono transition-colors border ${
+                  filter === t.key
+                    ? 'border-ac bg-ac text-white font-bold'
+                    : 'border-bd bg-s2 text-t2 hover:text-white'
+                }`}
               >
-                {/* Order Top Bar */}
-                <div className="p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-arcade-border/50">
-                  <div className="space-y-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="font-display font-black text-lg text-arcade-primary">
-                        ORDER #{order.id}
-                      </span>
-                      <span className="text-[10px] px-2 py-0.5 border border-arcade-border bg-arcade-surface text-arcade-secondary uppercase">
-                        Status: {order.status}
-                      </span>
-                      {/* Authoritative Priority Badge */}
-                      <div className="flex items-center space-x-1.5 text-xs">
-                        <span className="text-arcade-secondary text-[11px]">Authoritative Priority:</span>
-                        <PriorityPill priority={order.approved_priority || 'MEDIUM'} />
+                {t.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Orders & Recommendations List */}
+          {loading ? (
+            <div className="card-base p-12 text-center text-t2">
+              <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-3 text-ac" />
+              <p className="text-[12px] font-mono">Loading orders & AI priority recommendations...</p>
+            </div>
+          ) : filteredOrders.length === 0 ? (
+            <div className="card-base p-12 text-center text-t2">
+              <Info className="w-8 h-8 mx-auto mb-2 opacity-40" />
+              <p className="text-[14px]">No orders found for selected filter.</p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {filteredOrders.map((order) => {
+                const rec = order.latest_recommendation;
+                const isExpanded = !!expandedOrders[order.id];
+
+                return (
+                  <div
+                    key={order.id}
+                    className="card-base p-0 overflow-hidden"
+                  >
+                    {/* Order Top Bar */}
+                    <div className="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-bd/60 bg-s2/40">
+                      <div className="space-y-1">
+                        <div className="flex flex-wrap items-center gap-2.5">
+                          <span className="font-mono font-bold text-lg text-white">
+                            ORDER #{order.id}
+                          </span>
+                          <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-pill border border-bd bg-s2 text-t2">
+                            Status: {order.status}
+                          </span>
+                          {/* Authoritative Priority Badge */}
+                          <div className="flex items-center space-x-1.5 text-[13px]">
+                            <span className="text-t2 text-[12px]">Authoritative Priority:</span>
+                            <PriorityPill priority={order.approved_priority || 'MEDIUM'} />
+                          </div>
+                        </div>
+
+                        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] text-t2">
+                          <span>Customer: <strong className="text-white">{order.customer_name}</strong></span>
+                          <span className="flex items-center gap-1">
+                            <Calendar className="w-3.5 h-3.5" />
+                            Promised:{' '}
+                            <strong className="text-white font-mono">
+                              {order.promised_delivery_date
+                                ? new Date(order.promised_delivery_date).toLocaleDateString()
+                                : 'N/A'}
+                            </strong>
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Actions / Rec Request */}
+                      <div className="flex items-center space-x-2">
+                        {!rec ? (
+                          <button
+                            onClick={() => handleRequestRecommendation(order.id)}
+                            disabled={actionLoading[`rec-${order.id}`]}
+                            className="btn-primary flex items-center space-x-2 px-4 py-2 text-[13px]"
+                          >
+                            <Sparkles className="w-4 h-4" />
+                            <span>
+                              {actionLoading[`rec-${order.id}`] ? 'Analyzing...' : 'Request AI Analysis'}
+                            </span>
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => handleRequestRecommendation(order.id)}
+                            disabled={actionLoading[`rec-${order.id}`]}
+                            title="Re-run AI Analysis"
+                            className="btn-header flex items-center space-x-1.5 px-3 py-1.5 text-[12px]"
+                          >
+                            <RefreshCw
+                              className={`w-3.5 h-3.5 ${actionLoading[`rec-${order.id}`] ? 'animate-spin' : ''}`}
+                            />
+                            <span>Re-Analyze</span>
+                          </button>
+                        )}
+
+                        <button
+                          onClick={() => toggleExpand(order.id)}
+                          className="p-2 rounded-full border border-bd text-t2 hover:text-white hover:border-white transition-colors"
+                          title={isExpanded ? 'Collapse Items' : 'Expand Items'}
+                        >
+                          {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                        </button>
                       </div>
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-arcade-secondary">
-                      <span>Customer: <strong className="text-arcade-primary">{order.customer_name}</strong></span>
-                      <span className="flex items-center gap-1">
-                        <Calendar className="w-3.5 h-3.5" />
-                        Promised:{' '}
-                        <strong className="text-arcade-primary">
-                          {order.promised_delivery_date
-                            ? new Date(order.promised_delivery_date).toLocaleDateString()
-                            : 'N/A'}
-                        </strong>
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Actions / Rec Request */}
-                  <div className="flex items-center space-x-2">
-                    {!rec ? (
-                      <button
-                        onClick={() => handleRequestRecommendation(order.id)}
-                        disabled={actionLoading[`rec-${order.id}`]}
-                        className="flex items-center space-x-2 px-3 py-1.5 text-xs font-semibold bg-arcade-accent text-arcade-surface border border-arcade-accent hover:bg-arcade-accent/90 transition-colors shadow-[0_0_10px_rgba(200,255,58,0.2)]"
-                      >
-                        <Sparkles className="w-3.5 h-3.5" />
-                        <span>
-                          {actionLoading[`rec-${order.id}`] ? 'Analyzing...' : 'Request AI Analysis'}
+                    {/* Items Accordion (if expanded) */}
+                    {isExpanded && order.items && order.items.length > 0 && (
+                      <div className="p-4 bg-s2/60 border-b border-bd text-[13px] space-y-2">
+                        <span className="text-[11px] font-mono text-t2 block">
+                          Order Items:
                         </span>
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() => handleRequestRecommendation(order.id)}
-                        disabled={actionLoading[`rec-${order.id}`]}
-                        title="Re-run AI Analysis"
-                        className="flex items-center space-x-1 px-2.5 py-1 text-[11px] border border-arcade-border text-arcade-secondary hover:text-arcade-primary bg-arcade-surface transition-colors"
-                      >
-                        <RefreshCw
-                          className={`w-3 h-3 ${actionLoading[`rec-${order.id}`] ? 'animate-spin' : ''}`}
-                        />
-                        <span>Re-Analyze</span>
-                      </button>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
+                          {order.items.map((it) => (
+                            <div key={it.id} className="p-3 rounded-card border border-bd bg-s space-y-0.5">
+                              <div className="font-bold text-white">{it.product_name}</div>
+                              <div className="text-[12px] font-mono text-t2">
+                                SKU: {it.sku} • Requested: <strong className="text-white">{it.requested_quantity}</strong> (Min: {it.minimum_acceptable_quantity})
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
                     )}
 
-                    <button
-                      onClick={() => toggleExpand(order.id)}
-                      className="p-1.5 border border-arcade-border text-arcade-secondary hover:text-arcade-primary transition-colors"
-                      title={isExpanded ? 'Collapse Items' : 'Expand Items'}
-                    >
-                      {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                    </button>
-                  </div>
-                </div>
-
-                {/* Items Accordion (if expanded) */}
-                {isExpanded && order.items && order.items.length > 0 && (
-                  <div className="p-4 bg-arcade-surface/60 border-b border-arcade-border text-xs space-y-2">
-                    <span className="text-[10px] text-arcade-secondary uppercase tracking-widest block font-bold">
-                      Order Items:
-                    </span>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
-                      {order.items.map((it) => (
-                        <div key={it.id} className="p-2 border border-arcade-border bg-arcade-card space-y-0.5">
-                          <div className="font-semibold text-arcade-primary">{it.product_name}</div>
-                          <div className="text-[11px] text-arcade-secondary">
-                            SKU: {it.sku} • Requested: <strong>{it.requested_quantity}</strong> (Min: {it.minimum_acceptable_quantity})
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Customer Business Notes */}
-                {order.business_notes && (
-                  <div className="px-5 py-3 bg-arcade-surface/40 border-b border-arcade-border/40 text-xs flex items-start space-x-2">
-                    <ShieldAlert className="w-4 h-4 text-arcade-secondary flex-shrink-0 mt-0.5" />
-                    <div>
-                      <span className="text-[10px] text-arcade-secondary uppercase tracking-wider block font-semibold">
-                        Customer Business Notes (Treated Strictly as Data):
-                      </span>
-                      <p className="text-arcade-primary/90 italic">"{order.business_notes}"</p>
-                    </div>
-                  </div>
-                )}
-
-                {/* AI Recommendation Box */}
-                {rec ? (
-                  <div className="p-5 bg-arcade-neutral/40 space-y-4">
-                    {/* Recommendation Top Metadata Strip */}
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-arcade-border/50">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span className="text-xs text-arcade-secondary font-semibold uppercase">
-                          AI Suggested Priority:
-                        </span>
-                        <PriorityPill priority={rec.suggested_priority} className="text-sm px-3 py-1" />
-                        <ConfidencePill confidence={rec.confidence} />
-                        <RecommendationStatusPill status={rec.status} />
-                      </div>
-
-                      {/* NEW: Traceability Badges (Model & Prompt Version) */}
-                      <div className="flex flex-wrap items-center gap-2 text-[10px] text-arcade-secondary">
-                        <span
-                          className={`px-2 py-0.5 border ${
-                            rec.provider === 'fallback'
-                              ? 'border-arcade-warning/40 bg-arcade-warning/10 text-arcade-warning'
-                              : 'border-arcade-accent/30 bg-arcade-accent/10 text-arcade-accent'
-                          } font-semibold uppercase`}
-                        >
-                          Provider: {rec.provider === 'fallback' ? 'Rule-Based Fallback' : 'Groq AI'}
-                        </span>
-                        <span className="px-2 py-0.5 border border-arcade-border bg-arcade-surface font-mono">
-                          Model: {rec.model || 'llama3-70b-8192'}
-                        </span>
-                        <span className="px-2 py-0.5 border border-arcade-border bg-arcade-surface font-mono">
-                          Prompt: {rec.prompt_version || 'v1.0.0'}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Recommendation Explanation */}
-                    <div className="space-y-2 text-xs">
-                      <div>
-                        <span className="text-[10px] text-arcade-secondary uppercase tracking-widest font-bold block mb-1">
-                          Rationale & Explanation:
-                        </span>
-                        <p className="text-arcade-primary leading-relaxed bg-arcade-card p-3 border border-arcade-border">
-                          {rec.explanation}
-                        </p>
-                      </div>
-
-                      {/* Supporting Evidence Quote */}
-                      {rec.evidence && (
+                    {/* Customer Business Notes */}
+                    {order.business_notes && (
+                      <div className="px-5 py-3 bg-s2/30 border-b border-bd text-[13px] flex items-start space-x-2.5">
+                        <ShieldAlert className="w-4 h-4 text-t2 flex-shrink-0 mt-0.5" />
                         <div>
-                          <span className="text-[10px] text-arcade-secondary uppercase tracking-widest font-bold block mb-1">
-                            Supporting Evidence:
+                          <span className="text-[11px] font-mono text-t2 block">
+                            Customer Business Notes (Treated Strictly as Data):
                           </span>
-                          <div className="flex items-start space-x-2 p-2.5 bg-arcade-surface border border-arcade-border text-arcade-secondary">
-                            <Quote className="w-3.5 h-3.5 text-arcade-accent flex-shrink-0 mt-0.5" />
-                            <span className="italic text-arcade-primary/90">{rec.evidence}</span>
+                          <p className="text-white italic">&ldquo;{order.business_notes}&rdquo;</p>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* AI Recommendation Box */}
+                    {rec ? (
+                      <div className="p-5 space-y-4">
+                        {/* Recommendation Top Metadata Strip */}
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-bd">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="text-[13px] text-t2">
+                              AI Suggested Priority:
+                            </span>
+                            <PriorityPill priority={rec.suggested_priority} className="text-sm px-3 py-1" />
+                            <ConfidencePill confidence={rec.confidence} />
+                            <RecommendationStatusPill status={rec.status} />
+                          </div>
+
+                          {/* Traceability Badges (Model & Prompt Version) */}
+                          <div className="flex flex-wrap items-center gap-2 text-[11px] font-mono">
+                            <span
+                              className={`px-2.5 py-0.5 rounded-pill border ${
+                                rec.provider === 'fallback'
+                                  ? 'border-wa/40 bg-wa/10 text-wa'
+                                  : 'border-ac/30 bg-ac/10 text-ac'
+                              }`}
+                            >
+                              Provider: {rec.provider === 'fallback' ? 'Rule-Based Fallback' : 'Groq AI'}
+                            </span>
+                            <span className="px-2.5 py-0.5 rounded-pill border border-bd bg-s2 text-t2">
+                              Model: {rec.model || 'llama3-70b-8192'}
+                            </span>
+                            <span className="px-2.5 py-0.5 rounded-pill border border-bd bg-s2 text-t2">
+                              Prompt: {rec.prompt_version || 'v1.0.0'}
+                            </span>
                           </div>
                         </div>
-                      )}
 
-                      {/* Warning Banner */}
-                      {rec.warning && (
-                        <div className="p-3 bg-arcade-warning/10 border border-arcade-warning/30 text-arcade-warning flex items-start space-x-2 text-[11px]">
-                          <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" />
-                          <span>{rec.warning}</span>
+                        {/* Recommendation Explanation */}
+                        <div className="space-y-2 text-[14px]">
+                          <div>
+                            <span className="text-[11px] font-mono text-t2 block mb-1">
+                              Rationale & Explanation:
+                            </span>
+                            <p className="text-white leading-relaxed bg-s2 p-4 rounded-card border border-bd">
+                              {rec.explanation}
+                            </p>
+                          </div>
+
+                          {/* Supporting Evidence Quote */}
+                          {rec.evidence && (
+                            <div>
+                              <span className="text-[11px] font-mono text-t2 block mb-1">
+                                Supporting Evidence:
+                              </span>
+                              <div className="flex items-start space-x-2.5 p-3 rounded-card bg-s2 border border-bd text-t2">
+                                <Quote className="w-4 h-4 text-ac flex-shrink-0 mt-0.5" />
+                                <span className="italic text-white">&ldquo;{rec.evidence}&rdquo;</span>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Warning Banner */}
+                          {rec.warning && (
+                            <div className="p-3.5 bg-[#2B2010] border border-[#5A4210] text-wa rounded-card flex items-start space-x-2 text-[13px]">
+                              <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                              <span>{rec.warning}</span>
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
 
-                    {/* Human Decision Governance Actions */}
-                    <div className="pt-3 border-t border-arcade-border/50 flex flex-wrap items-center justify-between gap-3">
-                      <div className="text-[11px] text-arcade-secondary">
-                        {rec.status === 'pending' ? (
-                          <span className="text-arcade-warning font-semibold">
-                            ⚠️ Awaiting authorized human review before updating authoritative priority.
-                          </span>
-                        ) : rec.status === 'approved' ? (
-                          <span className="text-arcade-success font-semibold flex items-center gap-1">
-                            <BookmarkCheck className="w-3.5 h-3.5" />
-                            Approved by Admin • Authoritative Priority updated to {order.approved_priority}.
-                          </span>
-                        ) : rec.status === 'overridden' ? (
-                          <span className="text-arcade-accent font-semibold flex items-center gap-1">
-                            <Edit3 className="w-3.5 h-3.5" />
-                            Modified by Admin • Authoritative Priority set to {order.approved_priority}.
-                          </span>
-                        ) : (
-                          <span className="text-arcade-danger font-semibold flex items-center gap-1">
-                            <XCircle className="w-3.5 h-3.5" />
-                            Recommendation Rejected • Original priority remained unchanged.
-                          </span>
-                        )}
+                        {/* Human Decision Governance Actions */}
+                        <div className="pt-3 border-t border-bd flex flex-wrap items-center justify-between gap-3">
+                          <div className="text-[13px]">
+                            {rec.status === 'pending' ? (
+                              <span className="text-wa">
+                                ⚠️ Awaiting authorized human review before updating authoritative priority.
+                              </span>
+                            ) : rec.status === 'approved' ? (
+                              <span className="text-ok flex items-center gap-1.5">
+                                <BookmarkCheck className="w-4 h-4" />
+                                Approved by Admin • Authoritative Priority updated to {order.approved_priority}.
+                              </span>
+                            ) : rec.status === 'overridden' ? (
+                              <span className="text-ac flex items-center gap-1.5">
+                                <Edit3 className="w-4 h-4" />
+                                Modified by Admin • Authoritative Priority set to {order.approved_priority}.
+                              </span>
+                            ) : (
+                              <span className="text-no flex items-center gap-1.5">
+                                <XCircle className="w-4 h-4" />
+                                Recommendation Rejected • Original priority remained unchanged.
+                              </span>
+                            )}
+                          </div>
+
+                          <div className="flex items-center space-x-2">
+                            {/* Ask AI Chatbot */}
+                            <button
+                              onClick={() => handleAskAboutOrder(order)}
+                              className="btn-header flex items-center space-x-1.5 px-3 py-1.5 text-[12px]"
+                              title="Ask AI Chatbot to explain this order"
+                            >
+                              <MessageSquare className="w-3.5 h-3.5 text-ac" />
+                              <span>Ask Copilot</span>
+                            </button>
+
+                            {/* Approve Action */}
+                            <button
+                              onClick={() => handleApprove(rec)}
+                              disabled={actionLoading[`approve-${rec.id}`]}
+                              className="btn-header flex items-center space-x-1.5 px-3.5 py-1.5 text-[12px] font-bold text-ok border-ok/40 hover:bg-ok/10"
+                            >
+                              <CheckCircle className="w-3.5 h-3.5" />
+                              <span>Approve</span>
+                            </button>
+
+                            {/* Modify Action */}
+                            <button
+                              onClick={() => openModifyModal(rec)}
+                              disabled={actionLoading[`modify-${rec.id}`]}
+                              className="btn-header flex items-center space-x-1.5 px-3.5 py-1.5 text-[12px] font-bold text-wa border-wa/40 hover:bg-wa/10"
+                            >
+                              <Edit3 className="w-3.5 h-3.5" />
+                              <span>Modify</span>
+                            </button>
+
+                            {/* Reject Action */}
+                            <button
+                              onClick={() => handleReject(rec)}
+                              disabled={actionLoading[`reject-${rec.id}`]}
+                              className="btn-header flex items-center space-x-1.5 px-3.5 py-1.5 text-[12px] font-bold text-no border-no/40 hover:bg-no/10"
+                            >
+                              <XCircle className="w-3.5 h-3.5" />
+                              <span>Reject</span>
+                            </button>
+                          </div>
+                        </div>
                       </div>
-
-                      <div className="flex items-center space-x-2">
-                        {/* Ask AI Chatbot */}
+                    ) : (
+                      <div className="p-4 bg-s2/30 text-[13px] text-t2 flex items-center justify-between">
+                        <span>No AI recommendation on record for this order.</span>
                         <button
-                          onClick={() => handleAskAboutOrder(order)}
-                          className="flex items-center space-x-1.5 px-3 py-1.5 text-xs font-semibold bg-arcade-surface hover:bg-arcade-surface-light text-arcade-primary border border-arcade-border hover:border-arcade-accent transition-colors"
-                          title="Ask AI Chatbot to explain this order"
+                          onClick={() => handleRequestRecommendation(order.id)}
+                          disabled={actionLoading[`rec-${order.id}`]}
+                          className="btn-primary text-[12px] px-3.5 py-1.5 flex items-center gap-1.5"
                         >
-                          <MessageSquare className="w-3.5 h-3.5 text-arcade-accent" />
-                          <span>Ask Copilot</span>
-                        </button>
-
-                        {/* Approve Action */}
-                        <button
-                          onClick={() => handleApprove(rec)}
-                          disabled={actionLoading[`approve-${rec.id}`]}
-                          className="flex items-center space-x-1.5 px-3 py-1.5 text-xs font-semibold bg-arcade-success/20 hover:bg-arcade-success/30 text-arcade-success border border-arcade-success/50 transition-colors"
-                        >
-                          <CheckCircle className="w-3.5 h-3.5" />
-                          <span>Approve</span>
-                        </button>
-
-                        {/* Modify Action */}
-                        <button
-                          onClick={() => openModifyModal(rec)}
-                          disabled={actionLoading[`modify-${rec.id}`]}
-                          className="flex items-center space-x-1.5 px-3 py-1.5 text-xs font-semibold bg-arcade-accent/15 hover:bg-arcade-accent/25 text-arcade-accent border border-arcade-accent/50 transition-colors"
-                        >
-                          <Edit3 className="w-3.5 h-3.5" />
-                          <span>Modify</span>
-                        </button>
-
-                        {/* Reject Action */}
-                        <button
-                          onClick={() => handleReject(rec)}
-                          disabled={actionLoading[`reject-${rec.id}`]}
-                          className="flex items-center space-x-1.5 px-3 py-1.5 text-xs font-semibold bg-arcade-danger/15 hover:bg-arcade-danger/25 text-arcade-danger border border-arcade-danger/50 transition-colors"
-                        >
-                          <XCircle className="w-3.5 h-3.5" />
-                          <span>Reject</span>
+                          <Sparkles className="w-3.5 h-3.5" />
+                          <span>Run AI Priority Assistant</span>
                         </button>
                       </div>
-                    </div>
+                    )}
                   </div>
-                ) : (
-                  <div className="p-4 bg-arcade-surface/30 text-xs text-arcade-secondary flex items-center justify-between">
-                    <span>No AI recommendation on record for this order.</span>
-                    <button
-                      onClick={() => handleRequestRecommendation(order.id)}
-                      disabled={actionLoading[`rec-${order.id}`]}
-                      className="text-xs text-arcade-accent hover:underline flex items-center gap-1 font-semibold"
-                    >
-                      <Sparkles className="w-3 h-3" />
-                      Run AI Priority Assistant
-                    </button>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      )}
-      </>
+                );
+              })}
+            </div>
+          )}
+        </>
       )}
 
       {/* Modify Modal Dialog */}
@@ -865,28 +1084,28 @@ export default function AIRecommendations() {
         onClose={() => setModifyModalOpen(false)}
         title="Modify AI Priority Recommendation"
       >
-        <form onSubmit={handleModifySubmit} className="space-y-4 text-xs">
+        <form onSubmit={handleModifySubmit} className="space-y-4 text-[14px]">
           <div>
-            <span className="text-arcade-secondary block text-[11px] mb-1">AI Recommendation ID:</span>
-            <div className="p-2 bg-arcade-surface border border-arcade-border font-mono text-arcade-primary">
+            <span className="text-t2 block text-[12px] font-mono mb-1.5">AI Recommendation ID:</span>
+            <div className="p-3 bg-s2 rounded-card border border-bd font-mono text-white text-[13px]">
               #{activeRecommendation?.id} • Suggested: {activeRecommendation?.suggested_priority}
             </div>
           </div>
 
           <div>
-            <label className="block text-arcade-primary font-semibold mb-1">
+            <label className="block text-white font-medium mb-2">
               Select Authoritative Priority:
             </label>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-2.5">
               {['CRITICAL', 'HIGH', 'MEDIUM', 'LOW'].map((p) => (
                 <button
                   type="button"
                   key={p}
                   onClick={() => setOverridePriority(p)}
-                  className={`p-2.5 border text-center font-bold tracking-wider uppercase transition-colors ${
+                  className={`p-3 rounded-pill text-center font-mono font-bold text-[13px] transition-colors border ${
                     overridePriority === p
-                      ? 'border-arcade-accent bg-arcade-accent/20 text-arcade-accent'
-                      : 'border-arcade-border bg-arcade-surface text-arcade-secondary hover:text-arcade-primary'
+                      ? 'border-ac bg-ac text-white'
+                      : 'border-bd bg-s2 text-t2 hover:text-white hover:border-white'
                   }`}
                 >
                   {p}
@@ -896,8 +1115,8 @@ export default function AIRecommendations() {
           </div>
 
           <div>
-            <label className="block text-arcade-primary font-semibold mb-1">
-              Modification Rationale / Justification <span className="text-arcade-danger">*</span>:
+            <label className="block text-white font-medium mb-1.5">
+              Modification Rationale / Justification <span className="text-no">*</span>:
             </label>
             <textarea
               rows={3}
@@ -905,25 +1124,25 @@ export default function AIRecommendations() {
               value={overrideReason}
               onChange={(e) => setOverrideReason(e.target.value)}
               placeholder="e.g. VIP client SLA requires expedited priority classification despite standard business notes."
-              className="w-full p-2.5 bg-arcade-surface border border-arcade-border text-arcade-primary focus:border-arcade-accent focus:outline-none"
+              className="w-full p-3 bg-s2 rounded-card border border-bd text-white focus:border-ac focus:outline-none placeholder-t2/50 text-[14px]"
             />
-            <span className="text-[10px] text-arcade-secondary mt-1 block">
+            <span className="text-[12px] text-t2 mt-1 block">
               This reason will be permanently recorded in priority_approvals and audit_logs.
             </span>
           </div>
 
-          <div className="pt-4 border-t border-arcade-border flex justify-end space-x-2">
+          <div className="pt-4 border-t border-bd flex justify-end space-x-3">
             <button
               type="button"
               onClick={() => setModifyModalOpen(false)}
-              className="px-4 py-2 border border-arcade-border text-arcade-secondary hover:text-arcade-primary transition-colors"
+              className="btn-header px-5 py-2 text-[14px]"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={actionLoading[`modify-${activeRecommendation?.id}`]}
-              className="px-4 py-2 bg-arcade-accent text-arcade-surface font-semibold uppercase tracking-wider hover:bg-arcade-accent/90 transition-colors"
+              className="btn-primary px-6 py-2 text-[14px]"
             >
               Confirm Modification
             </button>

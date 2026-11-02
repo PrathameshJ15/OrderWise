@@ -10,9 +10,9 @@ export default function ProtectedRoute({ allowedRoles, children }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-arcade-surface flex flex-col items-center justify-center p-6 text-arcade-primary font-mono">
-        <RefreshCw className="h-6 w-6 animate-spin text-arcade-accent mb-3" />
-        <p className="text-xs tracking-wider uppercase text-arcade-secondary">Authenticating session...</p>
+      <div className="min-h-screen bg-bg flex flex-col items-center justify-center p-6 text-white font-sans">
+        <RefreshCw className="h-6 w-6 animate-spin text-ac mb-3" />
+        <p className="text-[12px] font-mono text-t2">Authenticating session...</p>
       </div>
     );
   }
