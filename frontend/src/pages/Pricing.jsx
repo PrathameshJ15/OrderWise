@@ -1,40 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import AmbientLighting from '../components/ui/AmbientLighting';
+import PublicNavbar from '../components/layout/PublicNavbar';
 
 export default function Pricing() {
   return (
-    <div className="min-h-screen bg-bg text-white font-sans flex flex-col selection:bg-ac selection:text-white relative overflow-x-hidden">
+    <div className="min-h-screen bg-bg text-t font-sans flex flex-col selection:bg-ac selection:text-white relative overflow-x-hidden">
       {/* Recreate exact soft ambient red lighting from reference video */}
       <AmbientLighting withGrid={false} />
 
       {/* Top Navigation */}
-      <header className="border-b border-bd bg-s/90 backdrop-blur-md sticky top-0 z-50 px-4 sm:px-8 py-3.5">
-        <div className="max-w-container mx-auto flex items-center justify-between">
-          <Link to="/" className="flex items-center space-x-2.5">
-            <img src="/logo-icon.png" alt="OrderWise" className="h-7 w-7 object-contain" />
-            <span className="font-display font-bold text-[19px] tracking-tight text-white">
-              Order<span className="text-ac">Wise</span>
-            </span>
-          </Link>
-
-          <nav className="hidden md:flex items-center space-x-8 text-[14px] text-t2 font-medium">
-            <Link to="/" className="hover:text-white transition-colors">Product</Link>
-            <Link to="/solutions" className="hover:text-white transition-colors">Solutions</Link>
-            <Link to="/pricing" className="text-white font-semibold">Pricing</Link>
-            <Link to="/security" className="hover:text-white transition-colors">Security</Link>
-          </nav>
-
-          <div className="flex items-center space-x-3">
-            <Link
-              to="/login"
-              className="btn-primary min-h-[38px] px-5 text-[13px] shadow-[0_0_20px_rgba(229,9,20,0.35)]"
-            >
-              Book a demo
-            </Link>
-          </div>
-        </div>
-      </header>
+      <PublicNavbar active="pricing" />
 
       {/* Main Container */}
       <main className="max-w-container mx-auto px-4 sm:px-8 py-12 space-y-12 flex-1 w-full relative z-10">
@@ -43,7 +19,7 @@ export default function Pricing() {
           <span className="text-ac font-mono text-[13px] block tracking-wider uppercase font-semibold">
             Pricing
           </span>
-          <h1 className="font-display text-[36px] sm:text-[48px] font-bold tracking-tight text-white leading-tight">
+          <h1 className="font-display text-[36px] sm:text-[48px] font-bold tracking-tight text-t leading-tight">
             Simple plans that scale with your operation
           </h1>
           <p className="text-[16px] text-t2 leading-relaxed">
@@ -56,10 +32,13 @@ export default function Pricing() {
           {/* Card 1: Team */}
           <div className="card-base flex flex-col justify-between p-7 space-y-6">
             <div className="space-y-4">
-              <span className="text-[15px] font-semibold text-white">Team</span>
-              <div className="font-display text-[44px] font-bold text-white tracking-tight leading-none">[Price]</div>
+              <span className="text-[15px] font-semibold text-t">Team</span>
+              <div className="font-display text-[40px] font-bold text-t tracking-tight leading-none flex items-baseline space-x-1.5">
+                <span>$299</span>
+                <span className="text-[14px] font-normal text-t2 font-sans">/month</span>
+              </div>
               <p className="text-[14px] text-t2 leading-normal">
-                For one warehouse getting started.
+                For single-warehouse operations automating priority allocations.
               </p>
             </div>
 
@@ -77,7 +56,7 @@ export default function Pricing() {
                 'Live order updates',
                 'CSV exports',
               ].map((feat, i) => (
-                <div key={i} className="flex items-center space-x-2.5 text-white/90">
+                <div key={i} className="flex items-center space-x-2.5 text-t">
                   <span className="text-ok font-bold text-[15px]">&check;</span>
                   <span>{feat}</span>
                 </div>
@@ -92,9 +71,12 @@ export default function Pricing() {
                 Most popular
               </span>
               <span className="text-[15px] font-semibold text-white block">Business</span>
-              <div className="font-display text-[44px] font-bold text-white tracking-tight leading-none">[Price]</div>
+              <div className="font-display text-[40px] font-bold text-white tracking-tight leading-none flex items-baseline space-x-1.5">
+                <span>$799</span>
+                <span className="text-[14px] font-normal text-t2 font-sans">/month</span>
+              </div>
               <p className="text-[14px] text-t2 leading-normal">
-                For teams that need AI and full audit.
+                For multi-facility supply chains requiring AI recommendations and full audit trails.
               </p>
             </div>
 
@@ -113,7 +95,7 @@ export default function Pricing() {
                 'Immutable audit log',
                 'Supply alerts',
               ].map((feat, i) => (
-                <div key={i} className="flex items-center space-x-2.5 text-white/90">
+                <div key={i} className="flex items-center space-x-2.5 text-t">
                   <span className="text-ok font-bold text-[15px]">&check;</span>
                   <span>{feat}</span>
                 </div>
@@ -124,10 +106,12 @@ export default function Pricing() {
           {/* Card 3: Enterprise */}
           <div className="card-base flex flex-col justify-between p-7 space-y-6">
             <div className="space-y-4">
-              <span className="text-[15px] font-semibold text-white">Enterprise</span>
-              <div className="font-display text-[44px] font-bold text-white tracking-tight leading-none">Custom</div>
+              <span className="text-[15px] font-semibold text-t">Enterprise</span>
+              <div className="font-display text-[40px] font-bold text-t tracking-tight leading-none flex items-baseline space-x-1.5">
+                <span>Custom</span>
+              </div>
               <p className="text-[14px] text-t2 leading-normal">
-                For multi-site, regulated operations.
+                For enterprise distribution networks with custom SLA and ERP integration requirements.
               </p>
             </div>
 
@@ -146,7 +130,7 @@ export default function Pricing() {
                 'Dedicated support',
                 'Custom retention',
               ].map((feat, i) => (
-                <div key={i} className="flex items-center space-x-2.5 text-white/90">
+                <div key={i} className="flex items-center space-x-2.5 text-t">
                   <span className="text-ok font-bold text-[15px]">&check;</span>
                   <span>{feat}</span>
                 </div>
@@ -162,7 +146,7 @@ export default function Pricing() {
           <div className="space-y-3">
             <div className="flex items-center space-x-2.5">
               <img src="/logo-icon.png" alt="OrderWise" className="h-6 w-6 object-contain" />
-              <span className="font-display font-bold text-[17px] text-white">
+              <span className="font-display font-bold text-[17px] text-t">
                 Order<span className="text-ac">Wise</span>
               </span>
             </div>
@@ -172,29 +156,29 @@ export default function Pricing() {
           </div>
 
           <div>
-            <h4 className="font-semibold text-white uppercase text-[12px] font-mono mb-3">Product</h4>
+            <h4 className="font-semibold text-t uppercase text-[12px] font-mono mb-3">Product</h4>
             <div className="space-y-2 flex flex-col text-[14px]">
-              <Link to="/admin/allocation" className="hover:text-white transition-colors">Allocation</Link>
-              <Link to="/admin/inventory" className="hover:text-white transition-colors">Inventory</Link>
-              <Link to="/admin/audit" className="hover:text-white transition-colors">Audit log</Link>
+              <Link to="/admin/allocation" className="hover:text-t transition-colors">Allocation</Link>
+              <Link to="/admin/inventory" className="hover:text-t transition-colors">Inventory</Link>
+              <Link to="/admin/audit" className="hover:text-t transition-colors">Audit log</Link>
             </div>
           </div>
 
           <div>
-            <h4 className="font-semibold text-white uppercase text-[12px] font-mono mb-3">Company</h4>
+            <h4 className="font-semibold text-t uppercase text-[12px] font-mono mb-3">Company</h4>
             <div className="space-y-2 flex flex-col text-[14px]">
-              <Link to="/" className="hover:text-white transition-colors">About</Link>
-              <Link to="/pricing" className="hover:text-white transition-colors">Pricing</Link>
-              <Link to="/security" className="hover:text-white transition-colors">Security</Link>
+              <Link to="/" className="hover:text-t transition-colors">About</Link>
+              <Link to="/pricing" className="hover:text-t transition-colors">Pricing</Link>
+              <Link to="/security" className="hover:text-t transition-colors">Security</Link>
             </div>
           </div>
 
           <div>
-            <h4 className="font-semibold text-white uppercase text-[12px] font-mono mb-3">Legal</h4>
+            <h4 className="font-semibold text-t uppercase text-[12px] font-mono mb-3">Legal</h4>
             <div className="space-y-2 flex flex-col text-[14px]">
-              <span className="hover:text-white transition-colors cursor-pointer">Privacy</span>
-              <span className="hover:text-white transition-colors cursor-pointer">Terms</span>
-              <Link to="/security" className="hover:text-white transition-colors">Security</Link>
+              <span className="hover:text-t transition-colors cursor-pointer">Privacy</span>
+              <span className="hover:text-t transition-colors cursor-pointer">Terms</span>
+              <Link to="/security" className="hover:text-t transition-colors">Security</Link>
             </div>
           </div>
         </div>

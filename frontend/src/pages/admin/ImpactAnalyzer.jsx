@@ -206,7 +206,7 @@ export default function ImpactAnalyzer() {
             <Layers className="w-3.5 h-3.5" />
             <span>PHASE 9 ALLOCATION IMPACT ANALYZER</span>
           </div>
-          <h1 className="font-display text-[34px] font-bold tracking-tight text-white">
+          <h1 className="font-display text-[34px] font-bold tracking-tight text-t">
             Allocation Impact <span className="text-ac">&amp;</span> Diff Engine
           </h1>
           <p className="text-[14px] text-t2 font-sans max-w-2xl mt-0.5 leading-relaxed">
@@ -245,11 +245,11 @@ export default function ImpactAnalyzer() {
               aria-label="Select Base Run"
               value={selectedBaseRun}
               onChange={(e) => setSelectedBaseRun(e.target.value)}
-              className="w-full bg-s2 rounded-pill border border-bd px-4 py-2 text-[14px] text-white focus:border-ac outline-none"
+              className="w-full bg-s2 rounded-pill border border-bd px-4 py-2 text-[14px] text-t focus:border-ac outline-none"
             >
-              <option value="" className="bg-s text-white">Select Base Run</option>
+              <option value="" className="bg-s text-t">Select Base Run</option>
               {runs.map((r) => (
-                <option key={`base-${r.id}`} value={r.id} className="bg-s text-white">
+                <option key={`base-${r.id}`} value={r.id} className="bg-s text-t">
                   Run #{r.id} ({new Date(r.created_at).toLocaleString()}) - {r.total_items_considered} items {r.notes ? `[${r.notes}]` : ''}
                 </option>
               ))}
@@ -268,11 +268,11 @@ export default function ImpactAnalyzer() {
               aria-label="Select Target Run"
               value={selectedTargetRun}
               onChange={(e) => setSelectedTargetRun(e.target.value)}
-              className="w-full bg-s2 rounded-pill border border-bd px-4 py-2 text-[14px] text-white focus:border-ac outline-none"
+              className="w-full bg-s2 rounded-pill border border-bd px-4 py-2 text-[14px] text-t focus:border-ac outline-none"
             >
-              <option value="" className="bg-s text-white">Select Target Run</option>
+              <option value="" className="bg-s text-t">Select Target Run</option>
               {runs.map((r) => (
-                <option key={`target-${r.id}`} value={r.id} className="bg-s text-white">
+                <option key={`target-${r.id}`} value={r.id} className="bg-s text-t">
                   Run #{r.id} ({new Date(r.created_at).toLocaleString()}) - {r.total_items_considered} items {r.notes ? `[${r.notes}]` : ''}
                 </option>
               ))}
@@ -295,7 +295,7 @@ export default function ImpactAnalyzer() {
           <div className="mt-4 flex flex-wrap items-center gap-4 text-[12px] font-mono text-t2 border-t border-bd pt-3">
             <div className="flex items-center space-x-1">
               <span>Base:</span>
-              <span className="text-white font-bold">Run #{impactData.base_run.id}</span>
+              <span className="text-t font-bold">Run #{impactData.base_run.id}</span>
               <span>({new Date(impactData.base_run.created_at).toLocaleTimeString()})</span>
             </div>
             <span>→</span>
@@ -305,7 +305,7 @@ export default function ImpactAnalyzer() {
               <span>({new Date(impactData.target_run.created_at).toLocaleTimeString()})</span>
             </div>
             <div className="ml-auto text-[11px]">
-              Total items compared: <span className="text-white font-semibold">{summary.total_items_compared}</span>
+              Total items compared: <span className="text-t font-semibold">{summary.total_items_compared}</span>
             </div>
           </div>
         )}
@@ -329,7 +329,7 @@ export default function ImpactAnalyzer() {
           }`}
         >
           <div className="text-[11px] font-mono text-t2">Total Compared</div>
-          <div className="text-2xl font-bold font-mono text-white mt-1">
+          <div className="text-2xl font-bold font-mono text-t mt-1">
             {summary.total_items_compared}
           </div>
           <div className="text-[11px] font-mono text-t2 mt-1">{summary.total_changed} items shifted</div>
@@ -429,7 +429,7 @@ export default function ImpactAnalyzer() {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-2">
               <BarChart2 className="w-4 h-4 text-ac" />
-              <h3 className="text-base font-bold text-white">
+              <h3 className="text-base font-bold text-t">
                 Allocation Quantity Comparison (Run #{impactData?.base_run?.id} vs Run #{impactData?.target_run?.id})
               </h3>
             </div>
@@ -441,18 +441,18 @@ export default function ImpactAnalyzer() {
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData} margin={{ top: 10, right: 20, left: 0, bottom: 25 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#2A2A2A" vertical={false} />
-                <XAxis dataKey="name" stroke="#A8A8A8" tick={{ fontSize: 11, fontFamily: 'IBM Plex Mono' }} />
-                <YAxis stroke="#A8A8A8" tick={{ fontSize: 11, fontFamily: 'IBM Plex Mono' }} />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--bd)" vertical={false} />
+                <XAxis dataKey="name" stroke="var(--t2)" tick={{ fontSize: 11, fontFamily: 'IBM Plex Mono' }} />
+                <YAxis stroke="var(--t2)" tick={{ fontSize: 11, fontFamily: 'IBM Plex Mono' }} />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#161616',
-                    borderColor: '#2A2A2A',
+                    backgroundColor: 'var(--s)',
+                    borderColor: 'var(--bd)',
                     borderRadius: '14px',
                     fontFamily: 'IBM Plex Mono',
                     fontSize: '12px',
                   }}
-                  itemStyle={{ color: '#FFFFFF' }}
+                  itemStyle={{ color: 'var(--t)' }}
                 />
                 <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }} />
                 <Bar dataKey="previous" name={`Run #${impactData?.base_run?.id} (Previous)`} fill="#8A8A8A" radius={[4, 4, 0, 0]} />
@@ -472,7 +472,7 @@ export default function ImpactAnalyzer() {
             placeholder="Search order #, customer, SKU, or cause..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-transparent border-none text-[14px] text-white placeholder-t2/60 outline-none"
+            className="w-full bg-transparent border-none text-[14px] text-t placeholder-t2/60 outline-none"
           />
         </div>
 
@@ -482,17 +482,17 @@ export default function ImpactAnalyzer() {
             aria-label="Filter by classification"
             value={filterClass}
             onChange={(e) => setFilterClass(e.target.value)}
-            className="bg-s2 rounded-pill border border-bd px-4 py-2 text-[14px] text-white outline-none focus:border-ac"
+            className="bg-s2 rounded-pill border border-bd px-4 py-2 text-[14px] text-t outline-none focus:border-ac"
           >
-            <option value="ALL" className="bg-s text-white">All Changes ({summary.total_items_compared})</option>
-            <option value="CHANGED_ONLY" className="bg-s text-white">Changed Only ({summary.total_changed})</option>
-            <option value="NEWLY_FULFILLED" className="bg-s text-white">Newly Fulfilled ({byClass.NEWLY_FULFILLED || 0})</option>
-            <option value="IMPROVED" className="bg-s text-white">Improved ({byClass.IMPROVED || 0})</option>
-            <option value="DEGRADED" className="bg-s text-white">Degraded ({byClass.DEGRADED || 0})</option>
-            <option value="NEWLY_DEFERRED" className="bg-s text-white">Newly Deferred ({byClass.NEWLY_DEFERRED || 0})</option>
-            <option value="NEW_ITEM" className="bg-s text-white">New Items ({byClass.NEW_ITEM || 0})</option>
-            <option value="REMOVED_ITEM" className="bg-s text-white">Removed Items ({byClass.REMOVED_ITEM || 0})</option>
-            <option value="UNCHANGED" className="bg-s text-white">Unchanged ({byClass.UNCHANGED || 0})</option>
+            <option value="ALL" className="bg-s text-t">All Changes ({summary.total_items_compared})</option>
+            <option value="CHANGED_ONLY" className="bg-s text-t">Changed Only ({summary.total_changed})</option>
+            <option value="NEWLY_FULFILLED" className="bg-s text-t">Newly Fulfilled ({byClass.NEWLY_FULFILLED || 0})</option>
+            <option value="IMPROVED" className="bg-s text-t">Improved ({byClass.IMPROVED || 0})</option>
+            <option value="DEGRADED" className="bg-s text-t">Degraded ({byClass.DEGRADED || 0})</option>
+            <option value="NEWLY_DEFERRED" className="bg-s text-t">Newly Deferred ({byClass.NEWLY_DEFERRED || 0})</option>
+            <option value="NEW_ITEM" className="bg-s text-t">New Items ({byClass.NEW_ITEM || 0})</option>
+            <option value="REMOVED_ITEM" className="bg-s text-t">Removed Items ({byClass.REMOVED_ITEM || 0})</option>
+            <option value="UNCHANGED" className="bg-s text-t">Unchanged ({byClass.UNCHANGED || 0})</option>
           </select>
         </div>
       </div>
@@ -537,7 +537,7 @@ export default function ImpactAnalyzer() {
                     >
                       {/* Order & Customer */}
                       <td className="py-3.5 px-4">
-                        <div className="font-mono font-bold text-white">ORDER #{item.order_id}</div>
+                        <div className="font-mono font-bold text-t">ORDER #{item.order_id}</div>
                         <div className="text-[12px] text-t2 flex items-center space-x-1.5 mt-0.5">
                           <User className="w-3.5 h-3.5 text-t2" />
                           <span>{item.customer_name}</span>
@@ -546,7 +546,7 @@ export default function ImpactAnalyzer() {
 
                       {/* Product */}
                       <td className="py-3.5 px-4">
-                        <div className="text-white font-medium">{item.product_name}</div>
+                        <div className="text-t font-medium">{item.product_name}</div>
                         <div className="text-[12px] font-mono text-t2 flex items-center space-x-2 mt-0.5">
                           <span className="text-ac">{item.sku}</span>
                           <span>·</span>
@@ -562,7 +562,7 @@ export default function ImpactAnalyzer() {
 
                       {/* Base Allocation */}
                       <td className="py-3.5 px-4 text-right">
-                        <div className="font-mono text-[14px] text-white font-semibold">
+                        <div className="font-mono text-[14px] text-t font-semibold">
                           {item.previous_allocated}
                         </div>
                         <div className="mt-1 flex justify-end">

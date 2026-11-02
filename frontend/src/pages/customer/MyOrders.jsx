@@ -69,7 +69,7 @@ export default function MyOrders() {
             <Clock className="h-3.5 w-3.5" />
             <span>Order Dispatch &amp; Allocations</span>
           </div>
-          <h1 className="font-display text-[34px] font-bold tracking-tight text-white">
+          <h1 className="font-display text-[34px] font-bold tracking-tight text-t">
             My Orders
           </h1>
           <p className="text-[14px] text-t2 font-sans mt-0.5">
@@ -89,7 +89,7 @@ export default function MyOrders() {
       {error && (
         <div className="p-4 rounded-card border border-no/30 bg-[#291313] text-no text-[13px] flex items-center justify-between">
           <span>{error}</span>
-          <button onClick={() => setError(null)} className="underline hover:text-white">
+          <button onClick={() => setError(null)} className="underline hover:text-t">
             Dismiss
           </button>
         </div>
@@ -107,7 +107,7 @@ export default function MyOrders() {
                 className={`px-3.5 py-1 text-[12px] font-mono font-medium rounded-pill whitespace-nowrap transition-colors ${
                   statusFilter === st
                     ? 'bg-ac text-white'
-                    : 'text-t2 hover:text-white'
+                    : 'text-t2 hover:text-t'
                 }`}
               >
                 {st.replace(/_/g, ' ')}
@@ -124,7 +124,7 @@ export default function MyOrders() {
             placeholder="Search order ID..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="bg-transparent text-white focus:outline-none text-[14px] w-full placeholder-t2/50 font-sans"
+            className="bg-transparent text-t focus:outline-none text-[14px] w-full placeholder-t2/50 font-sans"
           />
         </div>
       </div>
@@ -138,7 +138,7 @@ export default function MyOrders() {
       ) : filteredOrders.length === 0 ? (
         <div className="card-base p-12 text-center text-t2 space-y-3">
           <Package className="h-8 w-8 text-t2 mx-auto opacity-50" />
-          <h3 className="text-[18px] text-white font-bold">
+          <h3 className="text-[18px] text-t font-bold">
             No Orders Found
           </h3>
           <p className="text-[14px] max-w-sm mx-auto">
@@ -175,7 +175,7 @@ export default function MyOrders() {
                   key={ord.id}
                   className="hover:bg-s2/50 transition-colors group"
                 >
-                  <td className="py-3.5 px-4 font-bold text-white font-mono">
+                  <td className="py-3.5 px-4 font-bold text-t font-mono">
                     <Link to={`/orders/${ord.id}`} className="block hover:text-ac">
                       {`#${ord.id}`}
                     </Link>
@@ -186,10 +186,10 @@ export default function MyOrders() {
                   <td className="py-3.5 px-3 text-t2 font-mono text-[12px]">
                     {ord.promised_delivery_date || 'Standard'}
                   </td>
-                  <td className="py-3.5 px-3 text-right font-mono text-white">
+                  <td className="py-3.5 px-3 text-right font-mono text-t">
                     {ord.item_count || 1}
                   </td>
-                  <td className="py-3.5 px-3 text-right font-mono text-white">
+                  <td className="py-3.5 px-3 text-right font-mono text-t">
                     {ord.total_requested_quantity || '—'}
                   </td>
                   <td className="py-3.5 px-3 text-center">

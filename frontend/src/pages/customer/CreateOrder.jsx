@@ -210,14 +210,14 @@ export default function CreateOrder() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2">
         <div>
           <div className="flex items-center space-x-2 text-[12px] font-sans text-t2 mb-1.5">
-            <Link to="/orders" className="hover:text-white flex items-center space-x-1">
+            <Link to="/orders" className="hover:text-t flex items-center space-x-1">
               <ArrowLeft className="h-3 w-3" />
               <span>Orders</span>
             </Link>
             <span>/</span>
-            <span className="text-white">New order</span>
+            <span className="text-t">New order</span>
           </div>
-          <h1 className="font-display text-[34px] font-bold tracking-tight text-white">
+          <h1 className="font-display text-[34px] font-bold tracking-tight text-t">
             Create Order Requisition
           </h1>
           <p className="text-[14px] text-t2 font-sans mt-0.5">
@@ -232,7 +232,7 @@ export default function CreateOrder() {
             <AlertCircle className="h-4 w-4 shrink-0" />
             <span>{error}</span>
           </div>
-          <button onClick={() => setError(null)} className="underline hover:text-white text-[12px]">
+          <button onClick={() => setError(null)} className="underline hover:text-t text-[12px]">
             Dismiss
           </button>
         </div>
@@ -250,7 +250,7 @@ export default function CreateOrder() {
             <div className="flex items-center justify-between border-b border-bd pb-4">
               <div className="flex items-center space-x-2">
                 <ShoppingBag className="h-4 w-4 text-ac" />
-                <h2 className="text-[20px] font-bold text-white">
+                <h2 className="text-[20px] font-bold text-t">
                   Order line items ({items.length})
                 </h2>
               </div>
@@ -279,7 +279,7 @@ export default function CreateOrder() {
                       <select
                         value={item.productId}
                         onChange={(e) => handleItemChange(idx, 'productId', e.target.value)}
-                        className="w-full bg-s border border-bd rounded-pill px-4 py-2.5 text-[14px] text-white focus:border-white focus:outline-none font-sans"
+                        className="w-full bg-s border border-bd rounded-pill px-4 py-2.5 text-[14px] text-t focus:border-ac focus:outline-none font-sans"
                       >
                         {products.map((p) => (
                           <option key={p.id} value={p.id}>
@@ -300,7 +300,7 @@ export default function CreateOrder() {
                         min="1"
                         value={item.requestedQuantity}
                         onChange={(e) => handleItemChange(idx, 'requestedQuantity', e.target.value)}
-                        className="w-full bg-s border border-bd rounded-pill px-4 py-2.5 text-[14px] text-white focus:border-white focus:outline-none font-mono"
+                        className="w-full bg-s border border-bd rounded-pill px-4 py-2.5 text-[14px] text-t focus:border-ac focus:outline-none font-mono"
                       />
                     </div>
 
@@ -318,7 +318,7 @@ export default function CreateOrder() {
                         onChange={(e) =>
                           handleItemChange(idx, 'minimumAcceptableQuantity', e.target.value)
                         }
-                        className="w-full bg-s border border-bd rounded-pill px-4 py-2.5 text-[14px] text-white focus:border-white focus:outline-none font-mono disabled:opacity-40"
+                        className="w-full bg-s border border-bd rounded-pill px-4 py-2.5 text-[14px] text-t focus:border-ac focus:outline-none font-mono disabled:opacity-40"
                       />
                     </div>
                   </div>
@@ -355,7 +355,7 @@ export default function CreateOrder() {
 
           {/* Delivery & Notes Section */}
           <div className="card-base space-y-4">
-            <h2 className="text-[20px] font-bold text-white border-b border-bd pb-4">
+            <h2 className="text-[20px] font-bold text-t border-b border-bd pb-4">
               Delivery commitments &amp; notes
             </h2>
 
@@ -369,7 +369,7 @@ export default function CreateOrder() {
                   type="date"
                   value={promisedDeliveryDate}
                   onChange={(e) => setPromisedDeliveryDate(e.target.value)}
-                  className="w-full bg-s2 border border-bd rounded-pill px-4 py-2.5 text-[14px] text-white focus:border-white focus:outline-none font-sans"
+                  className="w-full bg-s2 border border-bd rounded-pill px-4 py-2.5 text-[14px] text-t focus:border-ac focus:outline-none font-sans"
                 />
                 <span className="text-[11px] font-mono text-t2 mt-1 block">
                   Delivery priority tie-breaks favor earlier committed dates.
@@ -386,7 +386,7 @@ export default function CreateOrder() {
                   placeholder="e.g. Turnaround milestone delivery; penalty clause if deferred."
                   value={businessNotes}
                   onChange={(e) => setBusinessNotes(e.target.value)}
-                  className="w-full bg-s2 border border-bd rounded-card p-3 text-[14px] text-white focus:border-white focus:outline-none placeholder-t2/50 font-sans"
+                  className="w-full bg-s2 border border-bd rounded-card p-3 text-[14px] text-t focus:border-ac focus:outline-none placeholder-t2/50 font-sans"
                 />
                 <span className="text-[11px] font-mono text-t2 mt-1 block">
                   Reviewed by AI Priority Assistant and operations team.

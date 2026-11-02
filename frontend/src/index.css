@@ -2,22 +2,77 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+:root,
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #F7F7F8;
+  --bg-rgb: 247 247 248;
+  --s: #FFFFFF;
+  --s-rgb: 255 255 255;
+  --s2: #F1F1F3;
+  --s2-rgb: 241 241 243;
+  --bd: #E4E4E7;
+  --bd-rgb: 228 228 231;
+  --divider: #D4D4D8;
+  --outline: #A1A1AA;
+  --t: #0A0A0A;
+  --t-rgb: 10 10 10;
+  --t2: #52525B;
+  --t2-rgb: 82 82 91;
+  --ac: #E50914;
+  --ac-rgb: 229 9 20;
+  --ac-hover: #c90812;
+  --series: #8A8A8A;
+  --ok: #15803D;
+  --ok-rgb: 21 128 61;
+  --wa: #B45309;
+  --wa-rgb: 180 83 9;
+  --no: #DC2626;
+  --no-rgb: 220 38 38;
+  --alert-bg: #FFF4E0;
+  --alert-border: #F0D49A;
+  --card-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --card-hover-border: rgba(229, 9, 20, 0.6);
+  --card-hover-shadow: 0 12px 40px rgba(229, 9, 20, 0.14);
+  --scrollbar-bg: #F1F1F3;
+  --scrollbar-thumb: #D4D4D8;
+  --grid-line: rgba(0, 0, 0, 0.04);
+}
+
+:root[data-theme="dark"] {
   color-scheme: dark;
   --bg: #0A0A0A;
+  --bg-rgb: 10 10 10;
   --s: #161616;
+  --s-rgb: 22 22 22;
   --s2: #232323;
+  --s2-rgb: 35 35 35;
   --bd: #2A2A2A;
+  --bd-rgb: 42 42 42;
+  --divider: #3A3A3A;
+  --outline: #555555;
   --t: #FFFFFF;
+  --t-rgb: 255 255 255;
   --t2: #A8A8A8;
+  --t2-rgb: 168 168 168;
   --ac: #E50914;
+  --ac-rgb: 229 9 20;
   --ac-hover: #c90812;
   --series: #8A8A8A;
   --ok: #4ADE80;
+  --ok-rgb: 74 222 128;
   --wa: #F5B544;
+  --wa-rgb: 245 181 68;
   --no: #FF7A7A;
+  --no-rgb: 255 122 122;
   --alert-bg: #2B2010;
   --alert-border: #5A4210;
+  --card-shadow: none;
+  --card-hover-border: rgba(229, 9, 20, 0.6);
+  --card-hover-shadow: 0 12px 40px rgba(229, 9, 20, 0.14);
+  --scrollbar-bg: #0A0A0A;
+  --scrollbar-thumb: #2A2A2A;
+  --grid-line: rgba(255, 255, 255, 0.025);
 }
 
 body {
@@ -29,6 +84,7 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
 }
 
 h1, h2, h3, h4, .font-display {
@@ -44,90 +100,108 @@ p {
   max-width: 65ch;
 }
 
-/* Custom scrollbars for OrderWise Dark Streaming Theme */
+/* Custom scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0A0A0A;
+  background: var(--scrollbar-bg);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #2A2A2A;
+  background: var(--scrollbar-thumb);
   border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #E50914;
+  background: var(--ac);
 }
 
 /* Common Design System Utility Classes */
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center min-h-[44px] px-6 text-[15px] font-semibold text-white transition-colors;
+    @apply inline-flex items-center justify-center min-h-[44px] px-6 text-[15px] font-semibold text-white transition-all cursor-pointer;
     border-radius: 999px;
-    background-color: #E50914;
+    background-color: var(--ac);
+    box-shadow: 0 6px 24px rgba(229, 9, 20, 0.35);
   }
   .btn-primary:hover {
-    background-color: #c90812;
+    background-color: var(--ac-hover);
+    box-shadow: 0 8px 30px rgba(229, 9, 20, 0.5);
   }
   .btn-secondary {
-    @apply inline-flex items-center justify-center min-h-[44px] px-6 text-[15px] font-semibold text-white border border-white hover:bg-white/10 transition-colors;
+    @apply inline-flex items-center justify-center min-h-[44px] px-6 text-[15px] font-semibold transition-colors cursor-pointer;
     border-radius: 999px;
+    border: 1px solid var(--t);
+    color: var(--t);
+    background-color: transparent;
+  }
+  .btn-secondary:hover {
+    background-color: rgb(var(--s2-rgb) / 0.7);
   }
   .btn-header {
-    @apply inline-flex items-center justify-center px-4 py-2 text-[14px] font-medium text-white border border-[#555] hover:border-white transition-colors;
+    @apply inline-flex items-center justify-center px-4 py-2 text-[14px] font-medium transition-colors cursor-pointer;
     border-radius: 999px;
+    border: 1px solid var(--outline);
+    color: var(--t);
+    background-color: transparent;
+  }
+  .btn-header:hover {
+    border-color: var(--t);
+    background-color: rgb(var(--s2-rgb) / 0.7);
   }
   .card-base {
-    background-color: #161616;
-    border: 1px solid #2A2A2A;
+    background-color: var(--s);
+    border: 1px solid var(--bd);
     border-radius: 14px;
     padding: 1.5rem;
-    box-shadow: none;
+    box-shadow: var(--card-shadow);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  }
+  .card-base:hover {
+    border-color: var(--card-hover-border);
+    box-shadow: var(--card-hover-shadow);
   }
   .card-roadmap {
-    background-color: #161616;
-    border: 1px dashed #2A2A2A;
+    background-color: var(--s);
+    border: 1px dashed var(--bd);
     border-radius: 14px;
     padding: 1.5rem;
+    box-shadow: var(--card-shadow);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
   }
   .badge-ac {
     @apply inline-flex items-center text-white font-mono text-[12px] font-medium px-3 py-1;
     border-radius: 999px;
-    background-color: #E50914;
+    background-color: var(--ac);
   }
   .badge-ok {
     @apply inline-flex items-center font-mono text-[12px] font-medium px-3 py-1;
     border-radius: 999px;
-    color: #4ADE80;
-    background-color: rgba(74, 222, 128, 0.15);
-    border: 1px solid rgba(74, 222, 128, 0.3);
+    color: var(--ok);
+    background-color: rgb(var(--ok-rgb) / 0.15);
+    border: 1px solid rgb(var(--ok-rgb) / 0.3);
   }
   .badge-wa {
     @apply inline-flex items-center font-mono text-[12px] font-medium px-3 py-1;
     border-radius: 999px;
-    color: #F5B544;
-    background-color: rgba(245, 181, 68, 0.15);
-    border: 1px solid rgba(245, 181, 68, 0.3);
+    color: var(--wa);
+    background-color: rgb(var(--wa-rgb) / 0.15);
+    border: 1px solid rgb(var(--wa-rgb) / 0.3);
   }
   .badge-no {
     @apply inline-flex items-center font-mono text-[12px] font-medium px-3 py-1;
     border-radius: 999px;
-    color: #FF7A7A;
-    background-color: rgba(255, 122, 122, 0.15);
-    border: 1px solid rgba(255, 122, 122, 0.3);
+    color: var(--no);
+    background-color: rgb(var(--no-rgb) / 0.15);
+    border: 1px solid rgb(var(--no-rgb) / 0.3);
   }
 }
 
 /* ==========================================================================
-   Ambient Lighting & Background Grid (Faithfully replicating reference video)
-   - OrderWise Red (#E50914) replacing original green hue
-   - Same softness, low intensity (~13.5% peak alpha), high diffusion & spread
-   - Seamless fade into deep black background (#0A0A0A)
-   - Zero neon bloom or harsh contrast
+   Ambient Lighting & Background Grid
    ========================================================================== */
 
 @keyframes ambientBreathing {
@@ -162,6 +236,15 @@ p {
   animation: ambientBreathing 8s ease-in-out infinite;
 }
 
+:root[data-theme="light"] .ambient-glow-red {
+  top: 10%;
+  left: 70%;
+  width: 760px;
+  height: 760px;
+  background: radial-gradient(closest-side, rgba(229, 9, 20, 0.13), transparent);
+  filter: blur(60px);
+}
+
 .ambient-glow-red-secondary {
   position: absolute;
   top: 38%;
@@ -181,7 +264,14 @@ p {
   animation: ambientBreathing 8s ease-in-out infinite 4s;
 }
 
+:root[data-theme="light"] .ambient-glow-red-secondary {
+  display: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
+  body, .card-base, .btn-secondary, .btn-header {
+    transition: none !important;
+  }
   .ambient-glow-red,
   .ambient-glow-red-secondary {
     animation: none;
@@ -190,13 +280,30 @@ p {
   }
 }
 
-/* Subtle dark grid background from reference video */
+/* Subtle grid background */
 .bg-grid-subtle {
   background-size: 56px 56px;
   background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
   mask-image: radial-gradient(ellipse 85% 65% at 50% 32%, black 25%, transparent 85%);
   -webkit-mask-image: radial-gradient(ellipse 85% 65% at 50% 32%, black 25%, transparent 85%);
 }
 
+/* Touch-friendly interactive scroll and tap utilities for mobile */
+.touch-scroll {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.touch-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.touch-tap {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: transform 0.1s ease;
+}
+.touch-tap:active {
+  transform: scale(0.98);
+}

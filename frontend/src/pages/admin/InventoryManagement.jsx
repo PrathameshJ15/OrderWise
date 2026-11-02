@@ -126,7 +126,7 @@ export default function InventoryManagement() {
             <Database className="h-3.5 w-3.5" />
             <span>Warehouse Inventory &amp; Ledger</span>
           </div>
-          <h1 className="font-display text-[34px] font-bold tracking-tight text-white">
+          <h1 className="font-display text-[34px] font-bold tracking-tight text-t">
             Inventory Management
           </h1>
           <p className="text-[14px] text-t2 font-sans mt-0.5">
@@ -149,7 +149,7 @@ export default function InventoryManagement() {
               placeholder="Search SKU or name..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-transparent text-white focus:outline-none text-[14px] w-full placeholder-t2/60"
+              className="bg-transparent text-t focus:outline-none text-[14px] w-full placeholder-t2/60"
             />
           </div>
         </div>
@@ -161,7 +161,7 @@ export default function InventoryManagement() {
             <AlertCircle className="h-4 w-4 shrink-0" />
             <span>{error}</span>
           </div>
-          <button onClick={() => setError(null)} className="underline hover:text-white text-[12px]">
+          <button onClick={() => setError(null)} className="underline hover:text-t text-[12px]">
             Dismiss
           </button>
         </div>
@@ -176,7 +176,7 @@ export default function InventoryManagement() {
       ) : filteredInventory.length === 0 ? (
         <div className="card-base p-12 text-center text-t2 space-y-3">
           <Database className="h-8 w-8 text-t2 mx-auto opacity-40" />
-          <h3 className="text-base font-bold text-white">
+          <h3 className="text-base font-bold text-t">
             No Inventory Records
           </h3>
           <p className="text-[14px]">No warehouse stock items match your search.</p>
@@ -210,13 +210,13 @@ export default function InventoryManagement() {
                       className="hover:bg-s2/40 transition-colors"
                     >
                       <td className="py-3.5 px-4">
-                        <div className="font-bold text-white">{item.product_name}</div>
+                        <div className="font-bold text-t">{item.product_name}</div>
                         <div className="text-[12px] font-mono text-t2 mt-0.5">
                           {item.sku}
                         </div>
                       </td>
 
-                      <td className="py-3.5 px-3 text-right font-mono font-bold text-white">
+                      <td className="py-3.5 px-3 text-right font-mono font-bold text-t">
                         {item.on_hand_quantity}
                       </td>
 
@@ -286,7 +286,7 @@ export default function InventoryManagement() {
                         </button>
                         <button
                           onClick={() => openLedgerModal(item)}
-                          className="p-2 rounded-full border border-bd text-t2 hover:text-white hover:border-white transition-colors"
+                          className="p-2 rounded-full border border-bd text-t2 hover:text-t hover:border-white transition-colors"
                           title="View Movement Ledger"
                         >
                           <History className="h-3.5 w-3.5" />
@@ -313,7 +313,7 @@ export default function InventoryManagement() {
               <span className="text-t2 text-[11px] font-mono block">
                 Current On Hand
               </span>
-              <span className="text-base font-mono font-bold text-white">
+              <span className="text-base font-mono font-bold text-t">
                 {adjustItem?.on_hand_quantity} units
               </span>
             </div>
@@ -344,10 +344,10 @@ export default function InventoryManagement() {
                 id="adjustment_type"
                 value={adjustForm.adjustmentType}
                 onChange={(e) => setAdjustForm({ ...adjustForm, adjustmentType: e.target.value })}
-                className="w-full bg-s2 rounded-pill border border-bd px-4 py-2 text-white focus:border-ac focus:outline-none text-[14px]"
+                className="w-full bg-s2 rounded-pill border border-bd px-4 py-2 text-t focus:border-ac focus:outline-none text-[14px]"
               >
-                <option value="delta" className="bg-s text-white">Delta Relative (+/-)</option>
-                <option value="set" className="bg-s text-white">Set Exact Count</option>
+                <option value="delta" className="bg-s text-t">Delta Relative (+/-)</option>
+                <option value="set" className="bg-s text-t">Set Exact Count</option>
               </select>
             </div>
 
@@ -361,7 +361,7 @@ export default function InventoryManagement() {
                 required
                 value={adjustForm.quantity}
                 onChange={(e) => setAdjustForm({ ...adjustForm, quantity: e.target.value })}
-                className="w-full bg-s2 rounded-pill border border-bd px-4 py-2 text-white focus:border-ac focus:outline-none text-[14px]"
+                className="w-full bg-s2 rounded-pill border border-bd px-4 py-2 text-t focus:border-ac focus:outline-none text-[14px]"
               />
             </div>
           </div>
@@ -377,7 +377,7 @@ export default function InventoryManagement() {
               placeholder="e.g. Physical inventory cycle count adjustment; damaged goods written off."
               value={adjustForm.reason}
               onChange={(e) => setAdjustForm({ ...adjustForm, reason: e.target.value })}
-              className="w-full bg-s2 rounded-card border border-bd p-3 text-white focus:border-ac focus:outline-none placeholder-t2/50 text-[14px]"
+              className="w-full bg-s2 rounded-card border border-bd p-3 text-t focus:border-ac focus:outline-none placeholder-t2/50 text-[14px]"
             />
           </div>
 
@@ -433,7 +433,7 @@ export default function InventoryManagement() {
                   </div>
                   <div className="flex items-center space-x-2 text-[14px]">
                     <span className="text-t2">Balance shift:</span>
-                    <span className="font-mono font-semibold text-white">
+                    <span className="font-mono font-semibold text-t">
                       {m.previous_on_hand}
                     </span>
                     <ArrowRight className="h-3.5 w-3.5 text-t2" />
@@ -444,7 +444,7 @@ export default function InventoryManagement() {
                   </div>
                   {m.reference_type && (
                     <div className="text-[12px] text-t2">
-                      Reference: <span className="text-white font-mono">{m.reference_type}</span>{' '}
+                      Reference: <span className="text-t font-mono">{m.reference_type}</span>{' '}
                       {m.reference_id ? `#${m.reference_id}` : ''}
                     </div>
                   )}

@@ -1,40 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import AmbientLighting from '../components/ui/AmbientLighting';
+import PublicNavbar from '../components/layout/PublicNavbar';
 
 export default function Solutions() {
   return (
-    <div className="min-h-screen bg-bg text-white font-sans flex flex-col selection:bg-ac selection:text-white relative overflow-x-hidden">
+    <div className="min-h-screen bg-bg text-t font-sans flex flex-col selection:bg-ac selection:text-white relative overflow-x-hidden">
       {/* Recreate exact soft ambient red lighting from reference video */}
       <AmbientLighting withGrid={false} />
 
       {/* Top Navigation */}
-      <header className="border-b border-bd bg-s/90 backdrop-blur-md sticky top-0 z-50 px-4 sm:px-8 py-3.5">
-        <div className="max-w-container mx-auto flex items-center justify-between">
-          <Link to="/" className="flex items-center space-x-2.5">
-            <img src="/logo-icon.png" alt="OrderWise" className="h-7 w-7 object-contain" />
-            <span className="font-display font-bold text-[19px] tracking-tight text-white">
-              Order<span className="text-ac">Wise</span>
-            </span>
-          </Link>
-
-          <nav className="hidden md:flex items-center space-x-8 text-[14px] text-t2 font-medium">
-            <Link to="/" className="hover:text-white transition-colors">Product</Link>
-            <Link to="/solutions" className="text-white font-semibold">Solutions</Link>
-            <Link to="/pricing" className="hover:text-white transition-colors">Pricing</Link>
-            <Link to="/security" className="hover:text-white transition-colors">Security</Link>
-          </nav>
-
-          <div className="flex items-center space-x-3">
-            <Link
-              to="/login"
-              className="btn-primary min-h-[38px] px-5 text-[13px] shadow-[0_0_20px_rgba(229,9,20,0.35)]"
-            >
-              Book a demo
-            </Link>
-          </div>
-        </div>
-      </header>
+      <PublicNavbar active="solutions" />
 
       {/* Main Container */}
       <main className="max-w-container mx-auto px-4 sm:px-8 py-12 space-y-14 flex-1 w-full relative z-10">
@@ -43,7 +19,7 @@ export default function Solutions() {
           <span className="text-ac font-mono text-[13px] block tracking-wider uppercase font-semibold">
             Solutions
           </span>
-          <h1 className="font-display text-[36px] sm:text-[48px] font-bold tracking-tight text-white leading-tight">
+          <h1 className="font-display text-[36px] sm:text-[48px] font-bold tracking-tight text-t leading-tight">
             Built for operations that cannot ship the wrong order
           </h1>
           <p className="text-[16px] text-t2 leading-relaxed">
@@ -53,24 +29,24 @@ export default function Solutions() {
 
         {/* Section 1: By Role */}
         <section className="space-y-5 relative z-10">
-          <h2 className="font-display text-[24px] font-bold text-white tracking-tight">By role</h2>
+          <h2 className="font-display text-[24px] font-bold text-t tracking-tight">By role</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="card-base p-7 space-y-3">
-              <h3 className="text-[18px] font-display font-bold text-white">Administrators</h3>
+              <h3 className="text-[18px] font-display font-bold text-t">Administrators</h3>
               <p className="text-[14px] text-t2 leading-relaxed">
                 Run allocations, review AI recommendations with strict confidence thresholds, and inspect immutable audit trails.
               </p>
             </div>
 
             <div className="card-base p-7 space-y-3">
-              <h3 className="text-[18px] font-display font-bold text-white">Inventory managers</h3>
+              <h3 className="text-[18px] font-display font-bold text-t">Inventory managers</h3>
               <p className="text-[14px] text-t2 leading-relaxed">
                 Track on-hand vs. reserved stock, manage safety buffers, and act on shortage alerts before stockouts impact delivery.
               </p>
             </div>
 
             <div className="card-base p-7 space-y-3">
-              <h3 className="text-[18px] font-display font-bold text-white">Customers</h3>
+              <h3 className="text-[18px] font-display font-bold text-t">Customers</h3>
               <p className="text-[14px] text-t2 leading-relaxed">
                 See transparent order status, promised delivery dates, and clear fulfillment explanations for their own accounts.
               </p>
@@ -80,11 +56,11 @@ export default function Solutions() {
 
         {/* Section 2: By Industry */}
         <section className="space-y-5 relative z-10">
-          <h2 className="font-display text-[24px] font-bold text-white tracking-tight">By industry</h2>
+          <h2 className="font-display text-[24px] font-bold text-t tracking-tight">By industry</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="card-base p-7 space-y-3">
               <span className="text-ac font-mono text-[11px] uppercase tracking-wider block font-semibold">Hardware distribution</span>
-              <h3 className="text-[18px] font-display font-bold text-white">Pumps, valves &amp; gauges</h3>
+              <h3 className="text-[18px] font-display font-bold text-t">Pumps, valves &amp; gauges</h3>
               <p className="text-[14px] text-t2 leading-relaxed">
                 Scarce SKUs compete across major contractors. Priority rules resolve conflicts deterministically without favoritism.
               </p>
@@ -92,7 +68,7 @@ export default function Solutions() {
 
             <div className="card-base p-7 space-y-3">
               <span className="text-ac font-mono text-[11px] uppercase tracking-wider block font-semibold">Manufacturing</span>
-              <h3 className="text-[18px] font-display font-bold text-white">Production line components</h3>
+              <h3 className="text-[18px] font-display font-bold text-t">Production line components</h3>
               <p className="text-[14px] text-t2 leading-relaxed">
                 Protect critical assembly operations and prevent costly plant downtime when supply chain disruptions emerge.
               </p>
@@ -100,7 +76,7 @@ export default function Solutions() {
 
             <div className="card-base p-7 space-y-3">
               <span className="text-ac font-mono text-[11px] uppercase tracking-wider block font-semibold">Wholesale and retail</span>
-              <h3 className="text-[18px] font-display font-bold text-white">Multi-tier distribution</h3>
+              <h3 className="text-[18px] font-display font-bold text-t">Multi-tier distribution</h3>
               <p className="text-[14px] text-t2 leading-relaxed">
                 Balance delivery commitments and partial shipment rules across key commercial accounts and standard buyers.
               </p>
@@ -134,7 +110,7 @@ export default function Solutions() {
           <div className="space-y-3">
             <div className="flex items-center space-x-2.5">
               <img src="/logo-icon.png" alt="OrderWise" className="h-6 w-6 object-contain" />
-              <span className="font-display font-bold text-[17px] text-white">
+              <span className="font-display font-bold text-[17px] text-t">
                 Order<span className="text-ac">Wise</span>
               </span>
             </div>
@@ -144,29 +120,29 @@ export default function Solutions() {
           </div>
 
           <div>
-            <h4 className="font-semibold text-white uppercase text-[12px] font-mono mb-3">Product</h4>
+            <h4 className="font-semibold text-t uppercase text-[12px] font-mono mb-3">Product</h4>
             <div className="space-y-2 flex flex-col text-[14px]">
-              <Link to="/admin/allocation" className="hover:text-white transition-colors">Allocation</Link>
-              <Link to="/admin/inventory" className="hover:text-white transition-colors">Inventory</Link>
-              <Link to="/admin/audit" className="hover:text-white transition-colors">Audit log</Link>
+              <Link to="/admin/allocation" className="hover:text-t transition-colors">Allocation</Link>
+              <Link to="/admin/inventory" className="hover:text-t transition-colors">Inventory</Link>
+              <Link to="/admin/audit" className="hover:text-t transition-colors">Audit log</Link>
             </div>
           </div>
 
           <div>
-            <h4 className="font-semibold text-white uppercase text-[12px] font-mono mb-3">Company</h4>
+            <h4 className="font-semibold text-t uppercase text-[12px] font-mono mb-3">Company</h4>
             <div className="space-y-2 flex flex-col text-[14px]">
-              <Link to="/" className="hover:text-white transition-colors">About</Link>
-              <Link to="/pricing" className="hover:text-white transition-colors">Pricing</Link>
-              <Link to="/security" className="hover:text-white transition-colors">Security</Link>
+              <Link to="/" className="hover:text-t transition-colors">About</Link>
+              <Link to="/pricing" className="hover:text-t transition-colors">Pricing</Link>
+              <Link to="/security" className="hover:text-t transition-colors">Security</Link>
             </div>
           </div>
 
           <div>
-            <h4 className="font-semibold text-white uppercase text-[12px] font-mono mb-3">Legal</h4>
+            <h4 className="font-semibold text-t uppercase text-[12px] font-mono mb-3">Legal</h4>
             <div className="space-y-2 flex flex-col text-[14px]">
-              <span className="hover:text-white transition-colors cursor-pointer">Privacy</span>
-              <span className="hover:text-white transition-colors cursor-pointer">Terms</span>
-              <Link to="/security" className="hover:text-white transition-colors">Security</Link>
+              <span className="hover:text-t transition-colors cursor-pointer">Privacy</span>
+              <span className="hover:text-t transition-colors cursor-pointer">Terms</span>
+              <Link to="/security" className="hover:text-t transition-colors">Security</Link>
             </div>
           </div>
         </div>

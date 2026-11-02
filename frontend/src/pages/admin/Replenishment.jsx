@@ -210,7 +210,7 @@ export default function Replenishment() {
             <Truck className="w-3.5 h-3.5" />
             <span>PHASE 11 SUPPLY INTELLIGENCE &amp; REPLENISHMENT</span>
           </div>
-          <h1 className="font-display text-[34px] font-bold tracking-tight text-white">
+          <h1 className="font-display text-[34px] font-bold tracking-tight text-t">
             Replenishment <span className="text-ac">&amp;</span> Demand Planning
           </h1>
           <p className="text-[14px] text-t2 font-sans max-w-2xl mt-0.5 leading-relaxed">
@@ -226,12 +226,12 @@ export default function Replenishment() {
               aria-label="Select Demand Window"
               value={demandPeriod}
               onChange={(e) => setDemandPeriod(parseInt(e.target.value, 10))}
-              className="bg-transparent border-none text-white font-mono font-bold outline-none cursor-pointer"
+              className="bg-transparent border-none text-t font-mono font-bold outline-none cursor-pointer"
             >
-              <option value={14} className="bg-s text-white">14 Days</option>
-              <option value={30} className="bg-s text-white">30 Days</option>
-              <option value={60} className="bg-s text-white">60 Days</option>
-              <option value={90} className="bg-s text-white">90 Days</option>
+              <option value={14} className="bg-s text-t">14 Days</option>
+              <option value={30} className="bg-s text-t">30 Days</option>
+              <option value={60} className="bg-s text-t">60 Days</option>
+              <option value={90} className="bg-s text-t">90 Days</option>
             </select>
           </div>
 
@@ -274,7 +274,7 @@ export default function Replenishment() {
             <span>Products Evaluated</span>
             <Package className="w-4 h-4 text-ac" />
           </div>
-          <div className="text-2xl font-mono font-bold text-white mt-1">
+          <div className="text-2xl font-mono font-bold text-t mt-1">
             {summary.total}
           </div>
           <div className="text-[11px] font-mono text-t2 mt-1">Active catalog items</div>
@@ -315,13 +315,13 @@ export default function Replenishment() {
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center space-x-2.5 pb-2">
+      <div className="flex items-center space-x-2.5 pb-2 overflow-x-auto touch-scroll flex-nowrap w-full">
         <button
           onClick={() => setActiveTab('recommendations')}
-          className={`px-5 py-2.5 rounded-pill text-[13px] font-semibold transition-colors border ${
+          className={`px-5 py-2.5 rounded-pill text-[13px] font-semibold transition-colors border whitespace-nowrap shrink-0 ${
             activeTab === 'recommendations'
               ? 'border-ac bg-ac text-white'
-              : 'border-bd text-t2 hover:text-white bg-s hover:border-white'
+              : 'border-bd text-t2 hover:text-t bg-s hover:border-white'
           }`}
         >
           Replenishment Recommendations ({recommendations.length})
@@ -329,10 +329,10 @@ export default function Replenishment() {
 
         <button
           onClick={() => setActiveTab('purchase_orders')}
-          className={`px-5 py-2.5 rounded-pill text-[13px] font-semibold transition-colors border ${
+          className={`px-5 py-2.5 rounded-pill text-[13px] font-semibold transition-colors border whitespace-nowrap shrink-0 ${
             activeTab === 'purchase_orders'
               ? 'border-ac bg-ac text-white'
-              : 'border-bd text-t2 hover:text-white bg-s hover:border-white'
+              : 'border-bd text-t2 hover:text-t bg-s hover:border-white'
           }`}
         >
           Purchase Orders &amp; Approvals ({purchaseOrders.length})
@@ -343,10 +343,10 @@ export default function Replenishment() {
             setActiveTab('supplier_performance');
             fetchSupplierPerformance();
           }}
-          className={`px-5 py-2.5 rounded-pill text-[13px] font-semibold transition-colors border ${
+          className={`px-5 py-2.5 rounded-pill text-[13px] font-semibold transition-colors border whitespace-nowrap shrink-0 ${
             activeTab === 'supplier_performance'
               ? 'border-ac bg-ac text-white'
-              : 'border-bd text-t2 hover:text-white bg-s hover:border-white'
+              : 'border-bd text-t2 hover:text-t bg-s hover:border-white'
           }`}
         >
           Supplier Performance Intelligence ({supplierPerformance?.summary?.total_suppliers || suppliers.length || 0})
@@ -365,7 +365,7 @@ export default function Replenishment() {
                     <th className="py-3.5 px-4 text-right">On-Hand</th>
                     <th className="py-3.5 px-4 text-right">Reserved</th>
                     <th className="py-3.5 px-4 text-right">Incoming</th>
-                    <th className="py-3.5 px-4 text-right font-bold text-white">Inv Position</th>
+                    <th className="py-3.5 px-4 text-right font-bold text-t">Inv Position</th>
                     <th className="py-3.5 px-4 text-right">Daily Demand</th>
                     <th className="py-3.5 px-4 text-right">Lead Time</th>
                     <th className="py-3.5 px-4 text-right">Reorder Point</th>
@@ -388,7 +388,7 @@ export default function Replenishment() {
                       <React.Fragment key={`rec-${rec.product_id}`}>
                         <tr className="hover:bg-s2/40 transition-colors">
                           <td className="py-3.5 px-4">
-                            <div className="font-bold text-white">{rec.product_name}</div>
+                            <div className="font-bold text-t">{rec.product_name}</div>
                             <div className="text-[12px] font-mono text-t2 flex items-center space-x-1.5 mt-0.5">
                               <span className="text-ac">{rec.sku}</span>
                               {rec.supplier && (
@@ -400,7 +400,7 @@ export default function Replenishment() {
                             </div>
                           </td>
 
-                          <td className="py-3.5 px-4 text-right font-mono text-white">
+                          <td className="py-3.5 px-4 text-right font-mono text-t">
                             {rec.on_hand_quantity}
                           </td>
 
@@ -418,7 +418,7 @@ export default function Replenishment() {
                             </span>
                           </td>
 
-                          <td className="py-3.5 px-4 text-right font-mono text-white">
+                          <td className="py-3.5 px-4 text-right font-mono text-t">
                             {rec.average_daily_demand}/d
                           </td>
 
@@ -426,7 +426,7 @@ export default function Replenishment() {
                             {rec.lead_time_days}d
                           </td>
 
-                          <td className="py-3.5 px-4 text-right font-mono font-semibold text-white">
+                          <td className="py-3.5 px-4 text-right font-mono font-semibold text-t">
                             {rec.effective_reorder_point}
                             <span className="text-[11px] text-t2 block font-normal">
                               (calc: {rec.calculated_reorder_point})
@@ -497,7 +497,7 @@ export default function Replenishment() {
           <div className="card-base p-5">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
-                <h3 className="text-base font-bold text-white">
+                <h3 className="text-base font-bold text-t">
                   Purchase Order Governance
                 </h3>
                 <p className="text-[14px] text-t2 mt-0.5">
@@ -547,14 +547,14 @@ export default function Replenishment() {
                           </td>
 
                           <td className="py-3.5 px-4">
-                            <div className="font-semibold text-white">{po.supplier_name}</div>
+                            <div className="font-semibold text-t">{po.supplier_name}</div>
                             <div className="text-[12px] font-mono text-t2">{po.supplier_code}</div>
                           </td>
 
                           <td className="py-3.5 px-4">
                             {po.items?.map((it) => (
                               <div key={`po-item-${it.id}`} className="text-[13px]">
-                                <strong className="text-white">{it.quantity_ordered}</strong> × {it.product_name}
+                                <strong className="text-t">{it.quantity_ordered}</strong> × {it.product_name}
                               </div>
                             ))}
                           </td>
@@ -630,7 +630,7 @@ export default function Replenishment() {
                   <Award className="w-3.5 h-3.5" />
                   <span>Phase 18 Supplier Reliability &amp; Performance Ledger</span>
                 </div>
-                <h2 className="text-[20px] font-bold text-white mt-1">
+                <h2 className="text-[20px] font-bold text-t mt-1">
                   Empirical Supplier Delivery Scorecards
                 </h2>
                 <p className="text-[13px] text-t2 mt-0.5 max-w-3xl leading-relaxed">
@@ -657,7 +657,7 @@ export default function Replenishment() {
                 <span>Portfolio On-Time Rate</span>
                 <Clock className="w-4 h-4 text-ok" />
               </div>
-              <div className="text-2xl font-mono font-bold text-white mt-1">
+              <div className="text-2xl font-mono font-bold text-t mt-1">
                 {supplierPerformance?.summary?.portfolio_on_time_rate !== null &&
                 supplierPerformance?.summary?.portfolio_on_time_rate !== undefined
                   ? `${supplierPerformance.summary.portfolio_on_time_rate}%`
@@ -673,7 +673,7 @@ export default function Replenishment() {
                 <span>Avg Lead Time Drift</span>
                 <TrendingUp className="w-4 h-4 text-ac" />
               </div>
-              <div className="text-2xl font-mono font-bold text-white mt-1">
+              <div className="text-2xl font-mono font-bold text-t mt-1">
                 {supplierPerformance?.summary?.avg_lead_time_variance !== null &&
                 supplierPerformance?.summary?.avg_lead_time_variance !== undefined
                   ? `${supplierPerformance.summary.avg_lead_time_variance > 0 ? '+' : ''}${supplierPerformance.summary.avg_lead_time_variance} d`
@@ -702,7 +702,7 @@ export default function Replenishment() {
                 <span>Evaluated Suppliers</span>
                 <Truck className="w-4 h-4 text-ac" />
               </div>
-              <div className="text-2xl font-mono font-bold text-white mt-1">
+              <div className="text-2xl font-mono font-bold text-t mt-1">
                 {supplierPerformance?.suppliers?.length || suppliers.length || 0}
               </div>
               <div className="text-[11px] font-mono text-t2 mt-1">
@@ -752,14 +752,14 @@ export default function Replenishment() {
                       return (
                         <tr key={`sup-score-${sup.supplier_id}`} className="hover:bg-s2/40 transition-colors">
                           <td className="py-3.5 px-4">
-                            <div className="font-bold text-white">{sup.supplier_name}</div>
+                            <div className="font-bold text-t">{sup.supplier_name}</div>
                             <div className="text-[12px] font-mono text-t2">
                               {sup.supplier_code} {sup.contact_email ? `• ${sup.contact_email}` : ''}
                             </div>
                           </td>
 
                           <td className="py-3.5 px-4 text-center font-mono">
-                            <span className="text-white font-bold">{sup.completed_deliveries_count}</span>
+                            <span className="text-t font-bold">{sup.completed_deliveries_count}</span>
                             <span className="text-t2 text-[12px]"> completed</span>
                           </td>
 
@@ -779,7 +779,7 @@ export default function Replenishment() {
                             {sup.promised_lead_time_days} days
                           </td>
 
-                          <td className="py-3.5 px-4 text-right font-mono text-white text-[13px]">
+                          <td className="py-3.5 px-4 text-right font-mono text-t text-[13px]">
                             {sup.actual_avg_lead_time_days !== null
                               ? `${sup.actual_avg_lead_time_days} days`
                               : <span className="text-t2">—</span>}
@@ -796,7 +796,7 @@ export default function Replenishment() {
                           </td>
 
                           <td className="py-3.5 px-4 text-center font-mono text-[13px]">
-                            <span className="text-white">{sup.active_pos_count} active</span>
+                            <span className="text-t">{sup.active_pos_count} active</span>
                             {sup.delayed_pos_count > 0 && (
                               <span className="ml-1.5 px-1.5 py-0.5 rounded-pill text-[10px] bg-no/20 text-no border border-no/40 font-bold">
                                 {sup.delayed_pos_count} delayed
@@ -842,7 +842,7 @@ export default function Replenishment() {
           <div className="p-4 rounded-card border border-bd bg-s flex items-start space-x-3 text-[12px] text-t2 font-sans">
             <Info className="w-4 h-4 text-ac flex-shrink-0 mt-0.5" />
             <div>
-              <strong className="text-white">Deterministic Non-Fabrication Guarantee:</strong> OrderWise never extrapolates or hallucinates supplier performance scores when deliveries are zero. Suppliers with zero historical shipments remain strictly tagged as <code className="text-white">INSUFFICIENT_DATA</code> with unrated reliability until physical goods receipt is confirmed.
+              <strong className="text-t">Deterministic Non-Fabrication Guarantee:</strong> OrderWise never extrapolates or hallucinates supplier performance scores when deliveries are zero. Suppliers with zero historical shipments remain strictly tagged as <code className="text-t">INSUFFICIENT_DATA</code> with unrated reliability until physical goods receipt is confirmed.
             </div>
           </div>
         </div>
@@ -859,7 +859,7 @@ export default function Replenishment() {
             <label className="block text-[12px] font-mono text-t2 mb-1.5">
               Target Product
             </label>
-            <div className="p-3 rounded-card border border-bd bg-s2 text-white font-bold">
+            <div className="p-3 rounded-card border border-bd bg-s2 text-t font-bold">
               {selectedProduct?.product_name} ({selectedProduct?.sku})
             </div>
           </div>
@@ -872,12 +872,12 @@ export default function Replenishment() {
               aria-label="Select Supplier"
               value={poSupplierId}
               onChange={(e) => setPoSupplierId(e.target.value)}
-              className="w-full bg-s2 rounded-pill border border-bd px-4 py-2 text-white outline-none focus:border-ac text-[14px]"
+              className="w-full bg-s2 rounded-pill border border-bd px-4 py-2 text-t outline-none focus:border-ac text-[14px]"
               required
             >
-              <option value="" className="bg-s text-white">Select Supplier</option>
+              <option value="" className="bg-s text-t">Select Supplier</option>
               {suppliers.map((s) => (
-                <option key={`sup-${s.id}`} value={s.id} className="bg-s text-white">
+                <option key={`sup-${s.id}`} value={s.id} className="bg-s text-t">
                   {s.name} ({s.code}) - {s.lead_time_days} days lead time
                 </option>
               ))}
@@ -893,7 +893,7 @@ export default function Replenishment() {
               min={1}
               value={poQuantity}
               onChange={(e) => setPoQuantity(parseInt(e.target.value, 10))}
-              className="w-full bg-s2 rounded-pill border border-bd px-4 py-2 text-white outline-none focus:border-ac font-mono font-bold text-[14px]"
+              className="w-full bg-s2 rounded-pill border border-bd px-4 py-2 text-t outline-none focus:border-ac font-mono font-bold text-[14px]"
               required
             />
           </div>
@@ -906,7 +906,7 @@ export default function Replenishment() {
               rows={2}
               value={poNotes}
               onChange={(e) => setPoNotes(e.target.value)}
-              className="w-full bg-s2 rounded-card border border-bd p-3 text-white outline-none focus:border-ac text-[14px]"
+              className="w-full bg-s2 rounded-card border border-bd p-3 text-t outline-none focus:border-ac text-[14px]"
             />
           </div>
 
@@ -941,7 +941,7 @@ export default function Replenishment() {
             <label className="block text-[12px] font-mono text-t2 mb-1.5">
               Receiving Purchase Order
             </label>
-            <div className="p-3 rounded-card border border-bd bg-s2 text-white font-mono">
+            <div className="p-3 rounded-card border border-bd bg-s2 text-t font-mono">
               <div className="font-bold text-[15px]">PO #{selectedPoToReceive?.id}</div>
               <div className="text-[12px] text-t2 mt-0.5">Supplier: {selectedPoToReceive?.supplier_name} ({selectedPoToReceive?.supplier_code})</div>
             </div>
@@ -954,7 +954,7 @@ export default function Replenishment() {
             <div className="p-3 rounded-card border border-bd bg-s2/40 space-y-1.5">
               {selectedPoToReceive?.items?.map((it) => (
                 <div key={`rec-item-${it.id}`} className="flex justify-between items-center text-[13px]">
-                  <span className="text-white font-medium">{it.product_name}</span>
+                  <span className="text-t font-medium">{it.product_name}</span>
                   <span className="font-mono text-ok font-bold">+{it.quantity_ordered} units</span>
                 </div>
               ))}
@@ -981,7 +981,7 @@ export default function Replenishment() {
                 type="date"
                 value={actualDeliveryDate}
                 onChange={(e) => setActualDeliveryDate(e.target.value)}
-                className="w-full bg-s2 rounded-pill border border-bd px-3 py-2 text-white outline-none focus:border-ac font-mono text-[13px]"
+                className="w-full bg-s2 rounded-pill border border-bd px-3 py-2 text-t outline-none focus:border-ac font-mono text-[13px]"
                 required
               />
             </div>
@@ -1008,7 +1008,7 @@ export default function Replenishment() {
           )}
 
           <div className="text-[11px] text-t2 leading-relaxed">
-            * Receiving this order will mark status as <code className="text-white">received</code>, increment on-hand inventory immediately, and append an audit receipt movement in the inventory ledger.
+            * Receiving this order will mark status as <code className="text-t">received</code>, increment on-hand inventory immediately, and append an audit receipt movement in the inventory ledger.
           </div>
 
           <div className="pt-3 flex items-center justify-end space-x-3 border-t border-bd">

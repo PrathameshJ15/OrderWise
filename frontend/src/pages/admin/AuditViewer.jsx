@@ -70,7 +70,7 @@ export default function AuditViewer() {
       default:
         return {
           label: action,
-          style: 'border-bd text-white bg-s2',
+          style: 'border-bd text-t bg-s2',
         };
     }
   };
@@ -84,7 +84,7 @@ export default function AuditViewer() {
             <ShieldCheck className="h-3.5 w-3.5" />
             <span>Immutable Governance &amp; Audit Trail</span>
           </div>
-          <h1 className="font-display text-[34px] font-bold tracking-tight text-white">
+          <h1 className="font-display text-[34px] font-bold tracking-tight text-t">
             Audit Log Viewer
           </h1>
           <p className="text-[14px] text-t2 font-sans mt-0.5 max-w-2xl">
@@ -105,7 +105,7 @@ export default function AuditViewer() {
       {error && (
         <div className="p-4 rounded-card border border-no/40 bg-[#291313] text-no text-[13px] flex items-center justify-between">
           <span>{error}</span>
-          <button onClick={() => setError(null)} className="underline hover:text-white text-[12px]">
+          <button onClick={() => setError(null)} className="underline hover:text-t text-[12px]">
             Dismiss
           </button>
         </div>
@@ -121,7 +121,7 @@ export default function AuditViewer() {
               value={userQuery}
               onChange={(e) => setUserQuery(e.target.value)}
               placeholder="Filter by actor name or email..."
-              className="w-full bg-s2 rounded-pill border border-bd pl-10 pr-4 py-2 text-[14px] text-white placeholder-t2/60 focus:outline-none focus:border-ac"
+              className="w-full bg-s2 rounded-pill border border-bd pl-10 pr-4 py-2 text-[14px] text-t placeholder-t2/60 focus:outline-none focus:border-ac"
             />
           </div>
           <button
@@ -137,13 +137,13 @@ export default function AuditViewer() {
           <select
             value={actionFilter}
             onChange={(e) => setActionFilter(e.target.value)}
-            className="bg-s2 rounded-pill border border-bd px-4 py-2 text-[14px] text-white focus:outline-none focus:border-ac"
+            className="bg-s2 rounded-pill border border-bd px-4 py-2 text-[14px] text-t focus:outline-none focus:border-ac"
           >
-            <option value="all" className="bg-s text-white">All Actions</option>
-            <option value="RUN_ALLOCATION" className="bg-s text-white">Run Allocation</option>
-            <option value="PRIORITY_APPROVED" className="bg-s text-white">Priority Approved</option>
-            <option value="STOCK_ADJUSTMENT" className="bg-s text-white">Stock Adjustment</option>
-            <option value="ORDER_CONFIRMED" className="bg-s text-white">Order Confirmed</option>
+            <option value="all" className="bg-s text-t">All Actions</option>
+            <option value="RUN_ALLOCATION" className="bg-s text-t">Run Allocation</option>
+            <option value="PRIORITY_APPROVED" className="bg-s text-t">Priority Approved</option>
+            <option value="STOCK_ADJUSTMENT" className="bg-s text-t">Stock Adjustment</option>
+            <option value="ORDER_CONFIRMED" className="bg-s text-t">Order Confirmed</option>
           </select>
         </div>
       </div>
@@ -153,7 +153,7 @@ export default function AuditViewer() {
         <div className="p-4 border-b border-bd flex items-center justify-between bg-s2/60">
           <div className="flex items-center space-x-2">
             <Activity className="h-4 w-4 text-ac" />
-            <span className="text-[14px] font-bold text-white">
+            <span className="text-[14px] font-bold text-t">
               System Audit Records ({logs.length})
             </span>
           </div>
@@ -200,7 +200,7 @@ export default function AuditViewer() {
                         </div>
                       </td>
                       <td className="p-3.5 whitespace-nowrap">
-                        <div className="flex items-center space-x-1.5 text-white font-semibold">
+                        <div className="flex items-center space-x-1.5 text-t font-semibold">
                           <User className="h-3.5 w-3.5 text-ac" />
                           <span>{log.actor_name || 'System Operator'}</span>
                         </div>
@@ -215,7 +215,7 @@ export default function AuditViewer() {
                           {badge.label}
                         </span>
                       </td>
-                      <td className="p-3.5 whitespace-nowrap text-white">
+                      <td className="p-3.5 whitespace-nowrap text-t">
                         <span className="text-t2 text-[12px] font-mono">
                           {log.entity_type} #
                         </span>

@@ -45,7 +45,7 @@ export default function ProductCatalog() {
             <Package className="h-3.5 w-3.5" />
             <span>Available industrial catalog</span>
           </div>
-          <h1 className="font-display text-[34px] font-bold tracking-tight text-white">
+          <h1 className="font-display text-[34px] font-bold tracking-tight text-t">
             Product Catalog
           </h1>
           <p className="text-[14px] text-t2 font-sans mt-0.5">
@@ -61,7 +61,7 @@ export default function ProductCatalog() {
             placeholder="Search catalog by product name or SKU..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="bg-transparent text-white focus:outline-none text-[14px] w-full placeholder-t2/50 font-sans"
+            className="bg-transparent text-t focus:outline-none text-[14px] w-full placeholder-t2/50 font-sans"
           />
         </div>
       </div>
@@ -69,7 +69,7 @@ export default function ProductCatalog() {
       {error && (
         <div className="p-4 rounded-card border border-no/30 bg-[#291313] text-no text-[13px] flex items-center justify-between">
           <span>{error}</span>
-          <button onClick={() => setError(null)} className="underline hover:text-white">
+          <button onClick={() => setError(null)} className="underline hover:text-t">
             Dismiss
           </button>
         </div>
@@ -84,7 +84,7 @@ export default function ProductCatalog() {
       ) : filteredProducts.length === 0 ? (
         <div className="card-base p-12 text-center text-t2 space-y-2">
           <Package className="h-8 w-8 text-t2 mx-auto opacity-50" />
-          <h3 className="text-[18px] text-white font-bold">
+          <h3 className="text-[18px] text-t font-bold">
             No matching products
           </h3>
           <p className="text-[14px]">No active products match your current search query.</p>
@@ -127,7 +127,7 @@ export default function ProductCatalog() {
                     </span>
                   </div>
 
-                  <h3 className="text-[18px] font-bold text-white group-hover:text-ac transition-colors">
+                  <h3 className="text-[18px] font-bold text-t group-hover:text-ac transition-colors">
                     {product.name}
                   </h3>
                   <p className="text-[13px] text-t2 mt-1 line-clamp-2 leading-relaxed">
@@ -138,7 +138,7 @@ export default function ProductCatalog() {
                 <div className="pt-3 border-t border-bd space-y-3">
                   <div className="flex items-center justify-between text-[12px] font-mono text-t2">
                     <span>Available stock:</span>
-                    <span className="text-white font-semibold text-[14px]">{available} units</span>
+                    <span className="text-t font-semibold text-[14px]">{available} units</span>
                   </div>
 
                   <Link

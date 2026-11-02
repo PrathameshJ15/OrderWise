@@ -40,7 +40,7 @@ export default function AIRecommendations() {
     {
       id: 1,
       sender: 'assistant',
-      text: "👋 Hello! I am your **OrderWise AI Assistant Chatbot** powered by Groq Llama-3. I can explain allocation decisions, analyze inventory bottlenecks like Pressure Gauge Pro, answer priority sorting questions, and guide simulations. What would you like to know?",
+      text: "👋 Hello! I am your **OrderWise AI Assistant**. I can explain allocation decisions, analyze inventory bottlenecks, answer priority sorting questions, and guide you through simulations. What would you like to know?",
       suggestions: [
         'Which product is our biggest inventory bottleneck?',
         'Why was Alice’s order deferred?',
@@ -310,13 +310,13 @@ export default function AIRecommendations() {
         <div>
           <div className="inline-flex items-center space-x-2 text-[12px] font-mono text-ac font-semibold tracking-wider uppercase mb-1">
             <Sparkles className="h-3.5 w-3.5" />
-            <span>AI Order Governance • Groq Llama-3</span>
+            <span>AI Order Governance</span>
           </div>
-          <h1 className="font-display text-[34px] font-bold tracking-tight text-white">
+          <h1 className="font-display text-[34px] font-bold tracking-tight text-t">
             AI Priority Assistant
           </h1>
           <p className="text-[14px] text-t2 font-sans mt-0.5">
-            Core Principle: <span className="text-white font-medium">AI recommends. Business rules validate. Authorized humans approve. OrderWise allocates.</span>
+            Core Principle: <span className="text-t font-medium">AI recommends. Business rules validate. Authorized humans approve. OrderWise allocates.</span>
           </p>
         </div>
 
@@ -336,7 +336,7 @@ export default function AIRecommendations() {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-[14px]">
         <div className="card-base p-4">
           <span className="text-t2 block text-[11px] font-mono">Total Orders</span>
-          <span className="text-[34px] font-display font-bold text-white mt-1 block">{orders.length}</span>
+          <span className="text-[34px] font-display font-bold text-t mt-1 block">{orders.length}</span>
         </div>
         <div className="p-4 bg-[#2B2010]/60 rounded-card border border-alert-border">
           <span className="text-wa block text-[11px] font-mono font-medium">Pending AI Review</span>
@@ -374,13 +374,13 @@ export default function AIRecommendations() {
       )}
 
       {/* Primary View Switcher: Approvals vs Chatbot */}
-      <div className="flex flex-wrap items-center gap-2.5 pb-2">
+      <div className="flex items-center gap-2.5 pb-2 overflow-x-auto touch-scroll flex-nowrap w-full">
         <button
           onClick={() => setActiveTab('review')}
           className={`flex items-center space-x-2 px-5 py-2.5 rounded-pill text-[14px] font-semibold transition-colors border ${
             activeTab === 'review'
               ? 'bg-ac text-white border-ac'
-              : 'bg-s text-t2 border-bd hover:text-white hover:border-white'
+              : 'bg-s text-t2 border-bd hover:text-t hover:border-white'
           }`}
         >
           <Sparkles className="w-4 h-4" />
@@ -395,7 +395,7 @@ export default function AIRecommendations() {
           className={`flex items-center space-x-2 px-5 py-2.5 rounded-pill text-[14px] font-semibold transition-colors border ${
             activeTab === 'chatbot'
               ? 'bg-ac text-white border-ac'
-              : 'bg-s text-t2 border-bd hover:text-white hover:border-white'
+              : 'bg-s text-t2 border-bd hover:text-t hover:border-white'
           }`}
         >
           <MessageSquare className="w-4 h-4" />
@@ -413,7 +413,7 @@ export default function AIRecommendations() {
           className={`flex items-center space-x-2 px-5 py-2.5 rounded-pill text-[14px] font-semibold transition-colors border ${
             activeTab === 'forecast'
               ? 'bg-ac text-white border-ac'
-              : 'bg-s text-t2 border-bd hover:text-white hover:border-white'
+              : 'bg-s text-t2 border-bd hover:text-t hover:border-white'
           }`}
         >
           <TrendingUp className="w-4 h-4" />
@@ -434,7 +434,7 @@ export default function AIRecommendations() {
               </div>
               <div>
                 <div className="flex items-center space-x-2">
-                  <h2 className="text-base font-bold text-white">
+                  <h2 className="text-base font-bold text-t">
                     OrderWise Intelligent Co-Pilot Chatbot
                   </h2>
                   <span className="text-[10px] px-2 py-0.5 rounded-pill bg-ok/20 text-ok border border-ok/30 font-mono">
@@ -442,7 +442,7 @@ export default function AIRecommendations() {
                   </span>
                 </div>
                 <p className="text-[12px] text-t2 mt-0.5">
-                  Groq Llama-3-70b-8192 • Deterministic Allocation Engine Explainer • Live Inventory Grounding
+                  AI-Assisted Decision Support • Allocation Explainer • Live Inventory Context
                 </p>
               </div>
             </div>
@@ -472,7 +472,7 @@ export default function AIRecommendations() {
                 key={i}
                 onClick={() => handleSendChat(prompt.replace(/^[^\s]+\s/, ''))}
                 disabled={chatLoading}
-                className="whitespace-nowrap px-3 py-1 rounded-pill bg-s2 border border-bd hover:border-white text-t2 hover:text-white transition-colors text-[12px]"
+                className="whitespace-nowrap px-3 py-1 rounded-pill bg-s2 border border-bd hover:border-white text-t2 hover:text-t transition-colors text-[12px]"
               >
                 {prompt}
               </button>
@@ -496,7 +496,7 @@ export default function AIRecommendations() {
                   className={`max-w-[80%] rounded-card border p-4 text-[14px] ${
                     msg.sender === 'user'
                       ? 'bg-ac/15 border-ac/40 text-white'
-                      : 'bg-s2 border-bd text-white'
+                      : 'bg-s2 border-bd text-t'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-2 pb-1.5 border-b border-bd/40 text-[11px] text-t2 font-mono">
@@ -522,7 +522,7 @@ export default function AIRecommendations() {
                             key={idx}
                             onClick={() => handleSendChat(sug)}
                             disabled={chatLoading}
-                            className="text-[12px] px-3 py-1 rounded-pill bg-s border border-bd hover:border-ac text-t2 hover:text-white transition-colors text-left"
+                            className="text-[12px] px-3 py-1 rounded-pill bg-s border border-bd hover:border-ac text-t2 hover:text-t transition-colors text-left"
                           >
                             → {sug}
                           </button>
@@ -533,7 +533,7 @@ export default function AIRecommendations() {
                 </div>
 
                 {msg.sender === 'user' && (
-                  <div className="w-8 h-8 rounded-full bg-s2 border border-bd text-white flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <div className="w-8 h-8 rounded-full bg-s2 border border-bd text-t flex items-center justify-center flex-shrink-0 mt-0.5">
                     <User className="w-4 h-4" />
                   </div>
                 )}
@@ -568,12 +568,12 @@ export default function AIRecommendations() {
               onChange={(e) => setInputMessage(e.target.value)}
               placeholder="Ask OrderWise AI (e.g. Why was Order #101 deferred? What is the Pressure Gauge bottleneck?)..."
               disabled={chatLoading}
-              className="flex-1 px-4 py-2.5 rounded-pill text-[14px] bg-s border border-bd focus:border-ac text-white focus:outline-none placeholder-t2/60"
+              className="flex-1 px-4 py-2.5 rounded-pill text-[14px] bg-s border border-bd focus:border-ac text-t focus:outline-none placeholder-t2/60"
             />
             <button
               type="submit"
               disabled={chatLoading || !inputMessage.trim()}
-              className="btn-primary flex items-center space-x-1.5 px-6 py-2.5 text-[14px] disabled:opacity-50"
+              className="btn-primary flex items-center space-x-1.5 px-3.5 sm:px-6 py-2.5 text-[14px] disabled:opacity-50 shrink-0 touch-tap"
             >
               {chatLoading ? (
                 <RefreshCw className="w-4 h-4 animate-spin" />
@@ -594,7 +594,7 @@ export default function AIRecommendations() {
                   <TrendingUp className="w-3.5 h-3.5" />
                   <span>Phase 17 AI Demand Forecasting &amp; Shortage Risk</span>
                 </div>
-                <h2 className="text-[20px] font-bold text-white mt-1">
+                <h2 className="text-[20px] font-bold text-t mt-1">
                   Horizon Projections &amp; Shortage Risk Radar
                 </h2>
                 <p className="text-[13px] text-t2 mt-0.5 max-w-3xl leading-relaxed">
@@ -612,12 +612,12 @@ export default function AIRecommendations() {
                       setForecastAlpha(newAlpha);
                       fetchForecasts(newAlpha);
                     }}
-                    className="bg-transparent border-none text-white font-mono font-bold outline-none cursor-pointer"
+                    className="bg-transparent border-none text-t font-mono font-bold outline-none cursor-pointer"
                   >
-                    <option value="0.1" className="bg-s text-white">0.1 (Slow/Stable)</option>
-                    <option value="0.3" className="bg-s text-white">0.3 (Standard)</option>
-                    <option value="0.5" className="bg-s text-white">0.5 (Responsive)</option>
-                    <option value="0.8" className="bg-s text-white">0.8 (Rapid Trend)</option>
+                    <option value="0.1" className="bg-s text-t">0.1 (Slow/Stable)</option>
+                    <option value="0.3" className="bg-s text-t">0.3 (Standard)</option>
+                    <option value="0.5" className="bg-s text-t">0.5 (Responsive)</option>
+                    <option value="0.8" className="bg-s text-t">0.8 (Rapid Trend)</option>
                   </select>
                 </div>
 
@@ -634,14 +634,14 @@ export default function AIRecommendations() {
           </div>
 
           {/* Non-speculative Disclaimer Banner */}
-          <div className="p-4 rounded-card border border-ac/30 bg-[#241212] flex items-start space-x-3 text-[12px] text-white">
+          <div className="p-4 rounded-card border border-ac/30 bg-[#241212] flex items-start space-x-3 text-[12px] text-t">
             <ShieldAlert className="w-4 h-4 text-ac flex-shrink-0 mt-0.5" />
             <div className="space-y-1">
               <div className="font-mono font-bold text-ac uppercase tracking-wider text-[11px]">
                 EXPERIMENTAL_ESTIMATE &bull; Non-Speculative Predictive Advisory
               </div>
               <p className="text-t2 text-[12px] leading-relaxed">
-                Demand forecasting is an assistive mathematical model designed to highlight potential stockout risks. In accordance with OrderWise deterministic governance, forecasts <strong className="text-white">never trigger automated replenishment or allocation modifications</strong> without authoritative human review and approval.
+                Demand forecasting is an assistive mathematical model designed to highlight potential stockout risks. In accordance with OrderWise deterministic governance, forecasts <strong className="text-t">never trigger automated replenishment or allocation modifications</strong> without authoritative human review and approval.
               </p>
             </div>
           </div>
@@ -672,7 +672,7 @@ export default function AIRecommendations() {
                     {/* Header: Name, SKU, Risk Badge */}
                     <div className="flex items-start justify-between gap-3 mb-3">
                       <div>
-                        <h3 className="text-[17px] font-bold text-white">{f.product_name}</h3>
+                        <h3 className="text-[17px] font-bold text-t">{f.product_name}</h3>
                         <span className="text-[12px] font-mono text-t2">{f.sku}</span>
                       </div>
 
@@ -685,7 +685,7 @@ export default function AIRecommendations() {
                     <div className="grid grid-cols-3 gap-2 p-3 rounded-card bg-s2 border border-bd mb-4 text-center font-mono">
                       <div>
                         <div className="text-[10px] text-t2 uppercase">Available Stock</div>
-                        <div className="text-[18px] font-bold text-white mt-0.5">{f.available_inventory}</div>
+                        <div className="text-[18px] font-bold text-t mt-0.5">{f.available_inventory}</div>
                       </div>
                       <div>
                         <div className="text-[10px] text-t2 uppercase">Daily Velocity</div>
@@ -702,11 +702,11 @@ export default function AIRecommendations() {
                       {/* 7-Day Horizon */}
                       <div className="p-3 rounded-card border border-bd/70 bg-s">
                         <div className="flex justify-between items-center mb-1.5">
-                          <span className="text-white font-bold flex items-center gap-1.5">
+                          <span className="text-t font-bold flex items-center gap-1.5">
                             <Calendar className="w-3.5 h-3.5 text-ac" />
                             <span>7-Day Projected Horizon</span>
                           </span>
-                          <span className="text-white font-bold text-[14px]">
+                          <span className="text-t font-bold text-[14px]">
                             {f.horizon_7d?.projected_demand} units
                           </span>
                         </div>
@@ -721,11 +721,11 @@ export default function AIRecommendations() {
                       {/* 30-Day Horizon */}
                       <div className="p-3 rounded-card border border-bd/70 bg-s">
                         <div className="flex justify-between items-center mb-1.5">
-                          <span className="text-white font-bold flex items-center gap-1.5">
+                          <span className="text-t font-bold flex items-center gap-1.5">
                             <Calendar className="w-3.5 h-3.5 text-ac" />
                             <span>30-Day Projected Horizon</span>
                           </span>
-                          <span className="text-white font-bold text-[14px]">
+                          <span className="text-t font-bold text-[14px]">
                             {f.horizon_30d?.projected_demand} units
                           </span>
                         </div>
@@ -787,7 +787,7 @@ export default function AIRecommendations() {
                 className={`px-4 py-1.5 rounded-pill text-[12px] font-mono transition-colors border ${
                   filter === t.key
                     ? 'border-ac bg-ac text-white font-bold'
-                    : 'border-bd bg-s2 text-t2 hover:text-white'
+                    : 'border-bd bg-s2 text-t2 hover:text-t'
                 }`}
               >
                 {t.label}
@@ -821,7 +821,7 @@ export default function AIRecommendations() {
                     <div className="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-bd/60 bg-s2/40">
                       <div className="space-y-1">
                         <div className="flex flex-wrap items-center gap-2.5">
-                          <span className="font-mono font-bold text-lg text-white">
+                          <span className="font-mono font-bold text-lg text-t">
                             ORDER #{order.id}
                           </span>
                           <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-pill border border-bd bg-s2 text-t2">
@@ -835,11 +835,11 @@ export default function AIRecommendations() {
                         </div>
 
                         <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] text-t2">
-                          <span>Customer: <strong className="text-white">{order.customer_name}</strong></span>
+                          <span>Customer: <strong className="text-t">{order.customer_name}</strong></span>
                           <span className="flex items-center gap-1">
                             <Calendar className="w-3.5 h-3.5" />
                             Promised:{' '}
-                            <strong className="text-white font-mono">
+                            <strong className="text-t font-mono">
                               {order.promised_delivery_date
                                 ? new Date(order.promised_delivery_date).toLocaleDateString()
                                 : 'N/A'}
@@ -877,7 +877,7 @@ export default function AIRecommendations() {
 
                         <button
                           onClick={() => toggleExpand(order.id)}
-                          className="p-2 rounded-full border border-bd text-t2 hover:text-white hover:border-white transition-colors"
+                          className="p-2 rounded-full border border-bd text-t2 hover:text-t hover:border-white transition-colors"
                           title={isExpanded ? 'Collapse Items' : 'Expand Items'}
                         >
                           {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
@@ -894,9 +894,9 @@ export default function AIRecommendations() {
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
                           {order.items.map((it) => (
                             <div key={it.id} className="p-3 rounded-card border border-bd bg-s space-y-0.5">
-                              <div className="font-bold text-white">{it.product_name}</div>
+                              <div className="font-bold text-t">{it.product_name}</div>
                               <div className="text-[12px] font-mono text-t2">
-                                SKU: {it.sku} • Requested: <strong className="text-white">{it.requested_quantity}</strong> (Min: {it.minimum_acceptable_quantity})
+                                SKU: {it.sku} • Requested: <strong className="text-t">{it.requested_quantity}</strong> (Min: {it.minimum_acceptable_quantity})
                               </div>
                             </div>
                           ))}
@@ -912,7 +912,7 @@ export default function AIRecommendations() {
                           <span className="text-[11px] font-mono text-t2 block">
                             Customer Business Notes (Treated Strictly as Data):
                           </span>
-                          <p className="text-white italic">&ldquo;{order.business_notes}&rdquo;</p>
+                          <p className="text-t italic">&ldquo;{order.business_notes}&rdquo;</p>
                         </div>
                       </div>
                     )}
@@ -957,7 +957,7 @@ export default function AIRecommendations() {
                             <span className="text-[11px] font-mono text-t2 block mb-1">
                               Rationale & Explanation:
                             </span>
-                            <p className="text-white leading-relaxed bg-s2 p-4 rounded-card border border-bd">
+                            <p className="text-t leading-relaxed bg-s2 p-4 rounded-card border border-bd">
                               {rec.explanation}
                             </p>
                           </div>
@@ -970,7 +970,7 @@ export default function AIRecommendations() {
                               </span>
                               <div className="flex items-start space-x-2.5 p-3 rounded-card bg-s2 border border-bd text-t2">
                                 <Quote className="w-4 h-4 text-ac flex-shrink-0 mt-0.5" />
-                                <span className="italic text-white">&ldquo;{rec.evidence}&rdquo;</span>
+                                <span className="italic text-t">&ldquo;{rec.evidence}&rdquo;</span>
                               </div>
                             </div>
                           )}
@@ -1082,13 +1082,13 @@ export default function AIRecommendations() {
         <form onSubmit={handleModifySubmit} className="space-y-4 text-[14px]">
           <div>
             <span className="text-t2 block text-[12px] font-mono mb-1.5">AI Recommendation ID:</span>
-            <div className="p-3 bg-s2 rounded-card border border-bd font-mono text-white text-[13px]">
+            <div className="p-3 bg-s2 rounded-card border border-bd font-mono text-t text-[13px]">
               #{activeRecommendation?.id} • Suggested: {activeRecommendation?.suggested_priority}
             </div>
           </div>
 
           <div>
-            <label className="block text-white font-medium mb-2">
+            <label className="block text-t font-medium mb-2">
               Select Authoritative Priority:
             </label>
             <div className="grid grid-cols-2 gap-2.5">
@@ -1100,7 +1100,7 @@ export default function AIRecommendations() {
                   className={`p-3 rounded-pill text-center font-mono font-bold text-[13px] transition-colors border ${
                     overridePriority === p
                       ? 'border-ac bg-ac text-white'
-                      : 'border-bd bg-s2 text-t2 hover:text-white hover:border-white'
+                      : 'border-bd bg-s2 text-t2 hover:text-t hover:border-white'
                   }`}
                 >
                   {p}
@@ -1110,7 +1110,7 @@ export default function AIRecommendations() {
           </div>
 
           <div>
-            <label className="block text-white font-medium mb-1.5">
+            <label className="block text-t font-medium mb-1.5">
               Modification Rationale / Justification <span className="text-no">*</span>:
             </label>
             <textarea
@@ -1119,7 +1119,7 @@ export default function AIRecommendations() {
               value={overrideReason}
               onChange={(e) => setOverrideReason(e.target.value)}
               placeholder="e.g. VIP client SLA requires expedited priority classification despite standard business notes."
-              className="w-full p-3 bg-s2 rounded-card border border-bd text-white focus:border-ac focus:outline-none placeholder-t2/50 text-[14px]"
+              className="w-full p-3 bg-s2 rounded-card border border-bd text-t focus:border-ac focus:outline-none placeholder-t2/50 text-[14px]"
             />
             <span className="text-[12px] text-t2 mt-1 block">
               This reason will be permanently recorded in priority_approvals and audit_logs.

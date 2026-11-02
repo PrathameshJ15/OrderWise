@@ -16,7 +16,7 @@ import {
 
 /**
  * Visual badge for allocation impact classification
- * Design System: Pill shape, IBM Plex Mono 12px font-medium.
+ * Design System: Pill shape, JetBrains / IBM Plex Mono 12px font-medium.
  * Status colors (ok, wa, no) separated from accent.
  */
 export function ImpactBadge({ classification, className = '' }) {
@@ -66,7 +66,7 @@ export function ImpactBadge({ classification, className = '' }) {
     case 'NEW_ITEM':
       return (
         <span
-          className={`inline-flex items-center space-x-1 px-2.5 py-0.5 text-[12px] font-mono font-medium rounded-pill border border-[#3A3A3A] bg-[#232323] text-white ${className}`}
+          className={`inline-flex items-center space-x-1 px-2.5 py-0.5 text-[12px] font-mono font-medium rounded-pill border border-bd bg-s2 text-t ${className}`}
         >
           <PlusCircle className="w-3.5 h-3.5" />
           <span>New Item</span>
@@ -76,7 +76,7 @@ export function ImpactBadge({ classification, className = '' }) {
     case 'REMOVED_ITEM':
       return (
         <span
-          className={`inline-flex items-center space-x-1 px-2.5 py-0.5 text-[12px] font-mono font-medium rounded-pill border border-bd bg-[#1B1B1B] text-t2 ${className}`}
+          className={`inline-flex items-center space-x-1 px-2.5 py-0.5 text-[12px] font-mono font-medium rounded-pill border border-bd bg-s text-t2 ${className}`}
         >
           <MinusCircle className="w-3.5 h-3.5" />
           <span>Removed Item</span>
@@ -104,7 +104,7 @@ export function CauseAttributionBadge({ causeType, description, triggerEvent }) 
 
   let Icon = Zap;
   let label = norm.replace(/_/g, ' ');
-  let colorStyles = 'border-ac/30 bg-ac/10 text-white';
+  let colorStyles = 'border-ac/30 bg-ac/10 text-t';
 
   if (norm.includes('STOCK_INCREASED') || norm.includes('STOCK')) {
     Icon = Package;
@@ -114,7 +114,7 @@ export function CauseAttributionBadge({ causeType, description, triggerEvent }) 
     colorStyles = 'border-no/30 bg-no/10 text-no';
   } else if (norm.includes('PRIORITY')) {
     Icon = ShieldCheck;
-    colorStyles = 'border-[#3A3A3A] bg-[#232323] text-white';
+    colorStyles = 'border-bd bg-s2 text-t';
   } else if (norm.includes('CANCELLED')) {
     Icon = Ban;
     colorStyles = 'border-wa/30 bg-wa/10 text-wa';

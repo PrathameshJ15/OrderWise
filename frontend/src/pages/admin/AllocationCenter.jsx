@@ -206,7 +206,7 @@ export default function AllocationCenter() {
             <Cpu className="h-3.5 w-3.5" />
             <span>Deterministic allocation engine</span>
           </div>
-          <h1 className="font-display text-[34px] font-bold tracking-tight text-white">
+          <h1 className="font-display text-[34px] font-bold tracking-tight text-t">
             Allocation Center
           </h1>
           <p className="text-[14px] text-t2 font-sans mt-0.5">
@@ -243,7 +243,7 @@ export default function AllocationCenter() {
       {reallocationSuccessMsg && (
         <div className="p-4 rounded-card border border-ok/40 bg-[#102416] text-ok text-[13px] flex items-center justify-between">
           <span>{reallocationSuccessMsg}</span>
-          <button onClick={() => setReallocationSuccessMsg(null)} className="underline hover:text-white text-[12px]">
+          <button onClick={() => setReallocationSuccessMsg(null)} className="underline hover:text-t text-[12px]">
             Dismiss
           </button>
         </div>
@@ -257,7 +257,7 @@ export default function AllocationCenter() {
           </div>
           <div>
             <div className="flex items-center space-x-2">
-              <span className="text-[14px] font-bold text-white">Controlled Automated Reallocation</span>
+              <span className="text-[14px] font-bold text-t">Controlled Automated Reallocation</span>
               <span className="text-[11px] font-mono px-2 py-0.5 rounded-pill bg-ac/20 text-ac border border-ac/30">
                 Phase 19
               </span>
@@ -288,7 +288,7 @@ export default function AllocationCenter() {
             <AlertTriangle className="h-4 w-4 shrink-0" />
             <span>{error}</span>
           </div>
-          <button onClick={() => setError(null)} className="underline hover:text-white text-[12px]">
+          <button onClick={() => setError(null)} className="underline hover:text-t text-[12px]">
             Dismiss
           </button>
         </div>
@@ -303,7 +303,7 @@ export default function AllocationCenter() {
                 Active inspection run
               </span>
               <div className="flex flex-wrap items-center gap-2 mt-0.5">
-                <span className="text-[20px] font-bold text-white">
+                <span className="text-[20px] font-bold text-t">
                   Run #{selectedRun.id}
                 </span>
                 <span className="text-[12px] font-mono px-2.5 py-0.5 rounded-pill bg-s2 border border-bd text-t2">
@@ -334,7 +334,7 @@ export default function AllocationCenter() {
               <span className="text-[12px] font-mono text-t2 block">
                 Total Evaluated
               </span>
-              <span className="text-[34px] font-bold text-white block my-0.5">
+              <span className="text-[34px] font-bold text-t block my-0.5">
                 {runResults.length}
               </span>
               <span className="text-[11px] font-mono text-t2">Order items</span>
@@ -378,12 +378,12 @@ export default function AllocationCenter() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-bd pb-4">
           <div className="flex items-center space-x-2">
             <Layers className="h-4 w-4 text-ac" />
-            <h2 className="text-[20px] font-display font-bold text-white">
+            <h2 className="text-[20px] font-display font-bold text-t">
               Allocation decisions &amp; explanations ({filteredResults.length})
             </h2>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex items-center gap-2 overflow-x-auto touch-scroll pb-1 w-full sm:w-auto">
             {/* View Mode Switcher: 3D View vs Table View */}
             <div className="flex items-center space-x-1 border border-bd rounded-pill bg-s2 p-1 text-xs" role="tablist" aria-label="Allocation visualization mode">
               <button
@@ -394,7 +394,7 @@ export default function AllocationCenter() {
                 className={`px-3.5 py-1 rounded-pill font-sans text-[12px] font-medium transition-colors ${
                   viewMode === '3d'
                     ? 'bg-ac text-white shadow-sm'
-                    : 'text-t2 hover:text-white'
+                    : 'text-t2 hover:text-t'
                 }`}
               >
                 3D View
@@ -407,7 +407,7 @@ export default function AllocationCenter() {
                 className={`px-3.5 py-1 rounded-pill font-sans text-[12px] font-medium transition-colors ${
                   viewMode === 'table'
                     ? 'bg-ac text-white shadow-sm'
-                    : 'text-t2 hover:text-white'
+                    : 'text-t2 hover:text-t'
                 }`}
               >
                 Table View
@@ -424,7 +424,7 @@ export default function AllocationCenter() {
                   className={`px-3 py-1 rounded-pill font-sans text-[12px] font-medium transition-colors ${
                     statusFilter === st
                       ? 'bg-ac text-white'
-                      : 'text-t2 hover:text-white'
+                      : 'text-t2 hover:text-t'
                   }`}
                 >
                   {st.replace(/_/g, ' ')}
@@ -467,19 +467,19 @@ export default function AllocationCenter() {
               <tbody className="divide-y divide-bd/60">
                 {filteredResults.map((res) => (
                   <tr key={res.id || `${res.order_id}-${res.product_id}`} className="hover:bg-s2/50 transition-colors">
-                    <td className="py-3.5 px-3 font-bold text-white font-mono text-[13px]">
+                    <td className="py-3.5 px-3 font-bold text-t font-mono text-[13px]">
                       #{res.order_id}
                     </td>
-                    <td className="py-3.5 px-3 text-white">
+                    <td className="py-3.5 px-3 text-t">
                       {res.customer_name || 'Customer'}
                     </td>
                     <td className="py-3.5 px-3">
-                      <span className="font-semibold text-white">{res.product_name}</span>
+                      <span className="font-semibold text-t">{res.product_name}</span>
                     </td>
                     <td className="py-3.5 px-3 text-center">
                       <Badge priority={res.approved_priority || 'MEDIUM'} />
                     </td>
-                    <td className="py-3.5 px-3 text-right font-mono text-white">
+                    <td className="py-3.5 px-3 text-right font-mono text-t">
                       {res.requested_quantity}
                     </td>
                     <td className="py-3.5 px-3 text-right font-mono font-bold text-ac">
@@ -505,7 +505,7 @@ export default function AllocationCenter() {
       <div className="card-base space-y-4">
         <div className="flex items-center space-x-2 border-b border-bd pb-4">
           <History className="h-4 w-4 text-ac" />
-          <h2 className="text-[20px] font-display font-bold text-white">
+          <h2 className="text-[20px] font-display font-bold text-t">
             Past allocation runs ({runs.length})
           </h2>
         </div>
@@ -538,13 +538,13 @@ export default function AllocationCenter() {
                       selectedRun?.id === r.id ? 'bg-s2' : ''
                     }`}
                   >
-                    <td className="py-3.5 px-3 font-mono font-bold text-white">
+                    <td className="py-3.5 px-3 font-mono font-bold text-t">
                       #{r.id}
                     </td>
                     <td className="py-3.5 px-3 text-t2 font-mono text-[12px]">
                       {new Date(r.created_at).toLocaleString()}
                     </td>
-                    <td className="py-3.5 px-3 text-white">
+                    <td className="py-3.5 px-3 text-t">
                       {r.initiated_by_name || 'Administrator'}
                     </td>
                     <td className="py-3.5 px-3 text-t2 font-mono text-[12px]">
@@ -556,7 +556,7 @@ export default function AllocationCenter() {
                       </span>
                     </td>
                     <td className="py-3.5 px-4 text-right">
-                      <span className="text-white hover:text-ac text-[12px] font-mono font-medium transition-colors">
+                      <span className="text-t hover:text-ac text-[12px] font-mono font-medium transition-colors">
                         View &rarr;
                       </span>
                     </td>
@@ -576,7 +576,7 @@ export default function AllocationCenter() {
       >
         <div className="space-y-4 text-sm font-sans">
           <div className="p-4 rounded-card bg-s2 border border-bd text-t2 space-y-1.5">
-            <span className="font-semibold text-white block">
+            <span className="font-semibold text-t block">
               Deterministic Invariant Guarantee
             </span>
             <p className="text-[13px] leading-relaxed">
@@ -591,7 +591,7 @@ export default function AllocationCenter() {
             <select
               value={selectedProductIds}
               onChange={(e) => setSelectedProductIds(e.target.value)}
-              className="w-full bg-s2 border border-bd rounded-pill px-4 py-2.5 text-white focus:border-white focus:outline-none font-sans text-[14px]"
+              className="w-full bg-s2 border border-bd rounded-pill px-4 py-2.5 text-t focus:border-ac focus:outline-none font-sans text-[14px]"
             >
               <option value="all">All Active Catalog Products</option>
               {products.map((p) => (
@@ -611,13 +611,13 @@ export default function AllocationCenter() {
               placeholder="e.g. Scheduled morning allocation batch run"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className="w-full bg-s2 border border-bd rounded-pill px-4 py-2.5 text-white placeholder-t2/50 focus:border-white focus:outline-none font-sans text-[14px]"
+              className="w-full bg-s2 border border-bd rounded-pill px-4 py-2.5 text-t placeholder-t2/50 focus:border-ac focus:outline-none font-sans text-[14px]"
             />
           </div>
 
           <div className="p-4 rounded-card bg-s2 border border-bd flex items-center justify-between">
             <div>
-              <span className="font-semibold text-white block">Dry-Run Simulation Mode</span>
+              <span className="font-semibold text-t block">Dry-Run Simulation Mode</span>
               <span className="text-[12px] text-t2">
                 Compute allocations without modifying database reservations
               </span>
@@ -671,7 +671,7 @@ export default function AllocationCenter() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
                 <div className="p-3 rounded-card bg-s2 border border-bd">
                   <div className="text-[11px] font-mono text-t2">Items Evaluated</div>
-                  <div className="text-[20px] font-bold text-white mt-1">
+                  <div className="text-[20px] font-bold text-t mt-1">
                     {reallocationPreview.summary?.total_order_items_considered || 0}
                   </div>
                 </div>
@@ -696,14 +696,14 @@ export default function AllocationCenter() {
               </div>
 
               <div className="border border-bd rounded-card overflow-hidden">
-                <div className="p-3 bg-s2 border-b border-bd text-[13px] font-semibold text-white">
+                <div className="p-3 bg-s2 border-b border-bd text-[13px] font-semibold text-t">
                   Affected Customer Orders & Proposed Allocations
                 </div>
                 <div className="max-h-60 overflow-y-auto divide-y divide-bd text-[12px]">
                   {reallocationPreview.affected_orders?.map((ord, idx) => (
                     <div key={idx} className="p-3 flex items-center justify-between gap-3">
                       <div>
-                        <div className="font-semibold text-white">Order #{ord.order_id} • {ord.customer_name || 'Customer'}</div>
+                        <div className="font-semibold text-t">Order #{ord.order_id} • {ord.customer_name || 'Customer'}</div>
                         <div className="text-t2 text-[11px] font-mono">{ord.sku} - {ord.product_name}</div>
                       </div>
                       <div className="text-right">

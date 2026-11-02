@@ -71,7 +71,7 @@ export default function OrderDetail() {
     return (
       <div className="card-base p-12 text-center text-t2 space-y-3 font-sans my-8">
         <AlertTriangle className="h-8 w-8 text-wa mx-auto" />
-        <h2 className="text-[20px] font-bold text-white">
+        <h2 className="text-[20px] font-bold text-t">
           Order #{id} Not Found
         </h2>
         <p className="text-[14px]">
@@ -129,15 +129,15 @@ export default function OrderDetail() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2">
         <div>
           <div className="flex items-center space-x-2 text-[12px] font-sans text-t2 mb-1.5">
-            <Link to="/orders" className="hover:text-white flex items-center space-x-1">
+            <Link to="/orders" className="hover:text-t flex items-center space-x-1">
               <ArrowLeft className="h-3 w-3" />
               <span>Orders</span>
             </Link>
             <span>/</span>
-            <span className="text-white font-mono">Order #{order.id}</span>
+            <span className="text-t font-mono">Order #{order.id}</span>
           </div>
           <div className="flex flex-wrap items-center gap-3">
-            <h1 className="font-display text-[34px] font-bold tracking-tight text-white">
+            <h1 className="font-display text-[34px] font-bold tracking-tight text-t">
               {`Order #${order.id}`}
             </h1>
             <StatusPill status={order.status} />
@@ -169,7 +169,7 @@ export default function OrderDetail() {
       {error && (
         <div className="p-4 rounded-card border border-no/30 bg-[#291313] text-no text-[13px] flex items-center justify-between">
           <span>{error}</span>
-          <button onClick={() => setError(null)} className="underline hover:text-white">
+          <button onClick={() => setError(null)} className="underline hover:text-t">
             Dismiss
           </button>
         </div>
@@ -177,7 +177,7 @@ export default function OrderDetail() {
 
       {/* Fulfillment Progress Timeline Card */}
       <div className="card-base space-y-4">
-        <h2 className="text-[20px] font-bold text-white flex items-center space-x-2">
+        <h2 className="text-[20px] font-bold text-t flex items-center space-x-2">
           <Clock className="h-4 w-4 text-ac" />
           <span>Fulfillment progress timeline</span>
         </h2>
@@ -213,7 +213,7 @@ export default function OrderDetail() {
                   </div>
                   <span
                     className={`text-[13px] font-semibold ${
-                      step.completed ? 'text-white' : 'text-t2'
+                      step.completed ? 'text-t' : 'text-t2'
                     }`}
                   >
                     {step.title}
@@ -233,7 +233,7 @@ export default function OrderDetail() {
             <Calendar className="h-3.5 w-3.5 text-ac" />
             <span>Promised delivery date</span>
           </div>
-          <div className="text-[18px] font-bold text-white">
+          <div className="text-[18px] font-bold text-t">
             {order.promised_delivery_date || 'Standard commercial delivery schedule'}
           </div>
           <p className="text-[13px] text-t2">
@@ -246,7 +246,7 @@ export default function OrderDetail() {
             <FileText className="h-3.5 w-3.5 text-ac" />
             <span>Business context &amp; notes</span>
           </div>
-          <div className="text-white text-[14px] leading-relaxed italic">
+          <div className="text-t text-[14px] leading-relaxed italic">
             &ldquo;{order.business_notes || 'No customer business notes attached to this order submission.'}&rdquo;
           </div>
         </div>
@@ -257,7 +257,7 @@ export default function OrderDetail() {
         <div className="flex items-center justify-between border-b border-bd pb-4">
           <div className="flex items-center space-x-2">
             <Layers className="h-4 w-4 text-ac" />
-            <h2 className="text-[20px] font-bold text-white">
+            <h2 className="text-[20px] font-bold text-t">
               Order items &amp; allocation explanations ({order.items?.length || 0})
             </h2>
           </div>
@@ -278,7 +278,7 @@ export default function OrderDetail() {
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-bd/60 pb-3">
                   <div>
                     <div className="flex items-center space-x-2.5">
-                      <span className="font-bold text-[16px] text-white">
+                      <span className="font-bold text-[16px] text-t">
                         {item.product_name}
                       </span>
                       <span className="font-mono text-[11px] px-2 py-0.5 rounded-pill bg-s border border-bd text-t2">
@@ -287,7 +287,7 @@ export default function OrderDetail() {
                     </div>
                     <span className="text-[12px] font-mono text-t2 mt-0.5 block">
                       Unit: {item.unit || 'units'} • Partial delivery allowed:{' '}
-                      <span className="font-semibold text-white">
+                      <span className="font-semibold text-t">
                         {item.partial_delivery_allowed ? 'Yes' : 'No'}
                       </span>
                     </span>
@@ -311,7 +311,7 @@ export default function OrderDetail() {
                     <span className="text-[11px] font-mono text-t2 block">
                       Requested
                     </span>
-                    <span className="text-[18px] font-bold text-white font-mono">
+                    <span className="text-[18px] font-bold text-t font-mono">
                       {item.requested_quantity}
                     </span>
                   </div>
@@ -320,7 +320,7 @@ export default function OrderDetail() {
                     <span className="text-[11px] font-mono text-t2 block">
                       Min Acceptable
                     </span>
-                    <span className="text-[18px] font-bold text-white font-mono">
+                    <span className="text-[18px] font-bold text-t font-mono">
                       {item.minimum_acceptable_quantity}
                     </span>
                   </div>
@@ -348,7 +348,7 @@ export default function OrderDetail() {
                     <span className="text-[11px] font-mono text-t2 block">
                       Fulfillment Rate
                     </span>
-                    <span className="text-[18px] font-bold text-white font-mono">
+                    <span className="text-[18px] font-bold text-t font-mono">
                       {hasAllocated
                         ? `${Math.round((item.allocated_quantity / item.requested_quantity) * 100)}%`
                         : 'Pending'}
@@ -360,11 +360,11 @@ export default function OrderDetail() {
                 <div
                   className={`p-4 rounded-card border text-[13px] flex items-start space-x-3 ${
                     isFulfilled
-                      ? 'border-ok/30 bg-ok/5 text-white'
+                      ? 'border-ok/30 bg-ok/5 text-t'
                       : isPartial
-                      ? 'border-wa/30 bg-wa/5 text-white'
+                      ? 'border-wa/30 bg-wa/5 text-t'
                       : isDeferred
-                      ? 'border-no/30 bg-[#291313] text-white'
+                      ? 'border-no/30 bg-[#291313] text-t'
                       : 'border-bd bg-s text-t2'
                   }`}
                 >
@@ -421,7 +421,7 @@ export default function OrderDetail() {
               placeholder="e.g. Project rescheduled, redundant order"
               value={cancelReason}
               onChange={(e) => setCancelReason(e.target.value)}
-              className="w-full bg-s2 border border-bd rounded-pill px-4 py-2.5 text-white focus:border-white focus:outline-none text-[14px]"
+              className="w-full bg-s2 border border-bd rounded-pill px-4 py-2.5 text-t focus:border-ac focus:outline-none text-[14px]"
             />
           </div>
           <div className="flex items-center justify-end space-x-3 pt-2">

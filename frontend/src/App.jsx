@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { ThemeProvider } from './contexts/ThemeContext';
 import { AuthProvider } from './contexts/AuthContext';
 import { NotificationProvider } from './contexts/NotificationContext';
 import ErrorBoundary from './components/ui/ErrorBoundary';
@@ -40,8 +41,9 @@ import AuditViewer from './pages/admin/AuditViewer';
 function App() {
   return (
     <ErrorBoundary>
-      <AuthProvider>
-        <NotificationProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <NotificationProvider>
           <BrowserRouter>
             <Routes>
               {/* Public Routes */}
@@ -97,7 +99,8 @@ function App() {
           </BrowserRouter>
         </NotificationProvider>
       </AuthProvider>
-    </ErrorBoundary>
+    </ThemeProvider>
+  </ErrorBoundary>
   );
 }
 

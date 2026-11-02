@@ -85,7 +85,7 @@ export default function Login() {
           <div className="flex items-center justify-between mb-4">
             <Link to="/" className="flex items-center space-x-2">
               <img src="/logo-icon.png" alt="OrderWise" className="h-7 w-7 object-contain" />
-              <span className="font-display font-bold text-[19px] tracking-tight text-white">
+              <span className="font-display font-bold text-[19px] tracking-tight text-t">
                 Order<span className="text-ac">Wise</span>
               </span>
             </Link>
@@ -94,7 +94,7 @@ export default function Login() {
               <span>Secure access</span>
             </div>
           </div>
-          <h1 className="font-display text-[26px] font-bold tracking-tight text-white">
+          <h1 className="font-display text-[26px] font-bold tracking-tight text-t">
             Sign In to OrderWise
           </h1>
           <p className="text-[14px] text-t2 mt-1">
@@ -103,7 +103,7 @@ export default function Login() {
         </div>
 
         {localError && (
-          <div className="mb-6 p-4 bg-[#291313] border border-no/30 text-no rounded-card text-[13px] flex items-start space-x-2.5">
+          <div className="mb-6 p-4 bg-no/10 border border-no/30 text-no rounded-card text-[13px] flex items-start space-x-2.5">
             <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5" />
             <div>
               <span className="font-semibold block">Access error</span>
@@ -126,7 +126,7 @@ export default function Login() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="name@company.com"
-                className="w-full bg-s2 border border-bd rounded-pill pl-10 pr-4 py-2.5 text-[14px] text-white placeholder-t2/50 focus:outline-none focus:border-white transition-colors font-sans"
+                className="w-full bg-s2 border border-bd rounded-pill pl-10 pr-4 py-2.5 text-[14px] text-t placeholder-t2/50 focus:outline-none focus:border-ac transition-colors font-sans"
               />
             </div>
           </div>
@@ -144,7 +144,7 @@ export default function Login() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••••••"
-                className="w-full bg-s2 border border-bd rounded-pill pl-10 pr-4 py-2.5 text-[14px] text-white placeholder-t2/50 focus:outline-none focus:border-white transition-colors font-sans"
+                className="w-full bg-s2 border border-bd rounded-pill pl-10 pr-4 py-2.5 text-[14px] text-t placeholder-t2/50 focus:outline-none focus:border-ac transition-colors font-sans"
               />
             </div>
           </div>
@@ -183,7 +183,7 @@ export default function Login() {
               type="button"
               disabled={submitting}
               onClick={() => fillCredentials('admin@orderwise.com', 'Admin123!')}
-              className="px-2.5 py-2 border border-bd bg-s2 hover:border-white text-white rounded-pill text-center font-medium truncate transition-colors disabled:opacity-50"
+              className="px-2.5 py-2 border border-bd bg-s2 hover:border-ac text-t rounded-pill text-center font-medium truncate transition-colors disabled:opacity-50"
             >
               Admin
             </button>
@@ -191,7 +191,7 @@ export default function Login() {
               type="button"
               disabled={submitting}
               onClick={() => fillCredentials('manager@orderwise.com', 'Manager123!')}
-              className="px-2.5 py-2 border border-bd bg-s2 hover:border-white text-white rounded-pill text-center font-medium truncate transition-colors disabled:opacity-50"
+              className="px-2.5 py-2 border border-bd bg-s2 hover:border-ac text-t rounded-pill text-center font-medium truncate transition-colors disabled:opacity-50"
             >
               Manager
             </button>
@@ -199,7 +199,7 @@ export default function Login() {
               type="button"
               disabled={submitting}
               onClick={() => fillCredentials('alice@demo.com', 'Alice123!')}
-              className="px-2.5 py-2 border border-bd bg-s2 hover:border-white text-white rounded-pill text-center font-medium truncate transition-colors disabled:opacity-50"
+              className="px-2.5 py-2 border border-bd bg-s2 hover:border-ac text-t rounded-pill text-center font-medium truncate transition-colors disabled:opacity-50"
             >
               Customer
             </button>
@@ -208,7 +208,7 @@ export default function Login() {
 
         <div className="mt-6 text-center text-[13px] text-t2">
           <span>New customer account? </span>
-          <Link to="/register" className="text-white hover:underline font-semibold ml-1">
+          <Link to="/register" className="text-t hover:underline font-semibold ml-1">
             Register here
           </Link>
         </div>

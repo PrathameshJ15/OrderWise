@@ -69,7 +69,7 @@ export default function CustomerDashboard() {
             <CheckCircle2 className="h-3.5 w-3.5" />
             <span>Customer Command Hub • Authenticated Portal</span>
           </div>
-          <h1 className="font-display text-[34px] font-bold tracking-tight text-white">
+          <h1 className="font-display text-[34px] font-bold tracking-tight text-t">
             Welcome, <span>{user?.name || 'Valued Customer'}</span>
           </h1>
           <p className="text-[14px] text-t2 font-sans mt-0.5">
@@ -99,7 +99,7 @@ export default function CustomerDashboard() {
       {error && (
         <div className="p-4 rounded-card border border-no/30 bg-[#291313] text-no text-[13px] flex items-center justify-between">
           <span>{error}</span>
-          <button onClick={() => setError(null)} className="underline hover:text-white">
+          <button onClick={() => setError(null)} className="underline hover:text-t">
             Dismiss
           </button>
         </div>
@@ -109,7 +109,7 @@ export default function CustomerDashboard() {
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
         <div className="card-base p-5 flex flex-col justify-between">
           <span className="text-[12px] font-mono text-t2">Total Placed</span>
-          <div className="text-[34px] font-display font-bold text-white tracking-tight my-1">
+          <div className="text-[34px] font-display font-bold text-t tracking-tight my-1">
             {totalOrders}
           </div>
           <span className="text-[11px] font-mono text-t2">Lifetime orders</span>
@@ -117,7 +117,7 @@ export default function CustomerDashboard() {
 
         <div className="card-base p-5 flex flex-col justify-between">
           <span className="text-[12px] font-mono text-t2">Pending Queue</span>
-          <div className="text-[34px] font-display font-bold text-white tracking-tight my-1">
+          <div className="text-[34px] font-display font-bold text-t tracking-tight my-1">
             {pendingOrders}
           </div>
           <span className="text-[11px] font-mono text-t2">Awaiting run</span>
@@ -154,17 +154,17 @@ export default function CustomerDashboard() {
           to="/products"
           className="card-base hover:border-white transition-colors group block space-y-3"
         >
-          <div className="w-9 h-9 rounded-full bg-s2 text-white flex items-center justify-center">
+          <div className="w-9 h-9 rounded-full bg-s2 text-t flex items-center justify-center">
             <Package className="h-4 w-4" />
           </div>
-          <h3 className="text-[18px] font-bold text-white group-hover:text-ac transition-colors flex items-center justify-between">
+          <h3 className="text-[18px] font-bold text-t group-hover:text-ac transition-colors flex items-center justify-between">
             <span>Product Catalog</span>
             <ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" />
           </h3>
           <p className="text-[14px] text-t2 leading-normal">
             Browse active industrial inventory with real-time on-hand availability indicators.
           </p>
-          <span className="text-[12px] font-mono text-white font-medium inline-block pt-1">
+          <span className="text-[12px] font-mono text-t font-medium inline-block pt-1">
             Explore catalog &rarr;
           </span>
         </Link>
@@ -173,17 +173,17 @@ export default function CustomerDashboard() {
           to="/orders/new"
           className="card-base hover:border-white transition-colors group block space-y-3"
         >
-          <div className="w-9 h-9 rounded-full bg-s2 text-white flex items-center justify-center">
+          <div className="w-9 h-9 rounded-full bg-s2 text-t flex items-center justify-center">
             <PlusCircle className="h-4 w-4" />
           </div>
-          <h3 className="text-[18px] font-bold text-white group-hover:text-ac transition-colors flex items-center justify-between">
+          <h3 className="text-[18px] font-bold text-t group-hover:text-ac transition-colors flex items-center justify-between">
             <span>Create New Order</span>
             <ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" />
           </h3>
           <p className="text-[14px] text-t2 leading-normal">
             Assemble multi-line orders with custom requested quantities and minimum thresholds.
           </p>
-          <span className="text-[12px] font-mono text-white font-medium inline-block pt-1">
+          <span className="text-[12px] font-mono text-t font-medium inline-block pt-1">
             Draft order &rarr;
           </span>
         </Link>
@@ -192,17 +192,17 @@ export default function CustomerDashboard() {
           to="/orders"
           className="card-base hover:border-white transition-colors group block space-y-3"
         >
-          <div className="w-9 h-9 rounded-full bg-s2 text-white flex items-center justify-center">
+          <div className="w-9 h-9 rounded-full bg-s2 text-t flex items-center justify-center">
             <ClipboardList className="h-4 w-4" />
           </div>
-          <h3 className="text-[18px] font-bold text-white group-hover:text-ac transition-colors flex items-center justify-between">
+          <h3 className="text-[18px] font-bold text-t group-hover:text-ac transition-colors flex items-center justify-between">
             <span>My Orders</span>
             <ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" />
           </h3>
           <p className="text-[14px] text-t2 leading-normal">
             Track real-time allocation outcomes, delivery dates, and item-by-item status reports.
           </p>
-          <span className="text-[12px] font-mono text-white font-medium inline-block pt-1">
+          <span className="text-[12px] font-mono text-t font-medium inline-block pt-1">
             View orders &rarr;
           </span>
         </Link>
@@ -213,11 +213,11 @@ export default function CustomerDashboard() {
         <div className="flex items-center justify-between border-b border-bd pb-4">
           <div className="flex items-center space-x-2">
             <ShoppingBag className="h-4 w-4 text-ac" />
-            <h2 className="text-[20px] font-bold text-white">Recent orders</h2>
+            <h2 className="text-[20px] font-bold text-t">Recent orders</h2>
           </div>
           <Link
             to="/orders"
-            className="text-[12px] font-mono text-t2 hover:text-white transition-colors"
+            className="text-[12px] font-mono text-t2 hover:text-t transition-colors"
           >
             View all ({orders.length}) &rarr;
           </Link>
@@ -247,7 +247,7 @@ export default function CustomerDashboard() {
               >
                 <div className="space-y-1">
                   <div className="flex items-center space-x-2">
-                    <span className="font-bold text-white text-[15px]">Order <span>#{order.id}</span></span>
+                    <span className="font-bold text-t text-[15px]">Order <span>#{order.id}</span></span>
                     <StatusPill status={order.status} size="sm" />
                     {order.priority && (
                       <StatusPill status={order.priority} type="priority" size="sm" />

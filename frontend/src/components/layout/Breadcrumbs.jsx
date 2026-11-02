@@ -29,7 +29,7 @@ export default function Breadcrumbs() {
     <nav aria-label="Breadcrumb" className="font-sans text-[13px] flex items-center space-x-1.5 text-t2">
       <Link
         to={pathnames[0] === 'admin' ? '/admin' : '/dashboard'}
-        className="hover:text-white transition-colors flex items-center space-x-1"
+        className="hover:text-t transition-colors flex items-center space-x-1"
         title="Dashboard Root"
       >
         <Home className="h-3 w-3" />
@@ -45,9 +45,9 @@ export default function Breadcrumbs() {
           <React.Fragment key={to}>
             <ChevronRight className="h-3 w-3 text-t2/50 shrink-0" />
             {isLast ? (
-              <span className="text-white font-medium truncate max-w-[180px]">{label}</span>
+              <span className="text-t font-medium truncate max-w-[180px]">{label}</span>
             ) : (
-              <Link to={to} className="hover:text-white transition-colors truncate max-w-[140px]">
+              <Link to={to} className="hover:text-t transition-colors truncate max-w-[140px]">
                 {label}
               </Link>
             )}

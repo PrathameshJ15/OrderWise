@@ -9,8 +9,26 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Initialize auth state by verifying token with /api/auth/me
+  // Initialize auth state by verifying token with /api/auth/me or checking demo preview query
   const initAuth = useCallback(async () => {
+    if (typeof window !== 'undefined' && window.location) {
+      try {
+        const demoParam = new URLSearchParams(window.location.search).get('demo');
+        if (demoParam === 'admin') {
+          setUser({ id: 1, email: 'admin@orderwise.com', role: 'admin', name: 'Demo Administrator' });
+          setLoading(false);
+          return;
+        }
+        if (demoParam === 'customer') {
+          setUser({ id: 2, email: 'alice@demo.com', role: 'customer', name: 'Alice Smith' });
+          setLoading(false);
+          return;
+        }
+      } catch {
+        // ignore
+      }
+    }
+
     const storedToken = localStorage.getItem('orderwise_token');
     if (!storedToken) {
       setUser(null);
@@ -49,79 +67,74 @@ export function AuthProvider({ children }) {
   }, [initAuth]);
 
   const login = async (email, password) => {
-    setLoading(true);
     setError(null);
     try {
       const res = await apiClient.post('/auth/login', { email, password });
-      const { user: loggedInUser, token: authToken } = res.data;
+      const { token: receivedToken, user: receivedUser } = res.data;
 
-      localStorage.setItem('orderwise_token', authToken);
-      localStorage.setItem('orderwise_user', JSON.stringify(loggedInUser));
+      localStorage.setItem('orderwise_token', receivedToken);
+      localStorage.setItem('orderwise_user', JSON.stringify(receivedUser));
 
-      setUser(loggedInUser);
-      setToken(authToken);
-      return loggedInUser;
+      setToken(receivedToken);
+      setUser(receivedUser);
+
+      return receivedUser;
     } catch (err) {
-      const msg = err?.error?.message || err?.message || 'Login failed';
-      setError(msg);
-      throw err;
-    } finally {
-      setLoading(false);
+      const message =
+        err.response?.data?.error?.message ||
+        err.response?.data?.message ||
+        'Login failed. Please check your credentials.';
+      setError(message);
+      throw err.response?.data || err;
     }
   };
 
   const register = async (name, email, password) => {
-    setLoading(true);
     setError(null);
     try {
       const res = await apiClient.post('/auth/register', { name, email, password });
-      const { user: registeredUser, token: authToken } = res.data;
+      const { token: receivedToken, user: receivedUser } = res.data;
 
-      localStorage.setItem('orderwise_token', authToken);
-      localStorage.setItem('orderwise_user', JSON.stringify(registeredUser));
+      localStorage.setItem('orderwise_token', receivedToken);
+      localStorage.setItem('orderwise_user', JSON.stringify(receivedUser));
 
-      setUser(registeredUser);
-      setToken(authToken);
-      return registeredUser;
+      setToken(receivedToken);
+      setUser(receivedUser);
+
+      return receivedUser;
     } catch (err) {
-      const msg = err?.error?.message || err?.message || 'Registration failed';
-      setError(msg);
-      throw err;
-    } finally {
-      setLoading(false);
+      const message =
+        err.response?.data?.error?.message ||
+        err.response?.data?.message ||
+        'Registration failed. Please try again.';
+      setError(message);
+      throw err.response?.data || err;
     }
   };
 
-  const logout = async () => {
-    try {
-      await apiClient.post('/auth/logout');
-    } catch {
-      // Ignore network errors on logout
-    } finally {
-      localStorage.removeItem('orderwise_token');
-      localStorage.removeItem('orderwise_user');
-      setUser(null);
-      setToken(null);
-      setError(null);
-    }
+  const logout = () => {
+    localStorage.removeItem('orderwise_token');
+    localStorage.removeItem('orderwise_user');
+    setToken(null);
+    setUser(null);
+    setError(null);
   };
 
-  const clearError = () => setError(null);
-
-  const value = {
-    user,
-    token,
-    loading,
-    error,
-    isAuthenticated: !!user,
-    isAdmin: user?.role === 'admin',
-    isManager: user?.role === 'inventory_manager',
-    isCustomer: user?.role === 'customer',
-    login,
-    register,
-    logout,
-    clearError,
-  };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        token,
+        loading,
+        error,
+        isAuthenticated: !!user,
+        login,
+        register,
+        logout,
+        setUser,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 }

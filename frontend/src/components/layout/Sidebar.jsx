@@ -53,7 +53,7 @@ export default function Sidebar({ mobileOpen = false, onCloseMobile = () => {} }
 
       {/* Sidebar Container: w-72 prevents truncation of long labels */}
       <aside
-        className={`fixed top-0 bottom-0 left-0 z-50 w-72 bg-s border-r border-bd flex flex-col font-sans transition-transform duration-200 ease-in-out lg:translate-x-0 ${
+        className={`fixed top-0 bottom-0 left-0 z-50 w-72 bg-s border-r border-bd flex flex-col font-sans transition-all duration-200 ease-in-out lg:translate-x-0 ${
           mobileOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
@@ -61,7 +61,7 @@ export default function Sidebar({ mobileOpen = false, onCloseMobile = () => {} }
         <div className="h-16 flex items-center justify-between px-5 border-b border-bd bg-bg/50">
           <Link to="/admin" className="flex items-center space-x-2.5">
             <img src="/logo-icon.png" alt="" className="h-7 w-7 object-contain" />
-            <span className="font-display font-bold text-[18px] text-white tracking-tight">
+            <span className="font-display font-bold text-[18px] text-t tracking-tight">
               Order<span className="text-ac">Wise</span>
             </span>
           </Link>
@@ -69,7 +69,7 @@ export default function Sidebar({ mobileOpen = false, onCloseMobile = () => {} }
           <button
             type="button"
             onClick={onCloseMobile}
-            className="lg:hidden p-1.5 rounded-full text-t2 hover:text-white"
+            className="lg:hidden p-1.5 rounded-full text-t2 hover:text-t cursor-pointer"
             aria-label="Close sidebar"
           >
             <X className="h-4 w-4" />
@@ -95,10 +95,10 @@ export default function Sidebar({ mobileOpen = false, onCloseMobile = () => {} }
                 end={item.exact}
                 onClick={onCloseMobile}
                 className={({ isActive }) =>
-                  `flex items-center space-x-3 px-3.5 py-2.5 rounded-pill text-[14px] font-medium transition-colors ${
+                  `flex items-center space-x-3 px-3.5 py-2.5 min-h-[44px] rounded-pill text-[14px] font-medium transition-colors active:scale-[0.99] ${
                     isActive
                       ? 'bg-ac text-white'
-                      : 'text-t2 hover:text-white hover:bg-s2'
+                      : 'text-t2 hover:text-t hover:bg-s2'
                   }`
                 }
               >

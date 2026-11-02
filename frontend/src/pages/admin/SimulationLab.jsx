@@ -151,7 +151,7 @@ export default function SimulationLab() {
             <FlaskConical className="h-3.5 w-3.5" />
             <span>WHAT-IF SCENARIO EXPERIMENTATION LAB</span>
           </div>
-          <h1 className="font-display text-[34px] font-bold tracking-tight text-white">
+          <h1 className="font-display text-[34px] font-bold tracking-tight text-t">
             Simulation Lab
           </h1>
           <p className="text-[14px] text-t2 font-sans mt-0.5">
@@ -183,7 +183,7 @@ export default function SimulationLab() {
             <AlertTriangle className="h-4 w-4 shrink-0" />
             <span>{error}</span>
           </div>
-          <button onClick={() => setError(null)} className="underline hover:text-white text-[12px]">
+          <button onClick={() => setError(null)} className="underline hover:text-t text-[12px]">
             Dismiss
           </button>
         </div>
@@ -193,7 +193,7 @@ export default function SimulationLab() {
       <div className="rounded-card border border-bd bg-s2 p-4 flex items-start space-x-3 text-[13px]">
         <ShieldCheck className="h-5 w-5 text-ok shrink-0 mt-0.5" />
         <div className="space-y-1">
-          <span className="font-bold text-white block">
+          <span className="font-bold text-t block">
             In-Memory Sandboxed Execution Guarantee
           </span>
           <p className="text-t2 leading-relaxed">
@@ -207,7 +207,7 @@ export default function SimulationLab() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Form: Select & Configure Scenario */}
         <div className="card-base lg:col-span-1 space-y-4">
-          <h2 className="text-base font-bold text-white border-b border-bd pb-2">
+          <h2 className="text-base font-bold text-t border-b border-bd pb-2">
             Configure What-If Model
           </h2>
 
@@ -219,10 +219,10 @@ export default function SimulationLab() {
               <select
                 value={selectedScenario}
                 onChange={(e) => setSelectedScenario(e.target.value)}
-                className="w-full bg-s2 rounded-pill border border-bd px-4 py-2 text-white focus:outline-none focus:border-ac text-[14px]"
+                className="w-full bg-s2 rounded-pill border border-bd px-4 py-2 text-t focus:outline-none focus:border-ac text-[14px]"
               >
                 {SCENARIOS.map((s) => (
-                  <option key={s.type} value={s.type} className="bg-s text-white">
+                  <option key={s.type} value={s.type} className="bg-s text-t">
                     {s.name}
                   </option>
                 ))}
@@ -242,10 +242,10 @@ export default function SimulationLab() {
                   <select
                     value={productId}
                     onChange={(e) => setProductId(e.target.value)}
-                    className="w-full bg-s2 rounded-pill border border-bd px-4 py-2 text-white focus:outline-none focus:border-ac text-[14px]"
+                    className="w-full bg-s2 rounded-pill border border-bd px-4 py-2 text-t focus:outline-none focus:border-ac text-[14px]"
                   >
                     {products.map((p) => (
-                      <option key={p.id} value={p.id} className="bg-s text-white">
+                      <option key={p.id} value={p.id} className="bg-s text-t">
                         {p.sku} — {p.name}
                       </option>
                     ))}
@@ -261,7 +261,7 @@ export default function SimulationLab() {
                     max="10000"
                     value={quantity}
                     onChange={(e) => setQuantity(e.target.value)}
-                    className="w-full bg-s2 rounded-pill border border-bd px-4 py-2 text-white focus:outline-none focus:border-ac text-[14px]"
+                    className="w-full bg-s2 rounded-pill border border-bd px-4 py-2 text-t focus:outline-none focus:border-ac text-[14px]"
                   />
                 </div>
               </>
@@ -278,7 +278,7 @@ export default function SimulationLab() {
                   max="500"
                   value={surgePercent}
                   onChange={(e) => setSurgePercent(e.target.value)}
-                  className="w-full bg-s2 rounded-pill border border-bd px-4 py-2 text-white focus:outline-none focus:border-ac text-[14px]"
+                  className="w-full bg-s2 rounded-pill border border-bd px-4 py-2 text-t focus:outline-none focus:border-ac text-[14px]"
                 />
                 <span className="text-[12px] text-t2 mt-1 block">
                   All active order item quantities will be scaled up by this ratio.
@@ -297,7 +297,7 @@ export default function SimulationLab() {
                   max="90"
                   value={delayDays}
                   onChange={(e) => setDelayDays(e.target.value)}
-                  className="w-full bg-s2 rounded-pill border border-bd px-4 py-2 text-white focus:outline-none focus:border-ac text-[14px]"
+                  className="w-full bg-s2 rounded-pill border border-bd px-4 py-2 text-t focus:outline-none focus:border-ac text-[14px]"
                 />
               </div>
             )}
@@ -311,10 +311,10 @@ export default function SimulationLab() {
                   <select
                     value={orderId}
                     onChange={(e) => setOrderId(e.target.value)}
-                    className="w-full bg-s2 rounded-pill border border-bd px-4 py-2 text-white focus:outline-none focus:border-ac text-[14px]"
+                    className="w-full bg-s2 rounded-pill border border-bd px-4 py-2 text-t focus:outline-none focus:border-ac text-[14px]"
                   >
                     {orders.map((o) => (
-                      <option key={o.id} value={o.id} className="bg-s text-white">
+                      <option key={o.id} value={o.id} className="bg-s text-t">
                         #{o.id} — Customer #{o.customer_id} ({o.status})
                       </option>
                     ))}
@@ -327,12 +327,12 @@ export default function SimulationLab() {
                   <select
                     value={hypotheticalPriority}
                     onChange={(e) => setHypotheticalPriority(e.target.value)}
-                    className="w-full bg-s2 rounded-pill border border-bd px-4 py-2 text-white focus:outline-none focus:border-ac text-[14px]"
+                    className="w-full bg-s2 rounded-pill border border-bd px-4 py-2 text-t focus:outline-none focus:border-ac text-[14px]"
                   >
-                    <option value="CRITICAL" className="bg-s text-white">CRITICAL (Tier 4)</option>
-                    <option value="HIGH" className="bg-s text-white">HIGH (Tier 3)</option>
-                    <option value="MEDIUM" className="bg-s text-white">MEDIUM (Tier 2)</option>
-                    <option value="LOW" className="bg-s text-white">LOW (Tier 1)</option>
+                    <option value="CRITICAL" className="bg-s text-t">CRITICAL (Tier 4)</option>
+                    <option value="HIGH" className="bg-s text-t">HIGH (Tier 3)</option>
+                    <option value="MEDIUM" className="bg-s text-t">MEDIUM (Tier 2)</option>
+                    <option value="LOW" className="bg-s text-t">LOW (Tier 1)</option>
                   </select>
                 </div>
               </>
@@ -361,7 +361,7 @@ export default function SimulationLab() {
         {/* Right Output: Simulation Outcomes & Telemetry */}
         <div className="card-base lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between border-b border-bd pb-3">
-            <h2 className="text-base font-bold text-white">
+            <h2 className="text-base font-bold text-t">
               Simulation Outcomes &amp; Delta Telemetry
             </h2>
             {activeResult && (
@@ -374,7 +374,7 @@ export default function SimulationLab() {
           {!activeResult ? (
             <div className="p-12 text-center text-t2 space-y-3">
               <FlaskConical className="h-10 w-10 text-t2 mx-auto opacity-30" />
-              <div className="text-base font-bold text-white">No Active Simulation</div>
+              <div className="text-base font-bold text-t">No Active Simulation</div>
               <p className="text-[14px] max-w-md mx-auto">
                 Configure your scenario parameters on the left and click &ldquo;Run Simulation&rdquo; to model the downstream fulfillment effects.
               </p>
@@ -385,7 +385,7 @@ export default function SimulationLab() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 <div className="rounded-card border border-bd bg-s2 p-3.5">
                   <span className="text-[11px] font-mono text-t2 block">Items Evaluated</span>
-                  <span className="text-xl font-mono font-bold text-white mt-1 block">
+                  <span className="text-xl font-mono font-bold text-t mt-1 block">
                     {diffSummary?.total_items_compared || diffSummary?.total_evaluated || itemDiffs.length || 0}
                   </span>
                 </div>
@@ -436,17 +436,17 @@ export default function SimulationLab() {
                       ) : (
                         itemDiffs.map((diff, idx) => (
                           <tr key={idx} className="hover:bg-s2/40 transition-colors">
-                            <td className="py-2.5 px-3 font-mono font-bold text-white">#{diff.order_id}</td>
+                            <td className="py-2.5 px-3 font-mono font-bold text-t">#{diff.order_id}</td>
                             <td className="py-2.5 px-3 text-t2 truncate max-w-[150px]">
                               {diff.product_name || `Product #${diff.product_id}`}
                             </td>
-                            <td className="py-2.5 px-3 text-right font-mono text-white">
+                            <td className="py-2.5 px-3 text-right font-mono text-t">
                               {diff.requested_quantity}
                             </td>
                             <td className="py-2.5 px-3 text-right font-mono text-series">
                               {diff.previous_allocated ?? diff.live_allocated ?? 0}
                             </td>
-                            <td className="py-2.5 px-3 text-right font-mono font-bold text-white">
+                            <td className="py-2.5 px-3 text-right font-mono font-bold text-t">
                               {diff.current_allocated ?? diff.simulated_allocated ?? 0}
                             </td>
                             <td
@@ -479,7 +479,7 @@ export default function SimulationLab() {
       <div className="card-base space-y-4">
         <div className="flex items-center space-x-2 border-b border-bd pb-3">
           <History className="h-4 w-4 text-ac" />
-          <h3 className="text-base font-bold text-white">
+          <h3 className="text-base font-bold text-t">
             Saved Simulation Runs History ({simulations.length})
           </h3>
         </div>
@@ -504,8 +504,8 @@ export default function SimulationLab() {
                 <tbody className="divide-y divide-bd/50">
                   {simulations.slice(0, 10).map((sim) => (
                     <tr key={sim.id} className="hover:bg-s2/40 transition-colors">
-                      <td className="py-3 px-3 font-mono font-bold text-white">#{sim.id}</td>
-                      <td className="py-3 px-3 font-semibold text-white">{sim.name || 'Simulation'}</td>
+                      <td className="py-3 px-3 font-mono font-bold text-t">#{sim.id}</td>
+                      <td className="py-3 px-3 font-semibold text-t">{sim.name || 'Simulation'}</td>
                       <td className="py-3 px-3">
                         <span className="px-2.5 py-0.5 rounded-pill border border-bd bg-s2 text-[11px] font-mono text-ac">
                           {sim.scenario_type}

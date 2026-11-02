@@ -11,8 +11,24 @@
       rel="stylesheet"
     />
     <title>OrderWise — AI-Assisted Order Allocation</title>
+    <script>
+      (function() {
+        try {
+          var params = new URLSearchParams(window.location.search);
+          var queryTheme = params.get('theme');
+          var saved = queryTheme || localStorage.getItem('orderwise_theme');
+          var theme = 'light';
+          if (saved === 'light' || saved === 'dark') {
+            theme = saved;
+          } else if (saved === 'system') {
+            theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', theme);
+        } catch (e) {}
+      })();
+    </script>
   </head>
-  <body class="bg-[#0A0A0A] text-white antialiased font-sans selection:bg-[#E50914] selection:text-white">
+  <body class="bg-bg text-t antialiased font-sans selection:bg-ac selection:text-white">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

@@ -8,7 +8,7 @@ export function Alert({ children, title, variant = 'info', className = '' }) {
       icon: <Info className="h-5 w-5 text-series shrink-0" aria-hidden="true" />,
     },
     success: {
-      container: 'bg-[#0f1f14] border-ok/30 text-ok',
+      container: 'bg-ok/10 border-ok/30 text-ok',
       icon: <CheckCircle className="h-5 w-5 text-ok shrink-0" aria-hidden="true" />,
     },
     warning: {
@@ -16,7 +16,7 @@ export function Alert({ children, title, variant = 'info', className = '' }) {
       icon: <AlertTriangle className="h-5 w-5 text-wa shrink-0" aria-hidden="true" />,
     },
     danger: {
-      container: 'bg-[#291313] border-no/30 text-no',
+      container: 'bg-no/10 border-no/30 text-no',
       icon: <AlertCircle className="h-5 w-5 text-no shrink-0" aria-hidden="true" />,
     },
   };

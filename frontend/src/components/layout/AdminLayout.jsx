@@ -7,7 +7,7 @@ export function AdminLayout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-bg text-white flex font-sans selection:bg-ac selection:text-white relative">
+    <div className="min-h-screen bg-bg text-t flex font-sans selection:bg-ac selection:text-white relative transition-colors">
       {/* Subtle upper-right ambient red lighting */}
       <div
         className="fixed top-0 right-0 w-[650px] h-[500px] pointer-events-none rounded-full blur-[90px] z-0"
@@ -34,10 +34,10 @@ export function AdminLayout() {
         </main>
 
         {/* Footer */}
-        <footer className="border-t border-bd bg-s py-6 px-4 sm:px-8 mt-12 text-[13px] text-t2 font-sans">
+        <footer className="border-t border-bd bg-s py-6 px-4 sm:px-8 mt-12 text-[13px] text-t2 font-sans transition-colors">
           <div className="max-w-container mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
-              <span className="text-white font-medium">OrderWise</span> — Deterministic inventory allocation and supply intelligence
+              <span className="text-t font-medium">OrderWise</span> — Deterministic inventory allocation and supply intelligence
             </div>
             <div className="text-t2 text-[12px]">
               All rights reserved • Enterprise Operations

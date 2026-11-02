@@ -92,7 +92,7 @@ export default function Reports() {
             <FileText className="h-3.5 w-3.5" />
             <span>Operational Reports &amp; Exports Hub</span>
           </div>
-          <h1 className="font-display text-[34px] font-bold tracking-tight text-white">
+          <h1 className="font-display text-[34px] font-bold tracking-tight text-t">
             Supply Chain &amp; Allocation Analytics
           </h1>
           <p className="text-[14px] text-t2 font-sans mt-0.5 max-w-2xl">
@@ -129,7 +129,7 @@ export default function Reports() {
       {error && (
         <div className="p-4 rounded-card border border-no/40 bg-[#291313] text-no text-[13px] flex items-center justify-between">
           <span>{error}</span>
-          <button onClick={() => setError(null)} className="underline hover:text-white text-[12px]">
+          <button onClick={() => setError(null)} className="underline hover:text-t text-[12px]">
             Dismiss
           </button>
         </div>
@@ -139,7 +139,7 @@ export default function Reports() {
       <div className="card-base p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center space-x-2">
           <Download className="h-4 w-4 text-ac" />
-          <span className="text-[14px] font-bold text-white">
+          <span className="text-[14px] font-bold text-t">
             Export On-Screen Datasets (CSV)
           </span>
         </div>
@@ -176,7 +176,7 @@ export default function Reports() {
             <span>Order Fill Rate</span>
             <Percent className="h-4 w-4 text-ok" />
           </div>
-          <div className="text-3xl font-bold font-mono text-white">
+          <div className="text-3xl font-bold font-mono text-t">
             {kpis.fill_rate_percent}%
           </div>
           <div className="text-[12px] text-t2 mt-1">
@@ -202,7 +202,7 @@ export default function Reports() {
             <span>Inventory Valuation</span>
             <DollarSign className="h-4 w-4 text-ac" />
           </div>
-          <div className="text-3xl font-bold font-mono text-white">
+          <div className="text-3xl font-bold font-mono text-t">
             ${(kpis.inventory_valuation_usd || 0).toLocaleString()}
           </div>
           <div className="text-[12px] text-t2 mt-1">
@@ -215,7 +215,7 @@ export default function Reports() {
             <span>AI Governance</span>
             <Cpu className="h-4 w-4 text-wa" />
           </div>
-          <div className="text-3xl font-bold font-mono text-white">
+          <div className="text-3xl font-bold font-mono text-t">
             {kpis.ai_approval_rate_percent}%
           </div>
           <div className="text-[12px] text-t2 mt-1">
@@ -231,7 +231,7 @@ export default function Reports() {
           <div className="flex items-center justify-between pb-3 border-b border-bd">
             <div className="flex items-center space-x-2">
               <AlertOctagon className="h-4 w-4 text-no" />
-              <h2 className="text-base font-bold text-white">
+              <h2 className="text-base font-bold text-t">
                 Deferred Orders &amp; Bottlenecks
               </h2>
             </div>
@@ -251,14 +251,14 @@ export default function Reports() {
                   key={idx}
                   className="p-3.5 rounded-card border border-bd bg-s2 space-y-1"
                 >
-                  <div className="flex items-center justify-between text-[14px] font-bold text-white mb-1">
+                  <div className="flex items-center justify-between text-[14px] font-bold text-t mb-1">
                     <span>Order #{d.order_id} • {d.customer_name}</span>
                     <span className="text-no text-[11px] font-mono px-2 py-0.5 rounded-pill border border-no/40 bg-no/10">
                       Deferred
                     </span>
                   </div>
                   <div className="text-[13px] text-t2">
-                    Requested: <span className="text-white font-medium">{d.requested_quantity} units</span> of {d.product_name}
+                    Requested: <span className="text-t font-medium">{d.requested_quantity} units</span> of {d.product_name}
                   </div>
                   <div className="text-[12px] text-no/90 pt-1">
                     Cause: {d.reason}
@@ -274,7 +274,7 @@ export default function Reports() {
           <div className="flex items-center justify-between pb-3 border-b border-bd">
             <div className="flex items-center space-x-2">
               <Database className="h-4 w-4 text-ac" />
-              <h2 className="text-base font-bold text-white">
+              <h2 className="text-base font-bold text-t">
                 Inventory Valuation by SKU
               </h2>
             </div>
@@ -297,12 +297,12 @@ export default function Reports() {
                 {valuationProducts.map((p) => (
                   <tr key={p.product_id} className="hover:bg-s2/40 transition-colors">
                     <td className="py-3">
-                      <div className="font-bold text-white">{p.sku}</div>
+                      <div className="font-bold text-t">{p.sku}</div>
                       <div className="text-[12px] text-t2 truncate max-w-[180px]">
                         {p.product_name}
                       </div>
                     </td>
-                    <td className="py-3 text-right font-mono text-white">
+                    <td className="py-3 text-right font-mono text-t">
                       {p.on_hand_quantity}
                     </td>
                     <td className="py-3 text-right font-mono text-t2">

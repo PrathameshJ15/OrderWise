@@ -60,7 +60,7 @@ export default function Register() {
         <div className="mb-6">
           <Link to="/" className="flex items-center space-x-2 mb-4">
             <img src="/logo-icon.png" alt="OrderWise" className="h-7 w-7 object-contain" />
-            <span className="font-display font-bold text-[19px] tracking-tight text-white">
+            <span className="font-display font-bold text-[19px] tracking-tight text-t">
               Order<span className="text-ac">Wise</span>
             </span>
           </Link>
@@ -68,7 +68,7 @@ export default function Register() {
             <UserPlus className="h-3.5 w-3.5" />
             <span>Customer onboarding</span>
           </div>
-          <h1 className="font-display text-[26px] font-bold tracking-tight text-white">
+          <h1 className="font-display text-[26px] font-bold tracking-tight text-t">
             Create OrderWise Account
           </h1>
           <p className="text-[14px] text-t2 mt-1">
@@ -77,7 +77,7 @@ export default function Register() {
         </div>
 
         {localError && (
-          <div className="mb-6 p-4 bg-[#291313] border border-no/30 text-no rounded-card text-[13px] flex items-start space-x-2.5">
+          <div className="mb-6 p-4 bg-no/10 border border-no/30 text-no rounded-card text-[13px] flex items-start space-x-2.5">
             <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5" />
             <div>
               <span className="font-semibold block">Registration error</span>
@@ -99,7 +99,7 @@ export default function Register() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Acme Industrial Corp"
-                className="w-full bg-s2 border border-bd rounded-pill pl-10 pr-4 py-2.5 text-[14px] text-white placeholder-t2/50 focus:outline-none focus:border-white transition-colors font-sans"
+                className="w-full bg-s2 border border-bd rounded-pill pl-10 pr-4 py-2.5 text-[14px] text-t placeholder-t2/50 focus:outline-none focus:border-ac transition-colors font-sans"
               />
             </div>
           </div>
@@ -116,7 +116,7 @@ export default function Register() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="purchasing@acme.example"
-                className="w-full bg-s2 border border-bd rounded-pill pl-10 pr-4 py-2.5 text-[14px] text-white placeholder-t2/50 focus:outline-none focus:border-white transition-colors font-sans"
+                className="w-full bg-s2 border border-bd rounded-pill pl-10 pr-4 py-2.5 text-[14px] text-t placeholder-t2/50 focus:outline-none focus:border-ac transition-colors font-sans"
               />
             </div>
           </div>
@@ -133,7 +133,7 @@ export default function Register() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••••••"
-                className="w-full bg-s2 border border-bd rounded-pill pl-10 pr-4 py-2.5 text-[14px] text-white placeholder-t2/50 focus:outline-none focus:border-white transition-colors font-sans"
+                className="w-full bg-s2 border border-bd rounded-pill pl-10 pr-4 py-2.5 text-[14px] text-t placeholder-t2/50 focus:outline-none focus:border-ac transition-colors font-sans"
               />
             </div>
           </div>
@@ -150,14 +150,14 @@ export default function Register() {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="••••••••••••"
-                className="w-full bg-s2 border border-bd rounded-pill pl-10 pr-4 py-2.5 text-[14px] text-white placeholder-t2/50 focus:outline-none focus:border-white transition-colors font-sans"
+                className="w-full bg-s2 border border-bd rounded-pill pl-10 pr-4 py-2.5 text-[14px] text-t placeholder-t2/50 focus:outline-none focus:border-ac transition-colors font-sans"
               />
             </div>
           </div>
 
           {/* Password policy requirements */}
           <div className="bg-s2/60 border border-bd rounded-card p-4 space-y-2 text-[12px] font-mono">
-            <span className="block font-medium text-white">Password Security Policy:</span>
+            <span className="block font-medium text-t">Password Security Policy:</span>
             <div className="space-y-1.5">
               <div className={`flex items-center space-x-2 ${isLengthValid ? 'text-ok' : 'text-t2'}`}>
                 <CheckCircle2 className="h-3.5 w-3.5" />
@@ -195,7 +195,7 @@ export default function Register() {
 
         <div className="mt-6 text-center text-[13px] text-t2">
           <span>Already have an account? </span>
-          <Link to="/login" className="text-white hover:underline font-semibold ml-1">
+          <Link to="/login" className="text-t hover:underline font-semibold ml-1">
             Sign in here
           </Link>
         </div>

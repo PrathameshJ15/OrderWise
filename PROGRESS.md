@@ -2,7 +2,7 @@
 
 > **System:** OrderWise (AI-Assisted Priority-Based Order Allocation Platform)  
 > **Event:** VORTEXA 3.0 Hackathon — Problem Statement S-03  
-> **Current Status:** Phase 16 Complete | Phase I (Premium 3D Visual Layer) Complete  
+> **Current Status:** Phase 16 Complete | Phase I (3D Layer) Complete | Light Mode & Theme System Complete  
 > **Last Updated:** November 2026
 
 ---
@@ -19,11 +19,12 @@
 | **Phase 18 (Supplier Performance)** | 100% | 100% Complete | 🟢 Operational |
 | **Phase 19 (Automated Reallocation)**| 100% | 100% Complete | 🟢 Operational |
 | **Phase I (Premium 3D Visual Layer)** | 100% | 100% Complete | 🟢 Operational |
+| **Light Mode & Theme Toggle** | 100% | 100% Complete | 🟢 Operational |
 | **Full Navigation & Route Integration**| 100% | 100% Interconnected | 🟢 Integrated |
-| **Frontend Test Suite** | 100% Pass | 39/39 Passed (10/10 Test Files) | 🟢 Passing |
+| **Frontend Test Suite** | 100% Pass | 42/42 Passed (11/11 Test Files) | 🟢 Passing |
 | **Pure Backend Unit Tests** | 100% Pass | 18/18 Allocation Pure Passed | 🟢 Passing |
-| **Production Vite Build** | 0 Errors | Clean Chunks (5.62s) | 🟢 Verified |
-| **OrderWise Design System** | 100% | Dark Streaming Theme (DESIGN.md) | 🟢 Complete |
+| **Production Vite Build** | 0 Errors | Clean Chunks (5.37s) | 🟢 Verified |
+| **OrderWise Design System** | 100% | Dual-Theme (Dark & Light) + ThemeToggle | 🟢 Complete |
 | **OWASP Security & RBAC Hardening** | 100% | 100% Enforced | 🟢 Secured |
 
 ---
@@ -202,3 +203,143 @@
   - Frontend Test Suite: 39 / 39 passed across 10 test files (npm --prefix frontend test -- --run).
   - Production Build: Clean Vite bundle generated in 7.32s with 0 errors (npm --prefix frontend run build).
   - Dev server running on http://localhost:5173/.
+
+---
+
+## 📝 Website Content Audit & Professional Copy Rewrite (Completed)
+
+- [x] **Pages Reviewed & Audited:**
+  - **Public Pages:** Landing Page (`Home.jsx`), Solutions (`Solutions.jsx`), Pricing (`Pricing.jsx`), Security (`Security.jsx`), Login (`Login.jsx`), Register (`Register.jsx`).
+  - **Customer Portal:** Customer Dashboard (`CustomerDashboard.jsx`), Product Catalog (`ProductCatalog.jsx`), Create Order (`CreateOrder.jsx`), My Orders (`MyOrders.jsx`), Order Detail (`OrderDetail.jsx`).
+  - **Admin Portal:** Operations Overview (`AdminDashboard.jsx`), Product Management (`ProductManagement.jsx`), Inventory Management (`InventoryManagement.jsx`), Order Management (`OrderManagement.jsx`), Allocation Center (`AllocationCenter.jsx`), AI Recommendations (`AIRecommendations.jsx`), Impact Analyzer (`ImpactAnalyzer.jsx`), Simulation Lab (`SimulationLab.jsx`), Supply Alerts (`Alerts.jsx`), Replenishment (`Replenishment.jsx`), Reports & Analytics (`Reports.jsx`), Audit Log Viewer (`AuditViewer.jsx`).
+- [x] **Components Modified:**
+  - `frontend/src/pages/Home.jsx`: Replaced hackathon badge text with `AI-ASSISTED SUPPLY CHAIN INTELLIGENCE`; replaced hardcoded illustrative statistics (`94.2% fill rate`, `4 items`, `1 critical alert`) with a clean 3-pillar product capability strip (Deterministic Allocation, Human-in-the-Loop AI Governance, Zero-Mutation Simulation Safety); normalized hero subhead to feature-first capability language.
+  - `frontend/src/pages/Pricing.jsx`: Eliminated unpopulated `[Price]` bracketed placeholders across Team and Business plans; replaced with realistic SaaS tier pricing ($299/mo for single warehouse, $799/mo for multi-facility operations, Custom for enterprise) with accurate capability descriptions.
+  - `frontend/src/pages/admin/AIRecommendations.jsx`: Removed model-name-first branding (`Groq Llama-3`) from the header badge; updated chatbot subheader and initial assistant welcome message to capability-first descriptions; preserved all backend API response traceability data (`Provider: Groq AI`, `Model: llama3-70b-8192`).
+  - `frontend/src/pages/admin/AdminDashboard.jsx`: Replaced static, hardcoded order status text (`3 pending · 2 confirmed`) with dynamic pipeline terminology (`Active demand pipeline`).
+- [x] **Misleading & Unverified Claims Corrected:**
+  - Removed all occurrences of Ollama references.
+  - Replaced model-centric marketing hype with capability-first language ("AI-assisted priority recommendations with strict human approval", "explainable priority rankings").
+  - Removed fabricated metrics and hardcoded stats that were not backed by dynamic API queries.
+  - Replaced raw bracket placeholders in public pricing plans.
+- [x] **Technology References Verified:**
+  - Verified Groq API integration with model `llama3-70b-8192` and deterministic keyword fallback in `aiService.js`.
+  - Confirmed human-in-the-loop governance: AI never updates `order_priorities` or inventory directly; authorized admin approval is mandatory.
+  - Verified zero-mutation simulation safety: in-memory cloning with zero live database updates.
+  - Verified deterministic allocation ordering: Priority DESC → Delivery Date ASC → Created ASC → ID ASC.
+- [x] **Tests Executed:**
+  - Full Frontend Test Suite: **39 / 39 PASSED** across all 10 test files (`npm --prefix frontend test -- --run`).
+  - Pure Allocation Unit Tests: **18 / 18 PASSED** (`allocation.pure.test.js`).
+- [x] **Build & Verification Status:**
+  - Production Build: Clean Vite production build in **5.46s** with **0 errors** (`npm --prefix frontend run build`).
+  - Dev Server: Running and healthy on `http://localhost:5173/` (HTTP 200).
+
+---
+
+## 📱 Mobile Interactivity & Touch Experience Upgrade (Completed)
+
+- [x] **Universal Public Mobile Navigation (`PublicNavbar.jsx`):**
+  - Built an animated responsive navigation header shared across `Home.jsx`, `Solutions.jsx`, `Pricing.jsx`, and `Security.jsx`.
+  - Added touch-friendly animated hamburger menu trigger (`Menu` / `X`) with $\ge 44\text{px}$ touch target.
+  - Implemented full-width slide-down glassmorphic drawer (`#121212/95` backdrop blur) with smooth slide-in animation.
+  - Features touchable navigation links with icons and active route badges for *How It Works*, *Modules*, *Solutions*, *Pricing*, and *Security*.
+  - Added prominent mobile actions: *Launch Operations Portal* CTA button, *Create customer account*, and *Sign In*.
+  - Auto-closes on route changes, escape key press, or backdrop tap; locks background body scroll while drawer is open.
+- [x] **Touch-Interactive 3D Visualizations:**
+  - Added touch drag support to `IsometricWarehouseVisual.jsx` (`onTouchStart`, `onTouchMove`, `onTouchEnd`, `onTouchCancel`).
+  - Mobile visitors can now drag their finger across the 3D warehouse to tilt and inspect the isometric facility in real-time.
+  - Added mobile badge hint ("Touch & drag") in the visual's header strip.
+- [x] **Mobile-Optimized Horizontal Scroll Tabs & Filter Strips:**
+  - Added `-webkit-overflow-scrolling: touch` utilities (`.touch-scroll` and `.touch-tap`) in `index.css`.
+  - Upgraded filter strips and view switchers in `AllocationCenter.jsx`, `AIRecommendations.jsx`, and `Replenishment.jsx` to smoothly scroll horizontally on mobile screens without awkward line wrapping.
+- [x] **Touch Target & Modal Ergonomics:**
+  - Enhanced `Modal.jsx` with `max-h-[92vh]`, vertical scroll confinement (`overflow-y-auto overscroll-contain`), and a touch-friendly 36px close button with tactile active scale.
+  - Enhanced `NotificationBell.jsx` dropdown with responsive viewport anchoring (`fixed inset-x-3 top-16 sm:absolute sm:inset-x-auto sm:right-0 sm:w-96`), preventing off-screen overflow on mobile viewports.
+  - Standardized customer layout drawer in `CustomerLayout.jsx` with backdrop blur, body scroll lock, and $\ge 44\text{px}$ touch targets.
+  - Added `inputMode="numeric"` to requisition line items in `CreateOrder.jsx` to trigger native mobile numeric keypads.
+- [x] **Verification & Test Suite:**
+  - Full Frontend Test Suite: **42 / 42 PASSED** across all 11 test files.
+  - Production Build: Clean Vite bundle generated in **5.37s** with **0 errors**.
+  - Dev Server: Running and healthy on `http://localhost:5173/` (HTTP 200).
+
+---
+
+## ☀️ Light Mode & Theme System (100% Complete & Verified)
+
+### Architectural Audit & Design System Tokens
+- **Reference Specification:** Exact match to [`docs/reference/orderwise-light-preview.html`](file:///C:/Users/jadha/OneDrive/Desktop/OrderWise/docs/reference/orderwise-light-preview.html).
+- **Core Principle Maintained:** "AI recommends. Business rules validate. Authorized humans approve. OrderWise allocates and explains." Pure visual/frontend implementation. Zero backend, business logic, DB, or API modifications.
+- **Git Branch:** `light-mode`. All existing user work preserved.
+- **Dependencies Added:** `0` new packages. Implemented with native React context and CSS variables.
+
+### CSS Tokens & Variable Mapping
+| Token | Dark Mode (`:root`) | Light Mode (`:root[data-theme="light"]`) | Contrast Ratio & Usage |
+|---|---|---|---|
+| `--bg` | `#0A0A0A` | `#F7F7F8` | Primary page canvas |
+| `--s` | `#161616` | `#FFFFFF` | Cards & elevated surfaces |
+| `--s2` | `#232323` | `#F1F1F3` | Inset containers & input fields |
+| `--bd` | `#2A2A2A` | `#E4E4E7` | Border dividers & card boundaries |
+| `--divider` | `#3A3A3A` | `#D4D4D8` | Subtle line dividers |
+| `--outline` | `#555555` | `#A1A1AA` | Secondary borders & outline controls |
+| `--t` | `#FFFFFF` | `#0A0A0A` | Primary typography (18.5:1 on bg, 19.8:1 on surface) |
+| `--t2` | `#A8A8A8` | `#52525B` | Secondary typography (4.8:1 on bg, 5.2:1 on surface) |
+| `--ac` | `#E50914` | `#E50914` | Brand red accent (white text on red buttons: 4.6:1) |
+| `--ok` | `#4ADE80` | `#15803D` | Fulfilled status (4.7:1 AA in light mode) |
+| `--wa` | `#F5B544` | `#B45309` | Partial fulfillment / warning (4.6:1 AA in light mode) |
+| `--no` | `#FF7A7A` | `#DC2626` | Deferred status / critical alert (4.6:1 AA in light mode) |
+| `--alert-bg` | `#2B2010` | `#FFF4E0` | Shortage alert container background |
+| `--alert-border` | `#5A4210` | `#F0D49A` | Shortage alert container border |
+| `--card-shadow` | `none` | `0 1px 2px rgba(0,0,0,0.05)` | Light card elevation |
+| `--card-hover-border` | `rgba(229,9,20,0.6)` | `rgba(229,9,20,0.6)` | Interactive card focus state |
+| `--card-hover-shadow` | `0 12px 40px rgba(229,9,20,0.14)` | `0 12px 40px rgba(229,9,20,0.14)` | Interactive card elevation |
+
+### Theme System Architecture
+1. **Context & State Management (`frontend/src/contexts/ThemeContext.jsx`):**
+   - Supports 3 modes: `light`, `dark`, `system`.
+   - Persists user selection in `localStorage.getItem('orderwise_theme')`.
+   - When in `system` mode, reacts to OS changes via `window.matchMedia('(prefers-color-scheme: dark)')`.
+   - Also supports URL parameter override (`?theme=light` or `?theme=dark`) for instant deterministic testing and previews.
+   - Sets attribute `data-theme="light"` or `data-theme="dark"` on `document.documentElement`.
+   - Transitions smoothly with `background-color 150ms ease, border-color 150ms ease, color 150ms ease`.
+   - Respects user accessibility settings via `@media (prefers-reduced-motion: reduce) { transition: none; }`.
+2. **Anti-FOUT Head Script (`frontend/index.html`):**
+   - Inline script directly inside `<head>` reads `localStorage` and query parameters before CSS parses, preventing any flash of wrong theme on reload.
+3. **Theme Toggle Component (`frontend/src/components/ui/ThemeToggle.jsx`):**
+   - **Segmented Control:** 3-state pill (`Sun` [Light] | `Moon` [Dark] | `Monitor` [System]) with high-contrast active indicator.
+   - **Compact Button:** Single button showing current mode with full accessible dropdown menu.
+   - Meets accessibility requirements: `<button>` tags with `aria-label`, visible focus ring (`focus:ring-2 focus:ring-ac`), and touch target $\ge 36\text{px}$ / $40\text{px}$.
+4. **Header Integration:**
+   - Desktop and mobile drawer in `PublicNavbar.jsx` (Landing, Pricing, Solutions, Security).
+   - Admin console header in `Navbar.jsx` (with Breadcrumbs, Notifications, User profile).
+   - Customer portal header in `CustomerLayout.jsx`.
+
+### 3D Visuals & Charts Theme Adaptation
+- **Isometric Warehouse Visual (`IsometricWarehouseVisual.jsx`):**
+  - Light mode palette: Ground platform slab (`#EDEDF0`), grid lines (`#D4D4D8`), standard inventory boxes (top `#E4E4E7`, left `#D4D4D8`, right `#A1A1AA`).
+  - Priority red boxes preserve brand red facets (`#E50914`, `#C00811`, `#8F050C`) in both themes.
+  - Soft red glow adapts to light intensity (`rgba(229, 9, 20, 0.12)`).
+- **Charts (Recharts in `AdminDashboard.jsx` & `ImpactAnalyzer.jsx`):**
+  - Cartesian axes and tick labels use `var(--t2)`.
+  - Tooltip container uses `var(--s)`, border `var(--bd)`, text `var(--t)`.
+  - Donut chart cells dynamically render `var(--ok)`, `var(--wa)`, and `var(--no)`.
+
+### Verification & Evidence Artifacts
+- **Evidence Directory:** `docs/screenshots/light-mode/`
+  1. `landing-desktop-dark.png` (1440x900) — 125.9 KB
+  2. `landing-desktop-light.png` (1440x900) — 138.6 KB
+  3. `landing-mobile-dark.png` (375x812) — 52.5 KB
+  4. `landing-mobile-light.png` (375x812) — 57.9 KB
+  5. `admin-dashboard-desktop-dark.png` (1440x900) — 100.8 KB
+  6. `admin-dashboard-desktop-light.png` (1440x900) — 87.1 KB
+  7. `admin-dashboard-mobile-dark.png` (375x812) — 33.2 KB
+  8. `admin-dashboard-mobile-light.png` (375x812) — 45.9 KB
+  9. `allocation-center-desktop-dark.png` (1440x900) — 91.4 KB
+  10. `allocation-center-desktop-light.png` (1440x900) — 96.2 KB
+  11. `allocation-center-mobile-dark.png` (375x812) — 39.3 KB
+  12. `allocation-center-mobile-light.png` (375x812) — 44.4 KB
+  13. `create-order-form-light.png` (1440x900) — 7.0 KB
+  14. `inventory-table-light.png` (1440x900) — 78.6 KB
+- **Automated Test Results:** **42 / 42 PASSED** across 11 test files (including new `Theme.test.jsx`).
+- **Production Build:** `vite build` completed cleanly in **5.37s** with **0 errors**.
+
+

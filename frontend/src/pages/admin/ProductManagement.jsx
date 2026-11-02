@@ -150,7 +150,7 @@ export default function ProductManagement() {
             <Package className="h-3.5 w-3.5" />
             <span>Operational catalog control</span>
           </div>
-          <h1 className="font-display text-[34px] font-bold tracking-tight text-white">
+          <h1 className="font-display text-[34px] font-bold tracking-tight text-t">
             Product Management
           </h1>
           <p className="text-[14px] text-t2 font-sans mt-0.5">
@@ -182,7 +182,7 @@ export default function ProductManagement() {
             <AlertCircle className="h-4 w-4 shrink-0" />
             <span>{error}</span>
           </div>
-          <button onClick={() => setError(null)} className="underline hover:text-white text-[12px]">
+          <button onClick={() => setError(null)} className="underline hover:text-t text-[12px]">
             Dismiss
           </button>
         </div>
@@ -197,7 +197,7 @@ export default function ProductManagement() {
             className={`px-3.5 py-1 text-[12px] font-mono font-medium rounded-pill whitespace-nowrap transition-colors ${
               activeFilter === 'all'
                 ? 'bg-ac text-white'
-                : 'text-t2 hover:text-white'
+                : 'text-t2 hover:text-t'
             }`}
           >
             All products ({products.length})
@@ -207,7 +207,7 @@ export default function ProductManagement() {
             className={`px-3.5 py-1 text-[12px] font-mono font-medium rounded-pill whitespace-nowrap transition-colors ${
               activeFilter === 'true'
                 ? 'bg-ac text-white'
-                : 'text-t2 hover:text-white'
+                : 'text-t2 hover:text-t'
             }`}
           >
             Active only
@@ -217,7 +217,7 @@ export default function ProductManagement() {
             className={`px-3.5 py-1 text-[12px] font-mono font-medium rounded-pill whitespace-nowrap transition-colors ${
               activeFilter === 'false'
                 ? 'bg-ac text-white'
-                : 'text-t2 hover:text-white'
+                : 'text-t2 hover:text-t'
             }`}
           >
             Inactive
@@ -232,7 +232,7 @@ export default function ProductManagement() {
             placeholder="Search SKU or name..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="bg-transparent text-white focus:outline-none text-[14px] w-full placeholder-t2/50 font-sans"
+            className="bg-transparent text-t focus:outline-none text-[14px] w-full placeholder-t2/50 font-sans"
           />
         </div>
       </div>
@@ -246,7 +246,7 @@ export default function ProductManagement() {
       ) : products.length === 0 ? (
         <div className="card-base p-12 text-center text-t2 space-y-3">
           <Package className="h-8 w-8 text-t2 mx-auto opacity-50" />
-          <h3 className="text-[18px] text-white font-bold">
+          <h3 className="text-[18px] text-t font-bold">
             No products found
           </h3>
           <p className="text-[14px]">No catalog entries match your query.</p>
@@ -268,11 +268,11 @@ export default function ProductManagement() {
             <tbody className="divide-y divide-bd/60">
               {products.map((p) => (
                 <tr key={p.id} className="hover:bg-s2/50 transition-colors">
-                  <td className="py-3.5 px-4 font-mono font-bold text-white">
+                  <td className="py-3.5 px-4 font-mono font-bold text-t">
                     {p.sku}
                   </td>
                   <td className="py-3.5 px-3">
-                    <div className="font-semibold text-white">{p.name}</div>
+                    <div className="font-semibold text-t">{p.name}</div>
                     <div className="text-[12px] text-t2 truncate max-w-sm">
                       {p.description || '—'}
                     </div>
@@ -280,7 +280,7 @@ export default function ProductManagement() {
                   <td className="py-3.5 px-3 text-t2 font-mono text-[12px]">
                     {p.unit || 'units'}
                   </td>
-                  <td className="py-3.5 px-3 text-right font-mono font-semibold text-white">
+                  <td className="py-3.5 px-3 text-right font-mono font-semibold text-t">
                     {p.on_hand_quantity ?? p.stock ?? '—'}
                   </td>
                   <td className="py-3.5 px-3 text-right font-mono text-t2">
@@ -301,7 +301,7 @@ export default function ProductManagement() {
                   <td className="py-3.5 px-4 text-right space-x-2">
                     <button
                       onClick={() => openEditModal(p)}
-                      className="p-1.5 rounded-full border border-bd text-t2 hover:text-white hover:border-white transition-colors"
+                      className="p-1.5 rounded-full border border-bd text-t2 hover:text-t hover:border-white transition-colors"
                       title="Edit Product"
                     >
                       <Edit2 className="h-3.5 w-3.5" />
@@ -341,7 +341,7 @@ export default function ProductManagement() {
                 placeholder="e.g. SENSOR-T500"
                 value={createForm.sku}
                 onChange={(e) => setCreateForm({ ...createForm, sku: e.target.value })}
-                className="w-full bg-s2 border border-bd rounded-pill px-4 py-2.5 text-white focus:border-white focus:outline-none font-mono text-[14px]"
+                className="w-full bg-s2 border border-bd rounded-pill px-4 py-2.5 text-t focus:border-ac focus:outline-none font-mono text-[14px]"
               />
             </div>
             <div>
@@ -353,7 +353,7 @@ export default function ProductManagement() {
                 placeholder="e.g. units, kg, meters"
                 value={createForm.unit}
                 onChange={(e) => setCreateForm({ ...createForm, unit: e.target.value })}
-                className="w-full bg-s2 border border-bd rounded-pill px-4 py-2.5 text-white focus:border-white focus:outline-none font-sans text-[14px]"
+                className="w-full bg-s2 border border-bd rounded-pill px-4 py-2.5 text-t focus:border-ac focus:outline-none font-sans text-[14px]"
               />
             </div>
           </div>
@@ -368,7 +368,7 @@ export default function ProductManagement() {
               placeholder="e.g. Temperature Sensor Array"
               value={createForm.name}
               onChange={(e) => setCreateForm({ ...createForm, name: e.target.value })}
-              className="w-full bg-s2 border border-bd rounded-pill px-4 py-2.5 text-white focus:border-white focus:outline-none font-sans text-[14px]"
+              className="w-full bg-s2 border border-bd rounded-pill px-4 py-2.5 text-t focus:border-ac focus:outline-none font-sans text-[14px]"
             />
           </div>
 
@@ -381,7 +381,7 @@ export default function ProductManagement() {
               placeholder="Hardware details, specifications..."
               value={createForm.description}
               onChange={(e) => setCreateForm({ ...createForm, description: e.target.value })}
-              className="w-full bg-s2 border border-bd rounded-card p-3 text-white focus:border-white focus:outline-none font-sans text-[14px]"
+              className="w-full bg-s2 border border-bd rounded-card p-3 text-t focus:border-ac focus:outline-none font-sans text-[14px]"
             />
           </div>
 
@@ -395,7 +395,7 @@ export default function ProductManagement() {
                 min="0"
                 value={createForm.initialStock}
                 onChange={(e) => setCreateForm({ ...createForm, initialStock: e.target.value })}
-                className="w-full bg-s2 border border-bd rounded-pill px-4 py-2 text-white focus:border-white focus:outline-none font-mono text-[14px]"
+                className="w-full bg-s2 border border-bd rounded-pill px-4 py-2 text-t focus:border-ac focus:outline-none font-mono text-[14px]"
               />
             </div>
             <div>
@@ -407,7 +407,7 @@ export default function ProductManagement() {
                 min="0"
                 value={createForm.safetyStock}
                 onChange={(e) => setCreateForm({ ...createForm, safetyStock: e.target.value })}
-                className="w-full bg-s2 border border-bd rounded-pill px-4 py-2 text-white focus:border-white focus:outline-none font-mono text-[14px]"
+                className="w-full bg-s2 border border-bd rounded-pill px-4 py-2 text-t focus:border-ac focus:outline-none font-mono text-[14px]"
               />
             </div>
             <div>
@@ -419,7 +419,7 @@ export default function ProductManagement() {
                 min="0"
                 value={createForm.reorderPoint}
                 onChange={(e) => setCreateForm({ ...createForm, reorderPoint: e.target.value })}
-                className="w-full bg-s2 border border-bd rounded-pill px-4 py-2 text-white focus:border-white focus:outline-none font-mono text-[14px]"
+                className="w-full bg-s2 border border-bd rounded-pill px-4 py-2 text-t focus:border-ac focus:outline-none font-mono text-[14px]"
               />
             </div>
           </div>
@@ -459,7 +459,7 @@ export default function ProductManagement() {
               required
               value={editForm.name}
               onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-              className="w-full bg-s2 border border-bd rounded-pill px-4 py-2.5 text-white focus:border-white focus:outline-none font-sans text-[14px]"
+              className="w-full bg-s2 border border-bd rounded-pill px-4 py-2.5 text-t focus:border-ac focus:outline-none font-sans text-[14px]"
             />
           </div>
 
@@ -471,7 +471,7 @@ export default function ProductManagement() {
               type="text"
               value={editForm.unit}
               onChange={(e) => setEditForm({ ...editForm, unit: e.target.value })}
-              className="w-full bg-s2 border border-bd rounded-pill px-4 py-2.5 text-white focus:border-white focus:outline-none font-sans text-[14px]"
+              className="w-full bg-s2 border border-bd rounded-pill px-4 py-2.5 text-t focus:border-ac focus:outline-none font-sans text-[14px]"
             />
           </div>
 
@@ -483,7 +483,7 @@ export default function ProductManagement() {
               rows="3"
               value={editForm.description}
               onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
-              className="w-full bg-s2 border border-bd rounded-card p-3 text-white focus:border-white focus:outline-none font-sans text-[14px]"
+              className="w-full bg-s2 border border-bd rounded-card p-3 text-t focus:border-ac focus:outline-none font-sans text-[14px]"
             />
           </div>
 
@@ -498,7 +498,7 @@ export default function ProductManagement() {
               ) : (
                 <ToggleLeft className="h-6 w-6 text-t2" />
               )}
-              <span className="font-medium text-white">
+              <span className="font-medium text-t">
                 {editForm.active ? 'Product is Active' : 'Product is Inactive'}
               </span>
             </button>

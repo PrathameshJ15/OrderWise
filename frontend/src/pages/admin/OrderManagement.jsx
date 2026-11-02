@@ -118,7 +118,7 @@ export default function OrderManagement() {
             <ShoppingBag className="h-3.5 w-3.5" />
             <span>Central Order Operations</span>
           </div>
-          <h1 className="font-display text-[34px] font-bold tracking-tight text-white">
+          <h1 className="font-display text-[34px] font-bold tracking-tight text-t">
             Order Management
           </h1>
           <p className="text-[14px] text-t2 font-sans mt-0.5">
@@ -148,7 +148,7 @@ export default function OrderManagement() {
               placeholder="Search order ID or customer..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-transparent text-white focus:outline-none text-[14px] w-full placeholder-t2/60"
+              className="bg-transparent text-t focus:outline-none text-[14px] w-full placeholder-t2/60"
             />
           </div>
         </div>
@@ -160,7 +160,7 @@ export default function OrderManagement() {
             <AlertCircle className="h-4 w-4 shrink-0" />
             <span>{error}</span>
           </div>
-          <button onClick={() => setError(null)} className="underline hover:text-white text-[12px]">
+          <button onClick={() => setError(null)} className="underline hover:text-t text-[12px]">
             Dismiss
           </button>
         </div>
@@ -180,7 +180,7 @@ export default function OrderManagement() {
             className={`cursor-pointer px-4 py-1.5 rounded-pill text-[12px] font-mono uppercase tracking-wider whitespace-nowrap transition-colors ${
               statusFilter === st
                 ? 'bg-ac text-white font-bold'
-                : 'bg-s2 text-t2 hover:text-white border border-bd'
+                : 'bg-s2 text-t2 hover:text-t border border-bd'
             }`}
           >
             {st.replace(/_/g, ' ')}
@@ -197,7 +197,7 @@ export default function OrderManagement() {
       ) : filteredOrders.length === 0 ? (
         <div className="card-base p-12 text-center text-t2 space-y-2">
           <ShoppingBag className="h-8 w-8 text-t2 mx-auto opacity-40" />
-          <h3 className="text-base font-bold text-white">
+          <h3 className="text-base font-bold text-t">
             No Orders Match Filter
           </h3>
           <p className="text-[14px]">Try selecting a different status filter.</p>
@@ -221,9 +221,9 @@ export default function OrderManagement() {
               <tbody className="divide-y divide-bd/50">
                 {filteredOrders.map((ord) => (
                   <tr key={ord.id} className="hover:bg-s2/40 transition-colors">
-                    <td className="py-3.5 px-4 font-mono font-bold text-white">{`#${ord.id}`}</td>
+                    <td className="py-3.5 px-4 font-mono font-bold text-t">{`#${ord.id}`}</td>
                     <td className="py-3.5 px-3">
-                      <div className="font-semibold text-white">{ord.customer_name}</div>
+                      <div className="font-semibold text-t">{ord.customer_name}</div>
                       <div className="text-[12px] font-mono text-t2">{ord.customer_email}</div>
                     </td>
                     <td className="py-3.5 px-3 text-t2 text-[13px]">
@@ -232,10 +232,10 @@ export default function OrderManagement() {
                     <td className="py-3.5 px-3 text-center">
                       <Badge priority={ord.approved_priority || ord.priority_level || ord.priority || 'MEDIUM'} />
                     </td>
-                    <td className="py-3.5 px-3 text-right font-mono font-semibold text-white">
+                    <td className="py-3.5 px-3 text-right font-mono font-semibold text-t">
                       {ord.item_count || 1}
                     </td>
-                    <td className="py-3.5 px-3 text-right font-mono font-semibold text-white">
+                    <td className="py-3.5 px-3 text-right font-mono font-semibold text-t">
                       {ord.total_requested_quantity || '—'}
                     </td>
                     <td className="py-3.5 px-3 text-center">
@@ -244,7 +244,7 @@ export default function OrderManagement() {
                     <td className="py-3.5 px-4 text-right space-x-2">
                       <button
                         onClick={() => viewOrderDetails(ord.id)}
-                        className="p-2 rounded-full border border-bd text-t2 hover:text-white hover:border-white transition-colors"
+                        className="p-2 rounded-full border border-bd text-t2 hover:text-t hover:border-white transition-colors"
                         title="View Details"
                       >
                         <Eye className="h-3.5 w-3.5" />
@@ -293,7 +293,7 @@ export default function OrderManagement() {
               <div className="p-4 bg-s2 rounded-card border border-bd grid grid-cols-2 gap-3 text-[14px]">
                 <div>
                   <span className="text-[11px] font-mono text-t2 block">Customer</span>
-                  <span className="font-bold text-white">{selectedOrder.customer_name}</span>
+                  <span className="font-bold text-t">{selectedOrder.customer_name}</span>
                 </div>
                 <div>
                   <span className="text-[11px] font-mono text-t2 block">Status</span>
@@ -301,7 +301,7 @@ export default function OrderManagement() {
                 </div>
                 <div>
                   <span className="text-[11px] font-mono text-t2 block">Promised Date</span>
-                  <span className="text-white">{selectedOrder.promised_delivery_date || 'Standard'}</span>
+                  <span className="text-t">{selectedOrder.promised_delivery_date || 'Standard'}</span>
                 </div>
                 <div>
                   <span className="text-[11px] font-mono text-t2 block">Created At</span>
@@ -312,7 +312,7 @@ export default function OrderManagement() {
               {selectedOrder.business_notes && (
                 <div className="p-3.5 bg-s2 rounded-card border border-bd">
                   <span className="text-[11px] font-mono text-t2 block mb-1">Business Notes</span>
-                  <p className="text-white italic">&ldquo;{selectedOrder.business_notes}&rdquo;</p>
+                  <p className="text-t italic">&ldquo;{selectedOrder.business_notes}&rdquo;</p>
                 </div>
               )}
 
@@ -324,13 +324,13 @@ export default function OrderManagement() {
                   {selectedOrder.items?.map((itm) => (
                     <div key={itm.id} className="p-3.5 bg-s2 rounded-card border border-bd space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="font-bold text-white">
+                        <span className="font-bold text-t">
                           {itm.product_name} <span className="text-t2 font-mono text-[12px]">({itm.sku})</span>
                         </span>
                         <StatusPill status={itm.allocation_status} />
                       </div>
                       <div className="text-[13px] text-t2 font-mono">
-                        Requested: <span className="font-bold text-white">{itm.requested_quantity}</span> • Min:{' '}
+                        Requested: <span className="font-bold text-t">{itm.requested_quantity}</span> • Min:{' '}
                         {itm.minimum_acceptable_quantity} • Allocated:{' '}
                         <span className="font-bold text-ok">{itm.allocated_quantity ?? '—'}</span>
                       </div>
@@ -367,7 +367,7 @@ export default function OrderManagement() {
               placeholder="e.g. Stock shortage, customer request"
               value={cancelReason}
               onChange={(e) => setCancelReason(e.target.value)}
-              className="w-full bg-s2 rounded-pill border border-bd px-4 py-2 text-white focus:border-ac focus:outline-none text-[14px]"
+              className="w-full bg-s2 rounded-pill border border-bd px-4 py-2 text-t focus:border-ac focus:outline-none text-[14px]"
             />
           </div>
           <div className="flex items-center justify-end space-x-3 pt-3 border-t border-bd">

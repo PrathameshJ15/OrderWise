@@ -200,7 +200,7 @@ export default function Alerts() {
             <ShieldAlert className="w-3.5 h-3.5" />
             <span>PHASE 11 SUPPLY INTELLIGENCE</span>
           </div>
-          <h1 className="font-display text-[34px] font-bold tracking-tight text-white">
+          <h1 className="font-display text-[34px] font-bold tracking-tight text-t">
             Supply Alerts <span className="text-ac">&amp;</span> Early Warnings
           </h1>
           <p className="text-[14px] text-t2 font-sans max-w-2xl mt-0.5 leading-relaxed">
@@ -264,7 +264,7 @@ export default function Alerts() {
             <span>Active Alerts</span>
             <AlertTriangle className="w-3.5 h-3.5 text-ac" />
           </div>
-          <div className="text-2xl font-mono font-bold text-white mt-1">
+          <div className="text-2xl font-mono font-bold text-t mt-1">
             {summary.active_count || 0}
           </div>
           <div className="text-[11px] font-mono text-t2 mt-1">Pending review</div>
@@ -318,7 +318,7 @@ export default function Alerts() {
             <span>Total Logged</span>
             <Layers className="w-3.5 h-3.5 text-t2" />
           </div>
-          <div className="text-2xl font-mono font-bold text-white mt-1">
+          <div className="text-2xl font-mono font-bold text-t mt-1">
             {summary.total || 0}
           </div>
           <div className="text-[11px] font-mono text-t2 mt-1">History records</div>
@@ -334,7 +334,7 @@ export default function Alerts() {
             placeholder="Search alerts by title, product SKU, action, or cause..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-transparent border-none text-[14px] text-white placeholder-t2/60 outline-none"
+            className="w-full bg-transparent border-none text-[14px] text-t placeholder-t2/60 outline-none"
           />
         </div>
 
@@ -345,12 +345,12 @@ export default function Alerts() {
               aria-label="Filter by status"
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="bg-s2 rounded-pill border border-bd px-4 py-2 text-[14px] text-white outline-none focus:border-ac"
+              className="bg-s2 rounded-pill border border-bd px-4 py-2 text-[14px] text-t outline-none focus:border-ac"
             >
-              <option value="ALL" className="bg-s text-white">All Statuses</option>
-              <option value="active" className="bg-s text-white">Active Only</option>
-              <option value="acknowledged" className="bg-s text-white">Acknowledged Only</option>
-              <option value="resolved" className="bg-s text-white">Resolved Only</option>
+              <option value="ALL" className="bg-s text-t">All Statuses</option>
+              <option value="active" className="bg-s text-t">Active Only</option>
+              <option value="acknowledged" className="bg-s text-t">Acknowledged Only</option>
+              <option value="resolved" className="bg-s text-t">Resolved Only</option>
             </select>
           </div>
 
@@ -358,27 +358,27 @@ export default function Alerts() {
             aria-label="Filter by severity"
             value={filterSeverity}
             onChange={(e) => setFilterSeverity(e.target.value)}
-            className="bg-s2 rounded-pill border border-bd px-4 py-2 text-[14px] text-white outline-none focus:border-ac"
+            className="bg-s2 rounded-pill border border-bd px-4 py-2 text-[14px] text-t outline-none focus:border-ac"
           >
-            <option value="ALL" className="bg-s text-white">All Severities</option>
-            <option value="critical" className="bg-s text-white">Critical</option>
-            <option value="warning" className="bg-s text-white">Warning</option>
-            <option value="info" className="bg-s text-white">Info</option>
+            <option value="ALL" className="bg-s text-t">All Severities</option>
+            <option value="critical" className="bg-s text-t">Critical</option>
+            <option value="warning" className="bg-s text-t">Warning</option>
+            <option value="info" className="bg-s text-t">Info</option>
           </select>
 
           <select
             aria-label="Filter by alert type"
             value={filterType}
             onChange={(e) => setFilterType(e.target.value)}
-            className="bg-s2 rounded-pill border border-bd px-4 py-2 text-[14px] text-white outline-none focus:border-ac"
+            className="bg-s2 rounded-pill border border-bd px-4 py-2 text-[14px] text-t outline-none focus:border-ac"
           >
-            <option value="ALL" className="bg-s text-white">All Types</option>
-            <option value="low_stock" className="bg-s text-white">Low Stock</option>
-            <option value="potential_stockout" className="bg-s text-white">Potential Stockout</option>
-            <option value="below_reorder_point" className="bg-s text-white">Below Reorder Point</option>
-            <option value="order_at_risk" className="bg-s text-white">Order At Risk</option>
-            <option value="supplier_delay" className="bg-s text-white">Supplier Delay</option>
-            <option value="allocation_change_competing" className="bg-s text-white">Allocation Shift</option>
+            <option value="ALL" className="bg-s text-t">All Types</option>
+            <option value="low_stock" className="bg-s text-t">Low Stock</option>
+            <option value="potential_stockout" className="bg-s text-t">Potential Stockout</option>
+            <option value="below_reorder_point" className="bg-s text-t">Below Reorder Point</option>
+            <option value="order_at_risk" className="bg-s text-t">Order At Risk</option>
+            <option value="supplier_delay" className="bg-s text-t">Supplier Delay</option>
+            <option value="allocation_change_competing" className="bg-s text-t">Allocation Shift</option>
           </select>
         </div>
       </div>
@@ -393,7 +393,7 @@ export default function Alerts() {
         ) : filteredAlerts.length === 0 ? (
           <div className="card-base p-12 text-center text-t2">
             <CheckCircle2 className="w-6 h-6 mx-auto mb-2 text-ok" />
-            <p className="font-bold text-white">No active supply alerts matching filter</p>
+            <p className="font-bold text-t">No active supply alerts matching filter</p>
             <p className="mt-1 text-[14px] text-t2">Inventory positions and orders currently meet configured safety parameters.</p>
           </div>
         ) : (
@@ -427,7 +427,7 @@ export default function Alerts() {
                       </span>
                     </div>
 
-                    <h3 className="text-base font-bold text-white mt-1">
+                    <h3 className="text-base font-bold text-t mt-1">
                       {alert.title}
                     </h3>
 
@@ -438,25 +438,25 @@ export default function Alerts() {
                     {/* Metadata Chips */}
                     <div className="flex flex-wrap items-center gap-2 text-[12px] pt-1">
                       {alert.product_name && (
-                        <span className="px-3 py-0.5 rounded-pill border border-bd bg-s2 text-white font-mono flex items-center space-x-1.5">
+                        <span className="px-3 py-0.5 rounded-pill border border-bd bg-s2 text-t font-mono flex items-center space-x-1.5">
                           <Package className="w-3.5 h-3.5 text-ac" />
                           <span>{alert.product_name} ({alert.sku})</span>
                         </span>
                       )}
                       {alert.order_id && (
-                        <span className="px-3 py-0.5 rounded-pill border border-bd bg-s2 text-white font-mono">
+                        <span className="px-3 py-0.5 rounded-pill border border-bd bg-s2 text-t font-mono">
                           Order #{alert.order_id} {alert.customer_name ? `(${alert.customer_name})` : ''}
                         </span>
                       )}
                       {alert.po_number && (
-                        <span className="px-3 py-0.5 rounded-pill border border-bd bg-s2 text-white font-mono flex items-center space-x-1.5">
+                        <span className="px-3 py-0.5 rounded-pill border border-bd bg-s2 text-t font-mono flex items-center space-x-1.5">
                           <Truck className="w-3.5 h-3.5 text-wa" />
                           <span>PO #{alert.po_number} ({alert.supplier_name})</span>
                         </span>
                       )}
                       {alert.metadata?.inventoryPosition !== undefined && (
                         <span className="px-3 py-0.5 rounded-pill border border-bd bg-s2 text-t2 font-mono">
-                          Position: <strong className="text-white">{alert.metadata.inventoryPosition}</strong>
+                          Position: <strong className="text-t">{alert.metadata.inventoryPosition}</strong>
                         </span>
                       )}
                     </div>
@@ -468,7 +468,7 @@ export default function Alerts() {
                         <span className="font-mono text-ac text-[11px] block mb-0.5">
                           Recommended Action:
                         </span>
-                        <span className="text-white">{alert.recommended_action}</span>
+                        <span className="text-t">{alert.recommended_action}</span>
                       </div>
                     </div>
                   </div>
@@ -501,7 +501,7 @@ export default function Alerts() {
                     {alert.product_id && (
                       <Link
                         to="/admin/replenishment"
-                        className="text-[12px] text-t2 hover:text-white underline flex items-center space-x-1 mt-1"
+                        className="text-[12px] text-t2 hover:text-t underline flex items-center space-x-1 mt-1"
                       >
                         <span>Replenish</span>
                         <ExternalLink className="w-3 h-3" />
@@ -515,12 +515,12 @@ export default function Alerts() {
                   <div className="mt-3 pt-2.5 border-t border-bd/40 text-[12px] font-mono text-t2 flex flex-wrap gap-4">
                     {alert.acknowledged_at && (
                       <span>
-                        Acknowledged by <strong className="text-white">{alert.acknowledged_by_name || 'Admin'}</strong> on {new Date(alert.acknowledged_at).toLocaleTimeString()}
+                        Acknowledged by <strong className="text-t">{alert.acknowledged_by_name || 'Admin'}</strong> on {new Date(alert.acknowledged_at).toLocaleTimeString()}
                       </span>
                     )}
                     {alert.resolved_at && (
                       <span>
-                        Resolved by <strong className="text-white">{alert.resolved_by_name || 'Admin'}</strong> on {new Date(alert.resolved_at).toLocaleTimeString()}
+                        Resolved by <strong className="text-t">{alert.resolved_by_name || 'Admin'}</strong> on {new Date(alert.resolved_at).toLocaleTimeString()}
                       </span>
                     )}
                   </div>
