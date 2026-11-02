@@ -62,17 +62,17 @@ export default function CustomerDashboard() {
 
   return (
     <div className="space-y-6 font-sans py-2">
-      {/* Welcome Banner Card: radius 14px, 1px border, no shadow */}
-      <div className="card-base flex flex-col md:flex-row md:items-center justify-between gap-4">
+      {/* Clean Page Header (No excessive bordered box) */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2">
         <div>
-          <div className="inline-flex items-center space-x-1.5 text-[12px] font-mono text-ac font-medium mb-1">
+          <div className="inline-flex items-center space-x-2 text-[12px] font-mono text-ac font-semibold tracking-wider uppercase mb-1">
             <CheckCircle2 className="h-3.5 w-3.5" />
             <span>Customer Command Hub • Authenticated Portal</span>
           </div>
-          <h1 className="text-[34px] font-bold tracking-[-0.02em] text-white">
+          <h1 className="font-display text-[34px] font-bold tracking-tight text-white">
             Welcome, <span>{user?.name || 'Valued Customer'}</span>
           </h1>
-          <p className="text-[14px] text-t2 mt-0.5">
+          <p className="text-[14px] text-t2 font-sans mt-0.5">
             Account: {user?.email} • Authority: <span className="font-mono text-ac font-medium">{user?.role}</span>
           </p>
         </div>
@@ -81,7 +81,7 @@ export default function CustomerDashboard() {
         <div className="flex items-center space-x-3">
           <Link
             to="/orders/new"
-            className="btn-primary space-x-2"
+            className="btn-primary space-x-2 shadow-[0_0_20px_rgba(229,9,20,0.35)]"
           >
             <PlusCircle className="h-4 w-4" />
             <span>Create New Order</span>
@@ -109,7 +109,7 @@ export default function CustomerDashboard() {
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
         <div className="card-base p-5 flex flex-col justify-between">
           <span className="text-[12px] font-mono text-t2">Total Placed</span>
-          <div className="text-[34px] font-bold text-white tracking-tight my-1">
+          <div className="text-[34px] font-display font-bold text-white tracking-tight my-1">
             {totalOrders}
           </div>
           <span className="text-[11px] font-mono text-t2">Lifetime orders</span>
@@ -117,7 +117,7 @@ export default function CustomerDashboard() {
 
         <div className="card-base p-5 flex flex-col justify-between">
           <span className="text-[12px] font-mono text-t2">Pending Queue</span>
-          <div className="text-[34px] font-bold text-white tracking-tight my-1">
+          <div className="text-[34px] font-display font-bold text-white tracking-tight my-1">
             {pendingOrders}
           </div>
           <span className="text-[11px] font-mono text-t2">Awaiting run</span>
@@ -125,7 +125,7 @@ export default function CustomerDashboard() {
 
         <div className="card-base p-5 flex flex-col justify-between">
           <span className="text-[12px] font-mono text-ok font-medium">Fulfilled</span>
-          <div className="text-[34px] font-bold text-ok tracking-tight my-1">
+          <div className="text-[34px] font-display font-bold text-ok tracking-tight my-1">
             {fulfilledOrders}
           </div>
           <span className="text-[11px] font-mono text-ok/80">100% stock allocated</span>
@@ -133,7 +133,7 @@ export default function CustomerDashboard() {
 
         <div className="card-base p-5 flex flex-col justify-between">
           <span className="text-[12px] font-mono text-wa font-medium">Partial</span>
-          <div className="text-[34px] font-bold text-wa tracking-tight my-1">
+          <div className="text-[34px] font-display font-bold text-wa tracking-tight my-1">
             {partialOrders}
           </div>
           <span className="text-[11px] font-mono text-wa/80">Minimum met</span>
@@ -141,7 +141,7 @@ export default function CustomerDashboard() {
 
         <div className="card-base p-5 flex flex-col justify-between">
           <span className="text-[12px] font-mono text-t2">Cancelled</span>
-          <div className="text-[34px] font-bold text-t2 tracking-tight my-1">
+          <div className="text-[34px] font-display font-bold text-t2 tracking-tight my-1">
             {cancelledOrders}
           </div>
           <span className="text-[11px] font-mono text-t2">Closed records</span>

@@ -208,7 +208,7 @@ export default function Replenishment() {
         <div>
           <div className="inline-flex items-center space-x-2 text-[12px] font-mono text-ac font-semibold tracking-wider uppercase mb-1">
             <Truck className="w-3.5 h-3.5" />
-            <span>Supply Intelligence &bull; Replenishment Engine</span>
+            <span>PHASE 11 SUPPLY INTELLIGENCE &amp; REPLENISHMENT</span>
           </div>
           <h1 className="font-display text-[34px] font-bold tracking-tight text-white">
             Replenishment <span className="text-ac">&amp;</span> Demand Planning

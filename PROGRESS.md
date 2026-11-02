@@ -173,3 +173,32 @@
   - `Security.png` in new public route `/security` (`Security.jsx`).
   - `Admin dashboard.png` in `AdminDashboard.jsx`.
   - Logo branding displayed across all headers, layouts, and favicons (`/logo.png`).
+
+
+---
+
+## 💎 Final Fix Pass + Premium 3D Visual Layer (Phase-I-3D-Fixes Complete)
+
+- [x] **Branch Safety:** Created and developed strictly on branch phase-i-3d-fixes. No commits, merges, or pushes without explicit user permission. Zero alterations to backend, business logic, DB schema, auth, or test assertions.
+- [x] **Typography Overhaul:**
+  - Standardized font tokens: Inter (400, 500, 600, 700) for body and UI copy; Inter Tight (600, 700, 800) with -0.02em tracking for headings and KPI numerical values.
+  - Eliminated inappropriate monospace (font-mono) from navigation items, page subheadings, table headers, action buttons, filter bars, customer names, and descriptive paragraphs across all 19 customer and admin views.
+  - Restricted JetBrains Mono and IBM Plex Mono strictly to machine-oriented data: SKU codes, order numbers, inventory units, numeric quantities, and small badges.
+- [x] **Structural & Layout Refinement:**
+  - Removed heavy card-base bordered containers from page headers across all administrative and customer views, restoring open whitespace and clear visual hierarchy.
+  - Modernized roadmap presentation into a clean single line of secondary text with release horizon tags.
+  - Streamlined module navigation cards: removed redundant Active tags and integrated hover direction arrows.
+  - Restructured landing page By role and By industry sections from rigid bordered card grids into spacious, readable three-column text presentations.
+- [x] **Brand & UI Polish:**
+  - Resolved logo wordmark duplication across headers and footers by rendering /logo-icon.png (64x64 icon mark) alongside the text wordmark OrderWise.
+  - Widened admin sidebar to w-72 (and content padding lg:pl-72), ensuring zero label truncation for AI Recommendations.
+  - Enforced exact chart color mapping in Recharts: #E50914 for On-hand / live values and #8A8A8A for Reserved / baseline series.
+  - Introduced subtle ambient upper-right red lighting (radial-gradient(ellipse at 85% 5%, rgba(229,9,20,0.18), transparent 50%)).
+- [x] **3D Visual Geometry & Developer Chrome Removal:**
+  - Removed all developer chrome labels (Interactive Axonometric, Axonometric 30 deg, Isometric SVG, and extra tab switchers). Defaulted directly to the enlarged 3D scene (>=85% container width).
+  - Maintained strict 30-degree isometric axonometric projection matching reference SVG files (orderwise-3d-hero.svg and orderwise-3d-allocation.svg).
+  - In AllocationDistributionVisual.jsx, dynamic rendering uses 100% real API allocation data.
+- [x] **Verification:**
+  - Frontend Test Suite: 39 / 39 passed across 10 test files (npm --prefix frontend test -- --run).
+  - Production Build: Clean Vite bundle generated in 7.32s with 0 errors (npm --prefix frontend run build).
+  - Dev server running on http://localhost:5173/.

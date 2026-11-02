@@ -3,15 +3,20 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { ArrowRight } from 'lucide-react';
 import IsometricWarehouseVisual from '../components/3d/IsometricWarehouseVisual';
-import AmbientLighting from '../components/ui/AmbientLighting';
 
 export default function Home() {
   const { user } = useAuth();
 
   return (
-    <div className="min-h-screen bg-bg text-white font-sans flex flex-col selection:bg-ac selection:text-white relative overflow-x-hidden">
-      {/* Recreate exact soft ambient red lighting and subtle architectural grid from reference video */}
-      <AmbientLighting />
+    <div className="min-h-screen bg-bg text-white font-sans flex flex-col selection:bg-ac selection:text-white relative">
+      {/* Subtle upper-right ambient red lighting */}
+      <div
+        className="fixed top-0 right-0 w-[550px] h-[450px] pointer-events-none rounded-full blur-[120px] -z-0"
+        style={{
+          background: 'radial-gradient(ellipse at 85% 5%, rgba(229,9,20,0.18), transparent 50%)',
+        }}
+        aria-hidden="true"
+      />
 
       {/* Top Landing Navigation Bar */}
       <header className="border-b border-bd bg-s/90 backdrop-blur-md sticky top-0 z-50 px-4 sm:px-8 py-3.5">

@@ -62,24 +62,24 @@ export default function MyOrders() {
 
   return (
     <div className="space-y-6 font-sans py-2">
-      {/* Header Card */}
-      <div className="card-base flex flex-col md:flex-row md:items-center justify-between gap-4">
+      {/* Clean Page Header (No excessive bordered box) */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2">
         <div>
-          <div className="inline-flex items-center space-x-1.5 text-[12px] font-mono text-ac font-medium mb-1">
+          <div className="inline-flex items-center space-x-2 text-[12px] font-mono text-ac font-semibold tracking-wider uppercase mb-1">
             <Clock className="h-3.5 w-3.5" />
-            <span>Order dispatch &amp; allocations</span>
+            <span>Order Dispatch &amp; Allocations</span>
           </div>
-          <h1 className="text-[34px] font-bold tracking-[-0.02em] text-white">
+          <h1 className="font-display text-[34px] font-bold tracking-tight text-white">
             My Orders
           </h1>
-          <p className="text-[14px] text-t2 mt-0.5">
+          <p className="text-[14px] text-t2 font-sans mt-0.5">
             Track your demand submissions, allocation decisions, and promised delivery timelines.
           </p>
         </div>
 
         <Link
           to="/orders/new"
-          className="btn-primary space-x-2 self-start md:self-auto"
+          className="btn-primary space-x-2 self-start md:self-auto shadow-[0_0_20px_rgba(229,9,20,0.35)]"
         >
           <PlusCircle className="h-4 w-4" />
           <span>New Order</span>
@@ -159,7 +159,7 @@ export default function MyOrders() {
         <div className="card-base overflow-x-auto p-0">
           <table className="w-full text-left text-sm border-collapse">
             <thead>
-              <tr className="border-b border-bd text-t2 font-mono text-[12px]">
+              <tr className="border-b border-bd text-t2 font-sans font-medium text-[12px] uppercase tracking-wider">
                 <th className="py-3 px-4">Order ID</th>
                 <th className="py-3 px-3">Date Submitted</th>
                 <th className="py-3 px-3">Promised Date</th>

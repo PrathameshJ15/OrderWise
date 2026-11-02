@@ -204,7 +204,7 @@ export default function ImpactAnalyzer() {
         <div>
           <div className="inline-flex items-center space-x-2 text-[12px] font-mono text-ac font-semibold tracking-wider uppercase mb-1">
             <Layers className="w-3.5 h-3.5" />
-            <span>Allocation Impact Analyzer &bull; Sequential Run Comparison</span>
+            <span>PHASE 9 ALLOCATION IMPACT ANALYZER</span>
           </div>
           <h1 className="font-display text-[34px] font-bold tracking-tight text-white">
             Allocation Impact <span className="text-ac">&amp;</span> Diff Engine

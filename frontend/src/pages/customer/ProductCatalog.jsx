@@ -38,17 +38,17 @@ export default function ProductCatalog() {
 
   return (
     <div className="space-y-6 font-sans py-2">
-      {/* Header Card */}
-      <div className="card-base flex flex-col md:flex-row md:items-center justify-between gap-4">
+      {/* Clean Page Header (No excessive bordered box) */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2">
         <div>
-          <div className="inline-flex items-center space-x-1.5 text-[12px] font-mono text-ac font-medium mb-1">
+          <div className="inline-flex items-center space-x-2 text-[12px] font-mono text-ac font-semibold tracking-wider uppercase mb-1">
             <Package className="h-3.5 w-3.5" />
             <span>Available industrial catalog</span>
           </div>
-          <h1 className="text-[34px] font-bold tracking-[-0.02em] text-white">
+          <h1 className="font-display text-[34px] font-bold tracking-tight text-white">
             Product Catalog
           </h1>
-          <p className="text-[14px] text-t2 mt-0.5">
+          <p className="text-[14px] text-t2 font-sans mt-0.5">
             Certified industrial hardware with live warehouse availability indicators.
           </p>
         </div>

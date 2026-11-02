@@ -239,7 +239,6 @@ export default function AllocationCenter() {
           </button>
         </div>
       </div>
-      </div>
 
       {reallocationSuccessMsg && (
         <div className="p-4 rounded-card border border-ok/40 bg-[#102416] text-ok text-[13px] flex items-center justify-between">

@@ -198,7 +198,7 @@ export default function Alerts() {
         <div>
           <div className="inline-flex items-center space-x-2 text-[12px] font-mono text-ac font-semibold tracking-wider uppercase mb-1">
             <ShieldAlert className="w-3.5 h-3.5" />
-            <span>Supply Intelligence &bull; Early Warning Engine</span>
+            <span>PHASE 11 SUPPLY INTELLIGENCE</span>
           </div>
           <h1 className="font-display text-[34px] font-bold tracking-tight text-white">
             Supply Alerts <span className="text-ac">&amp;</span> Early Warnings

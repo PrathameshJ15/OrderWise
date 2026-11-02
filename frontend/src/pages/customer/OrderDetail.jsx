@@ -125,24 +125,24 @@ export default function OrderDetail() {
 
   return (
     <div className="space-y-6 font-sans py-2">
-      {/* Header Card */}
-      <div className="card-base flex flex-col md:flex-row md:items-center justify-between gap-4">
+      {/* Clean Page Header (No excessive bordered box) */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2">
         <div>
-          <div className="flex items-center space-x-2 text-[12px] font-mono text-t2 mb-1.5">
+          <div className="flex items-center space-x-2 text-[12px] font-sans text-t2 mb-1.5">
             <Link to="/orders" className="hover:text-white flex items-center space-x-1">
               <ArrowLeft className="h-3 w-3" />
               <span>Orders</span>
             </Link>
             <span>/</span>
-            <span className="text-white">Order #{order.id}</span>
+            <span className="text-white font-mono">Order #{order.id}</span>
           </div>
           <div className="flex flex-wrap items-center gap-3">
-            <h1 className="text-[34px] font-bold tracking-[-0.02em] text-white">
+            <h1 className="font-display text-[34px] font-bold tracking-tight text-white">
               {`Order #${order.id}`}
             </h1>
             <StatusPill status={order.status} />
           </div>
-          <p className="text-[14px] text-t2 mt-0.5">
+          <p className="text-[14px] text-t2 font-sans mt-0.5">
             Submitted on {new Date(order.created_at).toLocaleString()} • Customer: {order.customer_name || 'You'}
           </p>
         </div>
@@ -159,7 +159,7 @@ export default function OrderDetail() {
           )}
           <Link
             to="/orders/new"
-            className="btn-primary min-h-[40px] px-4 text-[13px]"
+            className="btn-primary min-h-[40px] px-4 text-[13px] shadow-[0_0_20px_rgba(229,9,20,0.35)]"
           >
             Reorder Similar
           </Link>
