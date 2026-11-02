@@ -51,16 +51,19 @@ export default function Sidebar({ mobileOpen = false, onCloseMobile = () => {} }
         />
       )}
 
-      {/* Sidebar Container */}
+      {/* Sidebar Container: w-72 prevents truncation of long labels */}
       <aside
-        className={`fixed top-0 bottom-0 left-0 z-50 w-64 bg-s border-r border-bd flex flex-col font-sans transition-transform duration-200 ease-in-out lg:translate-x-0 ${
+        className={`fixed top-0 bottom-0 left-0 z-50 w-72 bg-s border-r border-bd flex flex-col font-sans transition-transform duration-200 ease-in-out lg:translate-x-0 ${
           mobileOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        {/* Sidebar Header */}
-        <div className="h-16 flex items-center justify-between px-4 border-b border-bd bg-bg/50">
-          <Link to="/admin" className="flex items-center space-x-2">
-            <img src="/logo.png" alt="OrderWise" className="h-7 w-auto object-contain" />
+        {/* Sidebar Header: 1 icon mark + 1 text wordmark */}
+        <div className="h-16 flex items-center justify-between px-5 border-b border-bd bg-bg/50">
+          <Link to="/admin" className="flex items-center space-x-2.5">
+            <img src="/logo-icon.png" alt="" className="h-7 w-7 object-contain" />
+            <span className="font-display font-bold text-[18px] text-white tracking-tight">
+              Order<span className="text-ac">Wise</span>
+            </span>
           </Link>
 
           <button
@@ -74,9 +77,9 @@ export default function Sidebar({ mobileOpen = false, onCloseMobile = () => {} }
         </div>
 
         {/* Role Badge Subheader */}
-        <div className="px-4 py-2 border-b border-bd bg-s2/40 flex items-center justify-between text-[12px] font-mono">
+        <div className="px-5 py-2.5 border-b border-bd bg-s2/40 flex items-center justify-between text-[12px] font-sans">
           <span className="text-t2">Active role:</span>
-          <span className="text-ac font-medium px-2 py-0.5 rounded-pill bg-ac/10 border border-ac/20">
+          <span className="text-ac font-mono text-[11px] font-medium px-2 py-0.5 rounded-pill bg-ac/10 border border-ac/20 uppercase">
             {user?.role || 'admin'}
           </span>
         </div>
@@ -92,7 +95,7 @@ export default function Sidebar({ mobileOpen = false, onCloseMobile = () => {} }
                 end={item.exact}
                 onClick={onCloseMobile}
                 className={({ isActive }) =>
-                  `flex items-center space-x-3 px-3 py-2.5 rounded-pill text-[14px] font-medium transition-colors ${
+                  `flex items-center space-x-3 px-3.5 py-2.5 rounded-pill text-[14px] font-medium transition-colors ${
                     isActive
                       ? 'bg-ac text-white'
                       : 'text-t2 hover:text-white hover:bg-s2'
@@ -100,9 +103,9 @@ export default function Sidebar({ mobileOpen = false, onCloseMobile = () => {} }
                 }
               >
                 <Icon className="h-4 w-4 shrink-0" />
-                <span className="truncate flex-1">{item.name}</span>
+                <span className="flex-1 whitespace-nowrap">{item.name}</span>
                 {item.badge && (
-                  <span className="text-[11px] px-2 py-0.5 rounded-pill bg-white/20 text-white font-mono font-medium ml-auto">
+                  <span className="text-[10px] px-2 py-0.5 rounded-pill bg-white/15 text-white font-mono font-medium ml-auto">
                     {item.badge}
                   </span>
                 )}
@@ -112,12 +115,12 @@ export default function Sidebar({ mobileOpen = false, onCloseMobile = () => {} }
         </nav>
 
         {/* Sidebar Footer */}
-        <div className="p-3 border-t border-bd bg-bg/40 text-[12px] font-mono text-t2 flex items-center justify-between">
+        <div className="p-4 border-t border-bd bg-bg/40 text-[12px] text-t2 flex items-center justify-between font-sans">
           <div className="flex items-center space-x-2">
-            <span className="inline-block w-2 h-2 rounded-full bg-ok" />
+            <span className="w-2 h-2 rounded-full bg-ok inline-block" />
             <span>Deterministic engine</span>
           </div>
-          <span className="text-white">v1.0</span>
+          <span className="text-t2 text-[11px] font-mono">v3.0</span>
         </div>
       </aside>
     </>

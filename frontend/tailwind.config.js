@@ -23,7 +23,6 @@ export default {
           bg: '#2B2010',
           border: '#5A4210',
         },
-        // Backward-compatibility mapping for components using arcade-* tokens
         arcade: {
           surface: '#0A0A0A',
           neutral: '#161616',
@@ -40,9 +39,9 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['"Helvetica Neue"', 'Arial', 'sans-serif'],
-        display: ['"Helvetica Neue"', 'Arial', 'sans-serif'],
-        mono: ['"IBM Plex Mono"', 'monospace'],
+        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
+        display: ['"Inter Tight"', 'Inter', '-apple-system', 'sans-serif'],
+        mono: ['"JetBrains Mono"', '"IBM Plex Mono"', 'monospace'],
       },
       borderRadius: {
         card: '14px',
@@ -50,7 +49,7 @@ export default {
         bar: '4px',
       },
       maxWidth: {
-        container: '1120px',
+        container: '1200px',
       },
       boxShadow: {
         'hero-glow': '0 0 120px rgba(229, 9, 20, 0.15)',

@@ -46,17 +46,29 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-[85vh] flex flex-col justify-center items-center px-4 font-sans py-8">
-      <div className="max-w-md w-full bg-s border border-bd rounded-card p-8 shadow-none relative">
+    <div className="min-h-[85vh] flex flex-col justify-center items-center px-4 font-sans py-8 relative">
+      {/* Subtle upper-right ambient red lighting */}
+      <div
+        className="fixed top-0 right-0 w-[500px] h-[400px] pointer-events-none rounded-full blur-[120px] -z-0"
+        style={{
+          background: 'radial-gradient(ellipse at 85% 5%, rgba(229,9,20,0.18), transparent 50%)',
+        }}
+        aria-hidden="true"
+      />
+
+      <div className="max-w-md w-full bg-s border border-bd rounded-card p-8 shadow-none relative z-10">
         <div className="mb-6">
-          <Link to="/" className="inline-block mb-3">
-            <img src="/logo.png" alt="OrderWise" className="h-8 w-auto object-contain" />
+          <Link to="/" className="flex items-center space-x-2 mb-4">
+            <img src="/logo-icon.png" alt="OrderWise" className="h-7 w-7 object-contain" />
+            <span className="font-display font-bold text-[19px] tracking-tight text-white">
+              Order<span className="text-ac">Wise</span>
+            </span>
           </Link>
           <div className="flex items-center space-x-2 text-ac text-[12px] font-mono mb-1 font-medium">
             <UserPlus className="h-3.5 w-3.5" />
             <span>Customer onboarding</span>
           </div>
-          <h1 className="text-[26px] font-bold tracking-tight text-white">
+          <h1 className="font-display text-[26px] font-bold tracking-tight text-white">
             Create OrderWise Account
           </h1>
           <p className="text-[14px] text-t2 mt-1">

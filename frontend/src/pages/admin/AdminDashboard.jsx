@@ -2,21 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import {
-  Cpu,
-  ShieldCheck,
-  Database,
-  Layers,
   LogOut,
-  AlertTriangle,
-  Truck,
   ArrowRight,
-  Package,
-  ShoppingBag,
   RefreshCw,
   BarChart3,
   PieChart as PieIcon,
-  FlaskConical,
-  Sparkles,
 } from 'lucide-react';
 import {
   BarChart,
@@ -30,7 +20,6 @@ import {
   Cell,
 } from 'recharts';
 import apiClient from '../../api/client';
-import Badge from '../../components/ui/Badge';
 
 export default function AdminDashboard() {
   const { user, logout } = useAuth();
@@ -132,14 +121,13 @@ export default function AdminDashboard() {
 
   return (
     <div className="space-y-6 font-sans py-2">
-      {/* Admin Header Card: radius 14px, 1px border, no shadow */}
-      <div className="card-base flex flex-col md:flex-row md:items-center justify-between gap-4">
+      {/* Page Header: Unbordered plain background as required by Step 2 */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-1">
         <div>
-          <span className="text-[12px] font-mono text-ac font-medium mb-1 block">
+          <span className="text-[12px] text-ac font-medium mb-1 block">
             Admin console <span className="sr-only">· Admin Operations Command</span>
           </span>
-          {/* Dashboard H1: 34px, tracking -0.02em, 700. Sentence case */}
-          <h1 className="text-[34px] font-bold tracking-[-0.02em] text-white">
+          <h1 className="text-[34px] font-display font-bold tracking-[-0.02em] text-white">
             Operations overview
           </h1>
           <p className="text-[14px] text-t2 mt-0.5 font-sans">
@@ -147,7 +135,7 @@ export default function AdminDashboard() {
           </p>
         </div>
 
-        {/* Header buttons (Refresh, Log out): secondary with #555 border */}
+        {/* Header buttons: secondary with #555 border */}
         <div className="flex items-center space-x-3 self-start md:self-auto">
           <button
             onClick={fetchDashboardData}
@@ -167,12 +155,12 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* KPI Row: 4 columns, gap 16px. Small label, 34px value, mono caption. Alert variant uses amber label and alert-bg */}
+      {/* KPI Row: 4 columns, gap 16px. Clean uniform style, Inter Tight 700 value */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* KPI 1 */}
         <div className="card-base flex flex-col justify-between p-6">
-          <span className="text-[12px] font-mono font-medium text-t2">Active Catalog</span>
-          <div className="text-[34px] font-bold text-white tracking-tight my-1">
+          <span className="text-[13px] font-medium text-t2">Active Catalog</span>
+          <div className="text-[34px] font-display font-bold text-white tracking-[-0.02em] my-1">
             {stats.productCount}
           </div>
           <span className="text-[12px] font-mono text-t2">SKUs monitored</span>
@@ -180,8 +168,8 @@ export default function AdminDashboard() {
 
         {/* KPI 2 */}
         <div className="card-base flex flex-col justify-between p-6">
-          <span className="text-[12px] font-mono font-medium text-t2">Customer Orders</span>
-          <div className="text-[34px] font-bold text-white tracking-tight my-1">
+          <span className="text-[13px] font-medium text-t2">Customer Orders</span>
+          <div className="text-[34px] font-display font-bold text-white tracking-[-0.02em] my-1">
             {stats.orderCount}
           </div>
           <span className="text-[12px] font-mono text-t2">3 pending · 2 confirmed</span>
@@ -189,20 +177,20 @@ export default function AdminDashboard() {
 
         {/* KPI 3 */}
         <div className="card-base flex flex-col justify-between p-6">
-          <span className="text-[12px] font-mono font-medium text-t2">Total On-Hand</span>
-          <div className="text-[34px] font-bold text-white tracking-tight my-1">
-            {stats.totalOnHand} <span className="text-[14px] text-t2 font-normal font-mono">units</span>
+          <span className="text-[13px] font-medium text-t2">Total On-Hand</span>
+          <div className="text-[34px] font-display font-bold text-white tracking-[-0.02em] my-1">
+            {stats.totalOnHand} <span className="text-[14px] text-t2 font-normal font-sans">units</span>
           </div>
-          <span className="text-[12px] font-mono text-t2">Warehouse inventory</span>
+          <span className="text-[12px] text-t2">Warehouse inventory</span>
         </div>
 
-        {/* KPI 4: Alert variant uses amber label and alert-bg / alert-border */}
-        <div className="bg-alert-bg border border-alert-border rounded-card p-6 flex flex-col justify-between">
-          <span className="text-[12px] font-mono font-medium text-wa">Unresolved alerts</span>
-          <div className="text-[34px] font-bold text-white tracking-tight my-1">
+        {/* KPI 4: Alert variant uses subtle amber tint (#2B2010) only, no harsh borders */}
+        <div className="bg-[#2B2010] border border-[#5A4210] rounded-card p-6 flex flex-col justify-between">
+          <span className="text-[13px] font-medium text-wa">Unresolved alerts</span>
+          <div className="text-[34px] font-display font-bold text-white tracking-[-0.02em] my-1">
             {stats.unresolvedAlerts}
           </div>
-          <span className="text-[12px] font-mono text-wa">Needs review</span>
+          <span className="text-[12px] text-wa">Needs review</span>
         </div>
       </div>
 
@@ -213,19 +201,18 @@ export default function AdminDashboard() {
           <div className="flex items-center justify-between border-b border-bd pb-3">
             <div className="flex items-center space-x-2">
               <BarChart3 className="h-4 w-4 text-ac" />
-              {/* Section H2: 24px (dashboard) */}
-              <h2 className="text-[20px] font-bold text-white">
+              <h2 className="text-[20px] font-display font-bold text-white">
                 Stock vs reserved by SKU
               </h2>
             </div>
             {/* Legend: On Hand in --ac (#E50914), Reserved in series (#8A8A8A) */}
-            <div className="flex items-center space-x-4 text-[12px] font-mono text-t2">
+            <div className="flex items-center space-x-4 text-[12px] text-t2">
               <span className="flex items-center space-x-1.5">
-                <span className="w-2.5 h-2.5 rounded-xs bg-ac inline-block" />
+                <span className="w-2.5 h-2.5 rounded-sm bg-ac inline-block" />
                 <span className="text-white">On hand</span>
               </span>
               <span className="flex items-center space-x-1.5">
-                <span className="w-2.5 h-2.5 rounded-xs bg-series inline-block" />
+                <span className="w-2.5 h-2.5 rounded-sm bg-series inline-block" />
                 <span>Reserved</span>
               </span>
             </div>
@@ -234,19 +221,18 @@ export default function AdminDashboard() {
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={stockDemandChartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <XAxis dataKey="sku" stroke="#A8A8A8" fontSize={12} tickLine={false} fontFamily="IBM Plex Mono" />
-                <YAxis stroke="#A8A8A8" fontSize={12} tickLine={false} fontFamily="IBM Plex Mono" />
+                <XAxis dataKey="sku" stroke="#A8A8A8" fontSize={12} tickLine={false} fontFamily="JetBrains Mono, monospace" />
+                <YAxis stroke="#A8A8A8" fontSize={12} tickLine={false} fontFamily="Inter, sans-serif" />
                 <Tooltip
                   contentStyle={{
                     backgroundColor: '#161616',
                     borderColor: '#2A2A2A',
                     borderRadius: '8px',
                     color: '#FFFFFF',
-                    fontFamily: 'IBM Plex Mono',
+                    fontFamily: 'Inter, sans-serif',
                     fontSize: '12px',
                   }}
                 />
-                {/* Bars: 4px top radius */}
                 <Bar dataKey="onHand" fill="#E50914" name="On hand" radius={[4, 4, 0, 0]} />
                 <Bar dataKey="reserved" fill="#8A8A8A" name="Reserved" radius={[4, 4, 0, 0]} />
               </BarChart>
@@ -260,7 +246,7 @@ export default function AdminDashboard() {
             <div className="flex items-center justify-between border-b border-bd pb-3 mb-2">
               <div className="flex items-center space-x-2">
                 <PieIcon className="h-4 w-4 text-ac" />
-                <h2 className="text-[20px] font-bold text-white">
+                <h2 className="text-[20px] font-display font-bold text-white">
                   Allocation outcomes
                 </h2>
               </div>
@@ -289,7 +275,7 @@ export default function AdminDashboard() {
                         borderColor: '#2A2A2A',
                         borderRadius: '8px',
                         color: '#FFFFFF',
-                        fontFamily: 'IBM Plex Mono',
+                        fontFamily: 'Inter, sans-serif',
                         fontSize: '12px',
                       }}
                     />
@@ -298,10 +284,10 @@ export default function AdminDashboard() {
 
                 {/* Total orders centered in the middle of donut */}
                 <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
-                  <span className="text-[34px] font-bold text-white leading-none">
+                  <span className="text-[34px] font-display font-bold text-white leading-none">
                     {totalAllocatedItems}
                   </span>
-                  <span className="text-[12px] font-mono text-t2 mt-1">orders</span>
+                  <span className="text-[12px] text-t2 mt-1">orders</span>
                 </div>
               </div>
             ) : (
@@ -312,7 +298,7 @@ export default function AdminDashboard() {
           </div>
 
           {/* Clean Horizontal Legend directly below matching Admin dashboard.png */}
-          <div className="border-t border-bd pt-3 flex items-center justify-around text-center text-[12px] font-mono text-t2">
+          <div className="border-t border-bd pt-3 flex items-center justify-around text-center text-[12px] text-t2">
             <span className="flex items-center space-x-1.5">
               <span className="w-2 h-2 rounded-full bg-ok inline-block" />
               <span className="text-white">Fulfilled {allocationSummaryData.find((d) => d.name === 'Fulfilled')?.value || 0}</span>
@@ -330,26 +316,25 @@ export default function AdminDashboard() {
       </div>
 
       {/* Modules row: 4 columns, gap 16px */}
-      <div className="space-y-4">
+      <div className="space-y-4 pt-2">
         <div>
-          <h2 className="text-[24px] font-bold tracking-tight text-white">
+          <h2 className="text-[24px] font-display font-bold tracking-tight text-white">
             Modules
           </h2>
         </div>
 
-        {/* Module cards: "Active" mono label in --ok, title, one-line description */}
+        {/* Module cards: Title, one-line description, and arrow (No "Active" label as per Step 2) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Module 1: Allocation center */}
           <Link
             to="/admin/allocation"
             className="card-base hover:border-white transition-colors group flex flex-col justify-between space-y-3 p-6"
           >
-            <div>
-              <div className="flex items-center space-x-1.5 mb-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-ok inline-block" />
-                <span className="text-[12px] font-mono font-medium text-ok">Active</span>
-              </div>
-              <h3 className="text-[18px] font-bold text-white">Allocation Center</h3>
+            <div className="flex items-start justify-between">
+              <h3 className="text-[18px] font-display font-bold text-white group-hover:text-white">
+                Allocation Center
+              </h3>
+              <ArrowRight className="h-4 w-4 text-t2 group-hover:text-ac transition-colors shrink-0 mt-1" />
             </div>
             <p className="text-[14px] text-t2 leading-normal">
               Run the engine and review run history.
@@ -361,12 +346,11 @@ export default function AdminDashboard() {
             to="/admin/products"
             className="card-base hover:border-white transition-colors group flex flex-col justify-between space-y-3 p-6"
           >
-            <div>
-              <div className="flex items-center space-x-1.5 mb-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-ok inline-block" />
-                <span className="text-[12px] font-mono font-medium text-ok">Active</span>
-              </div>
-              <h3 className="text-[18px] font-bold text-white">Product Management</h3>
+            <div className="flex items-start justify-between">
+              <h3 className="text-[18px] font-display font-bold text-white group-hover:text-white">
+                Product Management
+              </h3>
+              <ArrowRight className="h-4 w-4 text-t2 group-hover:text-ac transition-colors shrink-0 mt-1" />
             </div>
             <p className="text-[14px] text-t2 leading-normal">
               Catalog, SKUs and lifecycle controls.
@@ -378,12 +362,11 @@ export default function AdminDashboard() {
             to="/admin/inventory"
             className="card-base hover:border-white transition-colors group flex flex-col justify-between space-y-3 p-6"
           >
-            <div>
-              <div className="flex items-center space-x-1.5 mb-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-ok inline-block" />
-                <span className="text-[12px] font-mono font-medium text-ok">Active</span>
-              </div>
-              <h3 className="text-[18px] font-bold text-white">Inventory Hub</h3>
+            <div className="flex items-start justify-between">
+              <h3 className="text-[18px] font-display font-bold text-white group-hover:text-white">
+                Inventory Hub
+              </h3>
+              <ArrowRight className="h-4 w-4 text-t2 group-hover:text-ac transition-colors shrink-0 mt-1" />
             </div>
             <p className="text-[14px] text-t2 leading-normal">
               Stock levels, buffers and audit ledger.
@@ -395,12 +378,11 @@ export default function AdminDashboard() {
             to="/admin/orders"
             className="card-base hover:border-white transition-colors group flex flex-col justify-between space-y-3 p-6"
           >
-            <div>
-              <div className="flex items-center space-x-1.5 mb-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-ok inline-block" />
-                <span className="text-[12px] font-mono font-medium text-ok">Active</span>
-              </div>
-              <h3 className="text-[18px] font-bold text-white">Order Management</h3>
+            <div className="flex items-start justify-between">
+              <h3 className="text-[18px] font-display font-bold text-white group-hover:text-white">
+                Order Management
+              </h3>
+              <ArrowRight className="h-4 w-4 text-t2 group-hover:text-ac transition-colors shrink-0 mt-1" />
             </div>
             <p className="text-[14px] text-t2 leading-normal">
               Inspect orders and enforce priority.
@@ -408,14 +390,10 @@ export default function AdminDashboard() {
           </Link>
         </div>
 
-        {/* Roadmap row: card with dashed border */}
-        <div className="card-roadmap flex flex-col md:flex-row md:items-center justify-between gap-4 p-5">
-          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[14px]">
-            <span className="font-semibold text-white">Roadmap</span>
-            <span className="text-t2">
-              Simulation lab · Supply alerts · Replenishment advisor · AI priorities · Impact analyzer · Executive reports
-            </span>
-          </div>
+        {/* Roadmap row: clean unboxed single line of secondary text as required by Step 2 */}
+        <div className="pt-2 text-[13px] text-t2">
+          <span className="font-semibold text-white">Roadmap:</span>{' '}
+          <span>Simulation lab · Supply alerts · Replenishment advisor · AI priorities · Impact analyzer · Executive reports</span>
         </div>
       </div>
     </div>

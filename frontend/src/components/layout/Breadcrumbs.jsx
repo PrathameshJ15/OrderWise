@@ -26,7 +26,7 @@ export default function Breadcrumbs() {
   if (pathnames.length === 0) return null;
 
   return (
-    <nav aria-label="Breadcrumb" className="font-mono text-[12px] flex items-center space-x-1.5 text-t2">
+    <nav aria-label="Breadcrumb" className="font-sans text-[13px] flex items-center space-x-1.5 text-t2">
       <Link
         to={pathnames[0] === 'admin' ? '/admin' : '/dashboard'}
         className="hover:text-white transition-colors flex items-center space-x-1"

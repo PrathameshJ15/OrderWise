@@ -16,6 +16,7 @@ import apiClient from '../../api/client';
 import StatusPill from '../../components/ui/StatusPill';
 import Badge from '../../components/ui/Badge';
 import Modal from '../../components/ui/Modal';
+import AllocationDistributionVisual from '../../components/3d/AllocationDistributionVisual';
 
 export default function AllocationCenter() {
   const [runs, setRuns] = useState([]);
@@ -41,8 +42,9 @@ export default function AllocationCenter() {
   const [applyingReallocation, setApplyingReallocation] = useState(false);
   const [reallocationSuccessMsg, setReallocationSuccessMsg] = useState(null);
 
-  // Results Filter
+  // Results Filter & View Mode
   const [statusFilter, setStatusFilter] = useState('all');
+  const [viewMode, setViewMode] = useState('table'); // '3d' | 'table'
 
   const fetchOpportunities = useCallback(async () => {
     try {
@@ -197,17 +199,17 @@ export default function AllocationCenter() {
 
   return (
     <div className="space-y-6 font-sans py-2">
-      {/* Header Card */}
-      <div className="card-base flex flex-col md:flex-row md:items-center justify-between gap-4">
+      {/* Clean Page Header (No excessive bordered box) */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2">
         <div>
-          <div className="inline-flex items-center space-x-1.5 text-[12px] font-mono text-ac font-medium mb-1">
+          <div className="inline-flex items-center space-x-2 text-[12px] font-mono text-ac font-semibold tracking-wider uppercase mb-1">
             <Cpu className="h-3.5 w-3.5" />
             <span>Deterministic allocation engine</span>
           </div>
-          <h1 className="text-[34px] font-bold tracking-[-0.02em] text-white">
+          <h1 className="font-display text-[34px] font-bold tracking-tight text-white">
             Allocation Center
           </h1>
-          <p className="text-[14px] text-t2 mt-0.5">
+          <p className="text-[14px] text-t2 font-sans mt-0.5">
             Execute deterministic multi-tier order allocations across competing customer demand queues.
           </p>
         </div>
@@ -230,12 +232,13 @@ export default function AllocationCenter() {
           <button
             onClick={() => setRunModalOpen(true)}
             aria-label="Run Engine"
-            className="btn-primary space-x-2"
+            className="btn-primary space-x-2 shadow-[0_0_20px_rgba(229,9,20,0.35)]"
           >
             <Play className="h-4 w-4 fill-current" />
             <span>Run Engine</span>
           </button>
         </div>
+      </div>
       </div>
 
       {reallocationSuccessMsg && (
@@ -376,27 +379,59 @@ export default function AllocationCenter() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-bd pb-4">
           <div className="flex items-center space-x-2">
             <Layers className="h-4 w-4 text-ac" />
-            <h2 className="text-[20px] font-bold text-white">
+            <h2 className="text-[20px] font-display font-bold text-white">
               Allocation decisions &amp; explanations ({filteredResults.length})
             </h2>
           </div>
 
-          {/* Status Filter */}
-          <div className="flex items-center space-x-1 border border-bd rounded-pill bg-s2 p-1 text-xs">
-            <Filter className="h-3.5 w-3.5 text-t2 ml-2" />
-            {['all', 'fulfilled', 'partially_fulfilled', 'deferred'].map((st) => (
+          <div className="flex flex-wrap items-center gap-2">
+            {/* View Mode Switcher: 3D View vs Table View */}
+            <div className="flex items-center space-x-1 border border-bd rounded-pill bg-s2 p-1 text-xs" role="tablist" aria-label="Allocation visualization mode">
               <button
-                key={st}
-                onClick={() => setStatusFilter(st)}
-                className={`px-3 py-1 rounded-pill font-mono text-[11px] font-medium transition-colors ${
-                  statusFilter === st
-                    ? 'bg-ac text-white'
+                type="button"
+                role="tab"
+                aria-selected={viewMode === '3d'}
+                onClick={() => setViewMode('3d')}
+                className={`px-3.5 py-1 rounded-pill font-sans text-[12px] font-medium transition-colors ${
+                  viewMode === '3d'
+                    ? 'bg-ac text-white shadow-sm'
                     : 'text-t2 hover:text-white'
                 }`}
               >
-                {st.replace(/_/g, ' ')}
+                3D View
               </button>
-            ))}
+              <button
+                type="button"
+                role="tab"
+                aria-selected={viewMode === 'table'}
+                onClick={() => setViewMode('table')}
+                className={`px-3.5 py-1 rounded-pill font-sans text-[12px] font-medium transition-colors ${
+                  viewMode === 'table'
+                    ? 'bg-ac text-white shadow-sm'
+                    : 'text-t2 hover:text-white'
+                }`}
+              >
+                Table View
+              </button>
+            </div>
+
+            {/* Status Filter */}
+            <div className="flex items-center space-x-1 border border-bd rounded-pill bg-s2 p-1 text-xs">
+              <Filter className="h-3.5 w-3.5 text-t2 ml-2" />
+              {['all', 'fulfilled', 'partially_fulfilled', 'deferred'].map((st) => (
+                <button
+                  key={st}
+                  onClick={() => setStatusFilter(st)}
+                  className={`px-3 py-1 rounded-pill font-sans text-[12px] font-medium transition-colors ${
+                    statusFilter === st
+                      ? 'bg-ac text-white'
+                      : 'text-t2 hover:text-white'
+                  }`}
+                >
+                  {st.replace(/_/g, ' ')}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -405,6 +440,12 @@ export default function AllocationCenter() {
             <RefreshCw className="h-5 w-5 animate-spin text-ac" />
             <span className="font-mono text-[12px]">Loading run decision log...</span>
           </div>
+        ) : viewMode === '3d' ? (
+          <AllocationDistributionVisual
+            results={filteredResults}
+            products={products}
+            selectedRun={selectedRun}
+          />
         ) : filteredResults.length === 0 ? (
           <div className="p-12 text-center text-t2 font-sans text-[14px]">
             No allocation decisions match the current filter.
@@ -413,7 +454,7 @@ export default function AllocationCenter() {
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm border-collapse">
               <thead>
-                <tr className="border-b border-bd text-t2 font-mono text-[12px]">
+                <tr className="border-b border-bd text-t2 font-sans font-medium text-[12px] uppercase tracking-wider">
                   <th className="py-3 px-3">Order #</th>
                   <th className="py-3 px-3">Customer</th>
                   <th className="py-3 px-3">Product</th>
@@ -465,7 +506,7 @@ export default function AllocationCenter() {
       <div className="card-base space-y-4">
         <div className="flex items-center space-x-2 border-b border-bd pb-4">
           <History className="h-4 w-4 text-ac" />
-          <h2 className="text-[20px] font-bold text-white">
+          <h2 className="text-[20px] font-display font-bold text-white">
             Past allocation runs ({runs.length})
           </h2>
         </div>
@@ -480,7 +521,7 @@ export default function AllocationCenter() {
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm border-collapse">
               <thead>
-                <tr className="border-b border-bd text-t2 font-mono text-[12px]">
+                <tr className="border-b border-bd text-t2 font-sans font-medium text-[12px] uppercase tracking-wider">
                   <th className="py-2.5 px-3">Run ID</th>
                   <th className="py-2.5 px-3">Execution Time</th>
                   <th className="py-2.5 px-3">Initiated By</th>

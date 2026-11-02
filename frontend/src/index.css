@@ -24,9 +24,24 @@ body {
   margin: 0;
   background-color: var(--bg);
   color: var(--t);
-  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, .font-display {
+  font-family: 'Inter Tight', 'Inter', -apple-system, sans-serif;
+  letter-spacing: -0.02em;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+}
+
+p {
+  max-width: 65ch;
 }
 
 /* Custom scrollbars for OrderWise Dark Streaming Theme */
@@ -106,3 +121,82 @@ body {
     border: 1px solid rgba(255, 122, 122, 0.3);
   }
 }
+
+/* ==========================================================================
+   Ambient Lighting & Background Grid (Faithfully replicating reference video)
+   - OrderWise Red (#E50914) replacing original green hue
+   - Same softness, low intensity (~13.5% peak alpha), high diffusion & spread
+   - Seamless fade into deep black background (#0A0A0A)
+   - Zero neon bloom or harsh contrast
+   ========================================================================== */
+
+@keyframes ambientBreathing {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.88;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.05);
+    opacity: 1;
+  }
+}
+
+.ambient-glow-red {
+  position: absolute;
+  top: 32%;
+  left: 52%;
+  transform: translate(-50%, -50%);
+  width: 960px;
+  height: 520px;
+  max-width: 95vw;
+  background: radial-gradient(
+    ellipse 960px 520px at 50% 50%,
+    rgba(229, 9, 20, 0.135) 0%,
+    rgba(229, 9, 20, 0.075) 32%,
+    rgba(229, 9, 20, 0.025) 58%,
+    rgba(229, 9, 20, 0.005) 78%,
+    transparent 100%
+  );
+  filter: blur(80px);
+  pointer-events: none;
+  animation: ambientBreathing 8s ease-in-out infinite;
+}
+
+.ambient-glow-red-secondary {
+  position: absolute;
+  top: 38%;
+  left: 58%;
+  transform: translate(-50%, -50%);
+  width: 720px;
+  height: 400px;
+  max-width: 90vw;
+  background: radial-gradient(
+    ellipse 720px 400px at 50% 50%,
+    rgba(229, 9, 20, 0.065) 0%,
+    rgba(229, 9, 20, 0.02) 42%,
+    transparent 75%
+  );
+  filter: blur(90px);
+  pointer-events: none;
+  animation: ambientBreathing 8s ease-in-out infinite 4s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ambient-glow-red,
+  .ambient-glow-red-secondary {
+    animation: none;
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.92;
+  }
+}
+
+/* Subtle dark grid background from reference video */
+.bg-grid-subtle {
+  background-size: 56px 56px;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  mask-image: radial-gradient(ellipse 85% 65% at 50% 32%, black 25%, transparent 85%);
+  -webkit-mask-image: radial-gradient(ellipse 85% 65% at 50% 32%, black 25%, transparent 85%);
+}
+

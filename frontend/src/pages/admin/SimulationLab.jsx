@@ -144,17 +144,17 @@ export default function SimulationLab() {
 
   return (
     <div className="space-y-6 font-sans py-2">
-      {/* Header */}
-      <div className="card-base flex flex-col md:flex-row md:items-center justify-between gap-4">
+      {/* Clean Page Header (No excessive bordered box) */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2">
         <div>
-          <div className="inline-flex items-center space-x-1.5 text-[12px] font-mono text-ac font-medium mb-1">
+          <div className="inline-flex items-center space-x-2 text-[12px] font-mono text-ac font-semibold tracking-wider uppercase mb-1">
             <FlaskConical className="h-3.5 w-3.5" />
             <span>WHAT-IF SCENARIO EXPERIMENTATION LAB</span>
           </div>
-          <h1 className="text-[34px] font-bold tracking-[-0.02em] text-white">
+          <h1 className="font-display text-[34px] font-bold tracking-tight text-white">
             Simulation Lab
           </h1>
-          <p className="text-[14px] text-t2 mt-0.5">
+          <p className="text-[14px] text-t2 font-sans mt-0.5">
             Test inventory changes, demand spikes, and priority shifts in-memory without mutating live database records.
           </p>
         </div>
@@ -169,7 +169,7 @@ export default function SimulationLab() {
           </Link>
           <Link
             to="/admin/allocation"
-            className="btn-primary flex items-center space-x-1.5"
+            className="btn-primary flex items-center space-x-1.5 shadow-[0_0_20px_rgba(229,9,20,0.35)]"
           >
             <Cpu className="h-4 w-4" />
             <span>Allocation Center &rarr;</span>
@@ -416,7 +416,7 @@ export default function SimulationLab() {
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-[14px] border-collapse">
                     <thead>
-                      <tr className="border-b border-bd bg-s2/60 text-t2 text-[12px] font-mono">
+                      <tr className="border-b border-bd bg-s2/60 text-t2 text-[12px] font-sans font-medium uppercase tracking-wider">
                         <th className="py-2.5 px-3">Order ID</th>
                         <th className="py-2.5 px-3">Product</th>
                         <th className="py-2.5 px-3 text-right">Requested</th>
@@ -493,7 +493,7 @@ export default function SimulationLab() {
             <div className="overflow-x-auto">
               <table className="w-full text-left text-[14px] border-collapse">
                 <thead>
-                  <tr className="border-b border-bd bg-s2/60 text-t2 text-[12px] font-mono">
+                  <tr className="border-b border-bd bg-s2/60 text-t2 text-[12px] font-sans font-medium uppercase tracking-wider">
                     <th className="py-3 px-3">Run ID</th>
                     <th className="py-3 px-3">Scenario Name</th>
                     <th className="py-3 px-3">Type</th>

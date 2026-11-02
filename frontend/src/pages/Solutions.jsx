@@ -1,15 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import AmbientLighting from '../components/ui/AmbientLighting';
 
 export default function Solutions() {
   return (
-    <div className="min-h-screen bg-bg text-white font-sans flex flex-col selection:bg-ac selection:text-white">
+    <div className="min-h-screen bg-bg text-white font-sans flex flex-col selection:bg-ac selection:text-white relative overflow-x-hidden">
+      {/* Recreate exact soft ambient red lighting from reference video */}
+      <AmbientLighting withGrid={false} />
+
       {/* Top Navigation */}
       <header className="border-b border-bd bg-s/90 backdrop-blur-md sticky top-0 z-50 px-4 sm:px-8 py-3.5">
         <div className="max-w-container mx-auto flex items-center justify-between">
           <Link to="/" className="flex items-center space-x-2.5">
-            <img src="/logo.png" alt="OrderWise" className="h-8 w-auto object-contain" />
-            <span className="font-bold text-[19px] tracking-tight">
+            <img src="/logo-icon.png" alt="OrderWise" className="h-7 w-7 object-contain" />
+            <span className="font-display font-bold text-[19px] tracking-tight text-white">
               Order<span className="text-ac">Wise</span>
             </span>
           </Link>
@@ -33,77 +37,72 @@ export default function Solutions() {
       </header>
 
       {/* Main Container */}
-      <main className="max-w-container mx-auto px-4 sm:px-8 py-14 space-y-14 flex-1 w-full relative">
-        <div
-          className="absolute top-1/4 right-1/4 w-[450px] h-[350px] bg-ac/10 rounded-full blur-[120px] pointer-events-none"
-          aria-hidden="true"
-        />
-
+      <main className="max-w-container mx-auto px-4 sm:px-8 py-12 space-y-14 flex-1 w-full relative z-10">
         {/* Page Header */}
-        <div className="space-y-2 relative z-10 max-w-3xl">
-          <span className="text-ac font-mono text-[13px] block">
+        <div className="space-y-3 relative z-10 max-w-3xl">
+          <span className="text-ac font-mono text-[13px] block tracking-wider uppercase font-semibold">
             Solutions
           </span>
-          <h1 className="text-[36px] sm:text-[48px] font-bold tracking-tight text-white leading-tight">
+          <h1 className="font-display text-[36px] sm:text-[48px] font-bold tracking-tight text-white leading-tight">
             Built for operations that cannot ship the wrong order
           </h1>
           <p className="text-[16px] text-t2 leading-relaxed">
-            One allocation engine, tuned to how each team works.
+            One deterministic allocation engine, tuned to how each operational tier functions.
           </p>
         </div>
 
-        {/* Section 1: By Role (Exact match to Solutions.png - calm, text-first) */}
-        <section className="space-y-4 relative z-10">
-          <h2 className="text-[24px] font-bold text-white tracking-tight">By role</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            <div className="card-base p-6 space-y-2">
-              <h3 className="text-[18px] font-bold text-white">Administrators</h3>
+        {/* Section 1: By Role */}
+        <section className="space-y-5 relative z-10">
+          <h2 className="font-display text-[24px] font-bold text-white tracking-tight">By role</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="card-base p-7 space-y-3">
+              <h3 className="text-[18px] font-display font-bold text-white">Administrators</h3>
               <p className="text-[14px] text-t2 leading-relaxed">
-                Run allocations, approve AI suggestions and review the audit trail.
+                Run allocations, review AI recommendations with strict confidence thresholds, and inspect immutable audit trails.
               </p>
             </div>
 
-            <div className="card-base p-6 space-y-2">
-              <h3 className="text-[18px] font-bold text-white">Inventory managers</h3>
+            <div className="card-base p-7 space-y-3">
+              <h3 className="text-[18px] font-display font-bold text-white">Inventory managers</h3>
               <p className="text-[14px] text-t2 leading-relaxed">
-                Track stock, safety buffers and supply alerts before shortages hit.
+                Track on-hand vs. reserved stock, manage safety buffers, and act on shortage alerts before stockouts impact delivery.
               </p>
             </div>
 
-            <div className="card-base p-6 space-y-2">
-              <h3 className="text-[18px] font-bold text-white">Customers</h3>
+            <div className="card-base p-7 space-y-3">
+              <h3 className="text-[18px] font-display font-bold text-white">Customers</h3>
               <p className="text-[14px] text-t2 leading-relaxed">
-                See live status and promised dates for their own orders.
+                See transparent order status, promised delivery dates, and clear fulfillment explanations for their own accounts.
               </p>
             </div>
           </div>
         </section>
 
         {/* Section 2: By Industry */}
-        <section className="space-y-4 relative z-10">
-          <h2 className="text-[24px] font-bold text-white tracking-tight">By industry</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            <div className="card-base p-6 space-y-2">
-              <span className="text-ac font-mono text-[11px] uppercase block">Industry</span>
-              <h3 className="text-[18px] font-bold text-white">Hardware distribution</h3>
+        <section className="space-y-5 relative z-10">
+          <h2 className="font-display text-[24px] font-bold text-white tracking-tight">By industry</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="card-base p-7 space-y-3">
+              <span className="text-ac font-mono text-[11px] uppercase tracking-wider block font-semibold">Hardware distribution</span>
+              <h3 className="text-[18px] font-display font-bold text-white">Pumps, valves &amp; gauges</h3>
               <p className="text-[14px] text-t2 leading-relaxed">
-                Pumps, valves and gauges compete for limited stock. Priority rules decide fairly.
+                Scarce SKUs compete across major contractors. Priority rules resolve conflicts deterministically without favoritism.
               </p>
             </div>
 
-            <div className="card-base p-6 space-y-2">
-              <span className="text-ac font-mono text-[11px] uppercase block">Industry</span>
-              <h3 className="text-[18px] font-bold text-white">Manufacturing</h3>
+            <div className="card-base p-7 space-y-3">
+              <span className="text-ac font-mono text-[11px] uppercase tracking-wider block font-semibold">Manufacturing</span>
+              <h3 className="text-[18px] font-display font-bold text-white">Production line components</h3>
               <p className="text-[14px] text-t2 leading-relaxed">
-                Protect critical production orders when parts run short.
+                Protect critical assembly operations and prevent costly plant downtime when supply chain disruptions emerge.
               </p>
             </div>
 
-            <div className="card-base p-6 space-y-2">
-              <span className="text-ac font-mono text-[11px] uppercase block">Industry</span>
-              <h3 className="text-[18px] font-bold text-white">Wholesale and retail</h3>
+            <div className="card-base p-7 space-y-3">
+              <span className="text-ac font-mono text-[11px] uppercase tracking-wider block font-semibold">Wholesale and retail</span>
+              <h3 className="text-[18px] font-display font-bold text-white">Multi-tier distribution</h3>
               <p className="text-[14px] text-t2 leading-relaxed">
-                Balance promised delivery dates across many customers.
+                Balance delivery commitments and partial shipment rules across key commercial accounts and standard buyers.
               </p>
             </div>
           </div>
@@ -111,12 +110,12 @@ export default function Solutions() {
 
         {/* Callout Banner: See it on your own orders */}
         <section className="card-base p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
-          <div className="space-y-1 max-w-xl">
-            <h3 className="text-[24px] font-bold text-white">
+          <div className="space-y-2 max-w-xl">
+            <h3 className="font-display text-[24px] font-bold text-white">
               See it on your own orders
             </h3>
-            <p className="text-[14px] text-t2">
-              Explore how OrderWise handles scarce stock and competing order priorities.
+            <p className="text-[14px] text-t2 leading-relaxed">
+              Explore how OrderWise resolves inventory scarcity and enforces business rules in the interactive demo console.
             </p>
           </div>
 
@@ -124,18 +123,18 @@ export default function Solutions() {
             to="/login"
             className="btn-primary min-h-[44px] px-6 text-[14px] shadow-[0_0_20px_rgba(229,9,20,0.35)] shrink-0"
           >
-            <span>Book a demo &rarr;</span>
+            <span>Launch Operations Portal &rarr;</span>
           </Link>
         </section>
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-bd bg-s py-12 px-4 sm:px-8 mt-16 text-[13px] text-t2">
+      <footer className="border-t border-bd bg-s py-12 px-4 sm:px-8 mt-16 text-[13px] text-t2 relative z-10">
         <div className="max-w-container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 pb-8">
           <div className="space-y-3">
-            <div className="flex items-center space-x-2">
-              <img src="/logo.png" alt="OrderWise" className="h-6 w-auto object-contain" />
-              <span className="font-bold text-[17px] text-white">
+            <div className="flex items-center space-x-2.5">
+              <img src="/logo-icon.png" alt="OrderWise" className="h-6 w-6 object-contain" />
+              <span className="font-display font-bold text-[17px] text-white">
                 Order<span className="text-ac">Wise</span>
               </span>
             </div>

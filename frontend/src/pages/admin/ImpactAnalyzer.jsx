@@ -199,44 +199,44 @@ export default function ImpactAnalyzer() {
 
   return (
     <div className="space-y-6 pb-12 font-sans py-2">
-      {/* Top Header */}
-      <div className="card-base relative overflow-hidden">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
-          <div>
-            <div className="inline-flex items-center space-x-1.5 text-[12px] font-mono text-ac font-medium mb-1">
-              <Layers className="w-3.5 h-3.5" />
-              <span>PHASE 9 ALLOCATION IMPACT ANALYZER</span>
-            </div>
-            <h1 className="text-[34px] font-bold tracking-[-0.02em] text-white">
-              Allocation Impact <span className="text-ac">&amp;</span> Diff Engine
-            </h1>
-            <p className="text-[14px] text-t2 max-w-2xl mt-0.5 leading-relaxed">
-              Precision before/after diffing between sequential allocation iterations with root-cause attribution
-              linked to audit logs, stock receipts, and priority approvals.
-            </p>
+      {/* Clean Page Header (No excessive bordered box) */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2">
+        <div>
+          <div className="inline-flex items-center space-x-2 text-[12px] font-mono text-ac font-semibold tracking-wider uppercase mb-1">
+            <Layers className="w-3.5 h-3.5" />
+            <span>Allocation Impact Analyzer &bull; Sequential Run Comparison</span>
           </div>
-
-          <div className="flex flex-wrap items-center gap-2.5">
-            <SafeLink
-              to="/admin/simulations"
-              className="btn-secondary min-h-[44px] px-4 text-[14px] flex items-center space-x-1.5"
-            >
-              <FlaskConical className="w-4 h-4 text-ac" />
-              <span>Simulation Lab &rarr;</span>
-            </SafeLink>
-            <button
-              onClick={handleCompareLatest}
-              disabled={comparing}
-              className="btn-primary flex items-center space-x-1.5 disabled:opacity-50"
-            >
-              <RefreshCw className={`w-4 h-4 ${comparing ? 'animate-spin' : ''}`} />
-              <span>Compare Latest Runs</span>
-            </button>
-          </div>
+          <h1 className="font-display text-[34px] font-bold tracking-tight text-white">
+            Allocation Impact <span className="text-ac">&amp;</span> Diff Engine
+          </h1>
+          <p className="text-[14px] text-t2 font-sans max-w-2xl mt-0.5 leading-relaxed">
+            Precision before/after diffing between sequential allocation iterations with root-cause attribution
+            linked to audit logs, stock receipts, and priority approvals.
+          </p>
         </div>
 
-        {/* Run Selection Form */}
-        <form onSubmit={handleRunSelect} className="mt-6 pt-5 border-t border-bd grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
+        <div className="flex flex-wrap items-center gap-2.5">
+          <SafeLink
+            to="/admin/simulations"
+            className="btn-secondary min-h-[44px] px-4 text-[14px] flex items-center space-x-1.5"
+          >
+            <FlaskConical className="w-4 h-4 text-ac" />
+            <span>Simulation Lab &rarr;</span>
+          </SafeLink>
+          <button
+            onClick={handleCompareLatest}
+            disabled={comparing}
+            className="btn-primary flex items-center space-x-1.5 disabled:opacity-50 shadow-[0_0_20px_rgba(229,9,20,0.35)]"
+          >
+            <RefreshCw className={`w-4 h-4 ${comparing ? 'animate-spin' : ''}`} />
+            <span>Compare Latest Runs</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Run Selection Form Card */}
+      <div className="card-base p-6">
+        <form onSubmit={handleRunSelect} className="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
           <div className="md:col-span-5">
             <label className="block text-[11px] font-mono text-t2 mb-1.5">
               Base Run (Previous / Run A)
@@ -502,7 +502,7 @@ export default function ImpactAnalyzer() {
         <div className="overflow-x-auto">
           <table className="w-full text-left text-[14px] border-collapse">
             <thead>
-              <tr className="border-b border-bd bg-s2/60 text-[12px] font-mono text-t2">
+              <tr className="border-b border-bd bg-s2/60 text-[12px] font-sans font-medium uppercase tracking-wider text-t2">
                 <th className="py-3.5 px-4">Order / Customer</th>
                 <th className="py-3.5 px-4">Product / SKU</th>
                 <th className="py-3.5 px-4 text-right">Base Alloc (A)</th>

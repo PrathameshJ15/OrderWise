@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import apiClient from '../../api/client';
 import Modal from '../../components/ui/Modal';
+import SupplierNetworkVisual from '../../components/3d/SupplierNetworkVisual';
 
 export default function Replenishment() {
   const [recommendations, setRecommendations] = useState([]);
@@ -712,6 +713,9 @@ export default function Replenishment() {
               </div>
             </div>
           </div>
+
+          {/* Isometric Supplier Network Visualization */}
+          <SupplierNetworkVisual suppliers={supplierPerformance?.suppliers || suppliers} />
 
           {/* Supplier Scorecards Table */}
           <div className="card-base p-0 overflow-hidden">

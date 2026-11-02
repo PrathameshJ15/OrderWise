@@ -1,16 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Check } from 'lucide-react';
+import AmbientLighting from '../components/ui/AmbientLighting';
 
 export default function Pricing() {
   return (
-    <div className="min-h-screen bg-bg text-white font-sans flex flex-col selection:bg-ac selection:text-white">
+    <div className="min-h-screen bg-bg text-white font-sans flex flex-col selection:bg-ac selection:text-white relative overflow-x-hidden">
+      {/* Recreate exact soft ambient red lighting from reference video */}
+      <AmbientLighting withGrid={false} />
+
       {/* Top Navigation */}
       <header className="border-b border-bd bg-s/90 backdrop-blur-md sticky top-0 z-50 px-4 sm:px-8 py-3.5">
         <div className="max-w-container mx-auto flex items-center justify-between">
           <Link to="/" className="flex items-center space-x-2.5">
-            <img src="/logo.png" alt="OrderWise" className="h-8 w-auto object-contain" />
-            <span className="font-bold text-[19px] tracking-tight">
+            <img src="/logo-icon.png" alt="OrderWise" className="h-7 w-7 object-contain" />
+            <span className="font-display font-bold text-[19px] tracking-tight text-white">
               Order<span className="text-ac">Wise</span>
             </span>
           </Link>
@@ -34,33 +37,27 @@ export default function Pricing() {
       </header>
 
       {/* Main Container */}
-      <main className="max-w-container mx-auto px-4 sm:px-8 py-14 space-y-12 flex-1 w-full relative">
-        {/* Soft Red Background Glow */}
-        <div
-          className="absolute top-1/4 right-1/4 w-[450px] h-[350px] bg-ac/10 rounded-full blur-[120px] pointer-events-none"
-          aria-hidden="true"
-        />
-
+      <main className="max-w-container mx-auto px-4 sm:px-8 py-12 space-y-12 flex-1 w-full relative z-10">
         {/* Page Header */}
-        <div className="text-center space-y-2 relative z-10 max-w-2xl mx-auto">
-          <span className="text-ac font-mono text-[13px] block">
+        <div className="text-center space-y-3 relative z-10 max-w-2xl mx-auto">
+          <span className="text-ac font-mono text-[13px] block tracking-wider uppercase font-semibold">
             Pricing
           </span>
-          <h1 className="text-[36px] sm:text-[48px] font-bold tracking-tight text-white leading-tight">
+          <h1 className="font-display text-[36px] sm:text-[48px] font-bold tracking-tight text-white leading-tight">
             Simple plans that scale with your operation
           </h1>
           <p className="text-[16px] text-t2 leading-relaxed">
-            Start with the demo, grow into a governed allocation platform.
+            Start with the demo, grow into an enterprise governed allocation platform.
           </p>
         </div>
 
-        {/* 3 Tier Pricing Cards (Exact match to Pricing.png) */}
+        {/* 3 Tier Pricing Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10 pt-2">
           {/* Card 1: Team */}
           <div className="card-base flex flex-col justify-between p-7 space-y-6">
             <div className="space-y-4">
-              <span className="text-[14px] font-medium text-white">Team</span>
-              <div className="text-[44px] font-bold text-white tracking-tight leading-none">[Price]</div>
+              <span className="text-[15px] font-semibold text-white">Team</span>
+              <div className="font-display text-[44px] font-bold text-white tracking-tight leading-none">[Price]</div>
               <p className="text-[14px] text-t2 leading-normal">
                 For one warehouse getting started.
               </p>
@@ -94,8 +91,8 @@ export default function Pricing() {
               <span className="inline-block rounded-pill bg-ac text-white font-mono text-[11px] font-semibold px-3 py-1">
                 Most popular
               </span>
-              <span className="text-[14px] font-medium text-white block">Business</span>
-              <div className="text-[44px] font-bold text-white tracking-tight leading-none">[Price]</div>
+              <span className="text-[15px] font-semibold text-white block">Business</span>
+              <div className="font-display text-[44px] font-bold text-white tracking-tight leading-none">[Price]</div>
               <p className="text-[14px] text-t2 leading-normal">
                 For teams that need AI and full audit.
               </p>
@@ -127,8 +124,8 @@ export default function Pricing() {
           {/* Card 3: Enterprise */}
           <div className="card-base flex flex-col justify-between p-7 space-y-6">
             <div className="space-y-4">
-              <span className="text-[14px] font-medium text-white">Enterprise</span>
-              <div className="text-[44px] font-bold text-white tracking-tight leading-none">Custom</div>
+              <span className="text-[15px] font-semibold text-white">Enterprise</span>
+              <div className="font-display text-[44px] font-bold text-white tracking-tight leading-none">Custom</div>
               <p className="text-[14px] text-t2 leading-normal">
                 For multi-site, regulated operations.
               </p>
@@ -160,12 +157,12 @@ export default function Pricing() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-bd bg-s py-12 px-4 sm:px-8 mt-16 text-[13px] text-t2">
+      <footer className="border-t border-bd bg-s py-12 px-4 sm:px-8 mt-16 text-[13px] text-t2 relative z-10">
         <div className="max-w-container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 pb-8">
           <div className="space-y-3">
-            <div className="flex items-center space-x-2">
-              <img src="/logo.png" alt="OrderWise" className="h-6 w-auto object-contain" />
-              <span className="font-bold text-[17px] text-white">
+            <div className="flex items-center space-x-2.5">
+              <img src="/logo-icon.png" alt="OrderWise" className="h-6 w-6 object-contain" />
+              <span className="font-display font-bold text-[17px] text-white">
                 Order<span className="text-ac">Wise</span>
               </span>
             </div>

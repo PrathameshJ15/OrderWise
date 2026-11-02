@@ -7,7 +7,16 @@ export function AdminLayout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-bg text-white flex font-sans selection:bg-ac selection:text-white">
+    <div className="min-h-screen bg-bg text-white flex font-sans selection:bg-ac selection:text-white relative">
+      {/* Subtle upper-right ambient red lighting */}
+      <div
+        className="fixed top-0 right-0 w-[650px] h-[500px] pointer-events-none rounded-full blur-[90px] z-0"
+        style={{
+          background: 'radial-gradient(ellipse at 85% 5%, rgba(229, 9, 20, 0.15), transparent 50%)',
+        }}
+        aria-hidden="true"
+      />
+
       {/* Sidebar Navigation */}
       <Sidebar
         mobileOpen={mobileMenuOpen}
@@ -15,7 +24,7 @@ export function AdminLayout() {
       />
 
       {/* Main App Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 lg:pl-64">
+      <div className="flex-1 flex flex-col min-w-0 lg:pl-72 relative z-10">
         {/* Top Navbar */}
         <Navbar onOpenMobile={() => setMobileMenuOpen(true)} />
 
@@ -24,14 +33,14 @@ export function AdminLayout() {
           <Outlet />
         </main>
 
-        {/* Footer: top border, two mono lines */}
-        <footer className="border-t border-bd bg-s py-6 px-4 sm:px-8 mt-12 text-[12px] font-mono text-t2">
+        {/* Footer */}
+        <footer className="border-t border-bd bg-s py-6 px-4 sm:px-8 mt-12 text-[13px] text-t2 font-sans">
           <div className="max-w-container mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
               <span className="text-white font-medium">OrderWise</span> — Deterministic inventory allocation and supply intelligence
             </div>
-            <div className="text-t2">
-              All rights reserved • High-contrast streaming console
+            <div className="text-t2 text-[12px]">
+              All rights reserved • Enterprise Operations
             </div>
           </div>
         </footer>

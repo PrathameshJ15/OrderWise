@@ -193,41 +193,39 @@ export default function Alerts() {
 
   return (
     <div className="space-y-6 pb-12 font-sans py-2">
-      {/* Top Header */}
-      <div className="card-base relative overflow-hidden">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
-          <div>
-            <div className="inline-flex items-center space-x-1.5 text-[12px] font-mono text-ac font-medium mb-1">
-              <ShieldAlert className="w-3.5 h-3.5" />
-              <span>PHASE 11 SUPPLY INTELLIGENCE</span>
-            </div>
-            <h1 className="text-[34px] font-bold tracking-[-0.02em] text-white">
-              Supply Alerts <span className="text-ac">&amp;</span> Early Warnings
-            </h1>
-            <p className="text-[14px] text-t2 max-w-2xl mt-0.5 leading-relaxed">
-              Proactive monitoring for low stock, potential stockouts, delayed supplier shipments, and orders at risk
-              with deduplication and actionable mitigation guidance.
-            </p>
+      {/* Clean Page Header (No excessive bordered box) */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2">
+        <div>
+          <div className="inline-flex items-center space-x-2 text-[12px] font-mono text-ac font-semibold tracking-wider uppercase mb-1">
+            <ShieldAlert className="w-3.5 h-3.5" />
+            <span>Supply Intelligence &bull; Early Warning Engine</span>
           </div>
+          <h1 className="font-display text-[34px] font-bold tracking-tight text-white">
+            Supply Alerts <span className="text-ac">&amp;</span> Early Warnings
+          </h1>
+          <p className="text-[14px] text-t2 font-sans max-w-2xl mt-0.5 leading-relaxed">
+            Proactive monitoring for low stock, potential stockouts, delayed supplier shipments, and orders at risk
+            with deduplication and actionable mitigation guidance.
+          </p>
+        </div>
 
-          <div className="flex flex-wrap items-center gap-2.5">
-            <button
-              onClick={handleScan}
-              disabled={scanning}
-              className="btn-primary flex items-center space-x-1.5 disabled:opacity-50"
-            >
-              <RefreshCw className={`w-4 h-4 ${scanning ? 'animate-spin' : ''}`} />
-              <span>{scanning ? 'Scanning...' : 'Scan Conditions Now'}</span>
-            </button>
+        <div className="flex flex-wrap items-center gap-2.5">
+          <button
+            onClick={handleScan}
+            disabled={scanning}
+            className="btn-primary flex items-center space-x-1.5 disabled:opacity-50 shadow-[0_0_20px_rgba(229,9,20,0.35)]"
+          >
+            <RefreshCw className={`w-4 h-4 ${scanning ? 'animate-spin' : ''}`} />
+            <span>{scanning ? 'Scanning...' : 'Scan Conditions Now'}</span>
+          </button>
 
-            <Link
-              to="/admin/replenishment"
-              className="btn-secondary min-h-[44px] px-4 text-[14px] flex items-center space-x-1.5"
-            >
-              <Truck className="w-4 h-4 text-ac" />
-              <span>Replenishment Lab</span>
-            </Link>
-          </div>
+          <Link
+            to="/admin/replenishment"
+            className="btn-secondary min-h-[44px] px-4 text-[14px] flex items-center space-x-1.5"
+          >
+            <Truck className="w-4 h-4 text-ac" />
+            <span>Replenishment Lab</span>
+          </Link>
         </div>
       </div>
 

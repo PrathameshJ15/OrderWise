@@ -24,6 +24,7 @@ import {
 import apiClient from '../../api/client';
 import { PriorityPill, ConfidencePill, RecommendationStatusPill } from '../../components/ui/StatusPill';
 import Modal from '../../components/ui/Modal';
+import ForecastDepthVisual from '../../components/3d/ForecastDepthVisual';
 
 export default function AIRecommendations() {
   const [activeTab, setActiveTab] = useState('review'); // 'review' | 'chatbot'
@@ -304,65 +305,56 @@ export default function AIRecommendations() {
 
   return (
     <div className="space-y-6 font-sans py-2">
-      {/* Header Banner */}
-      <div className="card-base">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <div className="flex items-center space-x-3 mb-1">
-              <span className="p-2 rounded-full bg-ac/10 border border-ac/30 text-ac">
-                <Sparkles className="w-5 h-5" />
-              </span>
-              <h1 className="text-[34px] font-bold tracking-[-0.02em] text-white">
-                AI Priority Assistant
-              </h1>
-              <span className="text-[11px] font-mono px-3 py-1 rounded-pill border border-ac/40 bg-ac/10 text-ac font-semibold">
-                Groq Llama-3
-              </span>
-            </div>
-            <p className="text-[14px] text-t2">
-              Core Principle:{' '}
-              <span className="text-white font-medium">
-                AI recommends. Business rules validate. Authorized humans approve. OrderWise allocates.
-              </span>
-            </p>
+      {/* Clean Page Header (No excessive bordered box) */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2">
+        <div>
+          <div className="inline-flex items-center space-x-2 text-[12px] font-mono text-ac font-semibold tracking-wider uppercase mb-1">
+            <Sparkles className="h-3.5 w-3.5" />
+            <span>AI Order Governance • Groq Llama-3</span>
           </div>
-
-          <div className="flex items-center space-x-2">
-            <button
-              onClick={fetchOrders}
-              disabled={loading}
-              className="btn-header flex items-center space-x-2 px-4 py-2 text-[14px]"
-            >
-              <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-              <span>Refresh Orders</span>
-            </button>
-          </div>
+          <h1 className="font-display text-[34px] font-bold tracking-tight text-white">
+            AI Priority Assistant
+          </h1>
+          <p className="text-[14px] text-t2 font-sans mt-0.5">
+            Core Principle: <span className="text-white font-medium">AI recommends. Business rules validate. Authorized humans approve. OrderWise allocates.</span>
+          </p>
         </div>
 
-        {/* Stats Strip */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-6 border-t border-bd text-[14px]">
-          <div className="p-4 bg-s2 rounded-card border border-bd">
-            <span className="text-t2 block text-[11px] font-mono">Total Orders</span>
-            <span className="text-2xl font-bold font-mono text-white mt-1 block">{orders.length}</span>
-          </div>
-          <div className="p-4 bg-[#2B2010] rounded-card border border-[#5A4210]">
-            <span className="text-wa block text-[11px] font-mono">Pending AI Review</span>
-            <span className="text-2xl font-bold font-mono text-wa mt-1 block">
-              {orders.filter((o) => o.latest_recommendation?.status === 'pending').length}
-            </span>
-          </div>
-          <div className="p-4 bg-s2 rounded-card border border-ok/30">
-            <span className="text-ok block text-[11px] font-mono">Human Approved</span>
-            <span className="text-2xl font-bold font-mono text-ok mt-1 block">
-              {orders.filter((o) => o.latest_recommendation?.status === 'approved').length}
-            </span>
-          </div>
-          <div className="p-4 bg-s2 rounded-card border border-ac/30">
-            <span className="text-ac block text-[11px] font-mono">Human Modified</span>
-            <span className="text-2xl font-bold font-mono text-ac mt-1 block">
-              {orders.filter((o) => o.latest_recommendation?.status === 'overridden').length}
-            </span>
-          </div>
+        <div className="flex items-center space-x-2">
+          <button
+            onClick={fetchOrders}
+            disabled={loading}
+            className="btn-secondary min-h-[42px] flex items-center space-x-2 px-4 py-2 text-[13px]"
+          >
+            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+            <span>Refresh Orders</span>
+          </button>
+        </div>
+      </div>
+
+      {/* KPI Stats Strip */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-[14px]">
+        <div className="card-base p-4">
+          <span className="text-t2 block text-[11px] font-mono">Total Orders</span>
+          <span className="text-[34px] font-display font-bold text-white mt-1 block">{orders.length}</span>
+        </div>
+        <div className="p-4 bg-[#2B2010]/60 rounded-card border border-alert-border">
+          <span className="text-wa block text-[11px] font-mono font-medium">Pending AI Review</span>
+          <span className="text-[34px] font-display font-bold text-wa mt-1 block">
+            {orders.filter((o) => o.latest_recommendation?.status === 'pending').length}
+          </span>
+        </div>
+        <div className="card-base p-4 border-ok/30">
+          <span className="text-ok block text-[11px] font-mono font-medium">Human Approved</span>
+          <span className="text-[34px] font-display font-bold text-ok mt-1 block">
+            {orders.filter((o) => o.latest_recommendation?.status === 'approved').length}
+          </span>
+        </div>
+        <div className="card-base p-4 border-ac/30">
+          <span className="text-ac block text-[11px] font-mono font-medium">Human Modified</span>
+          <span className="text-[34px] font-display font-bold text-ac mt-1 block">
+            {orders.filter((o) => o.latest_recommendation?.status === 'overridden').length}
+          </span>
         </div>
       </div>
 
@@ -653,6 +645,9 @@ export default function AIRecommendations() {
               </p>
             </div>
           </div>
+
+          {/* 3D Horizon Depth Radar Visual */}
+          <ForecastDepthVisual forecasts={forecasts} />
 
           {/* Forecasting Cards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
