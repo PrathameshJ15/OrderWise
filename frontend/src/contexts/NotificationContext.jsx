@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
 import { useAuth } from '../hooks/useAuth';
-import apiClient from '../api/client';
+import apiClient, { API_BASE_URL } from '../api/client';
 
 const NotificationContext = createContext(null);
 
@@ -73,8 +73,7 @@ export function NotificationProvider({ children }) {
 
     // In modern browsers, EventSource does not support custom headers,
     // so we pass the token in query parameter (?token=...)
-    const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api';
-    const sseUrl = `${baseUrl}/events?token=${encodeURIComponent(token)}`;
+    const sseUrl = `${API_BASE_URL}/events?token=${encodeURIComponent(token)}`;
 
     try {
       const es = new EventSource(sseUrl);
