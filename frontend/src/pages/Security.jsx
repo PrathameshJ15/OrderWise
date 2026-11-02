@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Shield, Lock, Eye, FileText, CheckCircle, Database } from 'lucide-react';
 
 export default function Security() {
   return (
@@ -10,6 +9,9 @@ export default function Security() {
         <div className="max-w-container mx-auto flex items-center justify-between">
           <Link to="/" className="flex items-center space-x-2.5">
             <img src="/logo.png" alt="OrderWise" className="h-8 w-auto object-contain" />
+            <span className="font-bold text-[19px] tracking-tight">
+              Order<span className="text-ac">Wise</span>
+            </span>
           </Link>
 
           <nav className="hidden md:flex items-center space-x-8 text-[14px] text-t2 font-medium">
@@ -22,7 +24,7 @@ export default function Security() {
           <div className="flex items-center space-x-3">
             <Link
               to="/login"
-              className="btn-primary min-h-[38px] px-5 text-[13px]"
+              className="btn-primary min-h-[38px] px-5 text-[13px] shadow-[0_0_20px_rgba(229,9,20,0.35)]"
             >
               Book a demo
             </Link>
@@ -31,18 +33,18 @@ export default function Security() {
       </header>
 
       {/* Main Container */}
-      <main className="max-w-container mx-auto px-4 sm:px-8 py-14 space-y-16 flex-1 w-full relative">
+      <main className="max-w-container mx-auto px-4 sm:px-8 py-14 space-y-12 flex-1 w-full relative">
         <div
           className="absolute top-1/4 right-1/4 w-[450px] h-[350px] bg-ac/10 rounded-full blur-[120px] pointer-events-none"
           aria-hidden="true"
         />
 
         {/* Page Header */}
-        <div className="text-center space-y-3 relative z-10 max-w-3xl mx-auto">
-          <span className="text-ac font-mono text-[13px] uppercase tracking-wider font-semibold">
+        <div className="space-y-2 relative z-10 max-w-3xl">
+          <span className="text-ac font-mono text-[13px] block">
             Security
           </span>
-          <h1 className="text-[34px] sm:text-[48px] font-bold tracking-tight text-white leading-tight">
+          <h1 className="text-[36px] sm:text-[48px] font-bold tracking-tight text-white leading-tight">
             Every decision is governed, scoped and logged
           </h1>
           <p className="text-[16px] text-t2 leading-relaxed">
@@ -50,80 +52,63 @@ export default function Security() {
           </p>
         </div>
 
-        {/* 6 Grid Security Pillar Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
-          <div className="card-base p-6 space-y-3">
-            <div className="w-10 h-10 rounded-full bg-s2 flex items-center justify-center text-ok">
-              <CheckCircle className="w-5 h-5" />
-            </div>
+        {/* 6 Grid Security Pillar Cards (Exact match to Security.png - text-first, calm, uncluttered) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 relative z-10">
+          <div className="card-base p-6 space-y-2">
             <h3 className="text-[18px] font-bold text-white">Human approval</h3>
             <p className="text-[14px] text-t2 leading-relaxed">
-              AI outputs recommendations with evidence and confidence scores. It can never modify inventory or approved priorities without explicit admin approval.
+              AI outputs recommendations with evidence and confidence. It can never modify inventory without admin approval.
             </p>
           </div>
 
-          <div className="card-base p-6 space-y-3">
-            <div className="w-10 h-10 rounded-full bg-s2 flex items-center justify-center text-ac">
-              <FileText className="w-5 h-5" />
-            </div>
+          <div className="card-base p-6 space-y-2">
             <h3 className="text-[18px] font-bold text-white">Immutable audit log</h3>
             <p className="text-[14px] text-t2 leading-relaxed">
-              Records who approved priorities, adjusted physical stock, or initiated allocation runs with timestamps, IP addresses, and state diffs.
+              Records who approved priorities, adjusted stock or ran allocations.
             </p>
           </div>
 
-          <div className="card-base p-6 space-y-3">
-            <div className="w-10 h-10 rounded-full bg-s2 flex items-center justify-center text-[#F5B544]">
-              <Eye className="w-5 h-5" />
-            </div>
+          <div className="card-base p-6 space-y-2">
             <h3 className="text-[18px] font-bold text-white">Scoped real-time events</h3>
             <p className="text-[14px] text-t2 leading-relaxed">
-              Customers only receive SSE order events for their own account. Backend enforces strict SQL authorization on every query.
+              Customers only receive events for their own orders.
             </p>
           </div>
 
-          <div className="card-base p-6 space-y-3">
-            <div className="w-10 h-10 rounded-full bg-s2 flex items-center justify-center text-white">
-              <Lock className="w-5 h-5" />
-            </div>
-            <h3 className="text-[18px] font-bold text-white">Role-based access (RBAC)</h3>
+          <div className="card-base p-6 space-y-2">
+            <h3 className="text-[18px] font-bold text-white">Role-based access</h3>
             <p className="text-[14px] text-t2 leading-relaxed">
-              Separate authority levels for Admins, Inventory Managers, and Customers. Inventory Managers cannot approve AI priorities or reallocations.
+              Separate authority levels for admins, inventory managers and customers.
             </p>
           </div>
 
-          <div className="card-base p-6 space-y-3">
-            <div className="w-10 h-10 rounded-full bg-s2 flex items-center justify-center text-ok">
-              <Database className="w-5 h-5" />
-            </div>
+          <div className="card-base p-6 space-y-2">
             <h3 className="text-[18px] font-bold text-white">Safe concurrency</h3>
             <p className="text-[14px] text-t2 leading-relaxed">
-              Optimistic concurrency versioning and row-level locking (SELECT FOR UPDATE) protect inventory balances from race conditions.
+              Optimistic concurrency protects stock from conflicting updates.
             </p>
           </div>
 
-          <div className="card-base p-6 space-y-3">
-            <div className="w-10 h-10 rounded-full bg-s2 flex items-center justify-center text-t2">
-              <Shield className="w-5 h-5" />
-            </div>
+          <div className="card-base p-6 space-y-2">
             <h3 className="text-[18px] font-bold text-white">Soft-delete lifecycle</h3>
             <p className="text-[14px] text-t2 leading-relaxed">
-              Catalog items and historical records are retired, never erased, ensuring complete regulatory compliance and historic reproducibility.
+              Catalog items are retired, not erased, so history stays intact.
             </p>
           </div>
         </div>
 
-        {/* Compliance Card */}
-        <div className="card-base p-7 flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
-          <div className="space-y-1">
-            <h3 className="text-[20px] font-bold text-white">Compliance and certifications</h3>
-            <p className="text-[14px] text-t2">
-              Designed for SOC 2 Type II and ISO 27001 readiness with comprehensive access auditing.
+        {/* Compliance and Certifications Banner (Dashed card with action button) */}
+        <div className="card-roadmap p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
+          <div>
+            <h3 className="text-[18px] font-bold text-white">Compliance and certifications</h3>
+            <p className="text-[14px] text-t2 mt-0.5">
+              [Add certifications once audited, e.g. SOC 2, ISO 27001]
             </p>
           </div>
+
           <Link
             to="/login"
-            className="btn-secondary min-h-[44px] px-6 text-[14px]"
+            className="btn-secondary min-h-[42px] px-5 text-[13px] shrink-0"
           >
             Request security overview
           </Link>
@@ -131,38 +116,51 @@ export default function Security() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-bd bg-s py-10 px-4 sm:px-8 mt-16 text-[13px] text-t2">
-        <div className="max-w-container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div>
-            <img src="/logo.png" alt="OrderWise" className="h-7 w-auto object-contain mb-3" />
-            <p className="text-[13px] text-t2">
+      <footer className="border-t border-bd bg-s py-12 px-4 sm:px-8 mt-16 text-[13px] text-t2">
+        <div className="max-w-container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 pb-8">
+          <div className="space-y-3">
+            <div className="flex items-center space-x-2">
+              <img src="/logo.png" alt="OrderWise" className="h-6 w-auto object-contain" />
+              <span className="font-bold text-[17px] text-white">
+                Order<span className="text-ac">Wise</span>
+              </span>
+            </div>
+            <p className="text-[13px] text-t2 leading-relaxed">
               Deterministic order allocation and supply intelligence.
             </p>
           </div>
+
           <div>
-            <h4 className="font-semibold text-white mb-2">Product</h4>
-            <div className="space-y-1.5 flex flex-col">
-              <Link to="/admin/allocation" className="hover:text-white">Allocation</Link>
-              <Link to="/admin/inventory" className="hover:text-white">Inventory</Link>
-              <Link to="/admin/audit" className="hover:text-white">Audit log</Link>
+            <h4 className="font-semibold text-white uppercase text-[12px] font-mono mb-3">Product</h4>
+            <div className="space-y-2 flex flex-col text-[14px]">
+              <Link to="/admin/allocation" className="hover:text-white transition-colors">Allocation</Link>
+              <Link to="/admin/inventory" className="hover:text-white transition-colors">Inventory</Link>
+              <Link to="/admin/audit" className="hover:text-white transition-colors">Audit log</Link>
             </div>
           </div>
+
           <div>
-            <h4 className="font-semibold text-white mb-2">Company</h4>
-            <div className="space-y-1.5 flex flex-col">
-              <Link to="/" className="hover:text-white">About</Link>
-              <Link to="/pricing" className="hover:text-white">Pricing</Link>
-              <Link to="/security" className="hover:text-white">Security</Link>
+            <h4 className="font-semibold text-white uppercase text-[12px] font-mono mb-3">Company</h4>
+            <div className="space-y-2 flex flex-col text-[14px]">
+              <Link to="/" className="hover:text-white transition-colors">About</Link>
+              <Link to="/pricing" className="hover:text-white transition-colors">Pricing</Link>
+              <Link to="/security" className="hover:text-white transition-colors">Security</Link>
             </div>
           </div>
+
           <div>
-            <h4 className="font-semibold text-white mb-2">Legal</h4>
-            <div className="space-y-1.5 flex flex-col">
-              <span>Terms of Service</span>
-              <span>Privacy Policy</span>
-              <span>Security Whitepaper</span>
+            <h4 className="font-semibold text-white uppercase text-[12px] font-mono mb-3">Legal</h4>
+            <div className="space-y-2 flex flex-col text-[14px]">
+              <span className="hover:text-white transition-colors cursor-pointer">Privacy</span>
+              <span className="hover:text-white transition-colors cursor-pointer">Terms</span>
+              <Link to="/security" className="hover:text-white transition-colors">Security</Link>
             </div>
           </div>
+        </div>
+
+        <div className="max-w-container mx-auto pt-6 border-t border-bd/60 flex flex-col sm:flex-row items-center justify-between text-[12px] font-mono text-t2 gap-2">
+          <span>OrderWise &mdash; Deterministic inventory allocation and supply intelligence</span>
+          <span>All rights reserved</span>
         </div>
       </footer>
     </div>

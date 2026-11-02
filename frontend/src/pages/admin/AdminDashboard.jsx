@@ -136,7 +136,7 @@ export default function AdminDashboard() {
       <div className="card-base flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <span className="text-[12px] font-mono text-ac font-medium mb-1 block">
-            Admin console · Admin Operations Command
+            Admin console <span className="sr-only">· Admin Operations Command</span>
           </span>
           {/* Dashboard H1: 34px, tracking -0.02em, 700. Sentence case */}
           <h1 className="text-[34px] font-bold tracking-[-0.02em] text-white">
@@ -206,27 +206,6 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* Orders by status row */}
-      {orderStatusChartData.length > 0 && (
-        <div className="card-base flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center space-x-2">
-            <ShoppingBag className="h-4 w-4 text-ac" />
-            <span className="text-[14px] font-bold text-white">Orders by status:</span>
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            {orderStatusChartData.map((item) => (
-              <span
-                key={item.status}
-                className="px-3 py-1 rounded-pill text-[12px] font-mono border border-bd bg-s2 flex items-center space-x-1.5"
-              >
-                <span className="text-t2 capitalize">{item.status}:</span>
-                <span className="font-semibold text-white">{item.count}</span>
-              </span>
-            ))}
-          </div>
-        </div>
-      )}
-
       {/* Charts Section: 1.6fr / 1fr, gap 16px */}
       <div className="grid grid-cols-1 lg:grid-cols-[1.6fr_1fr] gap-4">
         {/* Left: Stock vs Reserved Allocation Bar Chart */}
@@ -236,7 +215,7 @@ export default function AdminDashboard() {
               <BarChart3 className="h-4 w-4 text-ac" />
               {/* Section H2: 24px (dashboard) */}
               <h2 className="text-[20px] font-bold text-white">
-                Stock vs reserved allocation by SKU
+                Stock vs reserved by SKU
               </h2>
             </div>
             {/* Legend: On Hand in --ac (#E50914), Reserved in series (#8A8A8A) */}
@@ -282,7 +261,7 @@ export default function AdminDashboard() {
               <div className="flex items-center space-x-2">
                 <PieIcon className="h-4 w-4 text-ac" />
                 <h2 className="text-[20px] font-bold text-white">
-                  Allocation engine outcomes
+                  Allocation outcomes
                 </h2>
               </div>
             </div>
@@ -319,10 +298,10 @@ export default function AdminDashboard() {
 
                 {/* Total orders centered in the middle of donut */}
                 <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
-                  <span className="text-[26px] font-bold text-white leading-none">
+                  <span className="text-[34px] font-bold text-white leading-none">
                     {totalAllocatedItems}
                   </span>
-                  <span className="text-[11px] font-mono text-t2 mt-1">Total items</span>
+                  <span className="text-[12px] font-mono text-t2 mt-1">orders</span>
                 </div>
               </div>
             ) : (
@@ -332,26 +311,20 @@ export default function AdminDashboard() {
             )}
           </div>
 
-          {/* Legend directly below */}
-          <div className="border-t border-bd pt-3 flex justify-around text-center text-xs">
-            <div>
-              <span className="text-[12px] font-mono text-ok font-medium block">Fulfilled</span>
-              <span className="text-[18px] font-bold text-white">
-                {allocationSummaryData.find((d) => d.name === 'Fulfilled')?.value || 0}
-              </span>
-            </div>
-            <div>
-              <span className="text-[12px] font-mono text-wa font-medium block">Partial</span>
-              <span className="text-[18px] font-bold text-white">
-                {allocationSummaryData.find((d) => d.name === 'Partial')?.value || 0}
-              </span>
-            </div>
-            <div>
-              <span className="text-[12px] font-mono text-no font-medium block">Deferred</span>
-              <span className="text-[18px] font-bold text-white">
-                {allocationSummaryData.find((d) => d.name === 'Deferred')?.value || 0}
-              </span>
-            </div>
+          {/* Clean Horizontal Legend directly below matching Admin dashboard.png */}
+          <div className="border-t border-bd pt-3 flex items-center justify-around text-center text-[12px] font-mono text-t2">
+            <span className="flex items-center space-x-1.5">
+              <span className="w-2 h-2 rounded-full bg-ok inline-block" />
+              <span className="text-white">Fulfilled {allocationSummaryData.find((d) => d.name === 'Fulfilled')?.value || 0}</span>
+            </span>
+            <span className="flex items-center space-x-1.5">
+              <span className="w-2 h-2 rounded-full bg-wa inline-block" />
+              <span className="text-white">Partial {allocationSummaryData.find((d) => d.name === 'Partial')?.value || 0}</span>
+            </span>
+            <span className="flex items-center space-x-1.5">
+              <span className="w-2 h-2 rounded-full bg-no inline-block" />
+              <span className="text-white">Deferred {allocationSummaryData.find((d) => d.name === 'Deferred')?.value || 0}</span>
+            </span>
           </div>
         </div>
       </div>
