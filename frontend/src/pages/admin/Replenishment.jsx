@@ -203,56 +203,53 @@ export default function Replenishment() {
 
   return (
     <div className="space-y-6 pb-12 font-sans py-2">
-      {/* Top Header */}
-      <div className="card-base relative overflow-hidden">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
-          <div>
-            <div className="inline-flex items-center space-x-1.5 text-[12px] font-mono text-ac font-medium mb-1">
-              <Truck className="w-3.5 h-3.5" />
-              <span>PHASE 11 SUPPLY INTELLIGENCE &amp; REPLENISHMENT</span>
-            </div>
-            <h1 className="text-[34px] font-bold tracking-[-0.02em] text-white">
-              Replenishment <span className="text-ac">&amp;</span> Demand Planning
-            </h1>
-            <p className="text-[14px] text-t2 max-w-2xl mt-0.5 leading-relaxed">
-              Deterministic reorder point calculation: <code>Reorder Point = Avg Daily Demand × Lead Time + Safety Stock</code>.
-              Inventory Position factoring confirmed incoming supplier shipments. Draft PO approval workflow.
-            </p>
+      {/* Clean Page Header (No excessive bordered box) */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2">
+        <div>
+          <div className="inline-flex items-center space-x-2 text-[12px] font-mono text-ac font-semibold tracking-wider uppercase mb-1">
+            <Truck className="w-3.5 h-3.5" />
+            <span>Supply Intelligence &bull; Replenishment Engine</span>
+          </div>
+          <h1 className="font-display text-[34px] font-bold tracking-tight text-white">
+            Replenishment <span className="text-ac">&amp;</span> Demand Planning
+          </h1>
+          <p className="text-[14px] text-t2 font-sans max-w-2xl mt-0.5 leading-relaxed">
+            Deterministic reorder point calculation factoring confirmed incoming supplier shipments and safe replenishment buffers.
+          </p>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2.5">
+          <div className="flex items-center space-x-2 rounded-pill border border-bd bg-s2 px-4 py-2 text-[13px] text-t2">
+            <Calendar className="w-4 h-4 text-ac" />
+            <span>Demand Window:</span>
+            <select
+              aria-label="Select Demand Window"
+              value={demandPeriod}
+              onChange={(e) => setDemandPeriod(parseInt(e.target.value, 10))}
+              className="bg-transparent border-none text-white font-mono font-bold outline-none cursor-pointer"
+            >
+              <option value={14} className="bg-s text-white">14 Days</option>
+              <option value={30} className="bg-s text-white">30 Days</option>
+              <option value={60} className="bg-s text-white">60 Days</option>
+              <option value={90} className="bg-s text-white">90 Days</option>
+            </select>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2.5">
-            <div className="flex items-center space-x-2 rounded-pill border border-bd bg-s2 px-4 py-2 text-[13px] text-t2">
-              <Calendar className="w-4 h-4 text-ac" />
-              <span>Demand Window:</span>
-              <select
-                aria-label="Select Demand Window"
-                value={demandPeriod}
-                onChange={(e) => setDemandPeriod(parseInt(e.target.value, 10))}
-                className="bg-transparent border-none text-white font-mono font-bold outline-none cursor-pointer"
-              >
-                <option value={14} className="bg-s text-white">14 Days</option>
-                <option value={30} className="bg-s text-white">30 Days</option>
-                <option value={60} className="bg-s text-white">60 Days</option>
-                <option value={90} className="bg-s text-white">90 Days</option>
-              </select>
-            </div>
-
-            <Link
-              to="/admin/inventory"
-              className="btn-secondary min-h-[44px] px-4 text-[14px] flex items-center space-x-1.5"
-            >
-              <Database className="w-4 h-4 text-ac" />
-              <span>Inventory Hub &rarr;</span>
-            </Link>
-            <button
-              onClick={() => fetchRecommendations(demandPeriod)}
-              disabled={loading}
-              className="btn-primary flex items-center space-x-1.5 disabled:opacity-50"
-            >
-              <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-              <span>Recalculate</span>
-            </button>
-          </div>
+          <Link
+            to="/admin/inventory"
+            className="btn-secondary min-h-[44px] px-4 text-[14px] flex items-center space-x-1.5"
+          >
+            <Database className="w-4 h-4 text-ac" />
+            <span>Inventory Hub &rarr;</span>
+          </Link>
+          <button
+            onClick={() => fetchRecommendations(demandPeriod)}
+            disabled={loading}
+            className="btn-primary flex items-center space-x-1.5 disabled:opacity-50 shadow-[0_0_20px_rgba(229,9,20,0.35)]"
+          >
+            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+            <span>Recalculate</span>
+          </button>
         </div>
       </div>
 
@@ -363,7 +360,7 @@ export default function Replenishment() {
             <div className="overflow-x-auto">
               <table className="w-full text-left text-[14px] border-collapse">
                 <thead>
-                  <tr className="border-b border-bd bg-s2/60 text-[12px] font-mono text-t2">
+                  <tr className="border-b border-bd bg-s2/60 text-[12px] font-sans font-medium uppercase tracking-wider text-t2">
                     <th className="py-3.5 px-4">Product / SKU</th>
                     <th className="py-3.5 px-4 text-right">On-Hand</th>
                     <th className="py-3.5 px-4 text-right">Reserved</th>
