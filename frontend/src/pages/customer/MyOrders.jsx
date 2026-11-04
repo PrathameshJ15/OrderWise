@@ -159,7 +159,7 @@ export default function MyOrders() {
         <div className="card-base overflow-x-auto p-0">
           <table className="w-full text-left text-sm border-collapse">
             <thead>
-              <tr className="border-b border-bd text-t2 font-sans font-medium text-[12px] uppercase tracking-wider">
+              <tr className="border-b border-bd bg-s2/60 text-t2 font-sans font-medium text-[12px] uppercase tracking-wider">
                 <th className="py-3 px-4">Order ID</th>
                 <th className="py-3 px-3">Date Submitted</th>
                 <th className="py-3 px-3">Promised Date</th>
@@ -198,7 +198,7 @@ export default function MyOrders() {
                   <td className="py-3.5 px-4 text-right">
                     <Link
                       to={`/orders/${ord.id}`}
-                      className="btn-header py-1 text-[12px] font-mono inline-flex items-center space-x-1"
+                      className="btn-header py-1 px-3 text-[13px] font-sans font-medium inline-flex items-center space-x-1"
                     >
                       <span>View</span>
                       <ChevronRight className="h-3 w-3" />

@@ -1,24 +1,107 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PublicNavbar from '../components/layout/PublicNavbar';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { ArrowRight } from 'lucide-react';
 import IsometricWarehouseVisual from '../components/3d/IsometricWarehouseVisual';
+import AmbientLighting from '../components/ui/AmbientLighting';
+import apiClient from '../api/client';
 
 export default function Home() {
   const { user } = useAuth();
   const [heroRightTab, setHeroRightTab] = useState('queue');
+  const [productHeader, setProductHeader] = useState({
+    name: 'Pressure Gauge Pro',
+    sku: 'GAUGE-P300',
+    onHand: 40,
+  });
+  const [queueOrders, setQueueOrders] = useState([
+    {
+      id: 103,
+      customer_name: 'Charlie',
+      order_id: 103,
+      requested_quantity: 30,
+      allocated_quantity: 30,
+      status: 'fulfilled',
+      minimum_acceptable_quantity: 10,
+      partial_delivery_allowed: true,
+    },
+    {
+      id: 101,
+      customer_name: 'Alice',
+      order_id: 101,
+      requested_quantity: 25,
+      allocated_quantity: 0,
+      status: 'deferred',
+      minimum_acceptable_quantity: 15,
+      partial_delivery_allowed: true,
+    },
+    {
+      id: 102,
+      customer_name: 'Bob',
+      order_id: 102,
+      requested_quantity: 20,
+      allocated_quantity: 0,
+      status: 'deferred',
+      minimum_acceptable_quantity: 20,
+      partial_delivery_allowed: false,
+    },
+  ]);
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchAllocationData = async () => {
+      try {
+        const prodRes = await apiClient.get('/products').catch(() => null);
+        const prodList = prodRes?.data || prodRes || [];
+        if (Array.isArray(prodList) && prodList.length > 0) {
+          const target = prodList.find((p) => p.sku === 'GAUGE-P300') || prodList[0];
+          if (target && isMounted) {
+            setProductHeader({
+              name: target.name || 'Pressure Gauge Pro',
+              sku: target.sku || 'GAUGE-P300',
+              onHand: target.on_hand_quantity ?? target.stock ?? 40,
+            });
+          }
+        }
+
+        const runsRes = await apiClient.get('/allocation/runs').catch(() => null);
+        const runs = runsRes?.data?.runs || runsRes?.data || runsRes || [];
+        if (Array.isArray(runs) && runs.length > 0) {
+          const latestRun = runs[0];
+          const runDetails = await apiClient.get(`/allocation/runs/${latestRun.id}`).catch(() => null);
+          const results = runDetails?.data?.results || runDetails?.results || [];
+          if (Array.isArray(results) && results.length > 0 && isMounted) {
+            const matched = results.filter((r) => r.product_sku === 'GAUGE-P300' || r.sku === 'GAUGE-P300');
+            const itemsToUse = matched.length > 0 ? matched : results.slice(0, 3);
+            setQueueOrders(
+              itemsToUse.map((r, idx) => ({
+                id: r.order_item_id || r.id || idx + 1,
+                customer_name: r.customer_name || `Customer #${r.customer_id || r.order_id || idx + 1}`,
+                order_id: r.order_id || r.id || idx + 1,
+                requested_quantity: Number(r.requested_quantity || 0),
+                allocated_quantity: Number(r.allocated_quantity || 0),
+                status: r.status,
+                minimum_acceptable_quantity: Number(r.minimum_acceptable_quantity || 0),
+                partial_delivery_allowed: Boolean(r.partial_delivery_allowed),
+              }))
+            );
+          }
+        }
+      } catch {
+        // Fallback
+      }
+    };
+    fetchAllocationData();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-bg text-t font-sans flex flex-col selection:bg-ac selection:text-white relative overflow-x-hidden">
-      {/* Subtle upper-right ambient lighting */}
-      <div
-        className="fixed top-[-240px] right-[-180px] w-[760px] h-[760px] pointer-events-none rounded-full blur-[60px] -z-0"
-        style={{
-          background: 'radial-gradient(closest-side, rgba(229, 9, 20, 0.13), transparent)',
-        }}
-        aria-hidden="true"
-      />
+      {/* Soft red ambient lighting effect from reference video */}
+      <AmbientLighting />
 
       {/* Top Landing Navigation Bar */}
       <PublicNavbar active="home" />
@@ -79,7 +162,7 @@ export default function Home() {
             <div className="w-full flex flex-col items-center space-y-3">
               <div className="w-full flex items-center justify-between">
                 <div
-                  className="flex items-center space-x-1 p-1 bg-s rounded-pill border border-bd text-xs"
+                  className="flex items-center space-x-1 p-1 bg-s rounded-pill border border-[#2A2A2A] text-xs"
                   role="tablist"
                   aria-label="Hero visual display options"
                 >
@@ -88,7 +171,7 @@ export default function Home() {
                     role="tab"
                     aria-selected={heroRightTab === 'queue'}
                     onClick={() => setHeroRightTab('queue')}
-                    className={`px-3 py-1 rounded-pill font-mono text-[11px] font-medium transition-colors ${
+                    className={`px-3.5 py-1.5 rounded-pill font-sans text-[12px] font-medium transition-colors ${
                       heroRightTab === 'queue'
                         ? 'bg-ac text-white font-semibold shadow-xs'
                         : 'text-t2 hover:text-t'
@@ -101,7 +184,7 @@ export default function Home() {
                     role="tab"
                     aria-selected={heroRightTab === '3d'}
                     onClick={() => setHeroRightTab('3d')}
-                    className={`px-3 py-1 rounded-pill font-mono text-[11px] font-medium transition-colors ${
+                    className={`px-3.5 py-1.5 rounded-pill font-sans text-[12px] font-medium transition-colors ${
                       heroRightTab === '3d'
                         ? 'bg-ac text-white font-semibold shadow-xs'
                         : 'text-t2 hover:text-t'
@@ -110,7 +193,7 @@ export default function Home() {
                     3D Warehouse Facility
                   </button>
                 </div>
-                <span className="text-[11px] font-mono text-t2 hidden sm:inline">
+                <span className="text-[12px] font-sans text-t2 hidden sm:inline">
                   {heroRightTab === 'queue' ? '40 on hand' : 'Interactive Axonometric'}
                 </span>
               </div>
@@ -120,54 +203,73 @@ export default function Home() {
                   <IsometricWarehouseVisual />
                 </div>
               ) : (
-                <div className="card-base w-full p-7 bg-s/95 backdrop-blur-sm space-y-4">
-                  <div className="flex items-center justify-between pb-3.5 border-b border-bd">
+                <div className="card-base w-full p-7 bg-s/95 backdrop-blur-sm space-y-4 border-[#2A2A2A]">
+                  <div className="flex items-center justify-between pb-3.5 border-b border-[#2A2A2A]">
                     <div>
                       <span className="text-[12px] font-mono text-t2 flex items-center">
                         <span className="w-2 h-2 rounded-full bg-ac shadow-[0_0_10px_#E50914] inline-block mr-2 animate-pulse" />
                         Live allocation queue
                       </span>
                       <h3 className="text-[20px] font-display font-bold text-t mt-1">
-                        Pressure Gauge Pro (GAUGE-P300)
+                        {productHeader.name} ({productHeader.sku})
                       </h3>
                     </div>
-                    <span className="text-[12px] font-mono text-t2 font-medium">40 on hand</span>
+                    <span className="text-[12px] font-mono text-t2 font-medium">{productHeader.onHand} on hand</span>
                   </div>
 
-                  {/* Charlie */}
-                  <div className="py-2 space-y-2">
-                    <div className="flex items-center justify-between text-[14px]">
-                      <span className="font-semibold text-t">Charlie · Order #103</span>
-                      <span className="text-[12px] font-mono text-ok font-medium">Fulfilled 30/30</span>
-                    </div>
-                    <div className="h-1.5 w-full bg-bd rounded-full overflow-hidden">
-                      <div className="h-full bg-ok rounded-full w-full" />
-                    </div>
-                  </div>
+                  {/* Dynamic Allocation Queue Progress Bars */}
+                  {queueOrders.map((item) => {
+                    const requested = Number(item.requested_quantity || 0);
+                    const allocated = Number(item.allocated_quantity || 0);
+                    const progress = requested > 0 ? Math.min(100, Math.max(0, (allocated / requested) * 100)) : 0;
 
-                  {/* Alice */}
-                  <div className="py-2 space-y-2">
-                    <div className="flex items-center justify-between text-[14px]">
-                      <span className="font-semibold text-t">Alice · Order #101</span>
-                      <span className="text-[12px] font-mono text-no font-medium">Deferred 0/25 (min 15)</span>
-                    </div>
-                    <div className="h-1.5 w-full bg-bd rounded-full overflow-hidden">
-                      <div className="h-full bg-no rounded-full w-[4%]" />
-                    </div>
-                  </div>
+                    let fillColor = '#FF7A7A'; // Deferred
+                    let statusLabel = 'Deferred';
+                    let textColor = 'text-[#FF7A7A]';
 
-                  {/* Bob */}
-                  <div className="py-2 space-y-2">
-                    <div className="flex items-center justify-between text-[14px]">
-                      <span className="font-semibold text-t">Bob · Order #102</span>
-                      <span className="text-[12px] font-mono text-no font-medium">Deferred 0/20 (no partial)</span>
-                    </div>
-                    <div className="h-1.5 w-full bg-bd rounded-full overflow-hidden">
-                      <div className="h-full bg-no rounded-full w-[4%]" />
-                    </div>
-                  </div>
+                    if (item.status === 'fulfilled' || (requested > 0 && allocated >= requested)) {
+                      fillColor = '#4ADE80';
+                      statusLabel = 'Fulfilled';
+                      textColor = 'text-[#4ADE80]';
+                    } else if (item.status === 'partially_fulfilled' || (allocated > 0 && allocated < requested)) {
+                      fillColor = '#F5B544';
+                      statusLabel = 'Partial';
+                      textColor = 'text-[#F5B544]';
+                    }
 
-                  <div className="flex items-center justify-between pt-3 border-t border-bd text-[12px] font-mono text-t2">
+                    let subClause = '';
+                    if (statusLabel === 'Deferred') {
+                      if (!item.partial_delivery_allowed) {
+                        subClause = ' (no partial)';
+                      } else if (item.minimum_acceptable_quantity) {
+                        subClause = ` (min ${item.minimum_acceptable_quantity})`;
+                      }
+                    }
+
+                    return (
+                      <div key={`queue-order-${item.id || item.order_id}`} className="py-2 space-y-2">
+                        <div className="flex items-center justify-between text-[14px]">
+                          <span className="font-semibold text-t truncate pr-2">
+                            {item.customer_name} · Order #{item.order_id}
+                          </span>
+                          <span className={`text-[12px] font-mono font-medium ${textColor} shrink-0`}>
+                            {statusLabel} {allocated}/{requested}{subClause}
+                          </span>
+                        </div>
+                        <div className="h-2 w-full bg-[#252525] rounded-full overflow-hidden">
+                          <div
+                            className="h-full rounded-full transition-all duration-500 ease-out"
+                            style={{
+                              width: `${progress}%`,
+                              backgroundColor: fillColor,
+                            }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+
+                  <div className="flex items-center justify-between pt-3 border-t border-[#2A2A2A] text-[12px] font-mono text-t2">
                     <span>Deterministic resolution</span>
                     <span>Zero over-allocation</span>
                   </div>
@@ -181,21 +283,21 @@ export default function Home() {
         <section>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="card-base p-6 flex flex-col justify-between">
-              <span className="text-[12px] font-mono text-t2">Overall fill rate</span>
+              <span className="text-[13px] font-sans font-medium text-t2">Overall fill rate</span>
               <div className="text-[40px] font-display font-bold text-t tracking-tight my-1.5">94.2%</div>
-              <span className="text-[12px] font-mono text-t2">Target: ≥90% deterministic fulfillment</span>
+              <span className="text-[13px] font-sans text-t2/80">Target: ≥90% deterministic fulfillment</span>
             </div>
 
             <div className="card-base p-6 flex flex-col justify-between">
-              <span className="text-[12px] font-mono text-t2">Active catalog items</span>
+              <span className="text-[13px] font-sans font-medium text-t2">Active catalog items</span>
               <div className="text-[40px] font-display font-bold text-t tracking-tight my-1.5">4 items</div>
-              <span className="text-[12px] font-mono text-t2">Pumps, valves, gauges &amp; control units</span>
+              <span className="text-[13px] font-sans text-t2/80">Pumps, valves, gauges &amp; control units</span>
             </div>
 
             <div className="card-base p-6 flex flex-col justify-between border-ac/70 shadow-[inset_0_0_40px_rgba(229,9,20,0.10)]">
-              <span className="text-[12px] font-mono text-t2">Unresolved alerts</span>
+              <span className="text-[13px] font-sans font-medium text-t2">Unresolved alerts</span>
               <div className="text-[40px] font-display font-bold text-t tracking-tight my-1.5">1 critical</div>
-              <span className="text-[12px] font-mono text-t2">GAUGE-P300 stock below reorder point</span>
+              <span className="text-[13px] font-sans text-t2/80">GAUGE-P300 stock below reorder point</span>
             </div>
           </div>
         </section>

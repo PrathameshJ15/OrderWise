@@ -24,10 +24,10 @@ export default function Modal({ isOpen, onClose, title, children }) {
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-lg max-h-[92vh] flex flex-col bg-s border border-bd rounded-card p-5 sm:p-6 shadow-2xl text-t animate-in zoom-in-95 duration-150"
+        className="relative w-full max-w-lg max-h-[92vh] flex flex-col bg-s border border-[#2A2A2A] rounded-[18px] p-5 sm:p-6 shadow-2xl text-t animate-in zoom-in-95 duration-150"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between pb-3.5 border-b border-bd shrink-0">
+        <div className="flex items-center justify-between pb-3.5 border-b border-[#2A2A2A] shrink-0">
           <h3 className="font-sans font-bold text-[18px] sm:text-[20px] text-t truncate pr-2">
             {title}
           </h3>

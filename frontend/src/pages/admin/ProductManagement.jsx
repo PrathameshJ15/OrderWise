@@ -255,7 +255,7 @@ export default function ProductManagement() {
         <div className="card-base overflow-x-auto p-0">
           <table className="w-full text-left text-sm border-collapse">
             <thead>
-              <tr className="border-b border-bd text-t2 font-sans font-medium text-[12px] uppercase tracking-wider">
+              <tr className="border-b border-bd bg-s2/60 text-t2 font-sans font-medium text-[12px] uppercase tracking-wider">
                 <th className="py-3 px-4">SKU</th>
                 <th className="py-3 px-3">Product Name</th>
                 <th className="py-3 px-3">Unit</th>
@@ -301,7 +301,7 @@ export default function ProductManagement() {
                   <td className="py-3.5 px-4 text-right space-x-2">
                     <button
                       onClick={() => openEditModal(p)}
-                      className="p-1.5 rounded-full border border-bd text-t2 hover:text-t hover:border-white transition-colors"
+                      className="p-1.5 rounded-full border border-bd text-t2 hover:text-t hover:border-neutral-600 transition-colors"
                       title="Edit Product"
                     >
                       <Edit2 className="h-3.5 w-3.5" />
@@ -332,7 +332,7 @@ export default function ProductManagement() {
         <form onSubmit={handleCreateProduct} className="space-y-4 text-sm font-sans">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-[12px] font-mono text-t2 mb-1.5">
+              <label className="block text-[13px] font-sans font-medium text-t2 mb-1.5">
                 SKU Code *
               </label>
               <input
@@ -345,7 +345,7 @@ export default function ProductManagement() {
               />
             </div>
             <div>
-              <label className="block text-[12px] font-mono text-t2 mb-1.5">
+              <label className="block text-[13px] font-sans font-medium text-t2 mb-1.5">
                 Unit of Measure
               </label>
               <input
@@ -359,7 +359,7 @@ export default function ProductManagement() {
           </div>
 
           <div>
-            <label className="block text-[12px] font-mono text-t2 mb-1.5">
+            <label className="block text-[13px] font-sans font-medium text-t2 mb-1.5">
               Product Name *
             </label>
             <input
@@ -373,7 +373,7 @@ export default function ProductManagement() {
           </div>
 
           <div>
-            <label className="block text-[12px] font-mono text-t2 mb-1.5">
+            <label className="block text-[13px] font-sans font-medium text-t2 mb-1.5">
               Description
             </label>
             <textarea
@@ -381,13 +381,13 @@ export default function ProductManagement() {
               placeholder="Hardware details, specifications..."
               value={createForm.description}
               onChange={(e) => setCreateForm({ ...createForm, description: e.target.value })}
-              className="w-full bg-s2 border border-bd rounded-card p-3 text-t focus:border-ac focus:outline-none font-sans text-[14px]"
+              className="w-full bg-s2 border border-bd rounded-[12px] p-3 text-t focus:border-ac focus:outline-none font-sans text-[14px]"
             />
           </div>
 
           <div className="grid grid-cols-3 gap-3">
             <div>
-              <label className="block text-[12px] font-mono text-t2 mb-1.5">
+              <label className="block text-[13px] font-sans font-medium text-t2 mb-1.5">
                 Initial Stock
               </label>
               <input
@@ -399,7 +399,7 @@ export default function ProductManagement() {
               />
             </div>
             <div>
-              <label className="block text-[12px] font-mono text-t2 mb-1.5">
+              <label className="block text-[13px] font-sans font-medium text-t2 mb-1.5">
                 Safety Stock
               </label>
               <input
@@ -411,7 +411,7 @@ export default function ProductManagement() {
               />
             </div>
             <div>
-              <label className="block text-[12px] font-mono text-t2 mb-1.5">
+              <label className="block text-[13px] font-sans font-medium text-t2 mb-1.5">
                 Reorder Point
               </label>
               <input
@@ -451,7 +451,7 @@ export default function ProductManagement() {
       >
         <form onSubmit={handleUpdateProduct} className="space-y-4 text-sm font-sans">
           <div>
-            <label className="block text-[12px] font-mono text-t2 mb-1.5">
+            <label className="block text-[13px] font-sans font-medium text-t2 mb-1.5">
               Product Name *
             </label>
             <input
@@ -464,7 +464,7 @@ export default function ProductManagement() {
           </div>
 
           <div>
-            <label className="block text-[12px] font-mono text-t2 mb-1.5">
+            <label className="block text-[13px] font-sans font-medium text-t2 mb-1.5">
               Unit of Measure
             </label>
             <input
@@ -476,14 +476,14 @@ export default function ProductManagement() {
           </div>
 
           <div>
-            <label className="block text-[12px] font-mono text-t2 mb-1.5">
+            <label className="block text-[13px] font-sans font-medium text-t2 mb-1.5">
               Description
             </label>
             <textarea
               rows="3"
               value={editForm.description}
               onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
-              className="w-full bg-s2 border border-bd rounded-card p-3 text-t focus:border-ac focus:outline-none font-sans text-[14px]"
+              className="w-full bg-s2 border border-bd rounded-[12px] p-3 text-t focus:border-ac focus:outline-none font-sans text-[14px]"
             />
           </div>
 

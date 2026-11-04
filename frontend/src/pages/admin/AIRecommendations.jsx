@@ -380,7 +380,7 @@ export default function AIRecommendations() {
           className={`flex items-center space-x-2 px-5 py-2.5 rounded-pill text-[14px] font-semibold transition-colors border ${
             activeTab === 'review'
               ? 'bg-ac text-white border-ac'
-              : 'bg-s text-t2 border-bd hover:text-t hover:border-white'
+              : 'bg-s text-t2 border-bd hover:text-t hover:border-neutral-600'
           }`}
         >
           <Sparkles className="w-4 h-4" />
@@ -395,7 +395,7 @@ export default function AIRecommendations() {
           className={`flex items-center space-x-2 px-5 py-2.5 rounded-pill text-[14px] font-semibold transition-colors border ${
             activeTab === 'chatbot'
               ? 'bg-ac text-white border-ac'
-              : 'bg-s text-t2 border-bd hover:text-t hover:border-white'
+              : 'bg-s text-t2 border-bd hover:text-t hover:border-neutral-600'
           }`}
         >
           <MessageSquare className="w-4 h-4" />
@@ -413,7 +413,7 @@ export default function AIRecommendations() {
           className={`flex items-center space-x-2 px-5 py-2.5 rounded-pill text-[14px] font-semibold transition-colors border ${
             activeTab === 'forecast'
               ? 'bg-ac text-white border-ac'
-              : 'bg-s text-t2 border-bd hover:text-t hover:border-white'
+              : 'bg-s text-t2 border-bd hover:text-t hover:border-neutral-600'
           }`}
         >
           <TrendingUp className="w-4 h-4" />
@@ -472,7 +472,7 @@ export default function AIRecommendations() {
                 key={i}
                 onClick={() => handleSendChat(prompt.replace(/^[^\s]+\s/, ''))}
                 disabled={chatLoading}
-                className="whitespace-nowrap px-3 py-1 rounded-pill bg-s2 border border-bd hover:border-white text-t2 hover:text-t transition-colors text-[12px]"
+                className="whitespace-nowrap px-3 py-1 rounded-pill bg-s2 border border-bd hover:border-neutral-600 text-t2 hover:text-t transition-colors text-[12px]"
               >
                 {prompt}
               </button>
@@ -877,7 +877,7 @@ export default function AIRecommendations() {
 
                         <button
                           onClick={() => toggleExpand(order.id)}
-                          className="p-2 rounded-full border border-bd text-t2 hover:text-t hover:border-white transition-colors"
+                          className="p-2 rounded-full border border-bd text-t2 hover:text-t hover:border-neutral-600 transition-colors"
                           title={isExpanded ? 'Collapse Items' : 'Expand Items'}
                         >
                           {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
@@ -1100,7 +1100,7 @@ export default function AIRecommendations() {
                   className={`p-3 rounded-pill text-center font-mono font-bold text-[13px] transition-colors border ${
                     overridePriority === p
                       ? 'border-ac bg-ac text-white'
-                      : 'border-bd bg-s2 text-t2 hover:text-t hover:border-white'
+                      : 'border-bd bg-s2 text-t2 hover:text-t hover:border-neutral-600'
                   }`}
                 >
                   {p}
@@ -1119,7 +1119,7 @@ export default function AIRecommendations() {
               value={overrideReason}
               onChange={(e) => setOverrideReason(e.target.value)}
               placeholder="e.g. VIP client SLA requires expedited priority classification despite standard business notes."
-              className="w-full p-3 bg-s2 rounded-card border border-bd text-t focus:border-ac focus:outline-none placeholder-t2/50 text-[14px]"
+              className="w-full p-3 bg-s2 rounded-[12px] border border-bd text-t focus:border-ac focus:outline-none placeholder-t2/50 text-[14px]"
             />
             <span className="text-[12px] text-t2 mt-1 block">
               This reason will be permanently recorded in priority_approvals and audit_logs.

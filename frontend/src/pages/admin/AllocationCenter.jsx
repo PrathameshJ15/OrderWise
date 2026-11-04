@@ -331,43 +331,43 @@ export default function AllocationCenter() {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <div className="p-4 rounded-card bg-s2 border border-bd">
-              <span className="text-[12px] font-mono text-t2 block">
+              <span className="text-[13px] font-sans font-medium text-t2 block">
                 Total Evaluated
               </span>
-              <span className="text-[34px] font-bold text-t block my-0.5">
+              <span className="text-[34px] font-display font-bold text-t block my-0.5">
                 {runResults.length}
               </span>
-              <span className="text-[11px] font-mono text-t2">Order items</span>
+              <span className="text-[12px] font-sans text-t2/80">Order items</span>
             </div>
 
             <div className="p-4 rounded-card bg-s2 border border-ok/30">
-              <span className="text-[12px] font-mono text-ok font-medium block">
+              <span className="text-[13px] font-sans font-medium text-ok block">
                 Fulfilled
               </span>
-              <span className="text-[34px] font-bold text-ok block my-0.5">
+              <span className="text-[34px] font-display font-bold text-ok block my-0.5">
                 {runResults.filter((r) => r.status === 'fulfilled').length}
               </span>
-              <span className="text-[11px] font-mono text-ok/80">100% satisfied</span>
+              <span className="text-[12px] font-sans text-ok/80">100% satisfied</span>
             </div>
 
             <div className="p-4 rounded-card bg-s2 border border-wa/30">
-              <span className="text-[12px] font-mono text-wa font-medium block">
+              <span className="text-[13px] font-sans font-medium text-wa block">
                 Partially Fulfilled
               </span>
-              <span className="text-[34px] font-bold text-wa block my-0.5">
+              <span className="text-[34px] font-display font-bold text-wa block my-0.5">
                 {runResults.filter((r) => r.status === 'partially_fulfilled').length}
               </span>
-              <span className="text-[11px] font-mono text-wa/80">Minimum met</span>
+              <span className="text-[12px] font-sans text-wa/80">Minimum met</span>
             </div>
 
             <div className="p-4 rounded-card bg-s2 border border-no/30">
-              <span className="text-[12px] font-mono text-no font-medium block">
+              <span className="text-[13px] font-sans font-medium text-no block">
                 Deferred
               </span>
-              <span className="text-[34px] font-bold text-no block my-0.5">
+              <span className="text-[34px] font-display font-bold text-no block my-0.5">
                 {runResults.filter((r) => r.status === 'deferred').length}
               </span>
-              <span className="text-[11px] font-mono text-no/80">0 units allocated</span>
+              <span className="text-[12px] font-sans text-no/80">0 units allocated</span>
             </div>
           </div>
         </div>
@@ -453,7 +453,7 @@ export default function AllocationCenter() {
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm border-collapse">
               <thead>
-                <tr className="border-b border-bd text-t2 font-sans font-medium text-[12px] uppercase tracking-wider">
+                <tr className="border-b border-bd bg-s2/60 text-t2 font-sans font-medium text-[12px] uppercase tracking-wider">
                   <th className="py-3 px-3">Order #</th>
                   <th className="py-3 px-3">Customer</th>
                   <th className="py-3 px-3">Product</th>
@@ -520,7 +520,7 @@ export default function AllocationCenter() {
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm border-collapse">
               <thead>
-                <tr className="border-b border-bd text-t2 font-sans font-medium text-[12px] uppercase tracking-wider">
+                <tr className="border-b border-bd bg-s2/60 text-t2 font-sans font-medium text-[12px] uppercase tracking-wider">
                   <th className="py-2.5 px-3">Run ID</th>
                   <th className="py-2.5 px-3">Execution Time</th>
                   <th className="py-2.5 px-3">Initiated By</th>
@@ -585,7 +585,7 @@ export default function AllocationCenter() {
           </div>
 
           <div>
-            <label className="block text-[12px] font-mono text-t2 mb-1.5">
+            <label className="block text-[13px] font-sans font-medium text-t2 mb-1.5">
               Product Scope
             </label>
             <select
@@ -603,7 +603,7 @@ export default function AllocationCenter() {
           </div>
 
           <div>
-            <label className="block text-[12px] font-mono text-t2 mb-1.5">
+            <label className="block text-[13px] font-sans font-medium text-t2 mb-1.5">
               Audit Notes
             </label>
             <input

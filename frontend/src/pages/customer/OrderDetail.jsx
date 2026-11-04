@@ -307,7 +307,7 @@ export default function OrderDetail() {
 
                 {/* Quantitative Breakdown Grid */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-                  <div className="p-3 bg-s rounded-card border border-bd">
+                  <div className="p-3 bg-s rounded-[12px]">
                     <span className="text-[11px] font-mono text-t2 block">
                       Requested
                     </span>
@@ -316,7 +316,7 @@ export default function OrderDetail() {
                     </span>
                   </div>
 
-                  <div className="p-3 bg-s rounded-card border border-bd">
+                  <div className="p-3 bg-s rounded-[12px]">
                     <span className="text-[11px] font-mono text-t2 block">
                       Min Acceptable
                     </span>
@@ -325,7 +325,7 @@ export default function OrderDetail() {
                     </span>
                   </div>
 
-                  <div className="p-3 bg-s rounded-card border border-bd">
+                  <div className="p-3 bg-s rounded-[12px]">
                     <span className="text-[11px] font-mono text-t2 block">
                       Allocated
                     </span>
@@ -344,7 +344,7 @@ export default function OrderDetail() {
                     </span>
                   </div>
 
-                  <div className="p-3 bg-s rounded-card border border-bd">
+                  <div className="p-3 bg-s rounded-[12px]">
                     <span className="text-[11px] font-mono text-t2 block">
                       Fulfillment Rate
                     </span>
@@ -413,7 +413,7 @@ export default function OrderDetail() {
             Are you sure you want to cancel Order #{order.id}? Once cancelled, any allocated stock will be released back to the warehouse.
           </p>
           <div>
-            <label className="block text-[12px] font-mono text-t2 mb-1.5">
+            <label className="block text-[13px] font-sans font-medium text-t2 mb-1.5">
               Cancellation reason (optional)
             </label>
             <input

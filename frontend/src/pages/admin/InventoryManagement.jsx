@@ -286,7 +286,7 @@ export default function InventoryManagement() {
                         </button>
                         <button
                           onClick={() => openLedgerModal(item)}
-                          className="p-2 rounded-full border border-bd text-t2 hover:text-t hover:border-white transition-colors"
+                          className="p-2 rounded-full border border-bd text-t2 hover:text-t hover:border-neutral-600 transition-colors"
                           title="View Movement Ledger"
                         >
                           <History className="h-3.5 w-3.5" />
@@ -337,7 +337,7 @@ export default function InventoryManagement() {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label htmlFor="adjustment_type" className="block text-[12px] font-mono text-t2 mb-1.5">
+              <label htmlFor="adjustment_type" className="block text-[13px] font-sans font-medium text-t2 mb-1.5">
                 Adjustment Type
               </label>
               <select
@@ -352,7 +352,7 @@ export default function InventoryManagement() {
             </div>
 
             <div>
-              <label htmlFor="on_hand_quantity" className="block text-[12px] font-mono text-t2 mb-1.5">
+              <label htmlFor="on_hand_quantity" className="block text-[13px] font-sans font-medium text-t2 mb-1.5">
                 New On-Hand Quantity
               </label>
               <input
@@ -367,7 +367,7 @@ export default function InventoryManagement() {
           </div>
 
           <div>
-            <label htmlFor="reason" className="block text-[12px] font-mono text-t2 mb-1.5">
+            <label htmlFor="reason" className="block text-[13px] font-sans font-medium text-t2 mb-1.5">
               Mandatory Audit Reason *
             </label>
             <textarea
@@ -377,7 +377,7 @@ export default function InventoryManagement() {
               placeholder="e.g. Physical inventory cycle count adjustment; damaged goods written off."
               value={adjustForm.reason}
               onChange={(e) => setAdjustForm({ ...adjustForm, reason: e.target.value })}
-              className="w-full bg-s2 rounded-card border border-bd p-3 text-t focus:border-ac focus:outline-none placeholder-t2/50 text-[14px]"
+              className="w-full bg-s2 rounded-[12px] border border-bd p-3 text-t focus:border-ac focus:outline-none placeholder-t2/50 text-[14px]"
             />
           </div>
 

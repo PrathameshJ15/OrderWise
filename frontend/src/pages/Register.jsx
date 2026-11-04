@@ -88,7 +88,7 @@ export default function Register() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-[12px] font-mono text-t2 mb-1.5">
+            <label className="block text-[13px] font-sans font-medium text-t2 mb-1.5">
               Company / Full Name
             </label>
             <div className="relative">
@@ -105,7 +105,7 @@ export default function Register() {
           </div>
 
           <div>
-            <label className="block text-[12px] font-mono text-t2 mb-1.5">
+            <label className="block text-[13px] font-sans font-medium text-t2 mb-1.5">
               Enterprise Email
             </label>
             <div className="relative">
@@ -122,7 +122,7 @@ export default function Register() {
           </div>
 
           <div>
-            <label className="block text-[12px] font-mono text-t2 mb-1.5">
+            <label className="block text-[13px] font-sans font-medium text-t2 mb-1.5">
               Password
             </label>
             <div className="relative">
@@ -139,7 +139,7 @@ export default function Register() {
           </div>
 
           <div>
-            <label className="block text-[12px] font-mono text-t2 mb-1.5">
+            <label className="block text-[13px] font-sans font-medium text-t2 mb-1.5">
               Confirm Password
             </label>
             <div className="relative">

@@ -3,7 +3,7 @@ import React from 'react';
 /**
  * AmbientLighting
  * Recreates the exact soft ambient lighting effect from the reference video:
- * - OrderWise amber (#E50914) replacing the reference video's soft green glow.
+ * - Soft OrderWise red (#E50914) replacing the reference video's soft green glow.
  * - Same softness, intensity, diffusion and spread as the original glow.
  * - Fades naturally into the deep black background (#0A0A0A).
  * - No neon, bloom, or harsh red shadows.
@@ -24,7 +24,7 @@ export default function AmbientLighting({ className = '', withGrid = true }) {
         />
       )}
 
-      {/* Primary soft diffused radial amber glow (#E50914) */}
+      {/* Primary soft diffused radial red glow (#E50914) */}
       <div
         className="ambient-glow-red"
         aria-hidden="true"

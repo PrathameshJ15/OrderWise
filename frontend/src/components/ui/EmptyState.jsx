@@ -14,7 +14,7 @@ export function EmptyState({
       <div className="flex items-center justify-center w-14 h-14 rounded-full bg-s2 text-t2 mb-4 border border-bd" aria-hidden="true">
         <Icon className="w-6 h-6 text-t2" />
       </div>
-      <h3 className="text-base font-bold text-white mb-1">{title}</h3>
+      <h3 className="text-base font-bold text-t mb-1">{title}</h3>
       <p className="text-[14px] text-t2 max-w-sm mb-6">{description}</p>
       {actionText && onAction && (
         <button

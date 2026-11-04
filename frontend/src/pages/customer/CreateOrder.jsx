@@ -273,7 +273,7 @@ export default function CreateOrder() {
                   <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 flex-1">
                     {/* Product Selector */}
                     <div className="sm:col-span-2">
-                      <label className="block text-[12px] font-mono text-t2 mb-1.5">
+                      <label className="block text-[13px] font-sans font-medium text-t2 mb-1.5">
                         Product (SKU)
                       </label>
                       <select
@@ -291,7 +291,7 @@ export default function CreateOrder() {
 
                     {/* Requested Quantity */}
                     <div>
-                      <label htmlFor={`req-qty-${idx}`} className="block text-[12px] font-mono text-t2 mb-1.5">
+                      <label htmlFor={`req-qty-${idx}`} className="block text-[13px] font-sans font-medium text-t2 mb-1.5">
                         Requested Quantity
                       </label>
                       <input
@@ -306,7 +306,7 @@ export default function CreateOrder() {
 
                     {/* Minimum Acceptable Quantity */}
                     <div>
-                      <label htmlFor={`min-qty-${idx}`} className="block text-[12px] font-mono text-t2 mb-1.5">
+                      <label htmlFor={`min-qty-${idx}`} className="block text-[13px] font-sans font-medium text-t2 mb-1.5">
                         Min Acceptable Quantity
                       </label>
                       <input
@@ -334,7 +334,7 @@ export default function CreateOrder() {
                         }
                         className="accent-ac h-4 w-4 rounded cursor-pointer"
                       />
-                      <span className="text-[12px] font-mono text-t2">Partial OK</span>
+                      <span className="text-[13px] font-sans font-medium text-t2">Partial OK</span>
                     </label>
 
                     {items.length > 1 && (
@@ -361,7 +361,7 @@ export default function CreateOrder() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-[12px] font-mono text-t2 mb-1.5 flex items-center space-x-1.5">
+                <label className="block text-[13px] font-sans font-medium text-t2 mb-1.5 flex items-center space-x-1.5">
                   <Calendar className="h-3.5 w-3.5 text-ac" />
                   <span>Promised Delivery Date</span>
                 </label>
@@ -377,7 +377,7 @@ export default function CreateOrder() {
               </div>
 
               <div>
-                <label className="block text-[12px] font-mono text-t2 mb-1.5 flex items-center space-x-1.5">
+                <label className="block text-[13px] font-sans font-medium text-t2 mb-1.5 flex items-center space-x-1.5">
                   <FileText className="h-3.5 w-3.5 text-ac" />
                   <span>Business Notes / Contract Context</span>
                 </label>
@@ -386,7 +386,7 @@ export default function CreateOrder() {
                   placeholder="e.g. Turnaround milestone delivery; penalty clause if deferred."
                   value={businessNotes}
                   onChange={(e) => setBusinessNotes(e.target.value)}
-                  className="w-full bg-s2 border border-bd rounded-card p-3 text-[14px] text-t focus:border-ac focus:outline-none placeholder-t2/50 font-sans"
+                  className="w-full bg-s2 border border-bd rounded-[12px] p-3 text-[14px] text-t focus:border-ac focus:outline-none placeholder-t2/50 font-sans"
                 />
                 <span className="text-[11px] font-mono text-t2 mt-1 block">
                   Reviewed by AI Priority Assistant and operations team.

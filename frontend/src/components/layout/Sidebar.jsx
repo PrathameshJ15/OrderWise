@@ -105,7 +105,7 @@ export default function Sidebar({ mobileOpen = false, onCloseMobile = () => {} }
                 <Icon className="h-4 w-4 shrink-0" />
                 <span className="flex-1 whitespace-nowrap">{item.name}</span>
                 {item.badge && (
-                  <span className="text-[10px] px-2 py-0.5 rounded-pill font-mono font-semibold ml-auto bg-ac/10 text-ac">
+                  <span className="text-[11px] px-2 py-0.5 rounded-pill font-sans font-semibold ml-auto bg-ac/10 text-ac">
                     {item.badge}
                   </span>
                 )}

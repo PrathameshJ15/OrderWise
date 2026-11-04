@@ -257,7 +257,7 @@ export default function Alerts() {
           className={`p-4 rounded-card border text-left transition-all ${
             filterStatus === 'active' && filterSeverity === 'ALL'
               ? 'border-ac bg-ac/10'
-              : 'border-bd bg-s hover:border-white'
+              : 'border-bd bg-s hover:border-neutral-600'
           }`}
         >
           <div className="text-[11px] font-mono text-t2 flex items-center justify-between">

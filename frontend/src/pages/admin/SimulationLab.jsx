@@ -213,7 +213,7 @@ export default function SimulationLab() {
 
           <form onSubmit={handleRunSimulation} className="space-y-4 text-[14px]">
             <div>
-              <label className="block text-[12px] font-mono text-t2 mb-1.5">
+              <label className="block text-[13px] font-sans font-medium text-t2 mb-1.5">
                 Scenario Type
               </label>
               <select
@@ -236,7 +236,7 @@ export default function SimulationLab() {
             {(selectedScenario === 'inventory_increase' || selectedScenario === 'inventory_decrease') && (
               <>
                 <div>
-                  <label className="block text-[12px] font-mono text-t2 mb-1.5">
+                  <label className="block text-[13px] font-sans font-medium text-t2 mb-1.5">
                     Target Product SKU
                   </label>
                   <select
@@ -252,7 +252,7 @@ export default function SimulationLab() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-[12px] font-mono text-t2 mb-1.5">
+                  <label className="block text-[13px] font-sans font-medium text-t2 mb-1.5">
                     Quantity Delta Units ({selectedScenario === 'inventory_increase' ? '+Add' : '-Subtract'})
                   </label>
                   <input
@@ -269,7 +269,7 @@ export default function SimulationLab() {
 
             {selectedScenario === 'demand_surge' && (
               <div>
-                <label className="block text-[12px] font-mono text-t2 mb-1.5">
+                <label className="block text-[13px] font-sans font-medium text-t2 mb-1.5">
                   Demand Surge (%)
                 </label>
                 <input
@@ -288,7 +288,7 @@ export default function SimulationLab() {
 
             {selectedScenario === 'supplier_delay' && (
               <div>
-                <label className="block text-[12px] font-mono text-t2 mb-1.5">
+                <label className="block text-[13px] font-sans font-medium text-t2 mb-1.5">
                   Delay Inbound POs (Days)
                 </label>
                 <input
@@ -305,7 +305,7 @@ export default function SimulationLab() {
             {selectedScenario === 'priority_change' && (
               <>
                 <div>
-                  <label className="block text-[12px] font-mono text-t2 mb-1.5">
+                  <label className="block text-[13px] font-sans font-medium text-t2 mb-1.5">
                     Target Order
                   </label>
                   <select
@@ -321,7 +321,7 @@ export default function SimulationLab() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-[12px] font-mono text-t2 mb-1.5">
+                  <label className="block text-[13px] font-sans font-medium text-t2 mb-1.5">
                     Hypothetical Priority Rank
                   </label>
                   <select

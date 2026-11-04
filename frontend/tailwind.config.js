@@ -15,6 +15,7 @@ export default {
         outline: 'var(--outline)',
         t: 'rgb(var(--t-rgb) / <alpha-value>)',
         t2: 'rgb(var(--t2-rgb) / <alpha-value>)',
+        muted: 'rgb(var(--muted-rgb) / <alpha-value>)',
         ac: 'rgb(var(--ac-rgb) / <alpha-value>)',
         'ac-hover': '#9E6412',
         'ac-bright': '#EF9F27',
@@ -45,8 +46,8 @@ export default {
       },
       fontFamily: {
         sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
-        display: ['"Inter Tight"', 'Inter', '-apple-system', 'sans-serif'],
-        mono: ['"JetBrains Mono"', '"IBM Plex Mono"', 'monospace'],
+        display: ['Manrope', '"Inter Tight"', 'Inter', '-apple-system', 'sans-serif'],
+        mono: ['"IBM Plex Mono"', '"JetBrains Mono"', 'monospace'],
       },
       borderRadius: {
         card: '14px',

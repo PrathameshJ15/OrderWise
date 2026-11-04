@@ -163,7 +163,7 @@ export default function AdminDashboard() {
           <div className="text-[34px] font-display font-bold text-t tracking-[-0.02em] my-1">
             {stats.productCount}
           </div>
-          <span className="text-[12px] font-mono text-t2">SKUs monitored</span>
+          <span className="text-[12px] font-sans text-t2">SKUs monitored</span>
         </div>
 
         {/* KPI 2 */}
@@ -172,7 +172,7 @@ export default function AdminDashboard() {
           <div className="text-[34px] font-display font-bold text-t tracking-[-0.02em] my-1">
             {stats.orderCount}
           </div>
-          <span className="text-[12px] font-mono text-t2">Active demand pipeline</span>
+          <span className="text-[12px] font-sans text-t2">Active demand pipeline</span>
         </div>
 
         {/* KPI 3 */}

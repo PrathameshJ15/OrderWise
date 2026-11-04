@@ -244,7 +244,7 @@ export default function OrderManagement() {
                     <td className="py-3.5 px-4 text-right space-x-2">
                       <button
                         onClick={() => viewOrderDetails(ord.id)}
-                        className="p-2 rounded-full border border-bd text-t2 hover:text-t hover:border-white transition-colors"
+                        className="p-2 rounded-full border border-bd text-t2 hover:text-t hover:border-neutral-600 transition-colors"
                         title="View Details"
                       >
                         <Eye className="h-3.5 w-3.5" />
@@ -359,7 +359,7 @@ export default function OrderManagement() {
             Are you sure you want to cancel this customer order? All allocated quantities will be released back to free warehouse stock.
           </p>
           <div>
-            <label className="block text-[12px] font-mono text-t2 mb-1.5">
+            <label className="block text-[13px] font-sans font-medium text-t2 mb-1.5">
               Cancellation Reason
             </label>
             <input

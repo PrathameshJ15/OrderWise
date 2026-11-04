@@ -321,7 +321,7 @@ export default function Replenishment() {
           className={`px-5 py-2.5 rounded-pill text-[13px] font-semibold transition-colors border whitespace-nowrap shrink-0 ${
             activeTab === 'recommendations'
               ? 'border-ac bg-ac text-white'
-              : 'border-bd text-t2 hover:text-t bg-s hover:border-white'
+              : 'border-bd text-t2 hover:text-t bg-s hover:border-neutral-600'
           }`}
         >
           Replenishment Recommendations ({recommendations.length})
@@ -332,7 +332,7 @@ export default function Replenishment() {
           className={`px-5 py-2.5 rounded-pill text-[13px] font-semibold transition-colors border whitespace-nowrap shrink-0 ${
             activeTab === 'purchase_orders'
               ? 'border-ac bg-ac text-white'
-              : 'border-bd text-t2 hover:text-t bg-s hover:border-white'
+              : 'border-bd text-t2 hover:text-t bg-s hover:border-neutral-600'
           }`}
         >
           Purchase Orders &amp; Approvals ({purchaseOrders.length})
@@ -346,7 +346,7 @@ export default function Replenishment() {
           className={`px-5 py-2.5 rounded-pill text-[13px] font-semibold transition-colors border whitespace-nowrap shrink-0 ${
             activeTab === 'supplier_performance'
               ? 'border-ac bg-ac text-white'
-              : 'border-bd text-t2 hover:text-t bg-s hover:border-white'
+              : 'border-bd text-t2 hover:text-t bg-s hover:border-neutral-600'
           }`}
         >
           Supplier Performance Intelligence ({supplierPerformance?.summary?.total_suppliers || suppliers.length || 0})
@@ -856,7 +856,7 @@ export default function Replenishment() {
       >
         <form onSubmit={handleCreateDraftPO} className="space-y-4 text-[14px]">
           <div>
-            <label className="block text-[12px] font-mono text-t2 mb-1.5">
+            <label className="block text-[13px] font-sans font-medium text-t2 mb-1.5">
               Target Product
             </label>
             <div className="p-3 rounded-card border border-bd bg-s2 text-t font-bold">
@@ -865,7 +865,7 @@ export default function Replenishment() {
           </div>
 
           <div>
-            <label className="block text-[12px] font-mono text-t2 mb-1.5">
+            <label className="block text-[13px] font-sans font-medium text-t2 mb-1.5">
               Select Supplier
             </label>
             <select
@@ -885,7 +885,7 @@ export default function Replenishment() {
           </div>
 
           <div>
-            <label className="block text-[12px] font-mono text-t2 mb-1.5">
+            <label className="block text-[13px] font-sans font-medium text-t2 mb-1.5">
               Quantity to Reorder (Units)
             </label>
             <input
@@ -899,14 +899,14 @@ export default function Replenishment() {
           </div>
 
           <div>
-            <label className="block text-[12px] font-mono text-t2 mb-1.5">
+            <label className="block text-[13px] font-sans font-medium text-t2 mb-1.5">
               Internal PO Notes
             </label>
             <textarea
               rows={2}
               value={poNotes}
               onChange={(e) => setPoNotes(e.target.value)}
-              className="w-full bg-s2 rounded-card border border-bd p-3 text-t outline-none focus:border-ac text-[14px]"
+              className="w-full bg-s2 rounded-[12px] border border-bd p-3 text-t outline-none focus:border-ac text-[14px]"
             />
           </div>
 
@@ -938,7 +938,7 @@ export default function Replenishment() {
       >
         <form onSubmit={handleReceivePo} className="space-y-4 text-[14px]">
           <div>
-            <label className="block text-[12px] font-mono text-t2 mb-1.5">
+            <label className="block text-[13px] font-sans font-medium text-t2 mb-1.5">
               Receiving Purchase Order
             </label>
             <div className="p-3 rounded-card border border-bd bg-s2 text-t font-mono">
@@ -948,7 +948,7 @@ export default function Replenishment() {
           </div>
 
           <div>
-            <label className="block text-[12px] font-mono text-t2 mb-1.5">
+            <label className="block text-[13px] font-sans font-medium text-t2 mb-1.5">
               Incoming Line Items
             </label>
             <div className="p-3 rounded-card border border-bd bg-s2/40 space-y-1.5">
@@ -963,7 +963,7 @@ export default function Replenishment() {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-[12px] font-mono text-t2 mb-1.5">
+              <label className="block text-[13px] font-sans font-medium text-t2 mb-1.5">
                 Promised Delivery
               </label>
               <div className="p-2.5 rounded-pill border border-bd bg-s font-mono text-t2 text-[13px]">
@@ -974,7 +974,7 @@ export default function Replenishment() {
             </div>
 
             <div>
-              <label className="block text-[12px] font-mono text-t2 mb-1.5">
+              <label className="block text-[13px] font-sans font-medium text-t2 mb-1.5">
                 Actual Receipt Date
               </label>
               <input

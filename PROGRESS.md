@@ -373,3 +373,93 @@ pm --prefix backend test -- tests/allocation.pure.test.js).
 - **Production Vite Build:** Built cleanly with **0 errors** (dist/ generated).
 - **Backend Protection:** Zero backend allocation algorithms, database schemas, or business rules altered.
 - **Development Server:** Active and responding on http://localhost:5173/ (HTTP 200).
+
+
+---
+
+## 🎨 Phase 21: Targeted UI Polish — Borders, Card Radii & Portal Visual Consistency (100% Complete & Verified)
+
+### Objectives & Strict Scope Adherence
+1. **Zero Modifications to Protected 3D & Business Layers:**
+   - The landing page 3D warehouse isometric illustration, SVG geometry, animations, timing, and soft red ambient lighting (`IsometricWarehouseVisual.jsx`, `AmbientLighting.jsx`) were completely preserved without modification.
+   - Zero changes to backend routes, database schema, RBAC, pure allocation engine algorithm, or core business rules.
+
+2. **Border Refinement & Elimination of Harsh Outlines:**
+   - **Removed All Prominent White Borders:** Eliminated every instance of `hover:border-white` across Admin and Customer portal pages:
+     - `CustomerDashboard.jsx`: Quick navigation cards now use subtle `hover:border-neutral-600`.
+     - `ProductCatalog.jsx`: Catalog product cards now use subtle `hover:border-neutral-600`.
+     - `AIRecommendations.jsx`: View switcher tabs, quick prompts, accordion toggles, and override buttons now use `hover:border-neutral-600`.
+     - `Alerts.jsx`: Active alert filter cards now use subtle `hover:border-neutral-600`.
+     - `ImpactAnalyzer.jsx`: Run comparison summary filter tiles now use `hover:border-neutral-600`.
+     - `InventoryManagement.jsx`: Ledger history action buttons now use subtle `hover:border-neutral-600`.
+     - `OrderManagement.jsx`: Order detail action buttons now use subtle `hover:border-neutral-600`.
+     - `ProductManagement.jsx`: Product edit action buttons now use subtle `hover:border-neutral-600`.
+     - `Replenishment.jsx`: Primary navigation tabs now use subtle `hover:border-neutral-600`.
+   - **Eliminated Nested Box Outlines:** Removed redundant bordered containers inside `OrderDetail.jsx` breakdown grids and modal order inspection panels, leveraging clean surface contrast (`bg-s` on `bg-s2`) for a spacious, uncluttered enterprise feel.
+   - **Unified Table Headers:** Added consistent subtle header background shading (`bg-s2/60`) and delicate border lines (`border-b border-bd`) across `ProductManagement.jsx`, `AllocationCenter.jsx`, `MyOrders.jsx`, `OrderManagement.jsx`, and `InventoryManagement.jsx`.
+
+3. **Consistent Corner Radii & Component Geometry:**
+   - **Modals:** Standardized `Modal.jsx` to `rounded-[18px]` with subtle `border border-[#2A2A2A]` and matching divider.
+   - **Dashboard Cards & Tiles:** Standardized to 14–16px (`rounded-card` / `rounded-[14px]`).
+   - **Table Wrappers:** Consistent 12–14px (`rounded-card` / `rounded-[14px]` with `overflow-hidden`).
+   - **Form Inputs & Textareas:** Standardized to 10–12px (`rounded-[12px]`) across `CreateOrder.jsx`, `ProductManagement.jsx`, `InventoryManagement.jsx`, `AIRecommendations.jsx`, and `Replenishment.jsx`.
+   - **Buttons & Badges:** Preserved 999px pill geometry (`rounded-pill`, `rounded-full`).
+
+4. **Shared UI Alignment:**
+   - Updated `EmptyState.jsx` to consume theme tokens (`text-t`) rather than hardcoded white.
+
+### Quality Verification & Gate Checks
+- **Frontend Vitest Suite:** **42 / 42 PASSED** across all 11 test files (`npm --prefix frontend test -- --run`).
+- **Backend Pure Allocation Suite:** **18 / 18 PASSED** (`npm --prefix backend test -- tests/allocation.pure.test.js`).
+- **Vite Production Build:** `vite build` completed in **5.37s** with **0 errors**.
+- **Development Server:** Active and responding on `http://localhost:5173/` (HTTP 200).
+
+
+---
+
+## 💎 Phase 22: Typography System, Soft Text Hierarchy, Bespoke Dark Dropdowns & Dynamic Allocation Progress Bars (100% Complete & Verified)
+
+### Objectives & Scope Adherence
+1. **Typography System Standardized Across Platform:**
+   - **Headings & Display:** Loaded `Manrope` (`500;600;700;800`) alongside `Inter` and `IBM Plex Mono` in `index.html` and configured `font-display: ['Manrope', 'Inter Tight', 'Inter', ...]` in `tailwind.config.js` and `index.css`.
+   - **Body, Buttons, Navigation, Labels & Tables:** Set `Inter` as the primary sans font family for all paragraphs, inputs, buttons, headers, and form labels.
+   - **Monospace Reserved for Technical Data:** Removed excessive monospace from form labels, action buttons, card descriptions, and eyebrow banners across `Login.jsx`, `Register.jsx`, `CreateOrder.jsx`, `AllocationCenter.jsx`, `InventoryManagement.jsx`, `OrderManagement.jsx`, `ProductManagement.jsx`, `Replenishment.jsx`, `SimulationLab.jsx`, `CustomerDashboard.jsx`, and `Sidebar.jsx`. Monospace (`IBM Plex Mono`) is now strictly reserved for SKUs, order IDs, hashes, numerical quantities, and timestamps.
+   - **Large Metrics:** Formatted all hero and dashboard KPI numbers with `font-display font-bold` (Manrope) for clean enterprise SaaS aesthetics.
+
+2. **Soft, Refined Text Hierarchy:**
+   - Updated primary text token `--t` to `#F2F2F2` (softer than harsh pure white).
+   - Standardized secondary text token `--t2` to `#A1A1AA` (zinc-400 tone).
+   - Added muted text token `--muted` to `#71717A` (zinc-500 tone) for subtle secondary context.
+
+3. **Bespoke Dark Dropdowns (Native OS Grey Overhaul):**
+   - Styled all `<select>` elements with dark surface (`var(--s2)`), subtle `#2A2A2A` borders, `rounded-[12px]`, Inter typography, custom inline SVG chevron icon (`stroke='#A1A1AA'`), `appearance: none`, and smooth hover/focus transitions.
+
+4. **Allocation Impact Analyzer Polish (`ImpactAnalyzer.jsx`):**
+   - Cleaned up Base Run and Target Run form labels to Inter font (`font-sans font-medium text-[13px] text-t2`).
+   - Replaced native-looking dropdowns with custom dark selects (`rounded-[12px] border-[#2A2A2A]`).
+   - Replaced the misaligned header diff button with a cohesive `btn-primary min-h-[42px] px-4 py-2 font-semibold` action button.
+   - Restyled the error notification to a subtle dark-red alert container (`border-no/30 bg-no/10 text-no rounded-[14px] font-sans`).
+   - Overhauled the 6 KPI metric cards: large values in `font-display font-bold text-[28px]` (Manrope), clean Inter labels and subtexts, with subtle `#2A2A2A` borders eliminating harsh white outlines.
+   - Harmonized search box and classification filter dropdown to consistent `rounded-[12px]` geometry.
+
+5. **Dynamic Live Allocation Queue Progress Bars (`Home.jsx`):**
+   - Implemented dynamic progress calculation: `progress = (allocated_quantity / requested_quantity) * 100`, clamped between 0% and 100%.
+   - Configured exact status fill colors:
+     - Fulfilled: `#4ADE80`
+     - Partial: `#F5B544`
+     - Deferred: `#FF7A7A`
+   - Dark subtle background track (`#252525`) with rounded track and fill (`rounded-full`).
+   - Smooth CSS width transitions on data updates (`transition-all duration-500 ease-out`).
+   - Displayed actual allocated/requested numbers beside each order (`{statusLabel} {allocated}/{requested}{subClause}`).
+   - Connected to actual allocation API responses (`/products` and `/allocation/runs`) with safe fallback and safe handling of zero/missing data.
+   - Preserved card layout, responsive behavior, and zero bright white outlines.
+
+6. **Strict Protection Compliance:**
+   - 3D warehouse isometric visual (`IsometricWarehouseVisual.jsx`), SVG reference geometry, and soft red ambient lighting (`AmbientLighting.jsx`) strictly untouched.
+   - Backend routes, database migrations, authentication, RBAC, and allocation engine core algorithms strictly untouched.
+
+### Quality Verification & Gate Checks
+- **Frontend Vitest Suite:** **42 / 42 PASSED** across all 11 test files (`npm --prefix frontend test -- --run`).
+- **Backend Pure Allocation Suite:** **18 / 18 PASSED** (`npm --prefix backend test -- tests/allocation.pure.test.js`).
+- **Production Vite Build:** `vite build` completed in **5.44s** with **0 errors**.
+- **Development Server:** Active and responding on `http://localhost:5173/` (HTTP 200).

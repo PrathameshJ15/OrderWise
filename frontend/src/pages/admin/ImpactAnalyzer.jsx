@@ -202,7 +202,7 @@ export default function ImpactAnalyzer() {
       {/* Clean Page Header (No excessive bordered box) */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2">
         <div>
-          <div className="inline-flex items-center space-x-2 text-[12px] font-mono text-ac font-semibold tracking-wider uppercase mb-1">
+          <div className="inline-flex items-center space-x-2 text-[12px] font-sans text-ac font-semibold tracking-wider uppercase mb-1">
             <Layers className="w-3.5 h-3.5" />
             <span>PHASE 9 ALLOCATION IMPACT ANALYZER</span>
           </div>
@@ -238,14 +238,14 @@ export default function ImpactAnalyzer() {
       <div className="card-base p-6">
         <form onSubmit={handleRunSelect} className="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
           <div className="md:col-span-5">
-            <label className="block text-[11px] font-mono text-t2 mb-1.5">
+            <label className="block text-[13px] font-sans font-medium text-t2 mb-1.5">
               Base Run (Previous / Run A)
             </label>
             <select
               aria-label="Select Base Run"
               value={selectedBaseRun}
               onChange={(e) => setSelectedBaseRun(e.target.value)}
-              className="w-full bg-s2 rounded-pill border border-bd px-4 py-2 text-[14px] text-t focus:border-ac outline-none"
+              className="w-full bg-s2 rounded-[12px] border border-bd px-3.5 py-2.5 text-[14px] text-t font-sans focus:border-ac outline-none"
             >
               <option value="" className="bg-s text-t">Select Base Run</option>
               {runs.map((r) => (
@@ -261,14 +261,14 @@ export default function ImpactAnalyzer() {
           </div>
 
           <div className="md:col-span-5">
-            <label className="block text-[11px] font-mono text-t2 mb-1.5">
+            <label className="block text-[13px] font-sans font-medium text-t2 mb-1.5">
               Target Run (Current / Run B)
             </label>
             <select
               aria-label="Select Target Run"
               value={selectedTargetRun}
               onChange={(e) => setSelectedTargetRun(e.target.value)}
-              className="w-full bg-s2 rounded-pill border border-bd px-4 py-2 text-[14px] text-t focus:border-ac outline-none"
+              className="w-full bg-s2 rounded-[12px] border border-bd px-3.5 py-2.5 text-[14px] text-t font-sans focus:border-ac outline-none"
             >
               <option value="" className="bg-s text-t">Select Target Run</option>
               {runs.map((r) => (
@@ -283,7 +283,7 @@ export default function ImpactAnalyzer() {
             <button
               type="submit"
               disabled={comparing || !selectedBaseRun || !selectedTargetRun}
-              className="btn-header w-full py-2 text-[14px] disabled:opacity-40"
+              className="btn-primary w-full min-h-[42px] px-4 py-2 text-[14px] font-semibold flex items-center justify-center transition-all disabled:opacity-40 disabled:cursor-not-allowed"
             >
               Diff
             </button>
@@ -312,7 +312,7 @@ export default function ImpactAnalyzer() {
       </div>
 
       {error && (
-        <div className="p-4 rounded-card border border-no/40 bg-[#291313] text-no text-[13px] flex items-center space-x-2">
+        <div className="p-4 rounded-[14px] border border-no/30 bg-no/10 text-no text-[13px] font-sans flex items-center space-x-2.5 shadow-sm">
           <AlertCircle className="w-4 h-4 flex-shrink-0" />
           <span>{error}</span>
         </div>
@@ -325,14 +325,14 @@ export default function ImpactAnalyzer() {
           className={`p-4 rounded-card border text-left transition-all ${
             filterClass === 'ALL'
               ? 'border-ac bg-ac/10'
-              : 'border-bd bg-s hover:border-white'
+              : 'border-bd bg-s hover:border-neutral-600'
           }`}
         >
-          <div className="text-[11px] font-mono text-t2">Total Compared</div>
-          <div className="text-2xl font-bold font-mono text-t mt-1">
+          <div className="text-[12px] font-sans font-medium text-t2">Total Compared</div>
+          <div className="text-[28px] font-display font-bold text-t mt-1 tracking-tight leading-none">
             {summary.total_items_compared}
           </div>
-          <div className="text-[11px] font-mono text-t2 mt-1">{summary.total_changed} items shifted</div>
+          <div className="text-[12px] font-sans text-t2/80 mt-1.5">{summary.total_changed} items shifted</div>
         </button>
 
         <button
@@ -343,14 +343,14 @@ export default function ImpactAnalyzer() {
               : 'border-bd bg-s hover:border-ok/50'
           }`}
         >
-          <div className="text-[11px] font-mono text-ok flex items-center justify-between">
+          <div className="text-[12px] font-sans font-medium text-ok flex items-center justify-between">
             <span>Newly Fulfilled</span>
             <CheckCircle2 className="w-3.5 h-3.5" />
           </div>
-          <div className="text-2xl font-bold font-mono text-ok mt-1">
+          <div className="text-[28px] font-display font-bold text-ok mt-1 tracking-tight leading-none">
             {byClass.NEWLY_FULFILLED || 0}
           </div>
-          <div className="text-[11px] font-mono text-t2 mt-1">Zero to 100% fulfill</div>
+          <div className="text-[12px] font-sans text-t2/80 mt-1.5">Zero to 100% fulfill</div>
         </button>
 
         <button
@@ -361,14 +361,14 @@ export default function ImpactAnalyzer() {
               : 'border-bd bg-s hover:border-ok/50'
           }`}
         >
-          <div className="text-[11px] font-mono text-ok flex items-center justify-between">
+          <div className="text-[12px] font-sans font-medium text-ok flex items-center justify-between">
             <span>Improved Qty</span>
             <TrendingUp className="w-3.5 h-3.5" />
           </div>
-          <div className="text-2xl font-bold font-mono text-ok mt-1">
+          <div className="text-[28px] font-display font-bold text-ok mt-1 tracking-tight leading-none">
             {byClass.IMPROVED || 0}
           </div>
-          <div className="text-[11px] font-mono text-t2 mt-1">Positive qty delta</div>
+          <div className="text-[12px] font-sans text-t2/80 mt-1.5">Positive qty delta</div>
         </button>
 
         <button
@@ -379,14 +379,14 @@ export default function ImpactAnalyzer() {
               : 'border-bd bg-s hover:border-wa/50'
           }`}
         >
-          <div className="text-[11px] font-mono text-wa flex items-center justify-between">
+          <div className="text-[12px] font-sans font-medium text-wa flex items-center justify-between">
             <span>Degraded Qty</span>
             <TrendingDown className="w-3.5 h-3.5" />
           </div>
-          <div className="text-2xl font-bold font-mono text-wa mt-1">
+          <div className="text-[28px] font-display font-bold text-wa mt-1 tracking-tight leading-none">
             {byClass.DEGRADED || 0}
           </div>
-          <div className="text-[11px] font-mono text-t2 mt-1">Negative qty delta</div>
+          <div className="text-[12px] font-sans text-t2/80 mt-1.5">Negative qty delta</div>
         </button>
 
         <button
@@ -397,14 +397,14 @@ export default function ImpactAnalyzer() {
               : 'border-bd bg-s hover:border-no/50'
           }`}
         >
-          <div className="text-[11px] font-mono text-no flex items-center justify-between">
+          <div className="text-[12px] font-sans font-medium text-no flex items-center justify-between">
             <span>Newly Deferred</span>
             <AlertCircle className="w-3.5 h-3.5" />
           </div>
-          <div className="text-2xl font-bold font-mono text-no mt-1">
+          <div className="text-[28px] font-display font-bold text-no mt-1 tracking-tight leading-none">
             {byClass.NEWLY_DEFERRED || 0}
           </div>
-          <div className="text-[11px] font-mono text-t2 mt-1">Dropped to 0 units</div>
+          <div className="text-[12px] font-sans text-t2/80 mt-1.5">Dropped to 0 units</div>
         </button>
 
         <button
@@ -415,11 +415,11 @@ export default function ImpactAnalyzer() {
               : 'border-bd bg-s hover:border-bd'
           }`}
         >
-          <div className="text-[11px] font-mono text-t2">Unchanged</div>
-          <div className="text-2xl font-bold font-mono text-t2 mt-1">
+          <div className="text-[12px] font-sans font-medium text-t2">Unchanged</div>
+          <div className="text-[28px] font-display font-bold text-t2 mt-1 tracking-tight leading-none">
             {byClass.UNCHANGED || 0}
           </div>
-          <div className="text-[11px] font-mono text-t2 mt-1">Stable allocation</div>
+          <div className="text-[12px] font-sans text-t2/80 mt-1.5">Stable allocation</div>
         </button>
       </div>
 
@@ -465,7 +465,7 @@ export default function ImpactAnalyzer() {
 
       {/* Filter and Search Bar */}
       <div className="card-base p-3 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-        <div className="flex items-center space-x-2 flex-1 rounded-pill bg-s2 border border-bd px-4 py-2">
+        <div className="flex items-center space-x-2 flex-1 rounded-[12px] bg-s2 border border-bd px-3.5 py-2.5">
           <Search className="w-4 h-4 text-t2 shrink-0" />
           <input
             type="text"
@@ -482,7 +482,7 @@ export default function ImpactAnalyzer() {
             aria-label="Filter by classification"
             value={filterClass}
             onChange={(e) => setFilterClass(e.target.value)}
-            className="bg-s2 rounded-pill border border-bd px-4 py-2 text-[14px] text-t outline-none focus:border-ac"
+            className="bg-s2 rounded-[12px] border border-bd px-3.5 py-2.5 text-[14px] text-t font-sans outline-none focus:border-ac"
           >
             <option value="ALL" className="bg-s text-t">All Changes ({summary.total_items_compared})</option>
             <option value="CHANGED_ONLY" className="bg-s text-t">Changed Only ({summary.total_changed})</option>

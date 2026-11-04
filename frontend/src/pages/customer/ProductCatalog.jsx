@@ -79,7 +79,7 @@ export default function ProductCatalog() {
       {loading ? (
         <div className="card-base p-12 text-center text-t2 flex flex-col items-center justify-center space-y-3">
           <RefreshCw className="h-6 w-6 animate-spin text-ac" />
-          <span className="text-[12px] font-mono">Loading catalog components...</span>
+          <span className="text-[13px] font-sans text-t2">Loading catalog components...</span>
         </div>
       ) : filteredProducts.length === 0 ? (
         <div className="card-base p-12 text-center text-t2 space-y-2">
@@ -112,7 +112,7 @@ export default function ProductCatalog() {
             return (
               <div
                 key={product.id}
-                className="card-base flex flex-col justify-between hover:border-white transition-colors group relative space-y-4"
+                className="card-base flex flex-col justify-between hover:border-neutral-600 transition-colors group relative space-y-4"
               >
                 <div>
                   <div className="flex items-start justify-between gap-2 mb-2">
@@ -136,7 +136,7 @@ export default function ProductCatalog() {
                 </div>
 
                 <div className="pt-3 border-t border-bd space-y-3">
-                  <div className="flex items-center justify-between text-[12px] font-mono text-t2">
+                  <div className="flex items-center justify-between text-[13px] font-sans text-t2">
                     <span>Available stock:</span>
                     <span className="text-t font-semibold text-[14px]">{available} units</span>
                   </div>

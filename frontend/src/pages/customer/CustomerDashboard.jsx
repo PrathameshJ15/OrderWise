@@ -108,43 +108,43 @@ export default function CustomerDashboard() {
       {/* KPI Row: Small label, 34px value, mono caption */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
         <div className="card-base p-5 flex flex-col justify-between">
-          <span className="text-[12px] font-mono text-t2">Total Placed</span>
+          <span className="text-[13px] font-sans font-medium text-t2">Total Placed</span>
           <div className="text-[34px] font-display font-bold text-t tracking-tight my-1">
             {totalOrders}
           </div>
-          <span className="text-[11px] font-mono text-t2">Lifetime orders</span>
+          <span className="text-[12px] font-sans text-t2/80">Lifetime orders</span>
         </div>
 
         <div className="card-base p-5 flex flex-col justify-between">
-          <span className="text-[12px] font-mono text-t2">Pending Queue</span>
+          <span className="text-[13px] font-sans font-medium text-t2">Pending Queue</span>
           <div className="text-[34px] font-display font-bold text-t tracking-tight my-1">
             {pendingOrders}
           </div>
-          <span className="text-[11px] font-mono text-t2">Awaiting run</span>
+          <span className="text-[12px] font-sans text-t2/80">Awaiting run</span>
         </div>
 
         <div className="card-base p-5 flex flex-col justify-between">
-          <span className="text-[12px] font-mono text-ok font-medium">Fulfilled</span>
+          <span className="text-[13px] font-sans font-medium text-ok">Fulfilled</span>
           <div className="text-[34px] font-display font-bold text-ok tracking-tight my-1">
             {fulfilledOrders}
           </div>
-          <span className="text-[11px] font-mono text-ok/80">100% stock allocated</span>
+          <span className="text-[12px] font-sans text-ok/80">100% stock allocated</span>
         </div>
 
         <div className="card-base p-5 flex flex-col justify-between">
-          <span className="text-[12px] font-mono text-wa font-medium">Partial</span>
+          <span className="text-[13px] font-sans font-medium text-wa">Partial</span>
           <div className="text-[34px] font-display font-bold text-wa tracking-tight my-1">
             {partialOrders}
           </div>
-          <span className="text-[11px] font-mono text-wa/80">Minimum met</span>
+          <span className="text-[12px] font-sans text-wa/80">Minimum met</span>
         </div>
 
         <div className="card-base p-5 flex flex-col justify-between">
-          <span className="text-[12px] font-mono text-t2">Cancelled</span>
+          <span className="text-[13px] font-sans font-medium text-t2">Cancelled</span>
           <div className="text-[34px] font-display font-bold text-t2 tracking-tight my-1">
             {cancelledOrders}
           </div>
-          <span className="text-[11px] font-mono text-t2">Closed records</span>
+          <span className="text-[12px] font-sans text-t2/80">Closed records</span>
         </div>
       </div>
 
@@ -152,7 +152,7 @@ export default function CustomerDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Link
           to="/products"
-          className="card-base hover:border-white transition-colors group block space-y-3"
+          className="card-base hover:border-neutral-600 transition-colors group block space-y-3"
         >
           <div className="w-9 h-9 rounded-full bg-s2 text-t flex items-center justify-center">
             <Package className="h-4 w-4" />
@@ -164,14 +164,14 @@ export default function CustomerDashboard() {
           <p className="text-[14px] text-t2 leading-normal">
             Browse active industrial inventory with real-time on-hand availability indicators.
           </p>
-          <span className="text-[12px] font-mono text-t font-medium inline-block pt-1">
+          <span className="text-[13px] font-sans text-t font-medium inline-block pt-1">
             Explore catalog &rarr;
           </span>
         </Link>
 
         <Link
           to="/orders/new"
-          className="card-base hover:border-white transition-colors group block space-y-3"
+          className="card-base hover:border-neutral-600 transition-colors group block space-y-3"
         >
           <div className="w-9 h-9 rounded-full bg-s2 text-t flex items-center justify-center">
             <PlusCircle className="h-4 w-4" />
@@ -183,14 +183,14 @@ export default function CustomerDashboard() {
           <p className="text-[14px] text-t2 leading-normal">
             Assemble multi-line orders with custom requested quantities and minimum thresholds.
           </p>
-          <span className="text-[12px] font-mono text-t font-medium inline-block pt-1">
+          <span className="text-[13px] font-sans text-t font-medium inline-block pt-1">
             Draft order &rarr;
           </span>
         </Link>
 
         <Link
           to="/orders"
-          className="card-base hover:border-white transition-colors group block space-y-3"
+          className="card-base hover:border-neutral-600 transition-colors group block space-y-3"
         >
           <div className="w-9 h-9 rounded-full bg-s2 text-t flex items-center justify-center">
             <ClipboardList className="h-4 w-4" />
@@ -202,7 +202,7 @@ export default function CustomerDashboard() {
           <p className="text-[14px] text-t2 leading-normal">
             Track real-time allocation outcomes, delivery dates, and item-by-item status reports.
           </p>
-          <span className="text-[12px] font-mono text-t font-medium inline-block pt-1">
+          <span className="text-[13px] font-sans text-t font-medium inline-block pt-1">
             View orders &rarr;
           </span>
         </Link>
@@ -217,7 +217,7 @@ export default function CustomerDashboard() {
           </div>
           <Link
             to="/orders"
-            className="text-[12px] font-mono text-t2 hover:text-t transition-colors"
+            className="text-[13px] font-sans font-medium text-t2 hover:text-t transition-colors"
           >
             View all ({orders.length}) &rarr;
           </Link>
@@ -226,7 +226,7 @@ export default function CustomerDashboard() {
         {loading ? (
           <div className="py-12 flex flex-col items-center justify-center text-t2 space-y-2">
             <RefreshCw className="h-5 w-5 animate-spin text-ac" />
-            <span className="text-[12px] font-mono">Loading your orders...</span>
+            <span className="text-[13px] font-sans text-t2">Loading your orders...</span>
           </div>
         ) : recentOrders.length === 0 ? (
           <div className="py-12 text-center text-t2 space-y-3">
@@ -261,7 +261,7 @@ export default function CustomerDashboard() {
                 <div className="flex items-center space-x-3 self-end sm:self-center">
                   <Link
                     to={`/orders/${order.id}`}
-                    className="btn-header py-1.5 text-[12px] font-mono"
+                    className="btn-header py-1.5 px-3 text-[13px] font-sans font-medium"
                   >
                     View details &rarr;
                   </Link>
