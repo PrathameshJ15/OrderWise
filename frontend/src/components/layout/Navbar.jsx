@@ -4,6 +4,7 @@ import Breadcrumbs from './Breadcrumbs';
 import NotificationBell from '../ui/NotificationBell';
 import UserProfileMenu from './UserProfileMenu';
 import ThemeToggle from '../ui/ThemeToggle';
+import LanguageSwitcher from '../ui/LanguageSwitcher';
 
 export default function Navbar({ onOpenMobile = () => {} }) {
   return (
@@ -22,6 +23,7 @@ export default function Navbar({ onOpenMobile = () => {} }) {
       </div>
 
       <div className="flex items-center space-x-3">
+        <LanguageSwitcher variant="compact" className="hidden sm:inline-block" />
         <ThemeToggle variant="segmented" className="hidden sm:inline-flex" />
         <ThemeToggle variant="button" className="sm:hidden" />
         <NotificationBell />

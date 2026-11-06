@@ -208,13 +208,14 @@ export default function Replenishment() {
         <div>
           <div className="inline-flex items-center space-x-2 text-[12px] font-mono text-ac font-semibold tracking-wider uppercase mb-1">
             <Truck className="w-3.5 h-3.5" />
-            <span>PHASE 11 SUPPLY INTELLIGENCE &amp; REPLENISHMENT</span>
+            <span>Supply Replenishment</span>
+            <span className="sr-only">PHASE 11 SUPPLY INTELLIGENCE</span>
           </div>
           <h1 className="font-display text-[34px] font-bold tracking-tight text-t">
             Replenishment <span className="text-ac">&amp;</span> Demand Planning
           </h1>
           <p className="text-[14px] text-t2 font-sans max-w-2xl mt-0.5 leading-relaxed">
-            Deterministic reorder point calculation factoring confirmed incoming supplier shipments and safe replenishment buffers.
+            Monitor inventory reorder points, incoming supplier shipments, and automated draft purchase orders.
           </p>
         </div>
 

@@ -1,7 +1,66 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import ThemeToggle from '../ui/ThemeToggle';
+import LanguageSwitcher from '../ui/LanguageSwitcher';
+import { useTranslation } from '../../contexts/I18nContext';
 import {
   Menu,
   X,
@@ -16,6 +75,7 @@ import {
 
 export default function PublicNavbar({ active = '' }) {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -46,11 +106,11 @@ export default function PublicNavbar({ active = '' }) {
   }, []);
 
   const navLinks = [
-    { label: 'How it works', href: '/#how-it-works', isHash: true, icon: HelpCircle },
-    { label: 'Modules', href: '/#modules', isHash: true, icon: Layers },
-    { label: 'Solutions', href: '/solutions', key: 'solutions', icon: Compass },
-    { label: 'Pricing', href: '/pricing', key: 'pricing', icon: DollarSign },
-    { label: 'Security', href: '/security', key: 'security', icon: Shield },
+    { label: t('nav.how_it_works') || 'How it works', href: '/#how-it-works', isHash: true, icon: HelpCircle },
+    { label: t('nav.modules') || 'Modules', href: '/#modules', isHash: true, icon: Layers },
+    { label: t('nav.solutions') || 'Solutions', href: '/solutions', key: 'solutions', icon: Compass },
+    { label: t('nav.pricing') || 'Pricing', href: '/pricing', key: 'pricing', icon: DollarSign },
+    { label: t('nav.security') || 'Security', href: '/security', key: 'security', icon: Shield },
   ];
 
   return (
@@ -101,57 +161,59 @@ export default function PublicNavbar({ active = '' }) {
 
           {/* Desktop Right CTA Actions */}
           <div className="hidden sm:flex items-center space-x-3">
+            <LanguageSwitcher variant="compact" />
             <ThemeToggle variant="segmented" />
 
             <Link
               to="/login"
               className="text-[14px] text-t2 hover:text-t font-medium transition-colors px-2"
             >
-              Sign in
+              {t('nav.login')}
             </Link>
             <Link
               to="/register"
               className="btn-secondary min-h-[38px] px-4 text-[13px] inline-flex items-center justify-center"
             >
-              Register
+              {t('nav.register')}
             </Link>
             {user ? (
               <Link
                 to={user.role === 'customer' ? '/dashboard' : '/admin'}
-                className="btn-primary min-h-[38px] px-5 text-[13px] shadow-[0_6px_24px_rgba(229,9,20,0.4)] flex items-center space-x-1.5"
+                className="btn-primary min-h-[38px] px-5 text-[13px] flex items-center space-x-1.5"
               >
-                <span>Console</span>
+                <span>{t('nav.console')}</span>
                 <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             ) : (
               <Link
                 to="/login"
-                className="btn-primary min-h-[38px] px-5 text-[13px] shadow-[0_6px_24px_rgba(229,9,20,0.4)] flex items-center space-x-1.5"
+                className="btn-primary min-h-[38px] px-5 text-[13px] flex items-center space-x-1.5"
               >
-                <span>Launch Portal</span>
+                <span>{t('nav.launch_ops')}</span>
                 <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             )}
           </div>
 
-          {/* Mobile Right Controls: Theme Toggle & Quick Portal Button & Hamburger */}
-          <div className="flex sm:hidden items-center space-x-2">
+          {/* Mobile Right Controls: Language, Theme & Hamburger */}
+          <div className="flex sm:hidden items-center space-x-1.5">
+            <LanguageSwitcher variant="compact" />
             <ThemeToggle variant="button" />
 
             {user ? (
               <Link
                 to={user.role === 'customer' ? '/dashboard' : '/admin'}
-                className="btn-primary min-h-[36px] px-3.5 text-[12px] shadow-[0_4px_16px_rgba(229,9,20,0.4)] flex items-center space-x-1"
+                className="btn-primary min-h-[36px] px-3.5 text-[12px] flex items-center space-x-1"
               >
-                <span>Console</span>
+                <span>{t('nav.console')}</span>
                 <ArrowRight className="h-3 w-3" />
               </Link>
             ) : (
               <Link
                 to="/login"
-                className="btn-primary min-h-[36px] px-3.5 text-[12px] shadow-[0_4px_16px_rgba(229,9,20,0.4)] flex items-center space-x-1"
+                className="btn-primary min-h-[36px] px-3.5 text-[12px] flex items-center space-x-1"
               >
-                <span>Sign in</span>
+                <span>{t('nav.login')}</span>
               </Link>
             )}
 
@@ -259,7 +321,7 @@ export default function PublicNavbar({ active = '' }) {
                 <Link
                   to={user.role === 'customer' ? '/dashboard' : '/admin'}
                   onClick={() => setMobileOpen(false)}
-                  className="btn-primary w-full min-h-[46px] text-[14px] flex items-center justify-center space-x-2 shadow-[0_6px_24px_rgba(229,9,20,0.4)]"
+                  className="btn-primary w-full min-h-[46px] text-[14px] flex items-center justify-center space-x-2 shadow-[0_0_20px_rgba(229,9,20,0.35)]"
                 >
                   <span>Enter Operations Console ({user.role})</span>
                   <ArrowRight className="h-4 w-4" />
@@ -269,7 +331,7 @@ export default function PublicNavbar({ active = '' }) {
                   <Link
                     to="/login"
                     onClick={() => setMobileOpen(false)}
-                    className="btn-primary w-full min-h-[46px] text-[14px] flex items-center justify-center space-x-2 shadow-[0_6px_24px_rgba(229,9,20,0.4)]"
+                    className="btn-primary w-full min-h-[46px] text-[14px] flex items-center justify-center space-x-2 shadow-[0_0_20px_rgba(229,9,20,0.35)]"
                   >
                     <span>Launch Operations Portal</span>
                     <ArrowRight className="h-4 w-4" />

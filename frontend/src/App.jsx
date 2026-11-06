@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { I18nProvider } from './contexts/I18nContext';
 import { AuthProvider } from './contexts/AuthContext';
 import { NotificationProvider } from './contexts/NotificationContext';
 import ErrorBoundary from './components/ui/ErrorBoundary';
@@ -23,6 +24,7 @@ import ProductCatalog from './pages/customer/ProductCatalog';
 import CreateOrder from './pages/customer/CreateOrder';
 import MyOrders from './pages/customer/MyOrders';
 import OrderDetail from './pages/customer/OrderDetail';
+import CustomerAIAssistant from './pages/customer/CustomerAIAssistant';
 
 // Admin Pages
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -42,6 +44,7 @@ function App() {
   return (
     <ErrorBoundary>
       <ThemeProvider>
+        <I18nProvider>
         <AuthProvider>
           <NotificationProvider>
           <BrowserRouter>
@@ -68,6 +71,7 @@ function App() {
                 <Route path="/orders/new" element={<CreateOrder />} />
                 <Route path="/orders" element={<MyOrders />} />
                 <Route path="/orders/:id" element={<OrderDetail />} />
+                <Route path="/assistant" element={<CustomerAIAssistant />} />
               </Route>
 
               {/* Admin & Inventory Manager Portal Protected Routes */}
@@ -99,6 +103,7 @@ function App() {
           </BrowserRouter>
         </NotificationProvider>
       </AuthProvider>
+    </I18nProvider>
     </ThemeProvider>
   </ErrorBoundary>
   );

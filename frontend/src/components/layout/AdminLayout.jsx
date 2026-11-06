@@ -2,17 +2,21 @@ import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
+import AnimatedRedWaves from '../ui/AnimatedRedWaves';
 
 export function AdminLayout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-bg text-t flex font-sans selection:bg-ac selection:text-white relative transition-colors">
+      {/* Subtle signature animated red wave background */}
+      <AnimatedRedWaves variant="corner" className="fixed" />
+
       {/* Subtle upper-right ambient red lighting */}
       <div
         className="fixed top-0 right-0 w-[650px] h-[500px] pointer-events-none rounded-full blur-[90px] z-0"
         style={{
-          background: 'radial-gradient(ellipse at 85% 5%, rgba(229, 9, 20, 0.14), transparent 50%)',
+          background: 'radial-gradient(ellipse at 85% 5%, rgba(198, 40, 40, 0.12), transparent 50%)',
         }}
         aria-hidden="true"
       />

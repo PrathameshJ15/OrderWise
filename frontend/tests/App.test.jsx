@@ -9,24 +9,22 @@ describe('Frontend Customer Portal App Tests', () => {
     render(<App />);
 
     expect(screen.getAllByText(/Order/i).length).toBeGreaterThan(0);
-    expect(screen.getByText(/Deterministic Order Allocation/i)).toBeInTheDocument();
-    expect(screen.getByText(/VORTEXA 3.0 • Problem Statement S-03/i)).toBeInTheDocument();
-    expect(screen.getByText(/Launch Operations Portal/i)).toBeInTheDocument();
-    expect(screen.getByText(/Go to 1-Click Login/i)).toBeInTheDocument();
+    expect(screen.getByText(/Allocate Smarter/i)).toBeInTheDocument();
+    expect(screen.getByText(/SUPPLY CHAIN ALLOCATION ENGINE/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/Launch Operations/i).length).toBeGreaterThan(0);
   });
 
-  it('navigates to Login page when Launch Operations Portal is clicked', async () => {
+  it('navigates to Login page when Launch Operations is clicked', async () => {
     localStorage.clear();
     render(<App />);
 
-    const launchButton = screen.getByText(/Launch Operations Portal/i);
-    fireEvent.click(launchButton);
+    const launchButtons = screen.getAllByText(/Launch Operations/i);
+    fireEvent.click(launchButtons[0]);
 
     await waitFor(() => {
       expect(screen.getByText(/Sign in to your account/i)).toBeInTheDocument();
       expect(screen.getByLabelText(/Email Address/i)).toBeInTheDocument();
       expect(screen.getByLabelText(/Password/i)).toBeInTheDocument();
-      expect(screen.getByText(/Quick Demo Accounts/i)).toBeInTheDocument();
     });
   });
 });

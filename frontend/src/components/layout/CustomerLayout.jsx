@@ -5,6 +5,7 @@ import {
   Package,
   PlusCircle,
   ClipboardList,
+  Bot,
   Menu,
   X,
 } from 'lucide-react';
@@ -12,6 +13,8 @@ import NotificationBell from '../ui/NotificationBell';
 import UserProfileMenu from './UserProfileMenu';
 import Breadcrumbs from './Breadcrumbs';
 import ThemeToggle from '../ui/ThemeToggle';
+import LanguageSwitcher from '../ui/LanguageSwitcher';
+import AnimatedRedWaves from '../ui/AnimatedRedWaves';
 
 export function CustomerLayout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -40,15 +43,19 @@ export function CustomerLayout() {
     { name: 'Product Catalog', to: '/products', icon: Package },
     { name: 'Create Order', to: '/orders/new', icon: PlusCircle },
     { name: 'My Orders', to: '/orders', icon: ClipboardList },
+    { name: 'AI Assistant', to: '/assistant', icon: Bot },
   ];
 
   return (
     <div className="min-h-screen bg-bg text-t flex flex-col font-sans selection:bg-ac selection:text-white relative transition-colors">
+      {/* Subtle signature animated red wave background */}
+      <AnimatedRedWaves variant="corner" className="fixed" />
+
       {/* Subtle ambient lighting */}
       <div
         className="fixed top-0 right-0 w-[650px] h-[500px] pointer-events-none rounded-full blur-[90px] z-0"
         style={{
-          background: 'radial-gradient(ellipse at 85% 5%, rgba(229, 9, 20, 0.14), transparent 50%)',
+          background: 'radial-gradient(ellipse at 85% 5%, rgba(198, 40, 40, 0.12), transparent 50%)',
         }}
         aria-hidden="true"
       />
@@ -96,6 +103,7 @@ export function CustomerLayout() {
 
             {/* Right Controls */}
             <div className="flex items-center space-x-3">
+              <LanguageSwitcher variant="compact" className="hidden sm:inline-block" />
               <ThemeToggle variant="segmented" className="hidden sm:inline-flex" />
               <ThemeToggle variant="button" className="sm:hidden" />
               <NotificationBell />
@@ -117,6 +125,10 @@ export function CustomerLayout() {
         {/* Mobile Navigation Drawer */}
         {mobileMenuOpen && (
           <div className="md:hidden border-t border-bd bg-s px-4 py-3 space-y-1">
+            <div className="pt-1 pb-2 border-b border-bd/40 flex items-center justify-between">
+              <span className="text-[12px] font-mono text-t2">Language</span>
+              <LanguageSwitcher variant="compact" />
+            </div>
             {navItems.map((item) => {
               const Icon = item.icon;
               return (

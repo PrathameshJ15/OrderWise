@@ -17,12 +17,7 @@
           var params = new URLSearchParams(window.location.search);
           var queryTheme = params.get('theme');
           var saved = queryTheme || localStorage.getItem('orderwise_theme');
-          var theme = 'dark';
-          if (saved === 'light' || saved === 'dark') {
-            theme = saved;
-          } else if (saved === 'system') {
-            theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-          }
+          var theme = (saved === 'light' || saved === 'dark') ? saved : 'dark';
           document.documentElement.setAttribute('data-theme', theme);
         } catch (e) {}
       })();

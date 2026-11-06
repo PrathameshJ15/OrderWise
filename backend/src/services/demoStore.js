@@ -6,17 +6,39 @@
 class DemoStore {
   constructor() {
     this.products = [
-      { id: 1, sku: 'PUMP-X100', name: 'Industrial Pump Model X', description: 'High pressure centrifugal pump', unit: 'units', active: true, created_at: new Date().toISOString() },
-      { id: 2, sku: 'VALVE-B200', name: 'Safety Valve Type B', description: 'Brass pressure release safety valve', unit: 'units', active: true, created_at: new Date().toISOString() },
-      { id: 3, sku: 'GAUGE-P300', name: 'Pressure Gauge Pro', description: 'High precision analog pressure gauge', unit: 'units', active: true, created_at: new Date().toISOString() },
-      { id: 4, sku: 'CTRL-U400', name: 'Control Panel Unit', description: 'Digital controller unit', unit: 'units', active: true, created_at: new Date().toISOString() },
+      { id: 1, sku: 'PLC-001', name: 'PLC Control Module', category: 'Industrial Automation', unit: 'Piece', price: '850.00', description: 'Modular programmable logic controller with real-time fieldbus interface', active: true, created_at: new Date().toISOString() },
+      { id: 2, sku: 'IPS-002', name: 'Industrial Pressure Sensor', category: 'Sensors', unit: 'Piece', price: '320.00', description: 'High precision analog pressure sensor with 4-20mA output (Scarce)', active: true, created_at: new Date().toISOString() },
+      { id: 3, sku: 'SVM-003', name: 'Servo Motor', category: 'Motors & Drives', unit: 'Piece', price: '550.00', description: 'High-torque AC brushless servo motor with optical encoder feedback', active: true, created_at: new Date().toISOString() },
+      { id: 4, sku: 'VFD-004', name: 'Variable Frequency Drive', category: 'Motors & Drives', unit: 'Piece', price: '720.00', description: 'Three-phase variable speed drive with regenerative braking support', active: true, created_at: new Date().toISOString() },
+      { id: 5, sku: 'PRS-005', name: 'Proximity Sensor', category: 'Sensors', unit: 'Piece', price: '85.00', description: 'Inductive proximity sensor, shielded stainless steel housing', active: true, created_at: new Date().toISOString() },
+      { id: 6, sku: 'TMS-006', name: 'Temperature Sensor', category: 'Sensors', unit: 'Piece', price: '95.00', description: 'RTD Pt100 industrial temperature probe with transmitter head', active: true, created_at: new Date().toISOString() },
+      { id: 7, sku: 'PSU-007', name: 'Industrial Power Supply', category: 'Electrical Components', unit: 'Piece', price: '210.00', description: 'DIN-rail mounted 24VDC 20A regulated industrial switching power supply', active: true, created_at: new Date().toISOString() },
+      { id: 8, sku: 'PCV-008', name: 'Pneumatic Control Valve', category: 'Pneumatic Components', unit: 'Piece', price: '175.00', description: '5/2 way solenoid-actuated directional pneumatic spool valve', active: true, created_at: new Date().toISOString() },
+      { id: 9, sku: 'ICT-009', name: 'Industrial Contactor', category: 'Electrical Components', unit: 'Piece', price: '65.00', description: '3-pole motor switching contactor rated for 32A AC-3 duty', active: true, created_at: new Date().toISOString() },
+      { id: 10, sku: 'PBB-010', name: 'Precision Ball Bearing', category: 'Mechanical Components', unit: 'Piece', price: '45.00', description: 'Deep groove precision radial ball bearing with synthetic grease seal', active: true, created_at: new Date().toISOString() },
+      { id: 11, sku: 'HPA-011', name: 'Hydraulic Pump Assembly', category: 'Hydraulic Components', unit: 'Piece', price: '1250.00', description: 'Variable displacement axial piston hydraulic pump assembly', active: true, created_at: new Date().toISOString() },
+      { id: 12, sku: 'PNC-012', name: 'Pneumatic Cylinder', category: 'Pneumatic Components', unit: 'Piece', price: '160.00', description: 'Double-acting ISO 15552 standard pneumatic cylinder 63mm bore', active: true, created_at: new Date().toISOString() },
+      { id: 13, sku: 'ICB-013', name: 'Industrial Circuit Board', category: 'Electronic Components', unit: 'Piece', price: '390.00', description: 'Multi-layer conformal coated processing board with surge protection', active: true, created_at: new Date().toISOString() },
+      { id: 14, sku: 'GBA-014', name: 'Gearbox Assembly', category: 'Mechanical Components', unit: 'Piece', price: '980.00', description: 'Heavy-duty helical planetary reduction gearbox 15:1 ratio', active: true, created_at: new Date().toISOString() },
+      { id: 15, sku: 'ICF-015', name: 'Industrial Cooling Fan', category: 'Electrical Components', unit: 'Piece', price: '115.00', description: 'Brushless IP68 high-airflow cabinet cooling blower fan', active: true, created_at: new Date().toISOString() },
     ];
 
     this.inventory = [
-      { product_id: 1, sku: 'PUMP-X100', product_name: 'Industrial Pump Model X', on_hand_quantity: 150, reserved_quantity: 0, available_quantity: 150, safety_stock: 20, reorder_point: 40, version: 1, updated_at: new Date().toISOString() },
-      { product_id: 2, sku: 'VALVE-B200', product_name: 'Safety Valve Type B', on_hand_quantity: 80, reserved_quantity: 0, available_quantity: 80, safety_stock: 15, reorder_point: 30, version: 1, updated_at: new Date().toISOString() },
-      { product_id: 3, sku: 'GAUGE-P300', product_name: 'Pressure Gauge Pro', on_hand_quantity: 40, reserved_quantity: 0, available_quantity: 40, safety_stock: 15, reorder_point: 70, version: 1, updated_at: new Date().toISOString() },
-      { product_id: 4, sku: 'CTRL-U400', product_name: 'Control Panel Unit', on_hand_quantity: 200, reserved_quantity: 0, available_quantity: 200, safety_stock: 25, reorder_point: 50, version: 1, updated_at: new Date().toISOString() },
+      { product_id: 1, sku: 'PLC-001', product_name: 'PLC Control Module', on_hand_quantity: 120, reserved_quantity: 0, available_quantity: 120, safety_stock: 15, reorder_point: 25, version: 1, updated_at: new Date().toISOString() },
+      { product_id: 2, sku: 'IPS-002', product_name: 'Industrial Pressure Sensor', on_hand_quantity: 40, reserved_quantity: 0, available_quantity: 40, safety_stock: 10, reorder_point: 20, version: 1, updated_at: new Date().toISOString() },
+      { product_id: 3, sku: 'SVM-003', product_name: 'Servo Motor', on_hand_quantity: 90, reserved_quantity: 0, available_quantity: 90, safety_stock: 15, reorder_point: 30, version: 1, updated_at: new Date().toISOString() },
+      { product_id: 4, sku: 'VFD-004', product_name: 'Variable Frequency Drive', on_hand_quantity: 75, reserved_quantity: 0, available_quantity: 75, safety_stock: 10, reorder_point: 20, version: 1, updated_at: new Date().toISOString() },
+      { product_id: 5, sku: 'PRS-005', product_name: 'Proximity Sensor', on_hand_quantity: 180, reserved_quantity: 0, available_quantity: 180, safety_stock: 25, reorder_point: 50, version: 1, updated_at: new Date().toISOString() },
+      { product_id: 6, sku: 'TMS-006', product_name: 'Temperature Sensor', on_hand_quantity: 160, reserved_quantity: 0, available_quantity: 160, safety_stock: 20, reorder_point: 40, version: 1, updated_at: new Date().toISOString() },
+      { product_id: 7, sku: 'PSU-007', product_name: 'Industrial Power Supply', on_hand_quantity: 110, reserved_quantity: 0, available_quantity: 110, safety_stock: 15, reorder_point: 30, version: 1, updated_at: new Date().toISOString() },
+      { product_id: 8, sku: 'PCV-008', product_name: 'Pneumatic Control Valve', on_hand_quantity: 85, reserved_quantity: 0, available_quantity: 85, safety_stock: 12, reorder_point: 25, version: 1, updated_at: new Date().toISOString() },
+      { product_id: 9, sku: 'ICT-009', product_name: 'Industrial Contactor', on_hand_quantity: 220, reserved_quantity: 0, available_quantity: 220, safety_stock: 30, reorder_point: 60, version: 1, updated_at: new Date().toISOString() },
+      { product_id: 10, sku: 'PBB-010', product_name: 'Precision Ball Bearing', on_hand_quantity: 350, reserved_quantity: 0, available_quantity: 350, safety_stock: 50, reorder_point: 100, version: 1, updated_at: new Date().toISOString() },
+      { product_id: 11, sku: 'HPA-011', product_name: 'Hydraulic Pump Assembly', on_hand_quantity: 55, reserved_quantity: 0, available_quantity: 55, safety_stock: 8, reorder_point: 15, version: 1, updated_at: new Date().toISOString() },
+      { product_id: 12, sku: 'PNC-012', product_name: 'Pneumatic Cylinder', on_hand_quantity: 130, reserved_quantity: 0, available_quantity: 130, safety_stock: 18, reorder_point: 35, version: 1, updated_at: new Date().toISOString() },
+      { product_id: 13, sku: 'ICB-013', product_name: 'Industrial Circuit Board', on_hand_quantity: 95, reserved_quantity: 0, available_quantity: 95, safety_stock: 12, reorder_point: 25, version: 1, updated_at: new Date().toISOString() },
+      { product_id: 14, sku: 'GBA-014', product_name: 'Gearbox Assembly', on_hand_quantity: 60, reserved_quantity: 0, available_quantity: 60, safety_stock: 10, reorder_point: 20, version: 1, updated_at: new Date().toISOString() },
+      { product_id: 15, sku: 'ICF-015', product_name: 'Industrial Cooling Fan', on_hand_quantity: 140, reserved_quantity: 0, available_quantity: 140, safety_stock: 20, reorder_point: 40, version: 1, updated_at: new Date().toISOString() },
     ];
 
     this.movements = [

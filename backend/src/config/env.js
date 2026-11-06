@@ -1,6 +1,9 @@
+const path = require('path');
 const dotenv = require('dotenv');
 const { z } = require('zod');
 
+// Always resolve backend/.env relative to this file, then check process.cwd() as fallback
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 dotenv.config();
 
 const INSECURE_JWT_SECRETS = [

@@ -204,8 +204,7 @@ export default function Alerts() {
             Supply Alerts <span className="text-ac">&amp;</span> Early Warnings
           </h1>
           <p className="text-[14px] text-t2 font-sans max-w-2xl mt-0.5 leading-relaxed">
-            Proactive monitoring for low stock, potential stockouts, delayed supplier shipments, and orders at risk
-            with deduplication and actionable mitigation guidance.
+            Proactive monitoring for inventory shortages, delayed shipments, and unfulfilled critical orders.
           </p>
         </div>
 

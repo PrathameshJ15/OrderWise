@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { Lock, Mail, AlertTriangle, ArrowRight, RefreshCw, KeyRound } from 'lucide-react';
+import AnimatedRedWaves from '../components/ui/AnimatedRedWaves';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -47,35 +48,23 @@ export default function Login() {
     }
   };
 
-  const handleQuickLogin = async (demoEmail, demoPassword) => {
-    setEmail(demoEmail);
-    setPassword(demoPassword);
-    setLocalError(null);
-    setSubmitting(true);
-
-    try {
-      const user = await login(demoEmail, demoPassword);
-      navigate(getDestination(user), { replace: true });
-    } catch (err) {
-      setLocalError(err?.error?.message || err?.message || 'Authentication failed');
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  const fillCredentials = (demoEmail, demoPassword) => {
-    setEmail(demoEmail);
-    setPassword(demoPassword);
+  const fillCredentials = (fillEmail, fillPassword) => {
+    setEmail(fillEmail);
+    setPassword(fillPassword);
     setLocalError(null);
   };
+
+
 
   return (
     <div className="min-h-[85vh] flex flex-col justify-center items-center px-4 font-sans relative">
+      {/* Signature animated red wave background in upper-right corner */}
+      <AnimatedRedWaves variant="corner" className="fixed" />
       {/* Subtle upper-right ambient red lighting */}
       <div
         className="fixed top-0 right-0 w-[500px] h-[400px] pointer-events-none rounded-full blur-[120px] -z-0"
         style={{
-          background: 'radial-gradient(ellipse at 85% 5%, rgba(229, 9, 20, 0.14), transparent 50%)',
+          background: 'radial-gradient(ellipse at 85% 5%, rgba(198, 40, 40, 0.12), transparent 50%)',
         }}
         aria-hidden="true"
       />
@@ -121,7 +110,9 @@ export default function Login() {
               <Mail className="absolute left-3.5 top-3.5 h-4 w-4 text-t2" />
               <input
                 id="email"
+                name="email"
                 type="email"
+                autoComplete="username email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -139,7 +130,9 @@ export default function Login() {
               <KeyRound className="absolute left-3.5 top-3.5 h-4 w-4 text-t2" />
               <input
                 id="password"
+                name="password"
                 type="password"
+                autoComplete="current-password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -168,22 +161,23 @@ export default function Login() {
           </button>
         </form>
 
-        {/* Demo Fast-Fill & 1-Click Access Shortcuts */}
-        <div className="mt-6 pt-6 border-t border-bd">
-          <div className="flex items-center justify-between mb-2.5">
-            <span className="block text-[12px] font-mono text-t2">
-              Quick Demo Accounts
+        {/* Admin, Customer & Manager Login Information */}
+        <div className="mt-6 pt-5 border-t border-bd space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="block text-[12px] font-mono text-t2 font-semibold uppercase tracking-wider">
+              Login Roles &amp; Credentials
             </span>
-            <span className="text-[12px] font-mono text-ac font-medium">
-              1-Click fast login
+            <span className="text-[11px] font-mono text-ac font-medium">
+              Click to autofill
             </span>
           </div>
+
           <div className="grid grid-cols-3 gap-2 text-[12px] font-mono">
             <button
               type="button"
               disabled={submitting}
               onClick={() => fillCredentials('admin@orderwise.com', 'Admin123!')}
-              className="px-2.5 py-2 border border-bd bg-s2 hover:border-ac text-t rounded-pill text-center font-medium truncate transition-colors disabled:opacity-50"
+              className="px-2.5 py-2 border border-bd bg-s2 hover:border-ac text-t rounded-pill text-center font-semibold truncate transition-colors disabled:opacity-50 hover:bg-ac/10"
             >
               Admin
             </button>
@@ -191,7 +185,7 @@ export default function Login() {
               type="button"
               disabled={submitting}
               onClick={() => fillCredentials('manager@orderwise.com', 'Manager123!')}
-              className="px-2.5 py-2 border border-bd bg-s2 hover:border-ac text-t rounded-pill text-center font-medium truncate transition-colors disabled:opacity-50"
+              className="px-2.5 py-2 border border-bd bg-s2 hover:border-ac text-t rounded-pill text-center font-semibold truncate transition-colors disabled:opacity-50 hover:bg-ac/10"
             >
               Manager
             </button>
@@ -199,7 +193,7 @@ export default function Login() {
               type="button"
               disabled={submitting}
               onClick={() => fillCredentials('alice@demo.com', 'Alice123!')}
-              className="px-2.5 py-2 border border-bd bg-s2 hover:border-ac text-t rounded-pill text-center font-medium truncate transition-colors disabled:opacity-50"
+              className="px-2.5 py-2 border border-bd bg-s2 hover:border-ac text-t rounded-pill text-center font-semibold truncate transition-colors disabled:opacity-50 hover:bg-ac/10"
             >
               Customer
             </button>

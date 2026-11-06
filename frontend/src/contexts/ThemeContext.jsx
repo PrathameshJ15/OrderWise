@@ -1,9 +1,9 @@
-import React, { createContext, useContext, useEffect, useState, useMemo } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
 const ThemeContext = createContext(null);
 
 export function ThemeProvider({ children }) {
-  const [themeMode, setThemeModeState] = useState(() => {
+  const [theme, setThemeState] = useState(() => {
     try {
       if (typeof window !== 'undefined' && window.location) {
         const q = new URLSearchParams(window.location.search).get('theme');
@@ -12,81 +12,46 @@ export function ThemeProvider({ children }) {
         }
       }
       const saved = localStorage.getItem('orderwise_theme');
-      if (saved === 'light' || saved === 'dark' || saved === 'system') {
+      if (saved === 'light' || saved === 'dark') {
         return saved;
       }
     } catch {
       // ignore
     }
-    return 'dark'; // default to dark
+    // Default to dark mode for first-time users as required
+    return 'dark';
   });
 
-  const [systemIsDark, setSystemIsDark] = useState(() => {
-    if (typeof window !== 'undefined' && window.matchMedia) {
-      return window.matchMedia('(prefers-color-scheme: dark)').matches;
-    }
-    return true;
-  });
-
-  useEffect(() => {
-    if (typeof window === 'undefined' || !window.matchMedia) return;
-
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleChange = (e) => {
-      setSystemIsDark(e.matches);
-    };
-
-    if (mediaQuery.addEventListener) {
-      mediaQuery.addEventListener('change', handleChange);
-    } else {
-      mediaQuery.addListener(handleChange);
-    }
-
-    return () => {
-      if (mediaQuery.removeEventListener) {
-        mediaQuery.removeEventListener('change', handleChange);
-      } else {
-        mediaQuery.removeListener(handleChange);
-      }
-    };
-  }, []);
-
-  const theme = useMemo(() => {
-    if (themeMode === 'light') return 'light';
-    if (themeMode === 'dark') return 'dark';
-    return systemIsDark ? 'dark' : 'light';
-  }, [themeMode, systemIsDark]);
-
+  // Apply data-theme attribute on root HTML element
   useEffect(() => {
     if (typeof document !== 'undefined') {
       document.documentElement.setAttribute('data-theme', theme);
     }
   }, [theme]);
 
-  const setThemeMode = (mode) => {
-    setThemeModeState(mode);
+  const setTheme = (mode) => {
+    const nextTheme = mode === 'light' ? 'light' : 'dark';
+    setThemeState(nextTheme);
     try {
-      localStorage.setItem('orderwise_theme', mode);
+      localStorage.setItem('orderwise_theme', nextTheme);
     } catch {
       // ignore
     }
   };
 
   const toggleTheme = () => {
-    if (theme === 'dark') {
-      setThemeMode('light');
-    } else {
-      setThemeMode('dark');
-    }
+    setTheme(theme === 'dark' ? 'light' : 'dark');
   };
 
   return (
     <ThemeContext.Provider
       value={{
         theme,
-        themeMode,
-        setThemeMode,
+        themeMode: theme, // backward-compatibility alias
+        setTheme,
+        setThemeMode: setTheme, // backward-compatibility alias
         toggleTheme,
+        isDark: theme === 'dark',
       }}
     >
       {children}
@@ -100,8 +65,10 @@ export function useTheme() {
     return {
       theme: 'dark',
       themeMode: 'dark',
+      setTheme: () => {},
       setThemeMode: () => {},
       toggleTheme: () => {},
+      isDark: true,
     };
   }
   return context;

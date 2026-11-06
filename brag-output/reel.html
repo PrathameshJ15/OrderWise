@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OrderWise — 25s Instagram Reel (1080x1920)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #040406;
+      color: #f2f2f2;
+      font-family: 'Inter', -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      overflow-x: hidden;
+    }
+
+    /* Container for the 9:16 Vertical Reel */
+    .reel-container {
+      position: relative;
+      width: 100%;
+      max-width: 440px;
+      aspect-ratio: 9 / 16;
+      height: 820px;
+      max-height: 88vh;
+      background: #08090D;
+      border-radius: 28px;
+      border: 2px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.95), 0 0 50px -10px rgba(225, 29, 50, 0.25);
+      overflow: hidden;
+      user-select: none;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Animated Flowing Red Wave Mesh Canvas in Background */
+    .wave-bg {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.85;
+    }
+
+    /* Atmospheric Burgundy / Crimson Radial Glow */
+    .ambient-halo {
+      position: absolute;
+      top: 15%;
+      right: -20%;
+      width: 380px;
+      height: 380px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(225, 29, 50, 0.22) 0%, rgba(69, 10, 22, 0.25) 45%, transparent 75%);
+      filter: blur(50px);
+      pointer-events: none;
+      z-index: 2;
+    }
+    .ambient-halo-2 {
+      position: absolute;
+      bottom: 10%;
+      left: -20%;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(225, 29, 50, 0.18) 0%, rgba(69, 10, 22, 0.15) 50%, transparent 75%);
+      filter: blur(60px);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* Reel Top Bar */
+    .reel-top-bar {
+      position: absolute;
+      top: 1.25rem;
+      left: 1.25rem;
+      right: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 20;
+    }
+    .brand-mark {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .logo-badge {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: #C62828;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Manrope', sans-serif;
+      font-weight: 900;
+      font-size: 14px;
+      color: #fff;
+      box-shadow: 0 0 16px rgba(198, 40, 40, 0.6);
+    }
+    .brand-text {
+      font-family: 'Manrope', sans-serif;
+      font-weight: 800;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+    }
+    .brand-text span { color: #E53935; }
+    .tag-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: #E53935;
+      background: rgba(198, 40, 40, 0.12);
+      border: 1px solid rgba(198, 40, 40, 0.3);
+      padding: 0.2rem 0.5rem;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Scene Layers */
+    .scene-viewport {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 4.5rem 1.5rem 3.5rem;
+    }
+
+    .reel-scene {
+      position: absolute;
+      inset: 4rem 1.5rem 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(12px) scale(0.97);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reel-scene.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0) scale(1);
+    }
+
+    /* Scene 1: Scarcity Hook */
+    .hook-headline {
+      font-family: 'Manrope', sans-serif;
+      font-size: 2.1rem;
+      font-weight: 900;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.5rem;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+    }
+    .hook-headline .num-white { color: #fff; }
+    .hook-headline .num-red { color: #E53935; text-shadow: 0 0 25px rgba(229, 57, 53, 0.6); }
+
+    .sku-card {
+      background: rgba(22, 22, 22, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 14px;
+      padding: 1.25rem;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.6);
+      margin-bottom: 1rem;
+    }
+    .sku-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+    }
+    .sku-code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: #A1A1AA;
+    }
+    .stock-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #FF7A7A;
+      background: rgba(255, 122, 122, 0.12);
+      border: 1px solid rgba(255, 122, 122, 0.3);
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+    }
+    .orders-competing {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .order-mini-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5rem 0.75rem;
+      background: rgba(28, 28, 28, 0.8);
+      border-radius: 8px;
+      font-size: 0.8rem;
+    }
+
+    /* Scene 2: Live Queue Bars */
+    .queue-title {
+      font-family: 'Manrope', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      line-height: 1.2;
+    }
+    .queue-sub {
+      font-size: 0.85rem;
+      color: #A1A1AA;
+      margin-bottom: 1.25rem;
+    }
+    .queue-item {
+      background: rgba(22, 22, 22, 0.9);
+      border: 1px solid #2A2A2A;
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+    }
+    .progress-track {
+      height: 6px;
+      background: #252525;
+      border-radius: 999px;
+      margin-top: 0.6rem;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.8s ease-out;
+    }
+
+    /* Scene 3: AI Modal */
+    .ai-card {
+      background: rgba(22, 22, 22, 0.95);
+      border: 1px solid rgba(198, 40, 40, 0.35);
+      border-radius: 16px;
+      padding: 1.25rem;
+      box-shadow: 0 0 35px rgba(198, 40, 40, 0.2);
+    }
+    .ai-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: #E53935;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+    .btn-approve {
+      width: 100%;
+      margin-top: 1rem;
+      background: #C62828;
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.9rem;
+      padding: 0.75rem;
+      border-radius: 10px;
+      border: none;
+      box-shadow: 0 0 20px rgba(198, 40, 40, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    /* Scene 4: Diff Cards */
+    .diff-box {
+      background: rgba(22, 22, 22, 0.9);
+      border: 1px solid #2A2A2A;
+      border-radius: 14px;
+      padding: 1.25rem;
+    }
+    .diff-pill-green {
+      color: #4ADE80;
+      background: rgba(74, 222, 128, 0.12);
+      border: 1px solid rgba(74, 222, 128, 0.3);
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+    }
+
+    /* Scene 5: Outro */
+    .outro-wrap {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.25rem;
+    }
+    .outro-title {
+      font-family: 'Manrope', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+    .outro-title span { color: #E53935; }
+    .cta-pill {
+      background: #C62828;
+      color: #fff;
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 0.85rem 1.75rem;
+      border-radius: 999px;
+      box-shadow: 0 0 30px rgba(198, 40, 40, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* Bottom Caption Overlay */
+    .reel-bottom-bar {
+      position: absolute;
+      bottom: 1.25rem;
+      left: 1.25rem;
+      right: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 20;
+    }
+    .user-tag {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #f2f2f2;
+    }
+
+    /* External Desktop Controls */
+    .controls-deck {
+      width: 100%;
+      max-width: 440px;
+      margin-top: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: #121215;
+      padding: 0.75rem 1.25rem;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .ctrl-btn {
+      background: #27272a;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #fff;
+      padding: 0.5rem 0.9rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.8rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .ctrl-btn:hover { background: #3f3f46; }
+    .ctrl-btn.record {
+      background: rgba(225, 29, 50, 0.18);
+      border-color: rgba(225, 29, 50, 0.4);
+      color: #FF7A7A;
+    }
+    .ctrl-slider {
+      flex: 1;
+      accent-color: #C62828;
+      height: 6px;
+      cursor: pointer;
+    }
+    .ctrl-time {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: #A1A1AA;
+      min-width: 80px;
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Instagram Reel Frame (9:16 Vertical) -->
+  <div class="reel-container" id="reel-viewport">
+    <!-- Atmospheric Ambient Halos -->
+    <div class="ambient-halo"></div>
+    <div class="ambient-halo-2"></div>
+
+    <!-- Animated Red Wave Mesh Canvas -->
+    <svg class="wave-bg" viewBox="0 0 1080 1920" fill="none" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="reelWaveGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#450A16" stop-opacity="0.3" />
+          <stop offset="45%" stop-color="#E11D32" stop-opacity="0.85" />
+          <stop offset="75%" stop-color="#C62828" stop-opacity="0.9" />
+          <stop offset="100%" stop-color="#450A16" stop-opacity="0.1" />
+        </linearGradient>
+      </defs>
+      <!-- Top Right Mesh Curves -->
+      <path d="M 400,-50 C 650,250 850,350 1120,380" stroke="url(#reelWaveGrad)" stroke-width="2.2" stroke-opacity="0.8" />
+      <path d="M 460,-30 C 690,280 890,380 1140,420" stroke="url(#reelWaveGrad)" stroke-width="1.8" stroke-opacity="0.65" />
+      <path d="M 530,-10 C 740,310 930,420 1160,460" stroke="url(#reelWaveGrad)" stroke-width="1.4" stroke-opacity="0.5" />
+      <path d="M 610,15 C 800,350 980,460 1180,510" stroke="url(#reelWaveGrad)" stroke-width="1.2" stroke-opacity="0.4" />
+      
+      <!-- Bottom Left Sweeping Ribbon -->
+      <path d="M -80,1650 C 250,1520 550,1580 950,1720" stroke="url(#reelWaveGrad)" stroke-width="2.5" stroke-opacity="0.75" />
+      <path d="M -60,1690 C 280,1560 580,1620 980,1760" stroke="url(#reelWaveGrad)" stroke-width="1.8" stroke-opacity="0.6" />
+      <path d="M -40,1730 C 310,1600 610,1660 1010,1800" stroke="url(#reelWaveGrad)" stroke-width="1.4" stroke-opacity="0.45" />
+    </svg>
+
+    <!-- Header Overlay -->
+    <div class="reel-top-bar">
+      <div class="brand-mark">
+        <div class="logo-badge">O</div>
+        <span class="brand-text">Order<span>Wise</span></span>
+      </div>
+      <span class="tag-badge">Supply Chain Engine</span>
+    </div>
+
+    <!-- Scene Viewport -->
+    <div class="scene-viewport">
+      <!-- SCENE 1: The Scarcity Hook (0.0s – 4.5s) -->
+      <div class="reel-scene" id="scene-1">
+        <h1 class="hook-headline">
+          <span class="num-white">40 Units in Stock.</span><br>
+          <span class="num-red">75 Units Ordered.</span><br>
+          <span style="font-size: 1.6rem; color: #A1A1AA;">Who gets fulfilled?</span>
+        </h1>
+
+        <div class="sku-card">
+          <div class="sku-header">
+            <div>
+              <div style="font-weight: 700; font-size: 0.95rem;">Pressure Gauge Pro</div>
+              <div class="sku-code">SKU: GAUGE-P300</div>
+            </div>
+            <span class="stock-pill">40 ON HAND</span>
+          </div>
+
+          <div class="orders-competing">
+            <div class="order-mini-row">
+              <span>Charlie (Refinery Plant)</span>
+              <span style="font-family: 'JetBrains Mono'; font-weight: 700; color: #fff;">30 Units [HIGH]</span>
+            </div>
+            <div class="order-mini-row">
+              <span>Alice (Petrochemical Corp)</span>
+              <span style="font-family: 'JetBrains Mono'; font-weight: 700; color: #fff;">25 Units [HIGH]</span>
+            </div>
+            <div class="order-mini-row">
+              <span>Bob (Standard Pipeline)</span>
+              <span style="font-family: 'JetBrains Mono'; font-weight: 700; color: #fff;">20 Units [MED]</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCENE 2: Deterministic Business Rules (4.5s – 9.5s) -->
+      <div class="reel-scene" id="scene-2">
+        <div class="queue-title">Deterministic Allocation</div>
+        <div class="queue-sub">No spreadsheet chaos. Strict mathematical business rules.</div>
+
+        <div class="queue-item">
+          <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600;">
+            <span>Charlie (HIGH)</span>
+            <span style="color: #4ADE80; font-family: 'JetBrains Mono'; font-weight: 700;">30 / 30 FULFILLED</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" style="width: 100%; background: #4ADE80;"></div>
+          </div>
+        </div>
+
+        <div class="queue-item">
+          <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600;">
+            <span>Alice (HIGH)</span>
+            <span style="color: #FF7A7A; font-family: 'JetBrains Mono'; font-weight: 700;">0 / 25 DEFERRED</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" style="width: 0%; background: #FF7A7A;"></div>
+          </div>
+          <div style="font-size: 0.7rem; color: #A1A1AA; margin-top: 0.3rem;">Remaining stock (10) &lt; Min acceptable (15)</div>
+        </div>
+
+        <div class="queue-item">
+          <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600;">
+            <span>Bob (MEDIUM)</span>
+            <span style="color: #FF7A7A; font-family: 'JetBrains Mono'; font-weight: 700;">0 / 20 DEFERRED</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" style="width: 0%; background: #FF7A7A;"></div>
+          </div>
+          <div style="font-size: 0.7rem; color: #A1A1AA; margin-top: 0.3rem;">0 units available • Partial not permitted</div>
+        </div>
+      </div>
+
+      <!-- SCENE 3: Governed AI Assistant (9.5s – 14.5s) -->
+      <div class="reel-scene" id="scene-3">
+        <div class="queue-title">Governed AI Co-Pilot</div>
+        <div class="queue-sub">AI recommends. Rules validate. Humans approve.</div>
+
+        <div class="ai-card">
+          <div class="ai-badge">⚡ GROQ LLAMA-3 INTELLIGENCE</div>
+          <div style="font-weight: 700; font-size: 1rem; margin-bottom: 0.4rem;">Priority Recommendation</div>
+          <div style="font-size: 0.8rem; color: #D4D4D8; line-height: 1.5; margin-bottom: 0.75rem;">
+            "Emergency refinery shutdown risk flagged in client business notes. Recommending elevation to CRITICAL."
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.75rem; font-family: 'JetBrains Mono'; color: #A1A1AA;">
+            <span>Confidence: 96%</span>
+            <span style="color: #E53935; font-weight: 700;">CRITICAL ELEVATION</span>
+          </div>
+          <button class="btn-approve" id="approve-btn">
+            <span>🔒 Authorized Manager Approve</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- SCENE 4: What-If Simulation (14.5s – 19.5s) -->
+      <div class="reel-scene" id="scene-4">
+        <div class="queue-title">Simulation Lab</div>
+        <div class="queue-sub">Test replenishment scenarios without altering live inventory.</div>
+
+        <div class="diff-box">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+            <span style="font-weight: 700; font-size: 0.9rem;">Scenario: +50 Stock Inflow</span>
+            <span class="diff-pill-green">+25 UNITS ALLOCATED</span>
+          </div>
+          <div style="font-size: 0.8rem; color: #A1A1AA; margin-bottom: 0.5rem;">
+            Alice order converts immediately from <b style="color: #FF7A7A;">Deferred</b> to <b style="color: #4ADE80;">Fulfilled</b>.
+          </div>
+          <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #2A2A2A; display: flex; justify-content: space-between; font-family: 'JetBrains Mono'; font-size: 0.8rem;">
+            <span>Revenue Protected:</span>
+            <span style="color: #4ADE80; font-weight: 700;">+$18,400</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCENE 5: Finale (19.5s – 25.0s) -->
+      <div class="reel-scene" id="scene-5">
+        <div class="outro-wrap">
+          <div class="logo-badge" style="width: 54px; height: 54px; font-size: 24px; border-radius: 14px;">O</div>
+          <h2 class="outro-title">Allocate Smarter.<br><span>Fulfill What Matters.</span></h2>
+          <p style="font-size: 0.9rem; color: #A1A1AA; max-width: 280px; line-height: 1.5;">
+            The explainable supply chain allocation engine.
+          </p>
+          <div class="cta-pill">Explore OrderWise →</div>
+          <span style="font-family: 'JetBrains Mono'; font-size: 0.8rem; color: #A1A1AA;">orderwise.com</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Caption Overlay -->
+    <div class="reel-bottom-bar">
+      <span class="user-tag">@OrderWise</span>
+      <span style="font-size: 0.75rem; color: #A1A1AA;">25s Launch Reel</span>
+    </div>
+  </div>
+
+  <!-- External Desktop Controls -->
+  <div class="controls-deck">
+    <button class="ctrl-btn" id="play-btn">▶ Play</button>
+    <button class="ctrl-btn" id="sound-btn">🔊 Sound</button>
+    <input type="range" class="ctrl-slider" id="scrubber" min="0" max="25" step="0.05" value="0">
+    <div class="ctrl-time" id="time-display">00:00 / 00:25</div>
+    <button class="ctrl-btn record" id="record-btn">⏺ Record MP4</button>
+  </div>
+
+  <script>
+    const DURATION = 25.0;
+    let currentTime = 0.0;
+    let isPlaying = false;
+    let lastTimestamp = 0;
+    let audioCtx = null;
+    let soundEnabled = true;
+
+    const playBtn = document.getElementById('play-btn');
+    const soundBtn = document.getElementById('sound-btn');
+    const scrubber = document.getElementById('scrubber');
+    const timeDisplay = document.getElementById('time-display');
+    const recordBtn = document.getElementById('record-btn');
+
+    const scene1 = document.getElementById('scene-1');
+    const scene2 = document.getElementById('scene-2');
+    const scene3 = document.getElementById('scene-3');
+    const scene4 = document.getElementById('scene-4');
+    const scene5 = document.getElementById('scene-5');
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function playTone(freq, type, duration, gainVal = 0.15) {
+      if (!soundEnabled || !audioCtx) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(gainVal, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch(e) {}
+    }
+
+    let lastBeat = -1;
+
+    function render(time) {
+      // Scene Activations
+      scene1.classList.toggle('active', time >= 0.0 && time < 4.5);
+      scene2.classList.toggle('active', time >= 4.5 && time < 9.5);
+      scene3.classList.toggle('active', time >= 9.5 && time < 14.5);
+      scene4.classList.toggle('active', time >= 14.5 && time < 19.5);
+      scene5.classList.toggle('active', time >= 19.5);
+
+      // Industrial Rhythmic Pulse (128 BPM = ~0.468s per beat)
+      if (isPlaying) {
+        const beat = Math.floor(time / 0.468);
+        if (beat !== lastBeat) {
+          lastBeat = beat;
+          if (time < 4.5) {
+            playTone(150, 'sawtooth', 0.1, 0.08);
+          } else if (time >= 4.5 && time < 9.5) {
+            playTone(220 + (beat % 4) * 30, 'triangle', 0.12, 0.1);
+          } else if (time >= 9.5 && time < 14.5) {
+            playTone(290 + (beat % 6) * 40, 'sine', 0.15, 0.1);
+          } else if (time >= 14.5 && time < 19.5) {
+            playTone(340 + (beat % 4) * 50, 'square', 0.12, 0.06);
+          } else if (beat % 4 === 0) {
+            playTone(65.4, 'triangle', 0.8, 0.3); // Deep Bass Drop
+          }
+        }
+      }
+
+      // Time & Scrubber Update
+      scrubber.value = time;
+      const s = Math.floor(time);
+      const ms = Math.floor((time % 1) * 100);
+      timeDisplay.textContent = `00:${s.toString().padStart(2, '0')}.${ms.toString().padStart(2, '0')} / 00:25`;
+    }
+
+    function tick(timestamp) {
+      if (!lastTimestamp) lastTimestamp = timestamp;
+      const delta = (timestamp - lastTimestamp) / 1000;
+      lastTimestamp = timestamp;
+
+      if (isPlaying) {
+        currentTime += delta;
+        if (currentTime >= DURATION) {
+          currentTime = DURATION;
+          isPlaying = false;
+          playBtn.textContent = '↻ Replay';
+        }
+        render(currentTime);
+      }
+
+      if (isPlaying) {
+        requestAnimationFrame(tick);
+      }
+    }
+
+    playBtn.addEventListener('click', () => {
+      initAudio();
+      if (currentTime >= DURATION) currentTime = 0.0;
+      isPlaying = !isPlaying;
+      playBtn.textContent = isPlaying ? '⏸ Pause' : '▶ Play';
+      if (isPlaying) {
+        lastTimestamp = performance.now();
+        requestAnimationFrame(tick);
+      }
+    });
+
+    soundBtn.addEventListener('click', () => {
+      initAudio();
+      soundEnabled = !soundEnabled;
+      soundBtn.textContent = soundEnabled ? '🔊 Sound' : '🔇 Muted';
+    });
+
+    scrubber.addEventListener('input', (e) => {
+      currentTime = parseFloat(e.target.value);
+      render(currentTime);
+    });
+
+    // Initial Frame
+    render(0.0);
+  </script>
+</body>
+</html>
+

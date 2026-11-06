@@ -7,6 +7,16 @@ import {
   RefreshCw,
   BarChart3,
   PieChart as PieIcon,
+  Play,
+  Cpu,
+  AlertTriangle,
+  Clock,
+  Sparkles,
+  ShoppingBag,
+  Database,
+  Layers,
+  ChevronRight,
+  ShieldAlert,
 } from 'lucide-react';
 import {
   BarChart,
@@ -20,6 +30,8 @@ import {
   Cell,
 } from 'recharts';
 import apiClient from '../../api/client';
+import StatusPill from '../../components/ui/StatusPill';
+import Badge from '../../components/ui/Badge';
 
 export default function AdminDashboard() {
   const { user, logout } = useAuth();
@@ -36,6 +48,9 @@ export default function AdminDashboard() {
   const [stockDemandChartData, setStockDemandChartData] = useState([]);
   const [orderStatusChartData, setOrderStatusChartData] = useState([]);
   const [allocationSummaryData, setAllocationSummaryData] = useState([]);
+  const [pendingOrders, setPendingOrders] = useState([]);
+  const [criticalAlerts, setCriticalAlerts] = useState([]);
+  const [recentRuns, setRecentRuns] = useState([]);
 
   const fetchDashboardData = async () => {
     setLoading(true);
@@ -75,7 +90,16 @@ export default function AdminDashboard() {
       }));
       setOrderStatusChartData(orderStatusData);
 
-      // 3. Allocation Outcomes Data (from latest run if available)
+      // 3. Operational queues
+      const pending = orderList.filter((o) => o.status === 'pending' || o.status === 'confirmed').slice(0, 5);
+      setPendingOrders(pending);
+
+      const crit = alertList.filter((a) => a.severity === 'critical' || a.severity === 'warning').slice(0, 4);
+      setCriticalAlerts(crit);
+
+      setRecentRuns(pastRuns.slice(0, 4));
+
+      // 4. Allocation Outcomes Data (from latest run if available)
       if (pastRuns.length > 0) {
         const latestRunId = pastRuns[0].id;
         try {
@@ -233,7 +257,7 @@ export default function AdminDashboard() {
                     fontSize: '12px',
                   }}
                 />
-                <Bar dataKey="onHand" fill="#E50914" name="On hand" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="onHand" fill="#C62828" name="On hand" radius={[4, 4, 0, 0]} />
                 <Bar dataKey="reserved" fill="#8A8A8A" name="Reserved" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
@@ -315,13 +339,195 @@ export default function AdminDashboard() {
         </div>
       </div>
 
+      {/* Operational Queues: Pending Allocation Queue & Critical Alerts */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* Pending Allocation Queue */}
+        <div className="card-base space-y-3">
+          <div className="flex items-center justify-between border-b border-bd pb-3">
+            <div className="flex items-center space-x-2">
+              <Clock className="h-4 w-4 text-ac" />
+              <h2 className="text-[18px] font-display font-bold text-t">
+                Pending Allocation Queue ({pendingOrders.length})
+              </h2>
+            </div>
+            <Link
+              to="/admin/allocation"
+              className="text-[12px] font-sans font-medium text-ac hover:underline flex items-center space-x-1"
+            >
+              <span>Run Allocation</span>
+              <ArrowRight className="h-3 w-3" />
+            </Link>
+          </div>
+
+          {pendingOrders.length === 0 ? (
+            <div className="py-8 text-center text-[13px] text-t2 font-sans">
+              No orders waiting for allocation. All queues cleared.
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-[13px] border-collapse">
+                <thead>
+                  <tr className="border-b border-bd text-t2 text-[11px] font-mono uppercase">
+                    <th className="py-2 px-2">Order #</th>
+                    <th className="py-2 px-2">Customer</th>
+                    <th className="py-2 px-2 text-right">Requested</th>
+                    <th className="py-2 px-2 text-center">Status</th>
+                    <th className="py-2 px-2 text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-bd/50">
+                  {pendingOrders.map((ord) => (
+                    <tr key={ord.id} className="hover:bg-s2/40 transition-colors">
+                      <td className="py-2.5 px-2 font-mono font-bold text-t">
+                        #{ord.id}
+                      </td>
+                      <td className="py-2.5 px-2 text-t truncate max-w-[140px]">
+                        {ord.customer_name || 'Customer'}
+                      </td>
+                      <td className="py-2.5 px-2 text-right font-mono text-t">
+                        {ord.total_requested_quantity || ord.requested_quantity || '—'}
+                      </td>
+                      <td className="py-2.5 px-2 text-center">
+                        <StatusPill status={ord.status} />
+                      </td>
+                      <td className="py-2.5 px-2 text-right">
+                        <Link
+                          to="/admin/allocation"
+                          className="text-ac hover:underline text-[12px] font-medium"
+                        >
+                          Allocate &rarr;
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+
+        {/* Critical Stock Alerts */}
+        <div className="card-base space-y-3">
+          <div className="flex items-center justify-between border-b border-bd pb-3">
+            <div className="flex items-center space-x-2">
+              <ShieldAlert className="h-4 w-4 text-wa" />
+              <h2 className="text-[18px] font-display font-bold text-t">
+                Critical Stock Alerts ({criticalAlerts.length})
+              </h2>
+            </div>
+            <Link
+              to="/admin/alerts"
+              className="text-[12px] font-sans font-medium text-ac hover:underline flex items-center space-x-1"
+            >
+              <span>View All</span>
+              <ArrowRight className="h-3 w-3" />
+            </Link>
+          </div>
+
+          {criticalAlerts.length === 0 ? (
+            <div className="py-8 text-center text-[13px] text-t2 font-sans">
+              No unresolved critical shortage alerts. Warehouse balanced.
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {criticalAlerts.map((alert) => (
+                <div
+                  key={alert.id}
+                  className="p-3 rounded-card bg-s2 border border-bd flex items-start justify-between gap-3 text-[13px]"
+                >
+                  <div className="space-y-1">
+                    <div className="flex items-center space-x-2">
+                      <span className="font-semibold text-t">{alert.title}</span>
+                      <span className={`text-[10px] font-mono px-2 py-0.5 rounded-pill ${
+                        alert.severity === 'critical' ? 'bg-no/10 text-no border border-no/30' : 'bg-wa/10 text-wa border border-wa/30'
+                      }`}>
+                        {alert.severity}
+                      </span>
+                    </div>
+                    <p className="text-[12px] text-t2 leading-normal line-clamp-1">
+                      {alert.recommended_action || alert.description}
+                    </p>
+                  </div>
+                  <Link
+                    to="/admin/replenishment"
+                    className="shrink-0 text-ac hover:underline text-[12px] font-medium pt-1"
+                  >
+                    Replenish &rarr;
+                  </Link>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Recent Allocation Activity */}
+      {recentRuns.length > 0 && (
+        <div className="card-base space-y-3">
+          <div className="flex items-center justify-between border-b border-bd pb-3">
+            <div className="flex items-center space-x-2">
+              <Cpu className="h-4 w-4 text-ac" />
+              <h2 className="text-[18px] font-display font-bold text-t">
+                Recent Allocation Activity
+              </h2>
+            </div>
+            <Link
+              to="/admin/allocation"
+              className="text-[12px] font-sans font-medium text-ac hover:underline flex items-center space-x-1"
+            >
+              <span>Allocation Center &rarr;</span>
+            </Link>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-[13px] border-collapse">
+              <thead>
+                <tr className="border-b border-bd text-t2 text-[11px] font-mono uppercase">
+                  <th className="py-2 px-3">Run ID</th>
+                  <th className="py-2 px-3">Executed At</th>
+                  <th className="py-2 px-3">Initiated By</th>
+                  <th className="py-2 px-3">Items Processed</th>
+                  <th className="py-2 px-3 text-center">Status</th>
+                  <th className="py-2 px-3 text-right">Details</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-bd/50">
+                {recentRuns.map((r) => (
+                  <tr key={r.id} className="hover:bg-s2/40 transition-colors">
+                    <td className="py-2.5 px-3 font-mono font-bold text-t">#{r.id}</td>
+                    <td className="py-2.5 px-3 text-t2 font-mono text-[12px]">
+                      {new Date(r.created_at).toLocaleString()}
+                    </td>
+                    <td className="py-2.5 px-3 text-t">{r.initiated_by_name || 'Admin'}</td>
+                    <td className="py-2.5 px-3 font-mono text-t">{r.total_items_considered || '—'}</td>
+                    <td className="py-2.5 px-3 text-center">
+                      <span className="text-[11px] font-mono px-2 py-0.5 rounded-pill bg-ok/10 text-ok border border-ok/30">
+                        {r.status || 'completed'}
+                      </span>
+                    </td>
+                    <td className="py-2.5 px-3 text-right">
+                      <Link
+                        to="/admin/allocation"
+                        className="text-ac hover:underline text-[12px] font-medium"
+                      >
+                        Inspect &rarr;
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
       {/* Modules row: 4 columns, gap 16px */}
       <div className="space-y-4 pt-2">
         <div>
-          <h2 className="text-[24px] font-display font-bold tracking-tight text-t">
+          <h2 className="text-[20px] font-display font-bold tracking-tight text-t">
             Modules
           </h2>
-          <div className="w-10 h-[3px] bg-ac mt-2 mb-3 rounded-full" />
+          <div className="w-10 h-[3px] bg-ac mt-1.5 mb-3 rounded-full" />
         </div>
 
         {/* Module cards: Title, description, and Active indicator matching Image 4 */}
@@ -329,17 +535,17 @@ export default function AdminDashboard() {
           {/* Module 1: Allocation center */}
           <Link
             to="/admin/allocation"
-            className="card-base hover:border-ac transition-colors group flex flex-col justify-between space-y-3 p-6"
+            className="card-base hover:border-ac transition-colors group flex flex-col justify-between space-y-3 p-5"
           >
             <div>
-              <span className="font-mono text-[12px] text-ok mb-2 block font-medium">● Active</span>
+              <span className="font-mono text-[11px] text-ok mb-2 block font-medium">● Active</span>
               <div className="flex items-start justify-between">
-                <h3 className="text-[18px] font-display font-bold text-t group-hover:text-t">
+                <h3 className="text-[16px] font-display font-bold text-t group-hover:text-t">
                   Allocation Center
                 </h3>
-                <ArrowRight className="h-4 w-4 text-t2 group-hover:text-ac transition-colors shrink-0 mt-1" />
+                <ArrowRight className="h-4 w-4 text-t2 group-hover:text-ac transition-colors shrink-0 mt-0.5" />
               </div>
-              <p className="text-[14px] text-t2 leading-normal mt-1">
+              <p className="text-[13px] text-t2 leading-normal mt-1">
                 Run the engine and review run history.
               </p>
             </div>
@@ -348,17 +554,17 @@ export default function AdminDashboard() {
           {/* Module 2: Product management */}
           <Link
             to="/admin/products"
-            className="card-base hover:border-ac transition-colors group flex flex-col justify-between space-y-3 p-6"
+            className="card-base hover:border-ac transition-colors group flex flex-col justify-between space-y-3 p-5"
           >
             <div>
-              <span className="font-mono text-[12px] text-ok mb-2 block font-medium">● Active</span>
+              <span className="font-mono text-[11px] text-ok mb-2 block font-medium">● Active</span>
               <div className="flex items-start justify-between">
-                <h3 className="text-[18px] font-display font-bold text-t group-hover:text-t">
+                <h3 className="text-[16px] font-display font-bold text-t group-hover:text-t">
                   Product Management
                 </h3>
-                <ArrowRight className="h-4 w-4 text-t2 group-hover:text-ac transition-colors shrink-0 mt-1" />
+                <ArrowRight className="h-4 w-4 text-t2 group-hover:text-ac transition-colors shrink-0 mt-0.5" />
               </div>
-              <p className="text-[14px] text-t2 leading-normal mt-1">
+              <p className="text-[13px] text-t2 leading-normal mt-1">
                 Catalog, SKUs and lifecycle controls.
               </p>
             </div>
@@ -367,17 +573,17 @@ export default function AdminDashboard() {
           {/* Module 3: Inventory hub */}
           <Link
             to="/admin/inventory"
-            className="card-base hover:border-ac transition-colors group flex flex-col justify-between space-y-3 p-6"
+            className="card-base hover:border-ac transition-colors group flex flex-col justify-between space-y-3 p-5"
           >
             <div>
-              <span className="font-mono text-[12px] text-ok mb-2 block font-medium">● Active</span>
+              <span className="font-mono text-[11px] text-ok mb-2 block font-medium">● Active</span>
               <div className="flex items-start justify-between">
-                <h3 className="text-[18px] font-display font-bold text-t group-hover:text-t">
+                <h3 className="text-[16px] font-display font-bold text-t group-hover:text-t">
                   Inventory Hub
                 </h3>
-                <ArrowRight className="h-4 w-4 text-t2 group-hover:text-ac transition-colors shrink-0 mt-1" />
+                <ArrowRight className="h-4 w-4 text-t2 group-hover:text-ac transition-colors shrink-0 mt-0.5" />
               </div>
-              <p className="text-[14px] text-t2 leading-normal mt-1">
+              <p className="text-[13px] text-t2 leading-normal mt-1">
                 Stock levels, buffers and audit ledger.
               </p>
             </div>
@@ -386,29 +592,49 @@ export default function AdminDashboard() {
           {/* Module 4: Order management */}
           <Link
             to="/admin/orders"
-            className="card-base hover:border-ac transition-colors group flex flex-col justify-between space-y-3 p-6"
+            className="card-base hover:border-ac transition-colors group flex flex-col justify-between space-y-3 p-5"
           >
             <div>
-              <span className="font-mono text-[12px] text-ok mb-2 block font-medium">● Active</span>
+              <span className="font-mono text-[11px] text-ok mb-2 block font-medium">● Active</span>
               <div className="flex items-start justify-between">
-                <h3 className="text-[18px] font-display font-bold text-t group-hover:text-t">
+                <h3 className="text-[16px] font-display font-bold text-t group-hover:text-t">
                   Order Management
                 </h3>
-                <ArrowRight className="h-4 w-4 text-t2 group-hover:text-ac transition-colors shrink-0 mt-1" />
+                <ArrowRight className="h-4 w-4 text-t2 group-hover:text-ac transition-colors shrink-0 mt-0.5" />
               </div>
-              <p className="text-[14px] text-t2 leading-normal mt-1">
+              <p className="text-[13px] text-t2 leading-normal mt-1">
                 Inspect orders and enforce priority.
               </p>
             </div>
           </Link>
         </div>
 
-        {/* Roadmap card: dashed border matching Image 4 */}
-        <div className="card-roadmap p-4 flex flex-wrap items-center gap-4">
-          <span className="font-mono text-[12px] text-t font-semibold">Roadmap</span>
-          <span className="text-[14px] text-t2 font-sans">
-            Simulation lab · Supply alerts · Replenishment advisor · AI priorities · Impact analyzer · Executive reports
-          </span>
+        {/* Operations Hub Toolbar */}
+        <div className="card-roadmap p-3.5 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center space-x-2">
+            <span className="w-2 h-2 rounded-full bg-ok inline-block" />
+            <span className="font-mono text-[12px] text-t font-semibold uppercase tracking-wider">Operational Intelligence Tools</span>
+          </div>
+          <div className="flex flex-wrap items-center gap-2 text-[13px] font-medium">
+            <Link to="/admin/simulations" className="px-3 py-1 rounded-pill bg-s2 border border-bd text-t2 hover:text-t hover:border-ac transition-colors">
+              Simulation Lab
+            </Link>
+            <Link to="/admin/alerts" className="px-3 py-1 rounded-pill bg-s2 border border-bd text-t2 hover:text-t hover:border-ac transition-colors">
+              Supply Alerts
+            </Link>
+            <Link to="/admin/replenishment" className="px-3 py-1 rounded-pill bg-s2 border border-bd text-t2 hover:text-t hover:border-ac transition-colors">
+              Replenishment
+            </Link>
+            <Link to="/admin/ai" className="px-3 py-1 rounded-pill bg-s2 border border-bd text-t2 hover:text-t hover:border-ac transition-colors">
+              AI Priorities
+            </Link>
+            <Link to="/admin/impact" className="px-3 py-1 rounded-pill bg-s2 border border-bd text-t2 hover:text-t hover:border-ac transition-colors">
+              Impact Analyzer
+            </Link>
+            <Link to="/admin/reports" className="px-3 py-1 rounded-pill bg-s2 border border-bd text-t2 hover:text-t hover:border-ac transition-colors">
+              Reports &amp; Exports
+            </Link>
+          </div>
         </div>
       </div>
     </div>

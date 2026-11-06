@@ -90,13 +90,13 @@ export default function Reports() {
         <div>
           <div className="inline-flex items-center space-x-2 text-[12px] font-mono text-ac font-semibold tracking-wider uppercase mb-1">
             <FileText className="h-3.5 w-3.5" />
-            <span>Operational Reports &amp; Exports Hub</span>
+            <span>Analytics &amp; Reporting</span>
           </div>
           <h1 className="font-display text-[34px] font-bold tracking-tight text-t">
             Supply Chain &amp; Allocation Analytics
           </h1>
           <p className="text-[14px] text-t2 font-sans mt-0.5 max-w-2xl">
-            Audit-ready evidence: deterministic fill rates, deferred demand root causes, inventory valuation, and governance metrics.
+            Fill rates, deferred demand root causes, inventory valuation, and audit CSV exports.
           </p>
         </div>
 

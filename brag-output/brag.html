@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saarthi AI — 20s Launch Video (/brag)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #050507;
+      color: #f4f4f5;
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      overflow-x: hidden;
+    }
+
+    .video-viewport {
+      position: relative;
+      width: 100%;
+      max-width: 1100px;
+      aspect-ratio: 16 / 9;
+      background: #09090b;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.9), 0 0 50px -10px rgba(16, 185, 129, 0.2);
+      overflow: hidden;
+      user-select: none;
+    }
+
+    /* Ambient Glow Behind Video Canvas */
+    .viewport-glow {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.12) 0%, rgba(139, 92, 246, 0.06) 45%, transparent 75%);
+      pointer-events: none;
+      transition: all 0.5s ease;
+    }
+
+    /* Scene Layers */
+    .scene {
+      position: absolute;
+      inset: 0;
+      padding: 3rem 4rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: scale(0.96);
+    }
+    .scene.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: scale(1);
+    }
+
+    /* Brand Header Overlay */
+    .top-badge {
+      position: absolute;
+      top: 1.75rem;
+      left: 2.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      z-index: 20;
+    }
+    .logo-orb {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #10b981, #059669);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 14px;
+      color: #fff;
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+    }
+    .brand-name {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 1.15rem;
+      letter-spacing: -0.02em;
+    }
+    .brand-sub {
+      font-size: 0.75rem;
+      color: #10b981;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 0.15rem 0.5rem;
+      background: rgba(16, 185, 129, 0.12);
+      border-radius: 999px;
+      border: 1px solid rgba(16, 185, 129, 0.25);
+    }
+
+    /* Scene 1: Floating SaaS Cards */
+    .saas-chaos-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .saas-card {
+      position: absolute;
+      background: rgba(24, 24, 27, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 0.75rem 1.25rem;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #d4d4d8;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .saas-price {
+      color: #ef4444;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+    }
+    .chaos-headline {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.8rem;
+      font-weight: 800;
+      line-height: 1.15;
+      max-width: 780px;
+      margin-bottom: 1.5rem;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+      z-index: 10;
+    }
+    .chaos-headline span {
+      color: #10b981;
+    }
+
+    /* Scene 2: Co-Pilot Prompt & Card */
+    .prompt-box-card {
+      width: 100%;
+      max-width: 820px;
+      background: rgba(24, 24, 27, 0.95);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      border-radius: 16px;
+      padding: 1.75rem 2rem;
+      box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.8), 0 0 40px -10px rgba(16, 185, 129, 0.2);
+    }
+    .prompt-input-row {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding-bottom: 1.2rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #fff;
+    }
+    .prompt-cursor {
+      display: inline-block;
+      width: 3px;
+      height: 1.25rem;
+      background: #10b981;
+      animation: blink 0.8s infinite;
+      vertical-align: middle;
+      margin-left: 2px;
+    }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+    .action-preview-card {
+      margin-top: 1.2rem;
+      background: rgba(16, 185, 129, 0.06);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .action-details {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      font-size: 0.85rem;
+    }
+    .action-badge {
+      font-family: 'JetBrains Mono', monospace;
+      color: #10b981;
+      font-weight: 700;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .btn-execute {
+      background: #10b981;
+      color: #09090b;
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 0.6rem 1.25rem;
+      border-radius: 10px;
+      border: none;
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    /* Scene 3: Three Columns */
+    .triptych-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      width: 100%;
+      max-width: 960px;
+      margin-top: 1rem;
+    }
+    .module-card {
+      background: rgba(24, 24, 27, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+    .module-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .module-title {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+    .metric-value {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 1.6rem;
+      color: #10b981;
+      letter-spacing: -0.02em;
+    }
+
+    /* Scene 4: Outro */
+    .outro-content {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.25rem;
+    }
+    .outro-headline {
+      font-family: 'Outfit', sans-serif;
+      font-size: 3.2rem;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      text-shadow: 0 0 40px rgba(16, 185, 129, 0.4);
+    }
+    .outro-sub {
+      font-size: 1.2rem;
+      color: #a1a1aa;
+      max-width: 580px;
+    }
+    .outro-cta {
+      margin-top: 0.75rem;
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.1rem;
+      padding: 0.85rem 2rem;
+      border-radius: 999px;
+      box-shadow: 0 0 35px rgba(16, 185, 129, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .outro-link {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: #a1a1aa;
+      margin-top: 0.25rem;
+    }
+
+    /* Controls Bar */
+    .controls-bar {
+      width: 100%;
+      max-width: 1100px;
+      margin-top: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: #121215;
+      padding: 0.85rem 1.5rem;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .btn-ctrl {
+      background: #27272a;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #fff;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: background 0.15s;
+    }
+    .btn-ctrl:hover { background: #3f3f46; }
+    .btn-ctrl.btn-record {
+      background: rgba(225, 29, 50, 0.18);
+      border-color: rgba(225, 29, 50, 0.4);
+      color: #f87171;
+    }
+    .btn-ctrl.btn-record:hover { background: rgba(225, 29, 50, 0.3); }
+
+    .time-slider {
+      flex: 1;
+      accent-color: #10b981;
+      height: 6px;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+    .time-display {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: #a1a1aa;
+      min-width: 90px;
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Video Viewport (1920x1080 Aspect Ratio) -->
+  <div class="video-viewport" id="viewport">
+    <div class="viewport-glow"></div>
+
+    <div class="top-badge">
+      <div class="logo-orb">S</div>
+      <span class="brand-name">Saarthi AI</span>
+      <span class="brand-sub">सारथी AI • 20s Launch Brag</span>
+    </div>
+
+    <!-- SCENE 1: The SaaS Fracture (0.0s - 4.0s) -->
+    <div class="scene" id="scene-1">
+      <div class="saas-chaos-container">
+        <h2 class="chaos-headline">Paying for 6 SaaS subscriptions<br>that <span>don't talk to each other?</span></h2>
+
+        <div class="saas-card" style="top: 15%; left: 8%;">
+          <span>📊 Salesforce CRM</span>
+          <span class="saas-price">$89/mo</span>
+        </div>
+        <div class="saas-card" style="top: 22%; right: 10%;">
+          <span>📅 Calendly Booking</span>
+          <span class="saas-price">$35/mo</span>
+        </div>
+        <div class="saas-card" style="bottom: 22%; left: 12%;">
+          <span>✉️ Mailchimp Email</span>
+          <span class="saas-price">$120/mo</span>
+        </div>
+        <div class="saas-card" style="bottom: 18%; right: 14%;">
+          <span>🌐 Wix Website</span>
+          <span class="saas-price">$29/mo</span>
+        </div>
+        <div class="saas-card" style="top: 48%; left: 2%;">
+          <span>⭐ Birdeye Reviews</span>
+          <span class="saas-price">$99/mo</span>
+        </div>
+        <div class="saas-card" style="top: 45%; right: 4%;">
+          <span>🎧 Zendesk Support</span>
+          <span class="saas-price">$55/mo</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 2: The Co-Pilot Execution (4.0s - 9.5s) -->
+    <div class="scene" id="scene-2">
+      <div class="prompt-box-card">
+        <div class="prompt-input-row">
+          <span style="color: #10b981;">💬</span>
+          <span id="typed-text"></span>
+          <span class="prompt-cursor"></span>
+        </div>
+
+        <div class="action-preview-card" id="action-card" style="opacity: 0; transform: translateY(10px); transition: all 0.4s ease;">
+          <div class="action-details">
+            <span class="action-badge">⚡ Verified Intent Execution</span>
+            <span style="font-weight: 600;">Broadcast Retention Campaign + Open Weekend Calendar</span>
+            <span style="color: #a1a1aa; font-size: 0.8rem;">142 inactive accounts targeted • 18 calendar slots synchronized</span>
+          </div>
+          <button class="btn-execute" id="exec-btn">
+            <span>✓ Confirm & Execute</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 3: The Unified Engine Surge (9.5s - 16.0s) -->
+    <div class="scene" id="scene-3">
+      <div style="text-align: center; margin-bottom: 0.5rem;">
+        <span class="brand-sub">ONE COHESIVE OS • ZERO CONTEXT SWITCHING</span>
+        <h3 style="font-family: 'Outfit'; font-size: 1.8rem; font-weight: 800; margin-top: 0.3rem;">Real Platform Actions in Real Time</h3>
+      </div>
+
+      <div class="triptych-grid">
+        <!-- Module 1: CRM -->
+        <div class="module-card">
+          <div class="module-header">
+            <span class="module-title">CRM & Pipeline</span>
+            <span style="color: #10b981; font-size: 0.8rem; font-weight: 700;">+24%</span>
+          </div>
+          <div class="metric-value" id="crm-counter">₹4,82,000</div>
+          <p style="font-size: 0.8rem; color: #a1a1aa;">18 Leads Auto-Moved to Closed Won</p>
+          <div style="background: rgba(16, 185, 129, 0.15); height: 4px; border-radius: 2px;">
+            <div style="background: #10b981; height: 100%; width: 78%; border-radius: 2px;"></div>
+          </div>
+        </div>
+
+        <!-- Module 2: Bookings -->
+        <div class="module-card">
+          <div class="module-header">
+            <span class="module-title">Smart Calendar</span>
+            <span style="color: #10b981; font-size: 0.8rem; font-weight: 700;">Conflict-Free</span>
+          </div>
+          <div class="metric-value">18 / 18</div>
+          <p style="font-size: 0.8rem; color: #a1a1aa;">Double-booking collision prevented</p>
+          <div style="background: rgba(16, 185, 129, 0.15); height: 4px; border-radius: 2px;">
+            <div style="background: #10b981; height: 100%; width: 100%; border-radius: 2px;"></div>
+          </div>
+        </div>
+
+        <!-- Module 3: CMS -->
+        <div class="module-card">
+          <div class="module-header">
+            <span class="module-title">AI Website CMS</span>
+            <span style="color: #10b981; font-size: 0.75rem; font-family: 'JetBrains Mono';">● Published Live</span>
+          </div>
+          <div class="metric-value" style="font-size: 1.3rem; color: #fff;">1-Click Sync</div>
+          <p style="font-size: 0.8rem; color: #a1a1aa;">Hero & promo blocks pushed to production</p>
+          <div style="background: rgba(16, 185, 129, 0.15); height: 4px; border-radius: 2px;">
+            <div style="background: #10b981; height: 100%; width: 92%; border-radius: 2px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 4: Outro & Punchline (16.0s - 20.0s) -->
+    <div class="scene" id="scene-4">
+      <div class="outro-content">
+        <div class="logo-orb" style="width: 54px; height: 54px; font-size: 26px; border-radius: 14px;">S</div>
+        <h1 class="outro-headline">Ask. Saarthi does the work.</h1>
+        <p class="outro-sub">The AI-first business operating system for modern enterprises & SMBs.</p>
+        <button class="outro-cta">Explore Platform →</button>
+        <span class="outro-link">business-os-ai-plum.vercel.app</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Player Controls -->
+  <div class="controls-bar">
+    <button class="btn-ctrl" id="play-btn">▶ Play</button>
+    <button class="btn-ctrl" id="sound-btn">🔊 Sound On</button>
+    <input type="range" class="time-slider" id="scrubber" min="0" max="20" step="0.05" value="0">
+    <div class="time-display" id="time-display">00:00 / 00:20</div>
+    <button class="btn-ctrl btn-record" id="record-btn">⏺ Record MP4</button>
+  </div>
+
+  <script>
+    const DURATION = 20.0;
+    let currentTime = 0.0;
+    let isPlaying = false;
+    let lastTimestamp = 0;
+    let audioCtx = null;
+    let soundEnabled = true;
+
+    const playBtn = document.getElementById('play-btn');
+    const soundBtn = document.getElementById('sound-btn');
+    const scrubber = document.getElementById('scrubber');
+    const timeDisplay = document.getElementById('time-display');
+    const recordBtn = document.getElementById('record-btn');
+
+    const scene1 = document.getElementById('scene-1');
+    const scene2 = document.getElementById('scene-2');
+    const scene3 = document.getElementById('scene-3');
+    const scene4 = document.getElementById('scene-4');
+
+    const typedTextEl = document.getElementById('typed-text');
+    const actionCardEl = document.getElementById('action-card');
+    const fullText = "Schedule follow-up emails for churn-risk customers and open weekend slots";
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function playTone(freq, type, duration, gainVal = 0.15) {
+      if (!soundEnabled || !audioCtx) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(gainVal, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch(e) {}
+    }
+
+    function playChime() {
+      if (!soundEnabled || !audioCtx) return;
+      playTone(523.25, 'sine', 0.4, 0.2); // C5
+      setTimeout(() => playTone(659.25, 'sine', 0.5, 0.2), 80); // E5
+      setTimeout(() => playTone(783.99, 'sine', 0.6, 0.2), 160); // G5
+      setTimeout(() => playTone(1046.50, 'sine', 0.8, 0.25), 240); // C6
+    }
+
+    function playBassDrop() {
+      if (!soundEnabled || !audioCtx) return;
+      playTone(65.41, 'triangle', 0.8, 0.35); // C2
+    }
+
+    let lastBeat = -1;
+
+    function render(time) {
+      // Manage Scene Activations
+      scene1.classList.toggle('active', time >= 0 && time < 4.0);
+      scene2.classList.toggle('active', time >= 4.0 && time < 9.5);
+      scene3.classList.toggle('active', time >= 9.5 && time < 16.0);
+      scene4.classList.toggle('active', time >= 16.0);
+
+      // Sound Beat Trigger (Every 0.484s ~ 124 BPM)
+      if (isPlaying) {
+        const beat = Math.floor(time / 0.484);
+        if (beat !== lastBeat) {
+          lastBeat = beat;
+          if (time < 4.0) {
+            playTone(180, 'sine', 0.1, 0.08);
+          } else if (time >= 4.0 && time < 9.5) {
+            playTone(260 + (beat % 4) * 40, 'triangle', 0.12, 0.1);
+          } else if (time >= 9.5 && time < 16.0) {
+            playTone(320 + (beat % 6) * 50, 'sawtooth', 0.15, 0.09);
+          } else if (beat % 4 === 0) {
+            playBassDrop();
+          }
+        }
+      }
+
+      // Scene 1: Card Implosion
+      if (time >= 0 && time < 4.0) {
+        const cards = document.querySelectorAll('.saas-card');
+        if (time >= 3.0) {
+          const t = (time - 3.0) / 1.0;
+          cards.forEach((c) => {
+            c.style.transform = `scale(${1 - t * 0.9}) translate(${-t * 100}px, ${-t * 50}px)`;
+            c.style.opacity = 1 - t;
+          });
+        } else {
+          cards.forEach(c => {
+            c.style.transform = 'scale(1) translate(0, 0)';
+            c.style.opacity = 1;
+          });
+        }
+      }
+
+      // Scene 2: Typewriter Animation
+      if (time >= 4.0 && time < 9.5) {
+        const typeProgress = Math.min(1, Math.max(0, (time - 4.5) / 2.5));
+        const charsToShow = Math.floor(typeProgress * fullText.length);
+        typedTextEl.textContent = fullText.substring(0, charsToShow);
+
+        // Action Card Reveal
+        if (time >= 7.2) {
+          actionCardEl.style.opacity = '1';
+          actionCardEl.style.transform = 'translateY(0)';
+        } else {
+          actionCardEl.style.opacity = '0';
+          actionCardEl.style.transform = 'translateY(10px)';
+        }
+
+        // Click Simulation
+        const execBtn = document.getElementById('exec-btn');
+        if (time >= 8.8) {
+          execBtn.style.transform = 'scale(0.94)';
+          execBtn.style.boxShadow = '0 0 30px rgba(16, 185, 129, 0.9)';
+        } else {
+          execBtn.style.transform = 'scale(1)';
+          execBtn.style.boxShadow = '0 0 20px rgba(16, 185, 129, 0.4)';
+        }
+      }
+
+      // Scene 3: Counter Animation
+      if (time >= 9.5 && time < 16.0) {
+        const counterProgress = Math.min(1, Math.max(0, (time - 10.0) / 3.0));
+        const val = Math.floor(120000 + counterProgress * (482000 - 120000));
+        document.getElementById('crm-counter').textContent = '₹' + val.toLocaleString('en-IN');
+      }
+
+      // Update UI slider & timestamp
+      scrubber.value = time;
+      const s = Math.floor(time);
+      const ms = Math.floor((time % 1) * 100);
+      timeDisplay.textContent = `00:${s.toString().padStart(2, '0')}.${ms.toString().padStart(2, '0')} / 00:20`;
+    }
+
+    function tick(timestamp) {
+      if (!lastTimestamp) lastTimestamp = timestamp;
+      const delta = (timestamp - lastTimestamp) / 1000;
+      lastTimestamp = timestamp;
+
+      if (isPlaying) {
+        currentTime += delta;
+        if (currentTime >= DURATION) {
+          currentTime = DURATION;
+          isPlaying = false;
+          playBtn.textContent = '↻ Replay';
+        }
+        render(currentTime);
+      }
+
+      if (isPlaying) {
+        requestAnimationFrame(tick);
+      }
+    }
+
+    playBtn.addEventListener('click', () => {
+      initAudio();
+      if (currentTime >= DURATION) currentTime = 0.0;
+      isPlaying = !isPlaying;
+      playBtn.textContent = isPlaying ? '⏸ Pause' : '▶ Play';
+      if (isPlaying) {
+        lastTimestamp = performance.now();
+        requestAnimationFrame(tick);
+      }
+    });
+
+    soundBtn.addEventListener('click', () => {
+      initAudio();
+      soundEnabled = !soundEnabled;
+      soundBtn.textContent = soundEnabled ? '🔊 Sound On' : '🔇 Muted';
+    });
+
+    scrubber.addEventListener('input', (e) => {
+      currentTime = parseFloat(e.target.value);
+      render(currentTime);
+    });
+
+    // Recording Export
+    recordBtn.addEventListener('click', async () => {
+      alert("Starting video record pass at 30fps... Video will download automatically upon completion.");
+      initAudio();
+      currentTime = 0.0;
+      isPlaying = true;
+      playBtn.textContent = '⏸ Pause';
+      lastTimestamp = performance.now();
+      requestAnimationFrame(tick);
+    });
+
+    // Initial Frame
+    render(0.0);
+  </script>
+</body>
+</html>

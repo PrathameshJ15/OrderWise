@@ -11,6 +11,7 @@ import {
   FileText,
   Info,
   Layers,
+  Sparkles,
 } from 'lucide-react';
 import apiClient from '../../api/client';
 import StatusPill from '../../components/ui/StatusPill';
@@ -24,6 +25,7 @@ export default function OrderDetail() {
   const [cancelModalOpen, setCancelModalOpen] = useState(false);
   const [cancelReason, setCancelReason] = useState('');
   const [error, setError] = useState(null);
+  const [aiInsights, setAiInsights] = useState(null);
 
   const fetchOrderDetail = useCallback(async () => {
     setLoading(true);
@@ -251,6 +253,69 @@ export default function OrderDetail() {
           </div>
         </div>
       </div>
+
+      {/* Feature C: AI Allocation & Shortage Insights */}
+      {aiInsights && (
+        <div className="card-base p-6 border-ac/30 bg-gradient-to-r from-s to-s2 space-y-4">
+          <div className="flex items-center justify-between border-b border-bd pb-3">
+            <div className="flex items-center space-x-2.5">
+              <div className="w-7 h-7 rounded-full bg-ac/10 text-ac flex items-center justify-center">
+                <Sparkles className="h-4 w-4" />
+              </div>
+              <div>
+                <h3 className="text-[17px] font-bold text-t flex items-center space-x-2">
+                  <span>AI Allocation &amp; Shortage Insights</span>
+                  <span className="text-[11px] font-mono text-ac px-2 py-0.5 rounded-pill bg-ac/10 border border-ac/20">
+                    Transparent Intelligence
+                  </span>
+                </h3>
+                <p className="text-[12.5px] text-t2 font-sans">
+                  Deterministic breakdown of stock allocation, partial fulfillments, and supply shortages.
+                </p>
+              </div>
+            </div>
+            <div className="text-right">
+              <span className="text-[11px] font-mono text-t2 block">Overall Fill Rate</span>
+              <span
+                className={`text-[20px] font-bold font-mono ${
+                  aiInsights.overall_fill_rate === 100
+                    ? 'text-ok'
+                    : aiInsights.overall_fill_rate > 0
+                    ? 'text-wa'
+                    : 'text-no'
+                }`}
+              >
+                {aiInsights.overall_fill_rate}%
+              </span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+            <div className="p-3 bg-s rounded-[12px] border border-bd">
+              <span className="text-[11px] font-mono text-t2 block">Total Requested</span>
+              <span className="text-[18px] font-bold text-t font-mono">{aiInsights.total_requested} units</span>
+            </div>
+            <div className="p-3 bg-s rounded-[12px] border border-bd">
+              <span className="text-[11px] font-mono text-t2 block">Total Allocated</span>
+              <span className="text-[18px] font-bold text-ok font-mono">{aiInsights.total_allocated} units</span>
+            </div>
+            <div className="p-3 bg-s rounded-[12px] border border-bd">
+              <span className="text-[11px] font-mono text-t2 block">Unallocated Shortage</span>
+              <span className="text-[18px] font-bold text-no font-mono">
+                {Math.max(0, aiInsights.total_requested - aiInsights.total_allocated)} units
+              </span>
+            </div>
+          </div>
+
+          <div className="p-3.5 bg-s/80 rounded-card border border-bd text-[13px] text-t leading-relaxed flex items-start space-x-2.5">
+            <Info className="h-4 w-4 text-ac shrink-0 mt-0.5" />
+            <div>
+              <span className="font-semibold text-t block mb-0.5">Allocation Policy Explanation:</span>
+              <p className="text-t2">{aiInsights.governance_summary}</p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Order Items Breakdown & Allocation Explanations */}
       <div className="card-base space-y-4">

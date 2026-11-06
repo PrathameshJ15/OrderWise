@@ -54,6 +54,10 @@ const auditRoutes = require('./audit');
 router.use('/reports', reportRoutes);
 router.use('/audit', auditRoutes);
 
+// Customer-Facing AI (Order Assistant, Recommendations, Insights, Order Builder)
+const customerAiRoutes = require('./customerAi');
+router.use('/customer/ai', customerAiRoutes);
+
 // Advanced Intelligence (Phase 18 Stretch)
 const intelligenceRoutes = require('./intelligence');
 router.use('/intelligence', intelligenceRoutes);

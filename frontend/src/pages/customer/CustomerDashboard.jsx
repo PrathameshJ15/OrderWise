@@ -11,6 +11,7 @@ import {
   ArrowRight,
   RefreshCw,
   ClipboardList,
+  Bot,
 } from 'lucide-react';
 import apiClient from '../../api/client';
 import StatusPill from '../../components/ui/StatusPill';
@@ -67,13 +68,13 @@ export default function CustomerDashboard() {
         <div>
           <div className="inline-flex items-center space-x-2 text-[12px] font-mono text-ac font-semibold tracking-wider uppercase mb-1">
             <CheckCircle2 className="h-3.5 w-3.5" />
-            <span>Customer Command Hub • Authenticated Portal</span>
+            <span>Customer Command Hub</span>
           </div>
           <h1 className="font-display text-[34px] font-bold tracking-tight text-t">
-            Welcome, <span>{user?.name || 'Valued Customer'}</span>
+            Welcome, <span>{user?.name || 'Customer'}</span>
           </h1>
           <p className="text-[14px] text-t2 font-sans mt-0.5">
-            Account: {user?.email} • Authority: <span className="font-mono text-ac font-medium">{user?.role}</span>
+            {user?.email} &bull; Verified Account
           </p>
         </div>
 
@@ -149,62 +150,69 @@ export default function CustomerDashboard() {
       </div>
 
       {/* Quick Action Navigation Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <Link
           to="/products"
-          className="card-base hover:border-neutral-600 transition-colors group block space-y-3"
+          className="card-base hover:border-neutral-600 transition-colors group block space-y-2 p-5"
         >
-          <div className="w-9 h-9 rounded-full bg-s2 text-t flex items-center justify-center">
+          <div className="w-8 h-8 rounded-full bg-s2 text-t flex items-center justify-center">
             <Package className="h-4 w-4" />
           </div>
-          <h3 className="text-[18px] font-bold text-t group-hover:text-ac transition-colors flex items-center justify-between">
+          <h3 className="text-[16px] font-bold text-t group-hover:text-ac transition-colors flex items-center justify-between">
             <span>Product Catalog</span>
             <ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" />
           </h3>
-          <p className="text-[14px] text-t2 leading-normal">
-            Browse active industrial inventory with real-time on-hand availability indicators.
+          <p className="text-[13px] text-t2 leading-normal">
+            Browse verified industrial stock with live availability.
           </p>
-          <span className="text-[13px] font-sans text-t font-medium inline-block pt-1">
-            Explore catalog &rarr;
-          </span>
         </Link>
 
         <Link
           to="/orders/new"
-          className="card-base hover:border-neutral-600 transition-colors group block space-y-3"
+          className="card-base hover:border-neutral-600 transition-colors group block space-y-2 p-5"
         >
-          <div className="w-9 h-9 rounded-full bg-s2 text-t flex items-center justify-center">
+          <div className="w-8 h-8 rounded-full bg-s2 text-t flex items-center justify-center">
             <PlusCircle className="h-4 w-4" />
           </div>
-          <h3 className="text-[18px] font-bold text-t group-hover:text-ac transition-colors flex items-center justify-between">
-            <span>Create New Order</span>
+          <h3 className="text-[16px] font-bold text-t group-hover:text-ac transition-colors flex items-center justify-between">
+            <span>Create Order</span>
             <ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" />
           </h3>
-          <p className="text-[14px] text-t2 leading-normal">
-            Assemble multi-line orders with custom requested quantities and minimum thresholds.
+          <p className="text-[13px] text-t2 leading-normal">
+            Assemble multi-line requisition with priority delivery notes.
           </p>
-          <span className="text-[13px] font-sans text-t font-medium inline-block pt-1">
-            Draft order &rarr;
-          </span>
         </Link>
 
         <Link
           to="/orders"
-          className="card-base hover:border-neutral-600 transition-colors group block space-y-3"
+          className="card-base hover:border-neutral-600 transition-colors group block space-y-2 p-5"
         >
-          <div className="w-9 h-9 rounded-full bg-s2 text-t flex items-center justify-center">
+          <div className="w-8 h-8 rounded-full bg-s2 text-t flex items-center justify-center">
             <ClipboardList className="h-4 w-4" />
           </div>
-          <h3 className="text-[18px] font-bold text-t group-hover:text-ac transition-colors flex items-center justify-between">
+          <h3 className="text-[16px] font-bold text-t group-hover:text-ac transition-colors flex items-center justify-between">
             <span>My Orders</span>
             <ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" />
           </h3>
-          <p className="text-[14px] text-t2 leading-normal">
-            Track real-time allocation outcomes, delivery dates, and item-by-item status reports.
+          <p className="text-[13px] text-t2 leading-normal">
+            Track allocation status, item breakdowns, and explanations.
           </p>
-          <span className="text-[13px] font-sans text-t font-medium inline-block pt-1">
-            View orders &rarr;
-          </span>
+        </Link>
+
+        <Link
+          to="/ai/assistant"
+          className="card-base hover:border-neutral-600 transition-colors group block space-y-2 p-5"
+        >
+          <div className="w-8 h-8 rounded-full bg-s2 text-ac flex items-center justify-center">
+            <Bot className="h-4 w-4" />
+          </div>
+          <h3 className="text-[16px] font-bold text-t group-hover:text-ac transition-colors flex items-center justify-between">
+            <span>AI Assistant</span>
+            <ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+          </h3>
+          <p className="text-[13px] text-t2 leading-normal">
+            Query stock levels, order status, and allocation guidelines.
+          </p>
         </Link>
       </div>
 

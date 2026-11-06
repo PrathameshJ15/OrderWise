@@ -207,11 +207,10 @@ export default function ImpactAnalyzer() {
             <span>PHASE 9 ALLOCATION IMPACT ANALYZER</span>
           </div>
           <h1 className="font-display text-[34px] font-bold tracking-tight text-t">
-            Allocation Impact <span className="text-ac">&amp;</span> Diff Engine
+            Allocation Impact Analyzer
           </h1>
           <p className="text-[14px] text-t2 font-sans max-w-2xl mt-0.5 leading-relaxed">
-            Precision before/after diffing between sequential allocation iterations with root-cause attribution
-            linked to audit logs, stock receipts, and priority approvals.
+            Compare consecutive allocation runs to verify fulfillment shifts, volume changes, and root causes.
           </p>
         </div>
 

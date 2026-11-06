@@ -58,7 +58,7 @@ export function StatusPill({ status, type = 'status', size = 'md' }) {
 
     return (
       <span
-        className={`inline-flex items-center rounded-pill font-mono font-medium tracking-wide ${sizeClasses} ${config.classes}`}
+        className={`inline-flex items-center rounded-[6px] font-mono font-medium tracking-wide ${sizeClasses} ${config.classes}`}
         aria-label={`Priority ${config.label}`}
       >
         {config.label}
@@ -77,7 +77,7 @@ export function StatusPill({ status, type = 'status', size = 'md' }) {
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-pill font-mono font-medium ${sizeClasses} ${config.classes}`}
+      className={`inline-flex items-center gap-1.5 rounded-[6px] font-mono font-medium ${sizeClasses} ${config.classes}`}
       aria-label={`Status: ${config.label}`}
     >
       <span className={`h-1.5 w-1.5 rounded-full ${config.dotClass}`} aria-hidden="true" />
@@ -98,7 +98,7 @@ export function PriorityPill({ priority, className = '' }) {
 
   return (
     <span
-      className={`inline-flex items-center rounded-pill font-mono font-medium text-[12px] px-2.5 py-0.5 border ${
+      className={`inline-flex items-center rounded-[6px] font-mono font-medium text-[12px] px-2.5 py-0.5 border ${
         styles[p] || 'bg-s2 text-t2 border-bd'
       } ${className}`}
     >
@@ -122,7 +122,7 @@ export function ConfidencePill({ confidence, className = '' }) {
 
   return (
     <span
-      className={`inline-flex items-center px-2.5 py-0.5 text-[12px] font-mono font-medium rounded-pill border ${currentStyle} ${className}`}
+      className={`inline-flex items-center px-2.5 py-0.5 text-[12px] font-mono font-medium rounded-[6px] border ${currentStyle} ${className}`}
     >
       Confidence: {c}
     </span>
@@ -145,7 +145,7 @@ export function RecommendationStatusPill({ status, className = '' }) {
 
   return (
     <span
-      className={`inline-flex items-center px-2.5 py-0.5 text-[12px] font-mono font-medium rounded-pill border ${currentStyle} ${className}`}
+      className={`inline-flex items-center px-2.5 py-0.5 text-[12px] font-mono font-medium rounded-[6px] border ${currentStyle} ${className}`}
     >
       {s === 'overridden' ? 'Modified' : s}
     </span>

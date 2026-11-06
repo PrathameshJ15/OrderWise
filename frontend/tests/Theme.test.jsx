@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, within } from '@testing-library/react';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { ThemeProvider, useTheme } from '../src/contexts/ThemeContext';
 import ThemeToggle from '../src/components/ui/ThemeToggle';
@@ -61,20 +61,21 @@ describe('Theme System & ThemeToggle', () => {
     expect(localStorage.getItem('orderwise_theme')).toBe('dark');
   });
 
-  it('segmented ThemeToggle allows directly selecting light, dark, and system modes', () => {
+  it('segmented ThemeToggle allows directly selecting light and dark modes without system option', () => {
     render(
       <ThemeProvider>
         <TestConsumer />
       </ThemeProvider>
     );
 
-    const lightBtn = screen.getByRole('button', { name: /light mode/i });
-    const darkBtn = screen.getByRole('button', { name: /dark mode/i });
-    const systemBtn = screen.getByRole('button', { name: /system preference/i });
+    const segmentedGroup = screen.getByRole('group', { name: /theme mode selector/i });
+    const lightBtn = within(segmentedGroup).getByRole('button', { name: /^light mode$/i });
+    const darkBtn = within(segmentedGroup).getByRole('button', { name: /^dark mode$/i });
 
     expect(lightBtn).toBeDefined();
     expect(darkBtn).toBeDefined();
-    expect(systemBtn).toBeDefined();
+    // System button must NOT be present anywhere
+    expect(screen.queryByRole('button', { name: /system/i })).toBeNull();
 
     // Select light
     fireEvent.click(lightBtn);
@@ -87,10 +88,5 @@ describe('Theme System & ThemeToggle', () => {
     expect(screen.getByTestId('current-mode').textContent).toBe('dark');
     expect(localStorage.getItem('orderwise_theme')).toBe('dark');
     expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
-
-    // Select system
-    fireEvent.click(systemBtn);
-    expect(screen.getByTestId('current-mode').textContent).toBe('system');
-    expect(localStorage.getItem('orderwise_theme')).toBe('system');
   });
 });

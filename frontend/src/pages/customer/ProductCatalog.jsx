@@ -1,20 +1,44 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Package, Search, ShoppingCart, RefreshCw, CheckCircle2, AlertTriangle, AlertOctagon } from 'lucide-react';
+import {
+  Package,
+  Search,
+  ShoppingCart,
+  RefreshCw,
+  CheckCircle2,
+  AlertTriangle,
+  AlertOctagon,
+  Sparkles,
+  ArrowRight,
+} from 'lucide-react';
 import apiClient from '../../api/client';
 
 export default function ProductCatalog() {
   const [products, setProducts] = useState([]);
+  const [recommendations, setRecommendations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const fetchProducts = async () => {
+  const fetchCatalogAndRecommendations = async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await apiClient.get('/products?active=true');
-      setProducts(res.data || []);
+      const [prodRes, recRes] = await Promise.allSettled([
+        apiClient.get('/products?active=true'),
+        apiClient.get('/customer/ai/recommendations'),
+      ]);
+
+      if (prodRes.status === 'fulfilled') {
+        setProducts(prodRes.value?.data || []);
+      } else {
+        throw new Error('Failed to load product catalog.');
+      }
+
+      if (recRes.status === 'fulfilled') {
+        const recData = recRes.value?.data?.recommendations || recRes.value?.recommendations || [];
+        setRecommendations(recData);
+      }
     } catch (err) {
       setError(err?.error?.message || err?.message || 'Failed to load product catalog.');
     } finally {
@@ -23,7 +47,7 @@ export default function ProductCatalog() {
   };
 
   useEffect(() => {
-    fetchProducts();
+    fetchCatalogAndRecommendations();
   }, []);
 
   const filteredProducts = products.filter((p) => {
@@ -32,24 +56,25 @@ export default function ProductCatalog() {
     return (
       p.name.toLowerCase().includes(q) ||
       p.sku.toLowerCase().includes(q) ||
+      (p.category && p.category.toLowerCase().includes(q)) ||
       (p.description && p.description.toLowerCase().includes(q))
     );
   });
 
   return (
     <div className="space-y-6 font-sans py-2">
-      {/* Clean Page Header (No excessive bordered box) */}
+      {/* Clean Page Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2">
         <div>
           <div className="inline-flex items-center space-x-2 text-[12px] font-mono text-ac font-semibold tracking-wider uppercase mb-1">
             <Package className="h-3.5 w-3.5" />
-            <span>Available industrial catalog</span>
+            <span>Industrial Automation &amp; Electrical Components</span>
           </div>
           <h1 className="font-display text-[34px] font-bold tracking-tight text-t">
             Product Catalog
           </h1>
           <p className="text-[14px] text-t2 font-sans mt-0.5">
-            Certified industrial hardware with live warehouse availability indicators.
+            Standard industrial catalog with verified SKUs and real-time inventory levels.
           </p>
         </div>
 
@@ -72,6 +97,70 @@ export default function ProductCatalog() {
           <button onClick={() => setError(null)} className="underline hover:text-t">
             Dismiss
           </button>
+        </div>
+      )}
+
+      {/* Feature B: AI Product Recommendations Strip */}
+      {!loading && recommendations.length > 0 && !searchQuery && (
+        <div className="card-base p-6 space-y-4 border-ac/30 bg-gradient-to-r from-s to-s2">
+          <div className="flex items-center justify-between border-b border-bd pb-3">
+            <div className="flex items-center space-x-2.5">
+              <div className="w-7 h-7 rounded-full bg-ac/10 text-ac flex items-center justify-center">
+                <Sparkles className="h-4 w-4" />
+              </div>
+              <div>
+                <h2 className="text-[17px] font-display font-bold text-t flex items-center space-x-2">
+                  <span>AI Recommended For Your Facility</span>
+                  <span className="text-[11px] font-mono font-medium text-ac px-2 py-0.5 rounded-pill bg-ac/10 border border-ac/20">
+                    Smart Match
+                  </span>
+                </h2>
+                <p className="text-[12.5px] text-t2 font-sans">
+                  Suggested components based on your order history and live stock availability.
+                </p>
+              </div>
+            </div>
+            <Link
+              to="/orders/new"
+              className="text-[12px] font-sans font-medium text-ac hover:underline hidden sm:inline-flex items-center space-x-1"
+            >
+              <span>Build Order Draft</span>
+              <ArrowRight className="h-3 w-3" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 pt-1">
+            {recommendations.map((rec) => (
+              <div
+                key={rec.id}
+                className="bg-s rounded-card p-4 border border-bd hover:border-ac/50 transition-colors flex flex-col justify-between space-y-3"
+              >
+                <div>
+                  <div className="flex items-center justify-between text-[11px] font-mono text-t2 mb-1.5">
+                    <span className="text-ac font-semibold">{rec.sku}</span>
+                    <span className="text-ok font-medium">{rec.available_stock} in stock</span>
+                  </div>
+                  <h4 className="text-[15px] font-bold text-t leading-snug">
+                    {rec.name}
+                  </h4>
+                  <span className="text-[11px] font-sans text-t2 block mt-0.5">
+                    {rec.category} • ${Number(rec.price || 0).toFixed(2)} / {rec.unit || 'Piece'}
+                  </span>
+                  <p className="text-[12px] text-t2/90 mt-2 line-clamp-2 italic leading-relaxed">
+                    "{rec.reason}"
+                  </p>
+                </div>
+
+                <Link
+                  to={`/orders/new?product_id=${rec.id}`}
+                  className="btn-header w-full py-1.5 text-[12px] font-sans font-medium flex items-center justify-center space-x-1.5"
+                >
+                  <ShoppingCart className="h-3.5 w-3.5 text-ac" />
+                  <span>Add to Order Draft</span>
+                </Link>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
@@ -130,7 +219,10 @@ export default function ProductCatalog() {
                   <h3 className="text-[18px] font-bold text-t group-hover:text-ac transition-colors">
                     {product.name}
                   </h3>
-                  <p className="text-[13px] text-t2 mt-1 line-clamp-2 leading-relaxed">
+                  <div className="text-[12px] font-mono text-t2 mt-0.5">
+                    {product.category || 'Industrial Automation'} • ${Number(product.price || 0).toFixed(2)} / {product.unit || 'Piece'}
+                  </div>
+                  <p className="text-[13px] text-t2 mt-1.5 line-clamp-2 leading-relaxed">
                     {product.description || 'Industrial equipment component with standard enterprise specifications.'}
                   </p>
                 </div>

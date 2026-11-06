@@ -161,10 +161,10 @@ export default function MyOrders() {
             <thead>
               <tr className="border-b border-bd bg-s2/60 text-t2 font-sans font-medium text-[12px] uppercase tracking-wider">
                 <th className="py-3 px-4">Order ID</th>
-                <th className="py-3 px-3">Date Submitted</th>
-                <th className="py-3 px-3">Promised Date</th>
-                <th className="py-3 px-3 text-right">Items</th>
+                <th className="py-3 px-3">Date</th>
+                <th className="py-3 px-3">Expected Delivery</th>
                 <th className="py-3 px-3 text-right">Requested Qty</th>
+                <th className="py-3 px-3 text-right">Allocated Qty</th>
                 <th className="py-3 px-3 text-center">Status</th>
                 <th className="py-3 px-4 text-right">Actions</th>
               </tr>
@@ -187,20 +187,20 @@ export default function MyOrders() {
                     {ord.promised_delivery_date || 'Standard'}
                   </td>
                   <td className="py-3.5 px-3 text-right font-mono text-t">
-                    {ord.item_count || 1}
+                    {ord.total_requested ?? ord.total_requested_quantity ?? '—'}
                   </td>
-                  <td className="py-3.5 px-3 text-right font-mono text-t">
-                    {ord.total_requested_quantity || '—'}
+                  <td className="py-3.5 px-3 text-right font-mono font-semibold text-t">
+                    {ord.total_allocated !== undefined ? ord.total_allocated : (ord.allocated_quantity ?? (ord.status === 'pending' ? '—' : 0))}
                   </td>
                   <td className="py-3.5 px-3 text-center">
-                    <StatusPill status={ord.status} />
+                    <StatusPill status={ord.display_status || ord.status} />
                   </td>
                   <td className="py-3.5 px-4 text-right">
                     <Link
                       to={`/orders/${ord.id}`}
                       className="btn-header py-1 px-3 text-[13px] font-sans font-medium inline-flex items-center space-x-1"
                     >
-                      <span>View</span>
+                      <span>View Details</span>
                       <ChevronRight className="h-3 w-3" />
                     </Link>
                   </td>

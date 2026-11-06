@@ -9,8 +9,8 @@
   --bg-rgb: 10 10 10;
   --s: #161616;
   --s-rgb: 22 22 22;
-  --s2: #232323;
-  --s2-rgb: 35 35 35;
+  --s2: #1C1C1C;
+  --s2-rgb: 28 28 28;
   --bd: #2A2A2A;
   --bd-rgb: 42 42 42;
   --divider: #2A2A2A;
@@ -21,12 +21,12 @@
   --t2-rgb: 161 161 170;
   --muted: #71717A;
   --muted-rgb: 113 113 122;
-  --ac: #E50914;
-  --ac-rgb: 229 9 20;
-  --ac-hover: #C00811;
-  --ac-bright: #E50914;
-  --ac-tint-bg: rgba(229, 9, 20, 0.15);
-  --ac-tint-text: #FF7A7A;
+  --ac: #C62828;
+  --ac-rgb: 198 40 40;
+  --ac-hover: #E53935;
+  --ac-bright: #E53935;
+  --ac-tint-bg: rgba(198, 40, 40, 0.10);
+  --ac-tint-text: #EF5350;
   --series: #8A8A8A;
   --ok: #4ADE80;
   --ok-rgb: 74 222 128;
@@ -34,11 +34,11 @@
   --wa-rgb: 245 181 68;
   --no: #FF7A7A;
   --no-rgb: 255 122 122;
-  --alert-bg: #2B2010;
-  --alert-border: #5A4210;
+  --alert-bg: rgba(198, 40, 40, 0.08);
+  --alert-border: rgba(198, 40, 40, 0.25);
   --card-shadow: none;
-  --card-hover-border: rgba(229, 9, 20, 0.5);
-  --card-hover-shadow: 0 12px 40px rgba(229, 9, 20, 0.12);
+  --card-hover-border: #3A3A3A;
+  --card-hover-shadow: none;
   --scrollbar-bg: #0A0A0A;
   --scrollbar-thumb: #2A2A2A;
   --grid-line: rgba(255, 255, 255, 0.025);
@@ -52,22 +52,22 @@
   --s-rgb: 255 255 255;
   --s2: #F1F1F3;
   --s2-rgb: 241 241 243;
-  --bd: #2A2A2A;
-  --bd-rgb: 42 42 42;
-  --divider: #D4D4D8;
-  --outline: #A1A1AA;
+  --bd: #E4E4E7;
+  --bd-rgb: 228 228 231;
+  --divider: #E4E4E7;
+  --outline: #D4D4D8;
   --t: #0A0A0A;
   --t-rgb: 10 10 10;
   --t2: #52525B;
   --t2-rgb: 82 82 91;
   --muted: #71717A;
   --muted-rgb: 113 113 122;
-  --ac: #E50914;
-  --ac-rgb: 229 9 20;
-  --ac-hover: #C00811;
-  --ac-bright: #E50914;
-  --ac-tint-bg: rgba(229, 9, 20, 0.08);
-  --ac-tint-text: #E50914;
+  --ac: #C62828;
+  --ac-rgb: 198 40 40;
+  --ac-hover: #E53935;
+  --ac-bright: #E53935;
+  --ac-tint-bg: rgba(198, 40, 40, 0.08);
+  --ac-tint-text: #C62828;
   --series: #8A8A8A;
   --ok: #15803D;
   --ok-rgb: 21 128 61;
@@ -75,11 +75,11 @@
   --wa-rgb: 180 83 9;
   --no: #DC2626;
   --no-rgb: 220 38 38;
-  --alert-bg: #FFF4E0;
-  --alert-border: #F0D49A;
+  --alert-bg: #FEF2F2;
+  --alert-border: #FECACA;
   --card-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --card-hover-border: rgba(229, 9, 20, 0.5);
-  --card-hover-shadow: 0 12px 40px rgba(229, 9, 20, 0.12);
+  --card-hover-border: #D4D4D8;
+  --card-hover-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
   --scrollbar-bg: #F1F1F3;
   --scrollbar-thumb: #D4D4D8;
   --grid-line: rgba(0, 0, 0, 0.04);
@@ -168,39 +168,40 @@ p {
 /* Common Design System Utility Classes */
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center min-h-[44px] px-6 text-[15px] font-semibold transition-all cursor-pointer;
-    border-radius: 999px;
-    background-color: #E50914 !important;
+    @apply inline-flex items-center justify-center min-h-[40px] px-5 text-[14px] font-semibold transition-all cursor-pointer;
+    border-radius: 8px;
+    background-color: var(--ac) !important;
     color: #FFFFFF !important;
-    box-shadow: 0 6px 24px rgba(229, 9, 20, 0.4);
+    box-shadow: 0 2px 8px rgba(198, 40, 40, 0.25);
   }
   .btn-primary * {
     color: #FFFFFF !important;
   }
   .btn-primary:hover {
-    background-color: #C00811 !important;
-    box-shadow: 0 8px 30px rgba(229, 9, 20, 0.6);
+    background-color: var(--ac-hover) !important;
+    box-shadow: 0 4px 14px rgba(198, 40, 40, 0.35);
   }
   .btn-secondary {
-    @apply inline-flex items-center justify-center min-h-[44px] px-6 text-[15px] font-semibold transition-colors cursor-pointer;
-    border-radius: 999px;
-    border: 1px solid var(--t);
+    @apply inline-flex items-center justify-center min-h-[40px] px-5 text-[14px] font-medium transition-colors cursor-pointer;
+    border-radius: 8px;
+    border: 1px solid var(--bd);
     color: var(--t);
-    background-color: transparent;
+    background-color: var(--s);
   }
   .btn-secondary:hover {
-    background-color: rgb(var(--s2-rgb) / 0.7);
+    background-color: var(--s2);
+    border-color: #383838;
   }
   .btn-header {
-    @apply inline-flex items-center justify-center px-4 py-2 text-[14px] font-medium transition-colors cursor-pointer;
-    border-radius: 999px;
-    border: 1px solid var(--outline);
+    @apply inline-flex items-center justify-center px-3.5 py-1.5 text-[13px] font-medium transition-colors cursor-pointer;
+    border-radius: 8px;
+    border: 1px solid var(--bd);
     color: var(--t);
-    background-color: transparent;
+    background-color: var(--s);
   }
   .btn-header:hover {
-    border-color: var(--t);
-    background-color: rgb(var(--s2-rgb) / 0.7);
+    border-color: #383838;
+    background-color: var(--s2);
   }
   .card-base {
     background-color: var(--s);
@@ -266,6 +267,72 @@ p {
   }
 }
 
+/* ==========================================================================
+   OrderWise Animated Red Wave Background
+   ========================================================================== */
+
+@keyframes waveDriftTR {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+  }
+  33% {
+    transform: translate3d(-14px, 10px, 0) scale(1.025) rotate(-0.75deg);
+  }
+  66% {
+    transform: translate3d(10px, -12px, 0) scale(0.985) rotate(0.6deg);
+  }
+}
+
+@keyframes waveDriftBL {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(16px, -12px, 0) scale(1.03) rotate(0.85deg);
+  }
+}
+
+@keyframes waveDriftBR {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-10px, -8px, 0) scale(1.02);
+  }
+}
+
+.animate-wave-tr {
+  animation: waveDriftTR 16s ease-in-out infinite;
+  transform-origin: 75% 25%;
+  will-change: transform;
+}
+
+.animate-wave-bl {
+  animation: waveDriftBL 18s ease-in-out infinite;
+  transform-origin: 20% 80%;
+  will-change: transform;
+}
+
+.animate-wave-br {
+  animation: waveDriftBR 14s ease-in-out infinite;
+  transform-origin: 80% 80%;
+  will-change: transform;
+}
+
+.orderwise-waves {
+  transition: opacity 250ms ease;
+}
+
+:root[data-theme="light"] .orderwise-waves {
+  opacity: 0.14;
+  filter: saturate(0.8);
+}
+
+:root[data-theme="dark"] .orderwise-waves,
+:root:not([data-theme="light"]) .orderwise-waves {
+  opacity: 1;
+}
+
 .ambient-glow-red {
   position: absolute;
   top: 32%;
@@ -276,10 +343,10 @@ p {
   max-width: 95vw;
   background: radial-gradient(
     ellipse 960px 520px at 50% 50%,
-    rgba(229, 9, 20, 0.135) 0%,
-    rgba(229, 9, 20, 0.075) 32%,
-    rgba(229, 9, 20, 0.025) 58%,
-    rgba(229, 9, 20, 0.005) 78%,
+    rgba(198, 40, 40, 0.12) 0%,
+    rgba(198, 40, 40, 0.06) 32%,
+    rgba(198, 40, 40, 0.02) 58%,
+    rgba(198, 40, 40, 0.005) 78%,
     transparent 100%
   );
   filter: blur(80px);
@@ -308,8 +375,8 @@ p {
   max-width: 90vw;
   background: radial-gradient(
     ellipse 720px 400px at 50% 50%,
-    rgba(229, 9, 20, 0.065) 0%,
-    rgba(229, 9, 20, 0.02) 42%,
+    rgba(198, 40, 40, 0.05) 0%,
+    rgba(198, 40, 40, 0.015) 42%,
     transparent 75%
   );
   filter: blur(90px);
@@ -326,9 +393,12 @@ p {
     transition: none !important;
   }
   .ambient-glow-red,
-  .ambient-glow-red-secondary {
-    animation: none;
-    transform: translate(-50%, -50%) scale(1);
+  .ambient-glow-red-secondary,
+  .animate-wave-tr,
+  .animate-wave-bl,
+  .animate-wave-br {
+    animation: none !important;
+    transform: none !important;
     opacity: 0.92;
   }
 }

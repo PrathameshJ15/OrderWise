@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import {
   Plus,
+  Sparkles,
   Trash2,
   Calendar,
   FileText,
@@ -41,6 +42,51 @@ export default function CreateOrder() {
     return d.toISOString().split('T')[0];
   });
   const [businessNotes, setBusinessNotes] = useState('');
+  const [aiPrompt, setAiPrompt] = useState('');
+  const [aiParsing, setAiParsing] = useState(false);
+  const [aiNotice, setAiNotice] = useState(null);
+
+  const handleParseAiOrder = async () => {
+    if (!aiPrompt.trim() || aiParsing) return;
+    setAiParsing(true);
+    setError(null);
+    setAiNotice(null);
+
+    try {
+      const res = await apiClient.post('/customer/ai/parse-order-prompt', {
+        prompt: aiPrompt.trim(),
+      });
+
+      const data = res?.data || res;
+      const draft = data?.draft_items || [];
+
+      if (draft.length > 0) {
+        setItems(
+          draft.map((d) => ({
+            productId: d.product_id,
+            requestedQuantity: d.requested_quantity || 10,
+            minimumAcceptableQuantity: d.minimum_acceptable_quantity || 5,
+            partialDeliveryAllowed: d.partial_delivery_allowed ?? true,
+          }))
+        );
+
+        if (data.suggested_delivery_date) {
+          setPromisedDeliveryDate(data.suggested_delivery_date);
+        }
+        if (data.suggested_notes) {
+          setBusinessNotes(data.suggested_notes);
+        }
+
+        setAiNotice(`Matched ${draft.length} industrial product(s). Please review and adjust the quantities below before confirming.`);
+      } else {
+        setError('No recognized products found in your prompt. You can select products manually below or try specifying industrial hardware like PLC, Pressure Sensor, or Motor.');
+      }
+    } catch (err) {
+      setError(err?.error?.message || err?.message || 'Failed to parse natural language order.');
+    } finally {
+      setAiParsing(false);
+    }
+  };
 
   useEffect(() => {
     const fetchCatalog = async () => {
@@ -245,6 +291,60 @@ export default function CreateOrder() {
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Feature D: AI Natural Language Order Creation Assistant */}
+          <div className="card-base p-5 border-ac/30 bg-gradient-to-r from-s to-s2 space-y-3">
+            <div className="flex items-center space-x-2.5">
+              <div className="w-7 h-7 rounded-full bg-ac/10 text-ac flex items-center justify-center">
+                <Sparkles className="h-4 w-4" />
+              </div>
+              <div>
+                <h3 className="text-[16px] font-bold text-t flex items-center space-x-2">
+                  <span>AI Order Creation Assistant</span>
+                  <span className="text-[11px] font-mono text-ac px-2 py-0.5 rounded-pill bg-ac/10 border border-ac/20">
+                    Natural Language Draft
+                  </span>
+                </h3>
+                <p className="text-[12.5px] text-t2 font-sans">
+                  Describe what your facility needs in plain English. AI matches components against the industrial catalog.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-2 pt-1">
+              <input
+                type="text"
+                value={aiPrompt}
+                onChange={(e) => setAiPrompt(e.target.value)}
+                placeholder="e.g. I need 20 PLC Control Modules and 10 Industrial Pressure Sensors by next week"
+                className="flex-1 bg-s border border-bd rounded-pill px-4 py-2.5 text-[13.5px] text-t placeholder-t2/50 focus:outline-none focus:border-ac transition-colors font-sans"
+              />
+              <button
+                type="button"
+                disabled={aiParsing || !aiPrompt.trim()}
+                onClick={handleParseAiOrder}
+                className="btn-primary min-h-[40px] px-5 text-[13px] whitespace-nowrap flex items-center justify-center space-x-1.5 disabled:opacity-50"
+              >
+                {aiParsing ? (
+                  <>
+                    <RefreshCw className="h-3.5 w-3.5 animate-spin" />
+                    <span>Parsing Catalog...</span>
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="h-3.5 w-3.5" />
+                    <span>Generate Draft</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            {aiNotice && (
+              <div className="text-[12px] font-mono text-ok bg-ok/10 border border-ok/20 rounded-pill px-3 py-1.5 flex items-center space-x-2">
+                <Check className="h-3.5 w-3.5 shrink-0" />
+                <span>{aiNotice}</span>
+              </div>
+            )}
+          </div>
           {/* Line Items Section */}
           <div className="card-base space-y-4">
             <div className="flex items-center justify-between border-b border-bd pb-4">

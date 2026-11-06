@@ -1,0 +1,56 @@
+================================================================================
+ORDERWISE — INSTAGRAM REEL & SOCIAL MEDIA LAUNCH COPY
+================================================================================
+Project: OrderWise (Supply Chain Allocation Engine)
+Format: 9:16 Vertical Reel (1080x1920) • 25 Seconds
+Headline: "Allocate Smarter. Fulfill What Matters."
+
+--------------------------------------------------------------------------------
+1. INSTAGRAM REEL CAPTION (Engineered for High Saves & Shares)
+--------------------------------------------------------------------------------
+40 units in stock. 75 units ordered across your top 3 customers.
+
+Who gets fulfilled? Who gets deferred? And how do you explain it when your biggest buyer calls angry? 😤📦
+
+In enterprise supply chains, manual gut-feeling allocation leads to stockouts, delayed fulfillment, and lost client trust.
+
+We built OrderWise to fix this with mathematical certainty:
+
+⚡ Deterministic Allocation Engine: Strict hierarchical priority (Approved Priority > Delivery Date > Creation Time)
+⚡ Governed AI Co-Pilot: Contextual priority recommendations extracted from emergency business notes—always gated by human approval
+⚡ What-If Simulation Lab: Model replenishment delays or demand surges in-memory without touching live stock
+⚡ Full Audit Explanations: Every single unit allocated is cryptographically logged and explainable
+
+AI recommends. Business rules validate. Authorized humans approve. OrderWise allocates and explains.
+
+Watch the full platform walkthrough via the link in our bio! 🚀
+
+#SupplyChain #InventoryManagement #AI #Operations #SaaS #Logistics #TechStartup #SoftwareEngineering #IndustrialAI #WebDev
+
+--------------------------------------------------------------------------------
+2. TIKTOK / YOUTUBE SHORTS TITLE & DESCRIPTION
+--------------------------------------------------------------------------------
+Title: How AI Solves Inventory Scarcity in 25 Seconds 📦⚡
+
+Description:
+When you have 40 units left and 3 enterprise customers ordering 75 units total, who gets shipped?
+OrderWise uses deterministic business rules + governed AI to eliminate supply chain guesswork.
+Full case study: link in bio!
+
+--------------------------------------------------------------------------------
+3. LINKEDIN POST (Operations & Supply Chain Leaders)
+--------------------------------------------------------------------------------
+"Who gets the inventory when stock runs out?"
+
+Every operations and warehouse director knows this nightmare scenario:
+You have 40 units of a critical industrial gauge in stock. Three tier-1 clients place competing orders totaling 75 units on the same morning.
+
+If your sales team argues over who shouts loudest, you risk contractual penalties, damaged relationships, and costly partial shipments.
+
+OrderWise replaces spreadsheet guesswork with an explainable allocation engine:
+
+1. Deterministic Multi-Pass Allocation: Allocates down to the unit based on approved priority, promised dates, and partial-fulfillment tolerances.
+2. Human-in-the-Loop AI: Leverages LLMs to evaluate order urgency from qualitative field notes, while requiring authorized manager approval before any inventory row is reserved.
+3. Impact Analyzer: Compare allocation runs side-by-side to understand exact revenue and order impact before dispatch.
+
+Check out our 25-second Reel preview and explore how modern supply chain intelligence protects fulfillment margins.

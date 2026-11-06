@@ -65,7 +65,7 @@ export default function Pricing() {
           </div>
 
           {/* Card 2: Growth (Featured tier, red border & badge) */}
-          <div className="bg-s border-2 border-ac rounded-card flex flex-col justify-between p-7 space-y-6 relative shadow-[0_12px_40px_rgba(229,9,20,0.18)]">
+          <div className="bg-s border-2 border-ac rounded-card flex flex-col justify-between p-7 space-y-6 relative ">
             <div className="space-y-4">
               <span className="badge-ac text-[11px] font-semibold px-3 py-1">
                 Most popular
@@ -82,7 +82,7 @@ export default function Pricing() {
 
             <Link
               to="/login"
-              className="btn-primary w-full text-center flex items-center justify-center min-h-[44px] text-[14px] shadow-[0_6px_24px_rgba(229,9,20,0.35)]"
+              className="btn-primary w-full text-center flex items-center justify-center min-h-[44px] text-[14px] "
             >
               Book a demo
             </Link>

@@ -97,7 +97,7 @@ export default function Solutions() {
 
           <Link
             to="/login"
-            className="btn-primary min-h-[44px] px-6 text-[14px] shadow-[0_6px_24px_rgba(229,9,20,0.4)] shrink-0"
+            className="btn-primary min-h-[44px] px-6 text-[14px]  shrink-0"
           >
             <span>Launch Operations Portal &rarr;</span>
           </Link>

@@ -7,7 +7,7 @@ import Login from '../src/pages/Login';
 import Register from '../src/pages/Register';
 
 describe('Frontend Authentication UI & Flow Tests', () => {
-  it('renders login page with input fields and demo quick-fill buttons', () => {
+  it('renders login page with input fields and authenticate button', () => {
     render(
       <AuthProvider>
         <MemoryRouter>
@@ -18,12 +18,11 @@ describe('Frontend Authentication UI & Flow Tests', () => {
 
     expect(screen.getByText(/Sign In to OrderWise/i)).toBeInTheDocument();
     expect(screen.getByPlaceholderText(/name@company.com/i)).toBeInTheDocument();
-    expect(screen.getByText('Admin')).toBeInTheDocument();
-    expect(screen.getByText('Manager')).toBeInTheDocument();
-    expect(screen.getByText('Customer')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/••••••••••••/i)).toBeInTheDocument();
+    expect(screen.getByText(/Authenticate Session/i)).toBeInTheDocument();
   });
 
-  it('populates credentials when quick-fill button is clicked', () => {
+  it('allows user to enter email and password credentials', () => {
     render(
       <AuthProvider>
         <MemoryRouter>
@@ -32,11 +31,14 @@ describe('Frontend Authentication UI & Flow Tests', () => {
       </AuthProvider>
     );
 
-    const adminButton = screen.getByText('Admin');
-    fireEvent.click(adminButton);
-
     const emailInput = screen.getByPlaceholderText(/name@company.com/i);
-    expect(emailInput.value).toBe('admin@orderwise.com');
+    const passInput = screen.getByPlaceholderText(/••••••••••••/i);
+
+    fireEvent.change(emailInput, { target: { value: 'alice@demo.com' } });
+    fireEvent.change(passInput, { target: { value: 'Alice123!' } });
+
+    expect(emailInput.value).toBe('alice@demo.com');
+    expect(passInput.value).toBe('Alice123!');
   });
 
   it('renders registration form with password security policy indicators', () => {

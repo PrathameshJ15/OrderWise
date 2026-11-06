@@ -45,6 +45,7 @@ export default function AllocationCenter() {
   // Results Filter & View Mode
   const [statusFilter, setStatusFilter] = useState('all');
   const [viewMode, setViewMode] = useState('table'); // '3d' | 'table'
+  const [selectedDecision, setSelectedDecision] = useState(null);
 
   const fetchOpportunities = useCallback(async () => {
     try {
@@ -249,21 +250,21 @@ export default function AllocationCenter() {
         </div>
       )}
 
-      {/* Controlled Reallocation Opportunity Banner (Phase 19) */}
-      <div className="card-base p-4 border border-ac/40 bg-s2/40 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      {/* Controlled Reallocation Opportunity Banner */}
+      <div className="card-base p-4 border border-bd bg-s2/40 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center space-x-3">
-          <div className="w-9 h-9 rounded-full bg-ac/15 text-ac flex items-center justify-center shrink-0">
-            <Sparkles className="w-5 h-5" />
+          <div className="w-8 h-8 rounded-full bg-ac/15 text-ac flex items-center justify-center shrink-0">
+            <Sparkles className="w-4 h-4" />
           </div>
           <div>
             <div className="flex items-center space-x-2">
-              <span className="text-[14px] font-bold text-t">Controlled Automated Reallocation</span>
-              <span className="text-[11px] font-mono px-2 py-0.5 rounded-pill bg-ac/20 text-ac border border-ac/30">
-                Phase 19
+              <span className="text-[14px] font-bold text-t">Controlled Reallocation</span>
+              <span className="text-[11px] font-mono px-2 py-0.5 rounded-pill bg-ok/15 text-ok border border-ok/30">
+                Ready
               </span>
             </div>
             <p className="text-[13px] text-t2 mt-0.5">
-              Inspect waiting deferred/pending orders against current physical inventory without mutating live state.
+              Analyze deferred orders against available stock with zero-mutation preview.
             </p>
           </div>
         </div>
@@ -271,14 +272,14 @@ export default function AllocationCenter() {
         <button
           onClick={handlePreviewReallocation}
           disabled={reallocationLoading}
-          className="btn-secondary min-h-[40px] px-5 text-[13px] whitespace-nowrap self-start md:self-auto flex items-center space-x-2"
+          className="btn-secondary min-h-[38px] px-4 text-[13px] whitespace-nowrap self-start md:self-auto flex items-center space-x-2"
         >
           {reallocationLoading ? (
             <RefreshCw className="w-3.5 h-3.5 animate-spin" />
           ) : (
             <Sparkles className="w-3.5 h-3.5 text-ac" />
           )}
-          <span>Preview Controlled Reallocation</span>
+          <span>Preview Reallocation</span>
         </button>
       </div>
 
@@ -460,8 +461,10 @@ export default function AllocationCenter() {
                   <th className="py-3 px-3 text-center">Priority</th>
                   <th className="py-3 px-3 text-right">Requested</th>
                   <th className="py-3 px-3 text-right">Allocated</th>
-                  <th className="py-3 px-3 text-center">Decision</th>
+                  <th className="py-3 px-3 text-right">Available Stock</th>
+                  <th className="py-3 px-3 text-center">Status</th>
                   <th className="py-3 px-4">Deterministic Explanation</th>
+                  <th className="py-3 px-3 text-right">Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-bd/60">
@@ -485,13 +488,25 @@ export default function AllocationCenter() {
                     <td className="py-3.5 px-3 text-right font-mono font-bold text-ac">
                       {res.allocated_quantity}
                     </td>
+                    <td className="py-3.5 px-3 text-right font-mono text-t2">
+                      {res.explanation?.stock_at_allocation ?? res.available_quantity ?? '—'}
+                    </td>
                     <td className="py-3.5 px-3 text-center">
                       <StatusPill status={res.status} />
                     </td>
-                    <td className="py-3.5 px-4 text-t2 text-[13px] max-w-md leading-relaxed">
+                    <td className="py-3.5 px-4 text-t2 text-[13px] max-w-sm truncate leading-relaxed">
                       {typeof res.explanation === 'object' && res.explanation !== null
                         ? res.explanation.reason || JSON.stringify(res.explanation)
                         : (res.explanation || '—')}
+                    </td>
+                    <td className="py-3.5 px-3 text-right">
+                      <button
+                        type="button"
+                        onClick={() => setSelectedDecision(res)}
+                        className="btn-header px-2.5 py-1 text-[12px] font-sans hover:text-ac inline-flex items-center space-x-1"
+                      >
+                        <span>Review</span>
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -575,12 +590,12 @@ export default function AllocationCenter() {
         title="Execute Order Allocation Engine"
       >
         <div className="space-y-4 text-sm font-sans">
-          <div className="p-4 rounded-card bg-s2 border border-bd text-t2 space-y-1.5">
-            <span className="font-semibold text-t block">
-              Deterministic Invariant Guarantee
+          <div className="p-3.5 rounded-card bg-s2 border border-bd text-t2 space-y-1">
+            <span className="font-semibold text-t block text-[13px]">
+              Allocation Rules &amp; Consistency
             </span>
-            <p className="text-[13px] leading-relaxed">
-              Order items will be sorted by Approved Priority DESC &gt; Promised Delivery Date ASC &gt; Order Created Date ASC. Physical warehouse reservations will be updated within a strict database transaction.
+            <p className="text-[12.5px] leading-relaxed">
+              Orders are allocated by priority tier, delivery commitment date, and order timestamp. Stock reservations are committed in an atomic database transaction.
             </p>
           </div>
 
@@ -742,6 +757,78 @@ export default function AllocationCenter() {
             </div>
           )}
         </div>
+      </Modal>
+
+      {/* Decision Review & Progressive Disclosure Modal */}
+      <Modal
+        isOpen={Boolean(selectedDecision)}
+        onClose={() => setSelectedDecision(null)}
+        title={`Allocation Decision Review — Order #${selectedDecision?.order_id}`}
+      >
+        {selectedDecision && (
+          <div className="space-y-4 text-sm font-sans">
+            <div className="p-3.5 rounded-card bg-s2 border border-bd flex items-center justify-between">
+              <div>
+                <span className="font-bold text-t block text-[15px]">{selectedDecision.product_name}</span>
+                <span className="text-[12px] text-t2 font-mono">{selectedDecision.customer_name || 'Customer'}</span>
+              </div>
+              <StatusPill status={selectedDecision.status} />
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+              <div className="p-3 bg-s2 rounded-card border border-bd">
+                <span className="text-[11px] font-mono text-t2 block">Requested</span>
+                <span className="text-xl font-bold font-mono text-t mt-1 block">{selectedDecision.requested_quantity}</span>
+              </div>
+              <div className="p-3 bg-s2 rounded-card border border-bd">
+                <span className="text-[11px] font-mono text-t2 block">Allocated</span>
+                <span className="text-xl font-bold font-mono text-ac mt-1 block">{selectedDecision.allocated_quantity}</span>
+              </div>
+              <div className="p-3 bg-s2 rounded-card border border-bd">
+                <span className="text-[11px] font-mono text-t2 block">Stock At Run</span>
+                <span className="text-xl font-bold font-mono text-t mt-1 block">
+                  {selectedDecision.explanation?.stock_at_allocation ?? '—'}
+                </span>
+              </div>
+              <div className="p-3 bg-s2 rounded-card border border-bd">
+                <span className="text-[11px] font-mono text-t2 block">Priority</span>
+                <div className="mt-1 flex justify-center">
+                  <Badge priority={selectedDecision.approved_priority || 'MEDIUM'} />
+                </div>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-card bg-s2 border border-bd space-y-2">
+              <span className="text-[12px] font-mono font-semibold text-t block uppercase tracking-wider">
+                Deterministic Explanation
+              </span>
+              <p className="text-[13px] text-t2 leading-relaxed">
+                {typeof selectedDecision.explanation === 'object' && selectedDecision.explanation !== null
+                  ? selectedDecision.explanation.reason || JSON.stringify(selectedDecision.explanation)
+                  : (selectedDecision.explanation || 'Evaluated in deterministic priority sequence.')}
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 text-[12px] font-mono text-t2">
+              <div className="p-2.5 rounded bg-s2/60 border border-bd">
+                Partial Delivery Allowed: <strong className="text-t">{selectedDecision.explanation?.partial_delivery_allowed ? 'Yes' : 'No'}</strong>
+              </div>
+              <div className="p-2.5 rounded bg-s2/60 border border-bd">
+                Min Threshold: <strong className="text-t">{selectedDecision.explanation?.minimum_acceptable_quantity ?? '—'}</strong>
+              </div>
+            </div>
+
+            <div className="pt-2 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setSelectedDecision(null)}
+                className="btn-secondary px-4 py-2 text-[13px]"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        )}
       </Modal>
     </div>
   );

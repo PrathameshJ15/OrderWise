@@ -29,7 +29,7 @@ export default function Badge({ priority, variant = 'default', className = '', c
     }
 
     return (
-      <span className={`inline-flex items-center rounded-pill px-2.5 py-0.5 text-[12px] font-mono font-medium ${style} ${className}`}>
+      <span className={`inline-flex items-center rounded-[6px] px-2.5 py-0.5 text-[12px] font-mono font-medium ${style} ${className}`}>
         {p}
       </span>
     );
@@ -51,7 +51,7 @@ export default function Badge({ priority, variant = 'default', className = '', c
 
   return (
     <span
-      className={`inline-flex items-center rounded-pill px-2.5 py-0.5 text-[12px] font-mono font-medium ${variantStyle} ${className}`}
+      className={`inline-flex items-center rounded-[6px] px-2.5 py-0.5 text-[12px] font-mono font-medium ${variantStyle} ${className}`}
     >
       {children}
     </span>
