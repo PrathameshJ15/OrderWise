@@ -21,12 +21,78 @@
 | **Phase I (Premium 3D Visual Layer)** | 100% | 100% Complete | 🟢 Operational |
 | **Light Mode & Theme Toggle** | 100% | 100% Complete | 🟢 Operational |
 | **Full Navigation & Route Integration**| 100% | 100% Interconnected | 🟢 Integrated |
-| **Frontend Test Suite** | 100% Pass | 54/54 Passed (14/14 Test Files) | 🟢 Passing |
+| **Frontend Test Suite** | 100% Pass | 67/67 Passed (16/16 Test Files) | 🟢 Passing |
 | **Pure Backend Unit Tests** | 100% Pass | 18/18 Allocation Pure Passed | 🟢 Passing |
-| **Production Vite Build** | 0 Errors | Clean Chunks (6.22s) | 🟢 Verified |
+| **Production Vite Build** | 0 Errors | Clean Chunks (7.65s) | 🟢 Verified |
+| **Phase 25 (3D Warehouse Digital Twin)** | 100% | 100% Complete & Verified | 🟢 Operational |
+| **Phase 26 (Global Navbar Alignment)** | 100% | All 3 Portals Aligned & Responsive | 🟢 Operational |
 | **Enterprise UI Simplification** | 100% | Streamlined Industrial SaaS UX | 🟢 Complete |
 | **OrderWise Design System** | 100% | Dual-Theme (Dark & Light) + ThemeToggle | 🟢 Complete |
 | **OWASP Security & RBAC Hardening** | 100% | 100% Enforced | 🟢 Secured |
+
+---
+
+## 🏭 Advanced 3D Industrial Digital Twin Upgrade (Simulation Lab)
+
+### Overview
+Upgraded the OrderWise Simulation Lab 3D visualization into a high-fidelity, realistic, and interactive industrial digital twin warehouse environment. The system features procedural PBR canvas textures, distinct physical models per SKU, autonomous AGV vehicles, loading docks, overhead roof trusses, and cinematic camera controls while preserving 100% of the underlying deterministic allocation logic, scenario configurations, and zero-mutation sandboxing.
+
+### Key Enhancements Delivered
+1. **Realistic Warehouse Environment**:
+   - **Polished Concrete Epoxy Floor**: Procedural PBR floor texture with 4x4 expansion control joints, fine aggregate speckles, epoxy gloss, perimeter hazard striping, and green pedestrian walkways.
+   - **Industrial Pallet Racking**: 4 multi-bay, 3-tier heavy-duty pallet racks with vertical upright columns, safety footplates anchored to the floor, horizontal orange load beams, wire mesh decking, and yellow column impact guards.
+   - **Loading Docks**: Inbound Receiving Bay with motorized roller conveyor and staged receipt pallets; Outbound Dispatch Bay with ready-to-ship order staging.
+   - **Overhead Structural Trusses & Lighting**: Suspended transverse structural steel roof trusses and high-bay industrial LED luminaires casting soft spot cones.
+
+2. **Distinct Physical Inventory Representation**:
+   - **Zone A (`PUMP-X100`)**: Heavy industrial machinery timber crates with metallic corner protectors and reinforcement steel bands.
+   - **Zone B (`VALVE-B200`)**: High-visibility heavy-duty stackable parts containers with visible valve fittings.
+   - **Zone C (`GAUGE-P300`)**: Precision sensor instrument cartons with antistatic warning labels, shipping barcodes, and pulsing critical shortage beacon.
+   - **Zone D (`CTRL-U400`)**: Electrical PLC control panel enclosures in protective heavy industrial packaging.
+
+3. **Autonomous Warehouse Logistics Animation**:
+   - Autonomous AGV (Automated Guided Vehicle) with safety yellow chassis, black bumpers, 4 polyurethane wheels, front mast, fork tines carrying an ISO pallet, and a rotating flashing amber warning strobe beacon.
+   - Moves along the central thoroughfare between Inbound Docks and Storage Racks.
+   - Transit logistics particles visualizing live inventory flow.
+
+4. **Interactive Simulation & Authoritative Synchronization**:
+   - Synchronizes directly with backend simulation scenarios (`inventory_increase`, `inventory_decrease`, `demand_surge`, `supplier_delay`, `priority_change`).
+   - Reflects real diffs: net stock delta, fulfillment rate, allocated vs deferred quantity.
+   - Mode switcher: **Baseline State** vs **Simulated Outcome**.
+   - Interactive Raycasting with hover inspection tooltips and floating glassmorphic inventory HUD inspector displaying live stock, fulfillment progress bar, and camera focus shortcuts.
+
+5. **Advanced Camera Controls**:
+   - Orbit, Zoom, Pan with mouse drag and touch gestures.
+   - Quick-preset buttons: **Isometric (Default)**, **Blueprint (Overhead Top View)**, **Aisle View (Ground Perspective)**, **Zone C (Scarce Close-Up)**, **Docks View**, and **Center Camera on Selected Zone**.
+   - Smooth cinematic lerp camera transitions across all presets.
+
+6. **Performance & Reliability**:
+   - **100% Offline Procedural Textures**: Zero external network downloads, eliminating 404 texture or model loading errors.
+   - **60 FPS Performance**: Geometry and material reuse, pixel ratio clamping, and clean WebGL disposal.
+   - **Graceful WebGL Fallback**: 2D floorplan view with interactive zone cards when WebGL is unavailable.
+
+---
+
+## 🛠️ Root Cause Analysis & Fixes (Manager Data, Dry Simulation, Route 404, Runtime Split)
+
+### 1. Issue: "IN MANAGER I CANT SEE ANY DATA AND GRAPH"
+- **Root Cause**: In `backend/src/routes/allocation.js`, top-level `router.use(authorize('admin'))` blocked `inventory_manager` from `GET /api/allocation/runs` with 403 Forbidden. `AdminDashboard.jsx` executed `Promise.all` containing this endpoint, causing the entire dashboard promise to reject and blanking all charts and metric cards.
+- **Fix**: Updated backend permissions in `allocation.js` to allow `authorize('admin', 'inventory_manager')` for read endpoints and dry-run execution, keeping live mutation strictly admin-only. Replaced unhandled `Promise.all` rejection in `AdminDashboard.jsx` with individual error handling and safe array extraction.
+
+### 2. Issue: "Run Dry Simulation DOESNT WORK"
+- **Root Cause**: `inventory_manager` was blocked with 403 on `POST /api/allocation/run`. Additionally, `AllocationCenter.jsx` did not defensively unwrap `outcome` or safely populate simulation results before closing the modal.
+- **Fix**: Allowed dry-run simulations (`dry_run: true`) for `inventory_manager` in `backend/src/routes/allocation.js`. In `AllocationCenter.jsx`, defensively unpacked `res?.data ?? res` and set `DRY-RUN` inspection state safely.
+
+### 3. Issue: Route Not Found (`/ai/assistant`)
+- **Root Cause**: CustomerDashboard linked to `/ai/assistant` while `App.jsx` only registered `/assistant`.
+- **Fix**: Registered `/ai/assistant` in `App.jsx` alongside `/assistant` and updated `CustomerDashboard.jsx`.
+
+### 4. Issue: Application Exception (`TypeError: Cannot read properties of undefined (reading 'split')`)
+- **Root Cause**: `SupplierNetworkVisual.jsx` called `sup.supplier_name.split(' ')[0]` without checking for undefined or missing `supplier_name`.
+- **Fix**: Added optional chaining and safe fallbacks in `SupplierNetworkVisual.jsx`, `AllocationDistributionVisual.jsx`, `Breadcrumbs.jsx`, and `UserProfileMenu.jsx`.
+
+### 5. Issue: Bottom-Left Red Wave Overlap & Opacity
+- **Fix**: Slid `showBottomLeft` wave container tightly into the bottom-left corner and decreased opacity to `curve.opacity * 0.35` without altering top-right hero lines.
 
 ---
 
@@ -529,3 +595,214 @@ pm --prefix backend test -- tests/allocation.pure.test.js).
 - **Backend Pure Allocation Suite:** **18 / 18 PASSED** (`npm --prefix backend test -- tests/allocation.pure.test.js`).
 - **Production Vite Build:** `vite build` completed in **5.44s** with **0 errors**.
 - **Development Server:** Active and responding on `http://localhost:5173/` (HTTP 200).
+
+
+---
+
+## 🌐 Phase 23: Multilingual AI Intelligence, Natural Language Requisitions, Cross-Device LAN & Launch Reel (100% Complete & Verified)
+
+### Objectives & Deliverables
+1. **Multilingual AI Intelligence Engine (`multilingualChatService.js`, `I18nContext.jsx`, `LanguageSwitcher.jsx`):**
+   - **Full Trilingual Domain Support:** Native support for English (`en`), Hindi (`hi`), and Marathi (`mr`).
+   - **Supply Chain Domain Precision:** Accurately translates complex industrial logistics terms (e.g., bottleneck resolution, deterministic allocation tie-breakers, partial shipment thresholds, priority overrides, and economic order quantities) into fluent Hindi and Marathi without transliteration artifacts.
+   - **Seamless Mid-Conversation Language Switching:** Users can switch languages dynamically at any turn without losing session context, order references, or inventory state.
+   - **Explainable Decision Logic:** Explains order outcomes (such as Alice's deferral vs. Charlie's fulfillment on Pressure Gauge Pro) in the user's selected language using exact mathematical constraints and business rules.
+
+2. **Customer Natural Language Requisition Assistant (`CustomerAIAssistant.jsx`, `customerAiService.js`):**
+   - **Conversational Requisition Parsing:** Industrial customers can converse naturally with the assistant (e.g., *"I need 25 units of Pressure Gauge Pro by next Friday, but I can accept a minimum of 15 units if stock is tight"*).
+   - **Deterministic Entity Extraction:** Automatically extracts SKU, requested quantity, minimum acceptable quantity, partial delivery preference, and promised delivery date.
+   - **One-Click Requisition Transfer:** Directly loads structured line-items into `CreateOrder.jsx` with full customer validation and verification before submission.
+   - **Security & RBAC Enforcement:** Requisition drafts strictly respect authenticated customer identity and prevent cross-customer data leakage.
+
+3. **Dynamic Cross-Device LAN API Resolution (`client.js`):**
+   - **Zero-Config Mobile & Tablet Testing:** Dynamically resolves API endpoints using `window.location.hostname`, allowing physical mobile devices and tablets on the local Wi-Fi network to interact with the backend API seamlessly without failing on `localhost:4000`.
+   - **Automated Fallback:** Automatically falls back to configured `VITE_API_BASE_URL` when accessed outside a browser window or in automated headless environments.
+
+4. **Automated Launch Showcase Video & Reel Generator (`scripts/render_reel.py`):**
+   - **Industrial Reel Generation:** Playwright-driven headless recording generating a vertical 1080x1920 9:16 Instagram/LinkedIn showcase reel (`brag-output/OrderWise_Instagram_Reel.mp4`).
+   - **Showcase Progression:** Features kinetic typography, 3D isometric warehouse platform animation, live allocation queue resolution demo, and clean social share copy (`brag-output/share-copy.txt`).
+
+### Quality Verification & Gate Checks
+- **Frontend Test Suite:** 14 test files covering core layouts, theme toggle, multilingual chat, customer AI, and animated waves.
+- **Backend Pure Allocation Suite:** **18 / 18 PASSED** (`npm --prefix backend test -- tests/allocation.pure.test.js`).
+- **Production Vite Build:** Clean Vite production build with zero chunk errors (`npm --prefix frontend run build`).
+- **Platform Integrity:** Zero alterations to deterministic allocation algorithms, database schema, or human approval safety gates.
+
+---
+
+## 🚀 Phase 24: Header Overlap Resolution, Multilingual UX Refinement & Hero Badge Clean-up (100% Complete & Verified)
+
+### 1. Root Cause Analysis
+- **Navbar Overlap & Spacing (Desktop & Tablet):**
+  - The navbar brand tagline (`"Supply chain & allocation intelligence"`) was set to `hidden sm:block`, consuming ~260px of horizontal space on viewports between 640px and 1279px (`sm` to `lg`).
+  - At 1024px (`lg`), the segmented theme toggle (`variant="segmented"`, ~130px) and full navigation links (`space-x-8`, ~420px) collided with the brand tagline and action buttons (`Sign In`, `Register`, `Launch Operations`), exceeding the 1024px width and causing visible overlaps, clipping, and text wrapping.
+  - Furthermore, between 640px and 1023px, the desktop navigation was hidden while the hamburger button was also hidden (`flex sm:hidden`), blocking tablet access to primary links.
+- **Multilingual Token & Dialect Detection:**
+  - Common Devanagari words such as `'ऑर्डर'` were previously categorized exclusively as Marathi markers, causing queries like `"मेरा ऑर्डर कब आएगा?"` to be misclassified as Marathi.
+  - Roman script queries such as `"Mera order kab aayega?"` and `"Majhi order kadhi yeil?"` lacked explicit scoring markers in `classifyIntent`, resulting in generic fallback replies instead of conversational delivery dates.
+  - `mr.json` had Hindi text in several keys instead of natural, conversational Marathi.
+- **Hero Badge:**
+  - The hero badge pill `"✨ AI-Powered Procurement & Inventory Platform"` required permanent removal while strictly preserving the hero heading `"Allocate Smarter. Fulfill What Matters."`.
+- **Bottom-Left Red Waves:**
+  - In commit `45c51a8`, the bottom-left wave ribbons had an expansive container height of `550px` with `overflow-visible`, extending upwards across the operational roadmap banner card.
+  - The bottom callout banner displayed raw translation keys (`home.launch_heading`) before full key resolution.
+
+### 2. Files Modified & Concrete Fixes
+1. **`frontend/src/components/layout/PublicNavbar.jsx`:**
+   - Hidden brand tagline on `< xl` screens (`hidden xl:block shrink-0`) to immediately release 260px of critical horizontal navbar space on `lg` desktop viewports (1024px–1279px).
+   - Applied responsive desktop navigation spacing (`space-x-3 xl:space-x-6 shrink-0 whitespace-nowrap text-[13.5px] xl:text-[14px]`).
+   - Integrated compact theme toggle button (`variant="button"`) on screens `< xl`, reserving the segmented toggle for screens `≥ 1280px`.
+   - Enabled responsive hamburger menu for viewports `< 1024px` (`flex lg:hidden`) so mobile and tablet visitors have 100% access to all links, authentication, and operations without clutter.
+   - Guaranteed `whitespace-nowrap` on all interactive links and buttons to prevent text wrapping or clipped labels.
+2. **`frontend/src/components/ui/LanguageSwitcher.jsx`:**
+   - Enforced compact fixed-pill styling with `whitespace-nowrap shrink-0` to prevent language labels from expanding the header.
+   - Maintained full persistence in `localStorage` (`orderwise_lang` and `orderwise_chat_lang`).
+   - Added `onLanguageChange` callback support to synchronize language across independent components and standalone unit tests.
+3. **`frontend/src/locales/hi.json` & `frontend/src/locales/mr.json`:**
+   - Replaced formal Sanskritized terms with natural, conversational Hindi and genuine Marathi phrasing.
+   - Standardized technical vocabulary: preserved `Order`, `Inventory`, `Stock`, `Allocation`, `Product`, `Dashboard`, and `AI` in standard understandable formats.
+   - Fixed all `home` and `common` keys in `mr.json` to genuine Marathi.
+4. **`backend/src/services/multilingualChatService.js`:**
+   - Added Devanagari and Roman script detection tokens for Hinglish (`mera`, `kab`, `aayega`, `aayegi`, `milega`, `pahuchega`) and Roman Marathi (`majha`, `majhi`, `kadhi`, `yeil`, `yenar`, `pohochil`).
+   - Removed `'ऑर्डर'` from exclusive Marathi markers to prevent misclassifying Hindi queries.
+   - Added `ORDER_ARRIVAL_STATUS` intent in `classifyIntent` recognizing `"मेरा ऑर्डर कब आएगा?"`, `"Mera order kab aayega?"`, `"माझी ऑर्डर कधी येईल?"`, and `"Majhi order kadhi yeil?"`.
+   - Formulated natural, short, and useful responses in Hindi (Devanagari & Hinglish), Marathi (Devanagari & Roman), and English.
+5. **`backend/src/services/customerAiService.js` & `backend/src/services/aiService.js`:**
+   - Integrated `detectLanguage` and multilingual responses in both Customer AI and Admin Assistant endpoints.
+   - Provided accurate delivery dates and order status in the customer's native language and script.
+6. **`frontend/src/pages/Home.jsx`:**
+   - Permanently removed the exact hero badge pill (`"✨ AI-Powered Procurement & Inventory Platform"`).
+   - Preserved hero heading `"Allocate Smarter. Fulfill What Matters."`, description, CTA buttons, and 3D visual.
+   - Encapsulated callout banner in `relative overflow-hidden rounded-card` with resolved translation keys (`ready_explore` and `ready_explore_desc`).
+7. **`frontend/src/pages/Login.jsx`:**
+   - Removed plaintext credentials table display while preserving 1-click autofill buttons (`Admin`, `Manager`, `Customer`).
+8. **`frontend/src/components/ui/AnimatedRedWaves.jsx`:**
+   - Slid bottom-left wave ribbons tightly into the bottom corner (`-bottom-2 -left-2 w-[35vw] max-w-[380px] h-[120px]-h-[180px]`).
+   - Decreased stroke opacity (`opacity * 0.7`) and ambient radial glow (`opacity-20`), ensuring zero overlap with upper cards.
+   - Strictly preserved top-right curves untouched.
+
+### 3. Verification & Test Results
+- **Frontend Test Suite:** **54 / 54 PASSED** across all 14 test files (`npm --prefix frontend test`).
+  - `tests/MultilingualChatbot.test.jsx`: **6 / 6 PASSED** (Mid-conversation switching, Hindi/Marathi suggestions, localStorage persistence).
+  - `tests/AnimatedRedWaves.test.jsx`: **3 / 3 PASSED** (Render compositions, corner variant, responsive classes).
+  - `tests/App.test.jsx`: **2 / 2 PASSED** (Landing page branding, hero heading preservation, navigation).
+  - `tests/Theme.test.jsx`: **3 / 3 PASSED** (Dual-theme toggle, persistence).
+- **Backend Multilingual Chat Suite:** **19 / 19 PASSED** (`npm --prefix backend test -- tests/multilingualChat.test.js`).
+  - Verified exact queries: `"मेरा ऑर्डर कब आएगा?"` (Hindi), `"Mera order kab aayega?"` (Hinglish), `"माझी ऑर्डर कधी येईल?"` (Marathi), `"Majhi order kadhi yeil?"` (Roman Marathi).
+- **Production Vite Build:** `vite build` completed in **12.28s** with **0 errors**.
+- **No commits, pushes, merges, or deployments:** All changes maintained strictly local and uncommitted.
+
+
+---
+
+## 🏭 Phase 25: Interactive 3D Warehouse Digital Twin & Real-Time Simulation Telemetry (100% Complete & Verified)
+
+### Objectives & Deliverables
+1. **Interactive 3D Warehouse Environment (`frontend/src/components/3d/WarehouseDigitalTwin.jsx` & `warehouseBuilder.js`):**
+   - **Realistic Industrial Layout:** Built a procedural 3D warehouse digital twin with concrete floor slab, safety yellow boundary stripes, AGV logistics lanes, and 4 dedicated product storage zones matching the OrderWise catalog:
+     - **Zone A:** Industrial Pump Model X (`PUMP-X100`) with heavy steel racking.
+     - **Zone B:** Safety Valve Type B (`VALVE-B200`) with flow control storage bays.
+     - **Zone C:** Pressure Gauge Pro (`GAUGE-P300`) — scarce sensor bay with active shortage beacon light.
+     - **Zone D:** Control Panel Unit (`CTRL-U400`) with electronics storage.
+     - **Inbound Receiving Dock:** Roll-up bay door, roller conveyor line, and goods receipt pallet stacks.
+     - **Outbound Dispatch Dock:** Shipping doors with outgoing customer order pallets.
+   - **Dynamic Racking & Pallet Geometry:** Multi-tier steel uprights, orange cross-beams, wire decking, wooden cargo pallets, and color-coded inventory crates.
+   - **Pulsing Shortage Beacons:** Dedicated 3D warning beacons on top of racks that dynamically pulse red when stock is scarce or unallocated demand is present.
+   - **Automated Logistics Flow Particles:** Moving AGV/transit particles traveling along warehouse aisles between Inbound, Racks, and Outbound docks.
+
+2. **Full Mouse & Touch User Interactions:**
+   - **Orbit Controls:** 360-degree horizontal rotation and clamped vertical pitch preventing subsurface dipping.
+   - **Zoom & Pan:** Smooth mouse wheel zooming, touch pinch-to-zoom, and two-finger panning.
+   - **Camera Preset Toolbar:** Instant one-click camera transitions (`Isometric 30° Default`, `Blueprint Overhead`, `Zone C Scarce Close-Up`, `Logistics Docks`, `Reset View`).
+   - **Animation Controls:** Play/Pause button for transit particles and beacon pulsing.
+   - **Interactive Raycasting:** Click or tap any rack, zone, or crate to inspect live telemetry.
+   - **Floating 3D HUD Inspector:** Real-time glassmorphic overlay card showing baseline on-hand, simulated stock, requested demand, allocated units, shortage, and net delta.
+
+3. **Seamless Simulation Engine Integration:**
+   - **In-Memory Telemetry Connection:** Directly connected to `activeResult` from `POST /api/simulations` without modifying live DB records.
+   - **Before-and-After State Toggle:** Instant switching between `Baseline State` and `Simulated Outcome` with live crate height and color transitions.
+   - **Color-Coded Allocation Outcomes:**
+     - 🟢 **Green (`#22C55E` / `#4ADE80`):** Fully allocated orders.
+     - 🟡 **Amber (`#F59E0B` / `#F5B544`):** Partially allocated orders.
+     - 🔴 **Red (`#EF4444` / `#E50914`):** Unallocated demand, shortages, or deferred orders.
+     - 🔵 **Neutral Slate/Blue (`#3B82F6`):** Available free stock.
+   - **Supported Scenarios:** Accurately reflects Inventory Receipt Surges, Stock Shrinkage/Losses, Market Demand Spikes, Supplier PO Delays, and VIP Priority Escalations.
+
+4. **Bidirectional Interaction with Results Panel:**
+   - Selecting a row in the Item Diffs table focuses the 3D camera on that product's rack, pulses the beacon, and opens the HUD inspector.
+   - Selecting a rack in the 3D warehouse highlights the corresponding line item in the diffs table.
+
+5. **Bulletproof WebGL Fallback & Performance Optimization:**
+   - **Zero-Crash WebGL Detection:** Automatically falls back to an interactive 2D isometric floorplan in headless CI or non-WebGL environments.
+   - **Optimized Bundle Splitting:** Extracted Three.js into a dedicated `three` chunk (552 kB / 137 kB gzip), reducing admin chunk from 848 kB to 295 kB.
+   - **60fps Rendering:** Efficient geometry reuse and instancing with clean disposal on component unmount.
+
+### Verification & Quality Gate Checks
+- **Frontend Test Suite:** **60 / 60 PASSED** across all 15 test files (`npm --prefix frontend test -- --run`).
+  - Added dedicated test suite: `tests/WarehouseDigitalTwin.test.jsx` (6/6 tests passing).
+  - Existing `tests/NavigationIntegration.test.jsx` (7/7 tests passing).
+- **Backend Pure Allocation Suite:** **18 / 18 PASSED** (`npm --prefix backend test -- tests/allocation.pure.test.js`).
+- **Production Vite Build:** Clean Vite build in **7.33s** with **0 errors**.
+- **Git Restrictions Respected:** All modifications kept strictly local and uncommitted.
+
+---
+
+## 🧭 Phase 26: Global Navbar Alignment & Multi-Portal Responsive Architecture (100% Complete & Verified)
+
+### 1. Root Cause Analysis
+- **Customer Portal Overlap (`CustomerLayout.jsx`):**
+  - Breakpoint was hardcoded at `hidden md:flex` (768px). Between 768px and 1279px, 5 full-width pill items (~650px) + Logo & Badge (~240px) + Right Controls (~440px) required > 1330px of width. On standard 13-inch and 14-inch laptops (1024px–1279px) and tablets (768px–1023px), this squeezed the OrderWise logo, caused text wrapping, and pushed the profile menu off-screen.
+- **Admin & Manager Header Squeeze (`Navbar.jsx`):**
+  - The desktop sidebar consumes 288px (`w-72`). On a 1024px viewport, only 736px remained for the header. Unconstrained Breadcrumbs (~320px) + Right Controls (~445px) exceeded available width, causing breadcrumbs to wrap and push right-side controls out of the viewport.
+- **Role Identity & Badge Discrepancy:**
+  - Customer Portal displayed a `"Customer portal"` badge, but Admin and Manager headers had no badge identifying whether the user was in the Admin Console or Manager Portal.
+- **Control Shrinkage & Wrapping (`LanguageSwitcher.jsx`, `ThemeToggle.jsx`, `UserProfileMenu.jsx`):**
+  - Missing `shrink-0` and `whitespace-nowrap` allowed flex containers to shrink buttons or wrap text when labels expanded under Hindi or Marathi translations.
+
+### 2. Architectural Fixes Delivered
+1. **Tiered Responsive Navigation in Customer Portal (`CustomerLayout.jsx`):**
+   - **Large Desktop (`>= xl` / 1280px+):** Full pill navigation with icons and localized labels (`Dashboard`, `Product Catalog`, `New Order`, `My Orders`, `AI Assistant`).
+   - **Standard Laptop (`lg:flex xl:hidden` / 1024px–1279px):** Compact high-density pills with truncated text and tighter padding (`space-x-1 px-2.5 py-1.5`).
+   - **Tablet & Mobile (`< lg` / <1024px):** Replaced top nav bar with a responsive hamburger drawer trigger (`lg:hidden`) plus a dedicated quick AI Assistant shortcut button (`Bot` icon in red accent pill) in the header.
+   - **Mobile Drawer:** Accessible slide-down drawer with all 5 navigation links ($\ge 44\text{px}$ touch targets), active state styling, and mobile language switcher.
+2. **Role-Aware Header Badging (`Navbar.jsx`):**
+   - Added distinct role badge:
+     - `Admin console` in red accent pill (`bg-ac/10 text-ac border border-ac/20`) for `admin`.
+     - `Manager portal` in amber warning pill (`bg-wa/15 text-wa border border-wa/30`) for `inventory_manager`.
+   - Added mobile brand wordmark (`OrderWise`) for screens `< lg` where the sidebar is hidden.
+3. **Responsive Breadcrumb Truncation (`Breadcrumbs.jsx`):**
+   - Added `min-w-0 overflow-hidden` wrapper.
+   - Truncates deep route labels (`truncate max-w-[140px] sm:max-w-[180px]`) and hides intermediate crumbs on mobile screens (`< sm`).
+4. **Adaptive User Profile Menu (`UserProfileMenu.jsx`):**
+   - Collapses user name and role subtitle on screens `< xl` (`hidden xl:block`), rendering a sleek avatar + chevron pill (`px-2.5 py-1.5 min-h-[36px] shrink-0`).
+   - Saves ~100px of horizontal navbar space on tablets and standard laptops while keeping the full account card accessible in the dropdown.
+5. **Rigid Control Sizing (`LanguageSwitcher.jsx` & `ThemeToggle.jsx`):**
+   - Enforced `shrink-0` and `whitespace-nowrap` across all toggle and dropdown containers.
+   - Added responsive label logic in `LanguageSwitcher.jsx`: shows full native label (`English`, `हिन्दी`, `मराठी`) on `sm:` and up, and compact 2-letter uppercase code (`EN`, `HI`, `MR`) on `< sm`.
+   - Added responsive ThemeToggle: segmented toggle on `xl:inline-flex` and 36px circular icon button on `< xl`.
+6. **Mobile Settings in Sidebar (`Sidebar.jsx`):**
+   - Integrated language switcher and theme toggle at the bottom of the mobile sidebar drawer (`lg:hidden`) so mobile admin/manager users can switch language and theme without cluttering the top bar.
+
+### 3. Multi-Portal Responsive Verification Matrix
+
+| Viewport Category | Width | Admin Portal | Manager Portal | Customer Portal | Result |
+|---|---|---|---|---|---|
+| **Large Desktop** | $\ge 1440\text{px}$ | Sidebar open, full breadcrumbs, segmented theme toggle, full user profile | Sidebar open, manager badge, restricted routes, segmented theme toggle | Full pill nav, logo + badge, segmented theme toggle, full user profile | 🟢 Zero overlap, perfect alignment |
+| **Standard Laptop** | $1024\text{px} - 1279\text{px}$ | Sidebar open, truncated breadcrumbs, circular theme button, compact profile | Sidebar open, manager badge, circular theme button, compact profile | Compact high-density nav pills, compact profile, circular theme button | 🟢 Zero collision, all controls visible |
+| **Tablet** | $768\text{px} - 1023\text{px}$ | Hamburger sidebar trigger, mobile logo, compact controls | Hamburger sidebar trigger, manager badge, compact controls | Mobile hamburger drawer trigger, quick AI shortcut button, compact controls | 🟢 Zero horizontal overflow |
+| **Mobile** | $< 768\text{px}$ | Hamburger trigger, compact language badge (`EN`/`HI`/`MR`), circular theme button | Hamburger trigger, manager badge, compact language badge, circular theme button | Hamburger trigger, quick AI button, compact language badge, slide-down drawer | 🟢 Clean single-line header, 44px+ touch targets |
+
+### 4. Multilingual Verification (English, Hindi, Marathi)
+- Tested navigation items, role badges, breadcrumbs, and language selector under `English`, `हिन्दी`, and `मराठी`.
+- Longer Devanagari labels (e.g. `वितरण केंद्र`, `उत्पादन व्यवस्थापन`, `डॅशबोर्ड`) render cleanly with zero line wrapping or squishing.
+
+### 5. Verification & Test Suite
+- **Frontend Test Suite:** **67 / 67 PASSED** across all 16 test files (`npm --prefix frontend test -- --run`).
+  - Added dedicated test suite: `tests/GlobalNavbarAlignment.test.jsx` (7/7 tests passing):
+    - Admin Portal navbar rendering with `Admin console` badge and compact controls.
+    - Manager Portal navbar rendering with `Manager portal` badge and restricted navigation.
+    - Customer Portal navbar rendering with `Customer portal` badge, 3-tier responsive links, and AI Assistant shortcut.
+    - Mobile drawer toggle and drawer content visibility.
+    - Multilingual label rendering (English, Hindi, Marathi) without clipping or layout breaking.
+- **Production Vite Build:** Clean Vite build in **7.65s** with **0 errors**.
+- **Git Restrictions Respected:** All modifications kept strictly local and uncommitted. Zero commits, zero pushes, zero merges.

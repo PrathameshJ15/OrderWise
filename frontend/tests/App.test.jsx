@@ -10,7 +10,7 @@ describe('Frontend Customer Portal App Tests', () => {
 
     expect(screen.getAllByText(/Order/i).length).toBeGreaterThan(0);
     expect(screen.getByText(/Allocate Smarter/i)).toBeInTheDocument();
-    expect(screen.getByText(/SUPPLY CHAIN ALLOCATION ENGINE/i)).toBeInTheDocument();
+    expect(screen.queryByText(/AI-Powered Procurement & Inventory Platform/i)).not.toBeInTheDocument();
     expect(screen.getAllByText(/Launch Operations/i).length).toBeGreaterThan(0);
   });
 

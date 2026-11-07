@@ -1,6 +1,7 @@
 const { z } = require('zod');
 const { env } = require('../config/env');
 const { query } = require('../config/db');
+const { detectLanguage, generateLocalizedFallbackReply } = require('./multilingualChatService');
 
 const PROMPT_VERSION = 'v1.0.0';
 
@@ -531,12 +532,18 @@ async function chatWithAssistant({ message, history = [], userRole = 'admin' }) 
     orderStatsContext = 'Demo dataset loaded.';
   }
 
+  const detected = detectLanguage(message);
+  const langRule =
+    detected.language !== 'en'
+      ? `\nCRITICAL LANGUAGE INSTRUCTION: The user queried in ${detected.languageLabel} (${detected.dialect}, script: ${detected.script}). You MUST reply in the EXACT SAME language and dialect (${detected.languageLabel}). For Hindi/Hinglish use conversational Hindi/Hinglish. For Marathi/Roman Marathi use conversational Marathi/Roman Marathi. Keep answers short, natural, and helpful.`
+      : '';
+
   const systemInstructions = `You are the OrderWise AI Assistant Chatbot, an intelligent conversational co-pilot for supply chain, deterministic inventory allocation, and order priority intelligence.
 Core Business Rules:
 - Golden Rule: AI recommends. Business rules validate. Authorized humans approve. OrderWise allocates and explains.
 - Priority Sorting Key: 1) Approved Priority DESC (Critical=4 > High=3 > Medium=2 > Low=1), 2) Promised Delivery Date ASC, 3) Created At ASC, 4) Order ID ASC.
 - Allocation Logic: Full fulfillment when stock >= requested; Partial fulfillment ONLY if partial_delivery_allowed is true AND remaining stock >= minimum_acceptable_quantity; otherwise Deferred.
-- Scarce Bottleneck: Pressure Gauge Pro (GAUGE-P300) has only 40 units in stock. In the demo conflict: Charlie gets 30 units (High priority, earlier date), Alice is deferred (needs min 15, only 10 left), Bob is deferred (Medium priority, 0 left).
+- Scarce Bottleneck: Pressure Gauge Pro (GAUGE-P300) has only 40 units in stock. In the demo conflict: Charlie gets 30 units (High priority, earlier date), Alice is deferred (needs min 15, only 10 left), Bob is deferred (Medium priority, 0 left).${langRule}
 Current Live Context:
 ${stockContext}
 ${orderStatsContext}
@@ -609,81 +616,21 @@ Respond in clean, well-formatted JSON with this exact schema:
   }
 
   // Intelligent conversational fallback engine
-  const lower = message.toLowerCase();
-  let reply = '';
-  let suggestions = [];
-
-  if (lower.includes('pressure gauge') || lower.includes('gauge') || lower.includes('bottleneck') || lower.includes('scarce')) {
-    reply = `**Pressure Gauge Pro (SKU: GAUGE-P300)** is the primary inventory bottleneck.
-- **On-Hand Stock:** 40 units
-- **Total Competing Demand:** 75 units (Alice: 25, Bob: 20, Charlie: 30)
-- **Allocation Result:** Charlie receives 30 units due to HIGH priority and earlier delivery date. Alice requires a minimum of 15 units, but only 10 remain, so she is deferred. Bob (MEDIUM) is deferred with 0 remaining stock.
-- **Recommendation:** Restock at least 35 units or execute a simulated inventory increase in the Simulation Lab.`;
-    suggestions = [
-      'Why was Alice’s order deferred?',
-      'How does the allocation engine break priority ties?',
-      'How can I simulate adding 50 units of Pressure Gauge Pro?',
-    ];
-  } else if (lower.includes('alice') || lower.includes('defer') || lower.includes('why')) {
-    reply = `### Why Order Deferrals Occurred:
-In the Pressure Gauge Pro allocation run:
-1. **Charlie** (HIGH priority, promised earlier) was evaluated first and claimed **30 units** (leaving 10 units).
-2. **Alice** (HIGH priority) requested 25 units with **partial delivery allowed** and **minimum acceptable quantity of 15**. Because only 10 units remained (< minimum 15), the business rule prevented sub-threshold delivery and deferred the order.
-3. **Bob** (MEDIUM priority) requested 20 units with **no partial delivery allowed**. Available stock was 0, resulting in deferral.`;
-    suggestions = [
-      'What are the 4 priority levels?',
-      'Where can I approve AI priority recommendations?',
-      'How do I run the allocation engine?',
-    ];
-  } else if (lower.includes('priority') || lower.includes('rule') || lower.includes('sort') || lower.includes('tie')) {
-    reply = `### Deterministic Allocation Engine Rules:
-Every allocation run evaluates orders in this exact deterministic order:
-1. **Approved Priority DESC:** CRITICAL (4) > HIGH (3) > MEDIUM (2) > LOW (1)
-2. **Promised Delivery Date ASC:** Earlier promised dates fulfilled first
-3. **Created Date ASC:** First-come, first-served for identical dates
-4. **Order ID ASC:** Final tie-breaker for identical timestamps
-
-*Remember:* AI only suggests recommendations. Authorized admins must approve or override them before the allocation engine executes.`;
-    suggestions = [
-      'What happens if an order allows partial delivery?',
-      'Which product has the lowest available stock?',
-      'Can AI change inventory stock directly?',
-    ];
-  } else if (lower.includes('simulat') || lower.includes('what-if') || lower.includes('scenario')) {
-    reply = `### Simulation Lab Capabilities:
-Simulations run purely in memory without mutating live inventory or live orders:
-- **Inventory Increase:** Test adding stock to resolve bottlenecks.
-- **Demand Surge:** Test sudden +25% or +50% spikes in customer demand.
-- **Supplier Delay:** Model delayed inbound PO shipments.
-- **Priority Change:** Test outcome shifts when changing customer priority tiers.`;
-    suggestions = [
-      'Go to Simulation Lab',
-      'What is the status of Pressure Gauge Pro?',
-      'How do I approve AI priority recommendations?',
-    ];
-  } else {
-    reply = `Hello! I am your **OrderWise AI Assistant Chatbot**.
-I can assist you with:
-- Explaining order fulfillment, partial shipments, and deferral reasons
-- Analyzing inventory bottlenecks (like Pressure Gauge Pro)
-- Guidance on deterministic allocation rules and tie-breakers
-- AI priority recommendations and human approval governance
-- What-if simulations in the Simulation Lab
-
-How can I help you today?`;
-    suggestions = [
-      'Which product is our biggest inventory bottleneck?',
-      'Why was Alice’s order deferred?',
-      'Explain the deterministic allocation rules',
-    ];
-  }
-
-  return {
-    reply,
-    suggestions,
-    provider: 'fallback-engine',
-    model: 'orderwise-assistant-v1',
-  };
+  return generateLocalizedFallbackReply({
+    message,
+    detected,
+    businessData: {
+      lowStockProducts: [
+        { name: 'Pressure Gauge Pro', sku: 'GAUGE-P300', available_stock: 40, reorder_point: 70, safety_stock: 15 }
+      ],
+      delayedSuppliers: [
+        { supplier_name: 'GaugeMaster Instruments', po_number: 'PO-2026-003', expected_delivery_date: '2026-10-18', status: 'ordered' }
+      ],
+      pendingPOs: [
+        { po_number: 'PO-2026-003', supplier_name: 'GaugeMaster Instruments', expected_delivery_date: '2026-10-18', status: 'ordered' }
+      ]
+    }
+  });
 }
 
 module.exports = {

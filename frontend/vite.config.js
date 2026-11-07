@@ -47,6 +47,11 @@ export default defineConfig({
             return 'charts';
           }
 
+          // Three.js — loaded for 3D digital twin
+          if (id.includes('node_modules/three')) {
+            return 'three';
+          }
+
           // Lucide icons
           if (id.includes('node_modules/lucide-react')) {
             return 'icons';

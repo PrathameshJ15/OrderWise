@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import {
   FlaskConical,
@@ -11,9 +11,13 @@ import {
   AlertTriangle,
   History,
   ShieldCheck,
+  Box,
+  Eye,
+  Sliders,
 } from 'lucide-react';
 import apiClient from '../../api/client';
 import StatusPill from '../../components/ui/StatusPill';
+import WarehouseDigitalTwin from '../../components/3d/WarehouseDigitalTwin';
 
 const SCENARIOS = [
   {
@@ -62,6 +66,9 @@ export default function SimulationLab() {
   const [orderId, setOrderId] = useState('');
   const [hypotheticalPriority, setHypotheticalPriority] = useState('CRITICAL');
 
+  // Bidirectional 3D <-> Results selection state
+  const [selectedProductId, setSelectedProductId] = useState(null);
+
   const fetchContextData = useCallback(async () => {
     setLoadingInitial(true);
     setError(null);
@@ -92,6 +99,18 @@ export default function SimulationLab() {
   useEffect(() => {
     fetchContextData();
   }, [fetchContextData]);
+
+  // Current scenario inputs object for 3D digital twin
+  const currentScenarioInputs = useMemo(() => {
+    return {
+      product_id: Number(productId),
+      quantity: Number(quantity),
+      surge_percent: Number(surgePercent),
+      delay_days: Number(delayDays),
+      order_id: Number(orderId),
+      hypothetical_priority: hypotheticalPriority,
+    };
+  }, [productId, quantity, surgePercent, delayDays, orderId, hypotheticalPriority]);
 
   const handleRunSimulation = async (e) => {
     e.preventDefault();
@@ -129,6 +148,8 @@ export default function SimulationLab() {
     try {
       const res = await apiClient.post('/simulations', payload);
       setActiveResult(res.data);
+      // Auto-select target product if relevant
+      if (productId) setSelectedProductId(Number(productId));
       // Refresh list
       const updatedSims = await apiClient.get('/simulations');
       setSimulations(updatedSims.data?.simulations || updatedSims.data || []);
@@ -139,12 +160,13 @@ export default function SimulationLab() {
     }
   };
 
-  const diffSummary = activeResult?.diff?.summary || activeResult?.diff || null;
-  const itemDiffs = activeResult?.diff?.item_diffs || activeResult?.diff?.differences || [];
+  const diffData = activeResult?.diff || activeResult?.results || activeResult;
+  const diffSummary = diffData?.summary || diffData;
+  const itemDiffs = diffData?.item_diffs || diffData?.changes || diffData?.differences || [];
 
   return (
     <div className="space-y-6 font-sans py-2">
-      {/* Clean Page Header (No excessive bordered box) */}
+      {/* Clean Page Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2">
         <div>
           <div className="inline-flex items-center space-x-2 text-[12px] font-mono text-ac font-semibold tracking-wider uppercase mb-1">
@@ -201,6 +223,24 @@ export default function SimulationLab() {
         </span>
       </div>
 
+      {/* Interactive 3D Warehouse Digital Twin Viewport */}
+      <div className="w-full">
+        <WarehouseDigitalTwin
+          products={products}
+          orders={orders}
+          activeResult={activeResult}
+          selectedScenario={selectedScenario}
+          scenarioInputs={currentScenarioInputs}
+          selectedProductId={selectedProductId}
+          onSelectProduct={(p) => {
+            if (p?.product_id) setSelectedProductId(Number(p.product_id));
+          }}
+          onSelectZone={(z) => {
+            if (z?.productId) setSelectedProductId(Number(z.productId));
+          }}
+        />
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Form: Select & Configure Scenario */}
         <div className="card-base lg:col-span-1 space-y-4">
@@ -238,7 +278,10 @@ export default function SimulationLab() {
                   </label>
                   <select
                     value={productId}
-                    onChange={(e) => setProductId(e.target.value)}
+                    onChange={(e) => {
+                      setProductId(e.target.value);
+                      setSelectedProductId(Number(e.target.value));
+                    }}
                     className="w-full bg-s2 rounded-pill border border-bd px-4 py-2 text-t focus:outline-none focus:border-ac text-[14px]"
                   >
                     {products.map((p) => (
@@ -369,11 +412,11 @@ export default function SimulationLab() {
           </div>
 
           {!activeResult ? (
-            <div className="p-12 text-center text-t2 space-y-3">
+            <div className="p-10 text-center text-t2 space-y-3">
               <FlaskConical className="h-10 w-10 text-t2 mx-auto opacity-30" />
-              <div className="text-base font-bold text-t">No Active Simulation</div>
+              <div className="text-base font-bold text-t">Ready for Simulation Run</div>
               <p className="text-[14px] max-w-md mx-auto">
-                Configure your scenario parameters on the left and click &ldquo;Run Simulation&rdquo; to model the downstream fulfillment effects.
+                Explore the warehouse floor above in real-time. Configure scenario parameters on the left and click &ldquo;Run Simulation&rdquo; to observe 3D downstream allocation changes.
               </p>
             </div>
           ) : (
@@ -408,7 +451,7 @@ export default function SimulationLab() {
                 </div>
               </div>
 
-              {/* Items Diff Table */}
+              {/* Items Diff Table with Bidirectional 3D Highlight */}
               <div className="rounded-card border border-bd overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-[14px] border-collapse">
@@ -431,37 +474,54 @@ export default function SimulationLab() {
                           </td>
                         </tr>
                       ) : (
-                        itemDiffs.map((diff, idx) => (
-                          <tr key={idx} className="hover:bg-s2/40 transition-colors">
-                            <td className="py-2.5 px-3 font-mono font-bold text-t">#{diff.order_id}</td>
-                            <td className="py-2.5 px-3 text-t2 truncate max-w-[150px]">
-                              {diff.product_name || `Product #${diff.product_id}`}
-                            </td>
-                            <td className="py-2.5 px-3 text-right font-mono text-t">
-                              {diff.requested_quantity}
-                            </td>
-                            <td className="py-2.5 px-3 text-right font-mono text-series">
-                              {diff.previous_allocated ?? diff.live_allocated ?? 0}
-                            </td>
-                            <td className="py-2.5 px-3 text-right font-mono font-bold text-t">
-                              {diff.current_allocated ?? diff.simulated_allocated ?? 0}
-                            </td>
-                            <td
-                              className={`py-2.5 px-3 text-right font-mono font-bold ${
-                                (diff.delta || 0) > 0
-                                  ? 'text-ok'
-                                  : (diff.delta || 0) < 0
-                                  ? 'text-no'
-                                  : 'text-t2'
+                        itemDiffs.map((diff, idx) => {
+                          const isRowSelected = selectedProductId && Number(diff.product_id) === Number(selectedProductId);
+                          return (
+                            <tr
+                              key={idx}
+                              onClick={() => {
+                                if (diff.product_id) setSelectedProductId(Number(diff.product_id));
+                              }}
+                              className={`cursor-pointer transition-colors ${
+                                isRowSelected
+                                  ? 'bg-ac/10 border-l-4 border-ac'
+                                  : 'hover:bg-s2/40'
                               }`}
                             >
-                              {(diff.delta || 0) > 0 ? `+${diff.delta}` : diff.delta || 0}
-                            </td>
-                            <td className="py-2.5 px-3 text-center">
-                              <StatusPill status={diff.current_status || diff.simulated_status || 'fulfilled'} />
-                            </td>
-                          </tr>
-                        ))
+                              <td className="py-2.5 px-3 font-mono font-bold text-t">
+                                #{diff.order_id}
+                              </td>
+                              <td className="py-2.5 px-3 text-t truncate max-w-[150px]">
+                                <span className={isRowSelected ? 'text-ac font-bold' : 'text-t2'}>
+                                  {diff.product_name || `Product #${diff.product_id}`}
+                                </span>
+                              </td>
+                              <td className="py-2.5 px-3 text-right font-mono text-t">
+                                {diff.requested_quantity}
+                              </td>
+                              <td className="py-2.5 px-3 text-right font-mono text-series">
+                                {diff.previous_allocated ?? diff.live_allocated ?? diff.baseline_allocated ?? 0}
+                              </td>
+                              <td className="py-2.5 px-3 text-right font-mono font-bold text-t">
+                                {diff.current_allocated ?? diff.simulated_allocated ?? 0}
+                              </td>
+                              <td
+                                className={`py-2.5 px-3 text-right font-mono font-bold ${
+                                  (diff.delta || 0) > 0
+                                    ? 'text-ok'
+                                    : (diff.delta || 0) < 0
+                                    ? 'text-no'
+                                    : 'text-t2'
+                                }`}
+                              >
+                                {(diff.delta || 0) > 0 ? `+${diff.delta}` : diff.delta || 0}
+                              </td>
+                              <td className="py-2.5 px-3 text-center">
+                                <StatusPill status={diff.current_status || diff.simulated_status || 'fulfilled'} />
+                              </td>
+                            </tr>
+                          );
+                        })
                       )}
                     </tbody>
                   </table>
@@ -500,7 +560,13 @@ export default function SimulationLab() {
                 </thead>
                 <tbody className="divide-y divide-bd/50">
                   {simulations.slice(0, 10).map((sim) => (
-                    <tr key={sim.id} className="hover:bg-s2/40 transition-colors">
+                    <tr
+                      key={sim.id}
+                      onClick={() => {
+                        if (sim.results) setActiveResult({ diff: sim.results, simulation: sim });
+                      }}
+                      className="hover:bg-s2/40 cursor-pointer transition-colors"
+                    >
                       <td className="py-3 px-3 font-mono font-bold text-t">#{sim.id}</td>
                       <td className="py-3 px-3 font-semibold text-t">{sim.name || 'Simulation'}</td>
                       <td className="py-3 px-3">
@@ -512,7 +578,7 @@ export default function SimulationLab() {
                         {new Date(sim.created_at).toLocaleString()}
                       </td>
                       <td className="py-3 px-3 text-right font-mono font-bold text-ok">
-                        {sim.diff?.summary?.total_changed ?? sim.diff?.changed_items ?? 0}
+                        {sim.diff?.summary?.total_changed ?? sim.diff?.changed_items ?? sim.results?.total_changed ?? 0}
                       </td>
                     </tr>
                   ))}

@@ -231,6 +231,28 @@ describe('Multilingual AI Chatbot for OrderWise Tests', () => {
       expect(mrRes.detectedLanguage).toBe('mr');
     });
 
+    it('answers order arrival and delivery questions naturally in Hindi, Hinglish, Marathi, and Roman Marathi', async () => {
+      // Devanagari Hindi
+      const hiRes = await chatWithAssistant({ message: 'मेरा ऑर्डर कब आएगा?' });
+      expect(hiRes.detectedLanguage).toBe('hi');
+      expect(hiRes.reply).toMatch(/ऑर्डर|डिलीवरी|OrderWise/);
+
+      // Hinglish
+      const hinglishRes = await chatWithAssistant({ message: 'Mera order kab aayega?' });
+      expect(hinglishRes.detectedLanguage).toBe('hi');
+      expect(hinglishRes.reply).toMatch(/order|delivery|OrderWise/i);
+
+      // Devanagari Marathi
+      const mrRes = await chatWithAssistant({ message: 'माझी ऑर्डर कधी येईल?' });
+      expect(mrRes.detectedLanguage).toBe('mr');
+      expect(mrRes.reply).toMatch(/ऑर्डर|डिलिव्हरी|OrderWise/);
+
+      // Roman Marathi
+      const romanMrRes = await chatWithAssistant({ message: 'Majhi order kadhi yeil?' });
+      expect(romanMrRes.detectedLanguage).toBe('mr');
+      expect(romanMrRes.reply).toMatch(/order|delivery|OrderWise/i);
+    });
+
     it('handles language switching mid-conversation while preserving context', async () => {
       const history = [
         { sender: 'user', text: 'Show low-stock products.' },

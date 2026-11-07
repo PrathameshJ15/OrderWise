@@ -59,25 +59,27 @@ function detectLanguage(text = '', preferredLanguage = 'en') {
       .map((t) => t.trim())
       .filter(Boolean);
 
-    // Distinct Marathi vocabulary in Devanagari
+    // Distinct Marathi vocabulary in Devanagari (excluding common words like 'ऑर्डर')
     const marathiWords = new Set([
+      'माझा', 'माझी', 'माझे', 'माझ्या', 'कधी', 'येईल', 'येणार', 'पोहोचेल', 'मिळेल',
       'दाखवा', 'दाखव', 'दाखवावे', 'आहे', 'आहेत', 'नाही', 'नाहीत',
       'कोणत्या', 'कोणते', 'कोणती', 'कोणता', 'पुरवठादार', 'पुरवठादारांची',
-      'पुरवठादारांचे', 'पुरवठादारांचा', 'वस्तू', 'खरेदी', 'ऑर्डर', 'ऑर्डर्स',
+      'पुरवठादारांचे', 'पुरवठादारांचा', 'वस्तू', 'खरेदी',
       'प्रलंबित', 'उशिरा', 'किती', 'कमी', 'जास्त', 'झाले', 'झाली',
       'झालेला', 'झालेली', 'झालेत', 'करा', 'करावे', 'करावी', 'बद्दल',
       'साठी', 'मध्ये', 'वरून', 'काय', 'सांगा', 'माहिती', 'नियम',
       'तुटवडा', 'साठा', 'स्थगित', 'अडचण', 'मिळाले', 'मिळाली', 'कळवा',
-      'सांग', 'असलेल्या', 'असलेली', 'असलेले'
+      'सांग', 'असलेल्या', 'असलेली', 'असलेले', 'कुठे', 'कशासाठी'
     ]);
 
     // Distinct Hindi vocabulary in Devanagari
     const hindiWords = new Set([
+      'मेरा', 'मेरी', 'मेरे', 'कब', 'आएगा', 'आएगी', 'आएंगे', 'आया', 'पहुंचेगा', 'मिलेगा',
       'दिखाओ', 'दिखाइए', 'दिखाएं', 'है', 'हैं', 'नहीं', 'कौनसे', 'कौनसा',
       'कौनसी', 'सप्लायर', 'सप्लायर्स', 'उत्पाद', 'सामान', 'कम', 'ज्यादा',
       'हुआ', 'हुई', 'हुए', 'क्या', 'क्यों', 'मुझे', 'हमे', 'चाहिए',
       'बताओ', 'बताइए', 'की', 'के', 'को', 'पर', 'में', 'करो', 'कीजिए',
-      'लेट', 'देरी', 'बारे', 'लिस्ट', 'रोक', 'वाले', 'वाली'
+      'लेट', 'देरी', 'बारे', 'लिस्ट', 'रोक', 'वाले', 'वाली', 'कहाँ'
     ]);
 
     let marathiMatches = 0;
@@ -127,22 +129,24 @@ function detectLanguage(text = '', preferredLanguage = 'en') {
   // 2. Roman Script Analysis (English, Hinglish, Roman Marathi)
   // Roman Marathi markers (words/particles distinct from Hindi)
   const romanMarathiTokens = [
+    'majha', 'majhi', 'mazi', 'mazha', 'majhe', 'kadhi', 'yeil', 'yenar', 'pohochil', 'milen',
     'dakhva', 'dakhav', 'dakhava', 'dakhwa', 'sanga', 'sang', 'ahe', 'aahe',
     'ahet', 'aahet', 'nahi', 'nahit', 'konta', 'kontya', 'konte', 'konti',
     'purvathadar', 'purvathadaranche', 'purvathadaranchi', 'vastu', 'kharedi',
     'pralambit', 'ushira', 'kiti', 'kami', 'zale', 'zali', 'jhale', 'jhalya',
     'zalya', 'kashamule', 'kasa', 'kashi', 'kashe', 'baddal', 'madhe',
     'karun', 'ani', 'aani', 'kay', 'mahiti', 'tutevada', 'tutvada',
-    'thambavli', 'sthagiti', 'sathi', 'warun', 'chya', 'chi', 'cha', 'che'
+    'thambavli', 'sthagiti', 'sathi', 'warun', 'chya', 'chi', 'cha', 'che', 'kuthe'
   ];
 
   // Roman Hindi / Hinglish markers
   const romanHindiTokens = [
+    'mera', 'meri', 'mere', 'kab', 'aayega', 'ayega', 'aayegi', 'aayenge', 'milega', 'pahuchega',
     'dikhao', 'dikhaye', 'batao', 'bataiye', 'hai', 'hain', 'nahi', 'nahin',
     'kaunse', 'kaunsa', 'kaunsi', 'wale', 'wali', 'kya', 'kyu', 'kyun',
     'hua', 'hui', 'hue', 'karo', 'kijiye', 'late', 'deri', 'kam', 'jyada',
     'mujhe', 'humko', 'chahiye', 'kaise', 'hota', 'hoti', 'hote', 'kiski',
-    'kisko', 'rok', 'gayi', 'mein', 'iske', 'uska', 'batao'
+    'kisko', 'rok', 'gayi', 'mein', 'iske', 'uska', 'batao', 'kahan'
   ];
 
   let marathiScore = 0;
@@ -295,6 +299,31 @@ function classifyIntent(lowerText) {
     return 'SIMULATION_LAB';
   }
 
+  // Customer order arrival / delivery status
+  if (
+    lowerText.includes('कब आएगा') ||
+    lowerText.includes('कब आएगी') ||
+    lowerText.includes('कब पहुंचेगा') ||
+    lowerText.includes('कब मिलेगा') ||
+    lowerText.includes('कधी येईल') ||
+    lowerText.includes('कधी येणार') ||
+    lowerText.includes('कधी पोहोचेल') ||
+    lowerText.includes('कधी मिळेल') ||
+    lowerText.includes('kab aayega') ||
+    lowerText.includes('kab ayega') ||
+    lowerText.includes('kab aayegi') ||
+    lowerText.includes('kab pahuchega') ||
+    lowerText.includes('kadhi yeil') ||
+    lowerText.includes('kadhi yenar') ||
+    lowerText.includes('when will my order') ||
+    lowerText.includes('where is my order') ||
+    lowerText.includes('order delivery date') ||
+    ((lowerText.includes('order') || lowerText.includes('ऑर्डर')) &&
+      (lowerText.includes('kab') || lowerText.includes('कब') || lowerText.includes('kadhi') || lowerText.includes('कधी') || lowerText.includes('when') || lowerText.includes('status')))
+  ) {
+    return 'ORDER_ARRIVAL_STATUS';
+  }
+
   // Specific Product: Pressure Gauge Pro
   if (lowerText.includes('pressure gauge') || lowerText.includes('gauge') || lowerText.includes('गेज')) {
     return 'PRESSURE_GAUGE';
@@ -339,9 +368,55 @@ function generateLocalizedFallbackReply({ message, detected, businessData }) {
   let suggestions = [];
 
   // ==========================================
+  // TOPIC 0: ORDER ARRIVAL & DELIVERY STATUS
+  // ==========================================
+  if (intent === 'ORDER_ARRIVAL_STATUS') {
+    if (language === 'mr') {
+      if (script === 'devanagari') {
+        reply = `तुमची ऑर्डर सिस्टीममध्ये नोंदवली आहे. OrderWise नियमांनुसार, मंजूर Priority आणि Stock उपलब्धतेवर डिलिव्हरी तारीख अवलंबून असते. स्टॉक उपलब्ध असल्यास तुमची ऑर्डर दिलेल्या वेळेत पोहोचेल. तुम्ही तुमच्या Dashboard वरील 'My Orders' मध्ये जाऊन थेट status पाहू शकता.`;
+        suggestions = [
+          'माझ्या ऑर्डरचे status काय आहे?',
+          'कमी स्टॉक असलेल्या वस्तू दाखवा.',
+          'Alice ची ऑर्डर का स्थगित झाली?',
+        ];
+      } else {
+        reply = `Tumchi order system madhe confirm ahe. OrderWise niyamansar, approved priority ani warehouse stock availability var delivery schedule hote. Stock available aslyas order promised date nusar dispatch hoil. Tumhi Dashboard varil 'My Orders' madhe live status pahू shakta.`;
+        suggestions = [
+          'Majhya order che status kay ahe?',
+          'Kami stock aslelya vastu dakhva.',
+          'Alice chi order ka defer zali?',
+        ];
+      }
+    } else if (language === 'hi') {
+      if (script === 'devanagari') {
+        reply = `आपका ऑर्डर सिस्टम में दर्ज है। OrderWise नियमों के मुताबिक, स्वीकृत Priority और Warehouse Stock के आधार पर delivery schedule तय होती है। अगर स्टॉक उपलब्ध है तो आपका ऑर्डर समय पर डिलीवर हो जाएगा। आप अपने Dashboard पर 'My Orders' में जाकर live status देख सकते हैं।`;
+        suggestions = [
+          'मेरे ऑर्डर का status क्या है?',
+          'कम स्टॉक वाले प्रोडक्ट्स दिखाओ।',
+          'Alice का ऑर्डर क्यों स्थगित हुआ?',
+        ];
+      } else {
+        reply = `Aapka order system me registered hai. OrderWise rules aur warehouse stock availability ke mutabiq delivery date tay hoti hai. Agar stock available hai toh aapka order promised date par dispatch ho jayega. Aap Dashboard par 'My Orders' me jakar live status check kar sakte hain.`;
+        suggestions = [
+          'Mere order ka status kya hai?',
+          'Kam stock wale products dikhao.',
+          'Alice ka order kyu defer hua?',
+        ];
+      }
+    } else {
+      reply = `Your order is recorded in the system. Under OrderWise deterministic allocation rules, delivery dates are scheduled according to approved priority and warehouse stock availability. You can check the real-time status and delivery date under 'My Orders' on your Dashboard.`;
+      suggestions = [
+        'What is my order status?',
+        'Show low-stock products.',
+        'Why was Alice’s order deferred?',
+      ];
+    }
+  }
+
+  // ==========================================
   // TOPIC 1: LOW STOCK PRODUCTS
   // ==========================================
-  if (intent === 'LOW_STOCK') {
+  else if (intent === 'LOW_STOCK') {
     if (language === 'mr') {
       if (script === 'devanagari') {
         reply = `### 📉 कमी स्टॉक असलेली उत्पादने (Low-Stock Inventory Report):

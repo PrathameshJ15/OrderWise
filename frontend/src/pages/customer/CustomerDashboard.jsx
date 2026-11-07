@@ -200,7 +200,7 @@ export default function CustomerDashboard() {
         </Link>
 
         <Link
-          to="/ai/assistant"
+          to="/assistant"
           className="card-base hover:border-neutral-600 transition-colors group block space-y-2 p-5"
         >
           <div className="w-8 h-8 rounded-full bg-s2 text-ac flex items-center justify-center">

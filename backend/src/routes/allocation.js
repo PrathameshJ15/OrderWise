@@ -10,9 +10,9 @@ const { query } = require('../config/db');
 
 const router = express.Router();
 
-// All allocation endpoints require authentication and admin role
+// All allocation endpoints require authentication; read & dry-run permit admin and inventory_manager
 router.use(authenticate);
-router.use(authorize('admin'));
+router.use(authorize('admin', 'inventory_manager'));
 
 const runAllocationSchema = z.object({
   product_ids: z.union([z.array(z.coerce.number().int().positive()), z.literal('all')]).optional(),
@@ -24,7 +24,7 @@ const runAllocationSchema = z.object({
 
 const demoStore = require('../services/demoStore');
 
-// POST /api/allocation/run (Admin only)
+// POST /api/allocation/run (Admin commits live; admin & inventory_manager can run dry simulation)
 router.post(
   '/run',
   validateRequest({ body: runAllocationSchema }),
@@ -33,6 +33,17 @@ router.post(
     const dryRun = Boolean(req.body.dry_run ?? req.body.dryRun ?? false);
     const notes = req.body.notes || '';
     const meta = { ip: req.ip, userAgent: req.headers['user-agent'] };
+
+    // Live database mutation requires admin role
+    if (!dryRun && req.user.role !== 'admin') {
+      return errorResponse(
+        res,
+        'Access denied. Only administrators can commit live allocation runs.',
+        'FORBIDDEN',
+        undefined,
+        403
+      );
+    }
 
     const eventHub = require('../services/eventHub');
 
@@ -184,6 +195,7 @@ router.post(
 // POST /api/allocation/reallocation/apply (Admin only)
 router.post(
   '/reallocation/apply',
+  authorize('admin'),
   asyncHandler(async (req, res) => {
     const { product_ids, productIds, reason, proposal_id, proposalId } = req.body;
     const result = await applyControlledReallocation(

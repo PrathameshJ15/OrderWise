@@ -209,15 +209,15 @@ export default function AnimatedRedWaves({ variant = 'full', className = '' }) {
           ==================================================================== */}
       {showBottomLeft && (
         <div
-          className="absolute bottom-0 left-0 w-[45vw] min-w-[280px] max-w-[500px] h-[160px] sm:h-[200px] lg:h-[240px] pointer-events-none overflow-hidden"
+          className="absolute -bottom-4 -left-4 w-[24vw] min-w-[160px] max-w-[280px] h-[90px] sm:h-[110px] lg:h-[130px] pointer-events-none overflow-hidden"
           aria-hidden="true"
         >
           {/* Atmospheric Soft Glow Backdrop */}
           <div
-            className="absolute bottom-0 left-0 w-full h-full rounded-full blur-[60px] opacity-35 -z-10"
+            className="absolute bottom-0 left-0 w-full h-full rounded-full blur-[40px] opacity-15 -z-10"
             style={{
               background:
-                'radial-gradient(ellipse 60% 50% at 20% 80%, rgba(225, 29, 50, 0.14) 0%, rgba(69, 10, 22, 0.10) 45%, rgba(8, 9, 13, 0) 80%)',
+                'radial-gradient(ellipse 55% 45% at 10% 90%, rgba(225, 29, 50, 0.08) 0%, rgba(69, 10, 22, 0.05) 45%, rgba(8, 9, 13, 0) 80%)',
             }}
           />
 
@@ -235,7 +235,7 @@ export default function AnimatedRedWaves({ variant = 'full', className = '' }) {
                 d={curve.d}
                 stroke="url(#owRedWaveStrokeBL)"
                 strokeWidth={curve.width}
-                strokeOpacity={curve.opacity}
+                strokeOpacity={Number((curve.opacity * 0.35).toFixed(2))}
                 strokeLinecap="round"
               />
             ))}
@@ -247,7 +247,7 @@ export default function AnimatedRedWaves({ variant = 'full', className = '' }) {
                 d={curve.d}
                 stroke="url(#owRedWaveCrossBL)"
                 strokeWidth={curve.width}
-                strokeOpacity={curve.opacity}
+                strokeOpacity={Number((curve.opacity * 0.35).toFixed(2))}
                 strokeLinecap="round"
               />
             ))}

@@ -18,7 +18,7 @@ export default function ThemeToggle({ variant = 'segmented', className = '' }) {
       <div
         role="group"
         aria-label="Theme mode selector"
-        className={`inline-flex items-center p-0.5 rounded-full border border-bd bg-s2/80 transition-colors shadow-xs ${className}`}
+        className={`inline-flex items-center p-0.5 rounded-full border border-bd bg-s2/80 transition-colors shadow-xs shrink-0 whitespace-nowrap ${className}`}
       >
         <button
           type="button"
@@ -26,7 +26,7 @@ export default function ThemeToggle({ variant = 'segmented', className = '' }) {
           aria-label="Light mode"
           aria-pressed={!isDark}
           title="Switch to light mode"
-          className={`h-7 px-2.5 flex items-center space-x-1.5 rounded-full text-xs font-medium transition-all duration-200 cursor-pointer ${
+          className={`h-7 px-2.5 flex items-center space-x-1.5 rounded-full text-xs font-medium transition-all duration-200 cursor-pointer shrink-0 whitespace-nowrap ${
             !isDark
               ? 'bg-s text-t shadow-xs font-semibold border border-bd'
               : 'text-t2 hover:text-t hover:bg-s/30'
@@ -42,7 +42,7 @@ export default function ThemeToggle({ variant = 'segmented', className = '' }) {
           aria-label="Dark mode"
           aria-pressed={isDark}
           title="Switch to dark mode"
-          className={`h-7 px-2.5 flex items-center space-x-1.5 rounded-full text-xs font-medium transition-all duration-200 cursor-pointer ${
+          className={`h-7 px-2.5 flex items-center space-x-1.5 rounded-full text-xs font-medium transition-all duration-200 cursor-pointer shrink-0 whitespace-nowrap ${
             isDark
               ? 'bg-s text-t shadow-xs font-semibold border border-bd'
               : 'text-t2 hover:text-t hover:bg-s/30'
@@ -62,7 +62,7 @@ export default function ThemeToggle({ variant = 'segmented', className = '' }) {
       onClick={toggleTheme}
       aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
       title={`Switch to ${isDark ? 'light' : 'dark'} mode`}
-      className={`min-h-[36px] min-w-[36px] p-2 flex items-center justify-center rounded-full border border-bd bg-s text-t hover:border-ac focus:outline-none focus:ring-2 focus:ring-ac transition-colors cursor-pointer shadow-xs ${className}`}
+      className={`min-h-[36px] min-w-[36px] p-2 flex items-center justify-center rounded-full border border-bd bg-s text-t hover:border-ac focus:outline-none focus:ring-2 focus:ring-ac transition-colors cursor-pointer shadow-xs shrink-0 whitespace-nowrap ${className}`}
     >
       {isDark ? (
         <Moon className="w-4 h-4 text-blue-400" />

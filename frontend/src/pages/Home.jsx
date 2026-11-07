@@ -118,15 +118,6 @@ export default function Home() {
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-[1.15fr_1fr] gap-12 lg:gap-14 items-center">
             {/* Left Column: Headlines & Actions */}
             <div className="space-y-6">
-              {/* Product Badge Pill */}
-              <div className="flex items-center space-x-2">
-                <div className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full bg-s2/80 border border-bd text-xs text-t font-medium backdrop-blur-sm shadow-sm">
-                  <span className="text-ac">✨</span>
-                  <span>{t('home.badge')}</span>
-                  <span className="sr-only">SUPPLY CHAIN ALLOCATION ENGINE</span>
-                </div>
-              </div>
-
               {/* Product Hero Heading */}
               <h1 className="font-display text-[44px] sm:text-[58px] font-bold leading-[1.08] tracking-[-0.03em] text-t">
                 {t('home.hero_title_1')}<br />

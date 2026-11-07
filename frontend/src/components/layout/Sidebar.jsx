@@ -1,6 +1,8 @@
 import React from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import LanguageSwitcher from '../ui/LanguageSwitcher';
+import ThemeToggle from '../ui/ThemeToggle';
 import {
   LayoutDashboard,
   Package,
@@ -78,9 +80,15 @@ export default function Sidebar({ mobileOpen = false, onCloseMobile = () => {} }
 
         {/* Role Badge Subheader */}
         <div className="px-5 py-2.5 border-b border-bd bg-s2/40 flex items-center justify-between text-[12px] font-sans">
-          <span className="text-t2">Active role:</span>
-          <span className="text-ac font-mono text-[11px] font-medium px-2 py-0.5 rounded-[6px] bg-ac/10 border border-ac/20 uppercase">
-            {user?.role || 'admin'}
+          <span className="text-t2 shrink-0">Active role:</span>
+          <span
+            className={`font-sans text-[11px] font-semibold px-2.5 py-0.5 rounded-pill border shrink-0 whitespace-nowrap ${
+              userRole === 'inventory_manager'
+                ? 'bg-wa/15 text-wa border-wa/30'
+                : 'bg-ac/10 text-ac border-ac/20'
+            }`}
+          >
+            {userRole === 'inventory_manager' ? 'Inventory Manager' : 'Administrator'}
           </span>
         </div>
 
@@ -113,6 +121,15 @@ export default function Sidebar({ mobileOpen = false, onCloseMobile = () => {} }
             );
           })}
         </nav>
+
+        {/* Mobile Settings Strip: Language & Theme for Mobile Viewports */}
+        <div className="px-4 py-2.5 border-t border-bd bg-s2/30 flex items-center justify-between lg:hidden text-[12px]">
+          <div className="flex items-center space-x-2">
+            <span className="text-t2 text-xs">Language:</span>
+            <LanguageSwitcher variant="compact" />
+          </div>
+          <ThemeToggle variant="button" />
+        </div>
 
         {/* Sidebar Footer */}
         <div className="p-4 border-t border-bd bg-bg/40 text-[12px] text-t2 flex items-center justify-between font-sans">

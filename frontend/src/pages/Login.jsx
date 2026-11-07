@@ -165,7 +165,7 @@ export default function Login() {
         <div className="mt-6 pt-5 border-t border-bd space-y-3">
           <div className="flex items-center justify-between">
             <span className="block text-[12px] font-mono text-t2 font-semibold uppercase tracking-wider">
-              Login Roles &amp; Credentials
+              Login Roles
             </span>
             <span className="text-[11px] font-mono text-ac font-medium">
               Click to autofill

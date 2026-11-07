@@ -107,23 +107,30 @@ export default function AllocationCenter() {
         notes: notes.trim() || undefined,
       });
 
-      const outcome = res.data;
+      const outcome = res?.data ?? res;
       setRunModalOpen(false);
 
       if (dryRun) {
+        const rawResults = outcome?.results || outcome?.runResults || [];
         setSelectedRun({
           id: 'DRY-RUN',
           status: 'simulated',
-          input_hash: outcome.input_hash,
-          notes: 'Dry Run Simulation (No database records modified)',
-          summary: outcome.summary,
+          input_hash: outcome?.input_hash || outcome?.inputHash || 'simulated',
+          notes: notes.trim() || 'Dry Run Simulation (No database records modified)',
+          summary: outcome?.summary || {
+            total_items_processed: rawResults.length,
+            fulfilled: rawResults.filter((r) => r.status === 'fulfilled').length,
+            partially_fulfilled: rawResults.filter((r) => r.status === 'partially_fulfilled').length,
+            deferred: rawResults.filter((r) => r.status === 'deferred').length,
+          },
           created_at: new Date().toISOString(),
         });
-        setRunResults(outcome.results || []);
+        setRunResults(rawResults);
       } else {
         await fetchCatalogAndHistory();
-        if (outcome.run_id) {
-          await loadRunDetails(outcome.run_id);
+        const runId = outcome?.run_id || outcome?.run?.id || outcome?.id;
+        if (runId) {
+          await loadRunDetails(runId);
         }
       }
     } catch (err) {

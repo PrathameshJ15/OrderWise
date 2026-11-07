@@ -56,18 +56,18 @@ export default function AdminDashboard() {
     setLoading(true);
     try {
       const [productsRes, ordersRes, inventoryRes, alertsRes, runsRes] = await Promise.all([
-        apiClient.get('/products'),
-        apiClient.get('/orders'),
-        apiClient.get('/inventory'),
-        apiClient.get('/alerts?resolved=false'),
-        apiClient.get('/allocation/runs'),
+        apiClient.get('/products').catch(() => ({ data: [] })),
+        apiClient.get('/orders').catch(() => ({ data: [] })),
+        apiClient.get('/inventory').catch(() => ({ data: [] })),
+        apiClient.get('/alerts?resolved=false').catch(() => ({ data: { alerts: [] } })),
+        apiClient.get('/allocation/runs').catch(() => ({ data: [] })),
       ]);
 
-      const productList = productsRes.data || [];
-      const orderList = ordersRes.data || [];
-      const inventoryList = inventoryRes.data || [];
-      const alertList = alertsRes.data?.alerts || [];
-      const pastRuns = runsRes.data || [];
+      const productList = Array.isArray(productsRes) ? productsRes : (productsRes?.data || []);
+      const orderList = Array.isArray(ordersRes) ? ordersRes : (ordersRes?.orders || ordersRes?.data?.orders || ordersRes?.data || []);
+      const inventoryList = Array.isArray(inventoryRes) ? inventoryRes : (inventoryRes?.data || []);
+      const alertList = alertsRes?.alerts || alertsRes?.data?.alerts || (Array.isArray(alertsRes?.data) ? alertsRes.data : []);
+      const pastRuns = Array.isArray(runsRes) ? runsRes : (runsRes?.runs || runsRes?.data?.runs || runsRes?.data || []);
 
       // 1. Stock vs Demand Chart Data
       const stockDemand = inventoryList.map((inv) => ({
@@ -104,7 +104,7 @@ export default function AdminDashboard() {
         const latestRunId = pastRuns[0].id;
         try {
           const runDetails = await apiClient.get(`/allocation/runs/${latestRunId}`);
-          const results = runDetails.data?.results || [];
+          const results = runDetails?.results || runDetails?.data?.results || [];
           const fulfilled = results.filter((r) => r.status === 'fulfilled').length;
           const partial = results.filter((r) => r.status === 'partially_fulfilled').length;
           const deferred = results.filter((r) => r.status === 'deferred').length;

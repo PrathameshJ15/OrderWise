@@ -118,7 +118,7 @@ export default function SupplierNetworkVisual({ suppliers = [] }) {
                   fontWeight="600"
                   textAnchor="middle"
                 >
-                  {sup.supplier_code || sup.supplier_name.split(' ')[0]}
+                  {sup.supplier_code || sup.supplier_name?.split(' ')?.[0] || 'Supplier'}
                 </text>
                 <text
                   x={x}

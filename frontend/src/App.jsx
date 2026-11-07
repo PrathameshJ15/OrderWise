@@ -72,6 +72,7 @@ function App() {
                 <Route path="/orders" element={<MyOrders />} />
                 <Route path="/orders/:id" element={<OrderDetail />} />
                 <Route path="/assistant" element={<CustomerAIAssistant />} />
+                <Route path="/ai/assistant" element={<CustomerAIAssistant />} />
               </Route>
 
               {/* Admin & Inventory Manager Portal Protected Routes */}
@@ -89,6 +90,7 @@ function App() {
                 <Route path="/admin/allocation" element={<AllocationCenter />} />
                 <Route path="/admin/ai" element={<AIRecommendations />} />
                 <Route path="/ai" element={<Navigate to="/admin/ai" replace />} />
+                <Route path="/admin/ai/assistant" element={<Navigate to="/admin/ai" replace />} />
                 <Route path="/admin/impact" element={<ImpactAnalyzer />} />
                 <Route path="/admin/simulations" element={<SimulationLab />} />
                 <Route path="/admin/alerts" element={<Alerts />} />

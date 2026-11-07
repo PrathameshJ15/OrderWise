@@ -24,8 +24,19 @@ import {
 import apiClient from '../../api/client';
 import { PriorityPill, ConfidencePill, RecommendationStatusPill } from '../../components/ui/StatusPill';
 import Modal from '../../components/ui/Modal';
+import LanguageSwitcher from '../../components/ui/LanguageSwitcher';
+import { useTranslation } from '../../contexts/I18nContext';
 
 export default function AIRecommendations() {
+  const i18n = useTranslation();
+  const [chatLanguage, setChatLanguage] = useState(() => {
+    try {
+      return localStorage.getItem('orderwise_chat_lang') || i18n?.language || 'en';
+    } catch {
+      return 'en';
+    }
+  });
+  const effectiveChatLang = chatLanguage || i18n?.language || 'en';
   const [activeTab, setActiveTab] = useState('review'); // 'review' | 'chatbot'
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -39,7 +50,7 @@ export default function AIRecommendations() {
     {
       id: 1,
       sender: 'assistant',
-      text: "I can analyze inventory bottlenecks, explain allocation outcomes, and clarify priority rankings. What would you like to inspect?",
+      text: "👋 Hello! I am your **OrderWise AI Assistant**. I can explain allocation decisions, analyze inventory bottlenecks, answer priority sorting questions, and guide you through simulations. What would you like to know?",
       suggestions: [
         'Which product is our biggest inventory bottleneck?',
         'Why was Alice’s order deferred?',
@@ -146,7 +157,7 @@ export default function AIRecommendations() {
     try {
       await ensureAdminAuth();
       const history = chatMessages.slice(-6).map((m) => ({ sender: m.sender, text: m.text }));
-      const res = await apiClient.post('/ai/chat', { message: text, history });
+      const res = await apiClient.post('/ai/chat', { message: text, history, language: effectiveChatLang });
       const data = res.data?.data || res.data || {};
       const botMsg = {
         id: Date.now() + 1,
@@ -155,6 +166,7 @@ export default function AIRecommendations() {
         suggestions: data.suggestions || [],
         provider: data.provider,
         model: data.model,
+        languageLabel: data.languageLabel,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       };
       setChatMessages((prev) => [...prev, botMsg]);
@@ -445,6 +457,12 @@ export default function AIRecommendations() {
                   <span className="text-[10px] px-2 py-0.5 rounded-pill bg-ok/20 text-ok border border-ok/30 font-mono">
                     Online
                   </span>
+                  <span
+                    data-testid="language-indicator"
+                    className="text-[11px] font-mono px-2.5 py-0.5 rounded-pill bg-ac/10 text-ac border border-ac/30 font-semibold"
+                  >
+                    {effectiveChatLang === 'mr' ? 'मराठी' : effectiveChatLang === 'hi' ? 'हिन्दी' : 'English'}
+                  </span>
                 </div>
                 <p className="text-[12px] text-t2 mt-0.5">
                   Groq Llama-3-70b-8192 • Deterministic Allocation Engine Explainer • Live Inventory Grounding
@@ -453,6 +471,7 @@ export default function AIRecommendations() {
             </div>
 
             <div className="flex items-center space-x-2">
+              <LanguageSwitcher variant="compact" onLanguageChange={(code) => setChatLanguage(code)} />
               <button
                 onClick={handleResetChat}
                 className="btn-header flex items-center space-x-1.5 px-3 py-1.5 text-[12px]"
@@ -469,12 +488,27 @@ export default function AIRecommendations() {
             <span className="text-t2 text-[11px] font-mono whitespace-nowrap">
               Suggested:
             </span>
-            {[
-              '🔥 Which product is our biggest inventory bottleneck?',
-              '📦 Why was Alice’s order deferred?',
-              '⚖️ How does the allocation engine break priority ties?',
-              '🧪 What happens during a demand surge simulation?',
-            ].map((prompt, i) => (
+            {(effectiveChatLang === 'mr'
+              ? [
+                  '📉 कमी स्टॉक असलेल्या वस्तू दाखवा',
+                  '🚚 कोणत्या पुरवठादारांची डिलिव्हरी उशिरा आहे?',
+                  '📋 प्रलंबित खरेदी ऑर्डर दाखवा',
+                  '📦 Alice ची ऑर्डर का स्थगित झाली?',
+                ]
+              : effectiveChatLang === 'hi'
+              ? [
+                  '📉 Kam stock wale products dikhao',
+                  '🚚 Kaunse suppliers ki delivery late hai?',
+                  '📋 Pending purchase orders dikhao',
+                  '📦 Alice ka order kyu defer hua?',
+                ]
+              : [
+                  '📉 Show low-stock products',
+                  '🚚 Which suppliers have delayed deliveries?',
+                  '📋 Show pending purchase orders',
+                  '📦 Why was Alice’s order deferred?',
+                ]
+            ).map((prompt, i) => (
               <button
                 key={i}
                 onClick={() => {
@@ -578,7 +612,13 @@ export default function AIRecommendations() {
               type="text"
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
-              placeholder="Ask OrderWise AI (e.g. Why was Order #101 deferred? What is the Pressure Gauge bottleneck?)..."
+              placeholder={
+                effectiveChatLang === 'mr'
+                  ? 'OrderWise AI ला विचारा (उदा. माझी ऑर्डर कधी येईल? / कमी स्टॉक असलेल्या वस्तू दाखवा)...'
+                  : effectiveChatLang === 'hi'
+                  ? 'OrderWise AI se puchein (उदा. मेरा ऑर्डर कब आएगा? / Kam stock wale products dikhao)...'
+                  : 'Ask OrderWise AI (e.g. Why was Order #101 deferred? What is the Pressure Gauge bottleneck?)...'
+              }
               disabled={chatLoading}
               className="flex-1 px-4 py-2.5 rounded-pill text-[14px] bg-s border border-bd focus:border-ac text-white focus:outline-none placeholder-t2/60"
             />

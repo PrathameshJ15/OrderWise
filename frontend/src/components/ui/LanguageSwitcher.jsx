@@ -2,12 +2,26 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Globe, ChevronDown, Check } from 'lucide-react';
 import { useTranslation, LANGUAGES } from '../../contexts/I18nContext';
 
-export default function LanguageSwitcher({ variant = 'pill', className = '' }) {
+export default function LanguageSwitcher({ variant = 'pill', className = '', onLanguageChange }) {
   const { language, changeLanguage } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
+  const [currentCode, setCurrentCode] = useState(() => {
+    try {
+      return localStorage.getItem('orderwise_chat_lang') || localStorage.getItem('orderwise_lang') || language || 'en';
+    } catch {
+      return language || 'en';
+    }
+  });
   const dropdownRef = useRef(null);
 
-  const activeLang = LANGUAGES.find((l) => l.code === language) || LANGUAGES[0];
+  const effectiveLangCode = language && language !== 'en' ? language : currentCode || 'en';
+  const activeLang = LANGUAGES.find((l) => l.code === effectiveLangCode) || LANGUAGES[0];
+
+  useEffect(() => {
+    if (language) {
+      setCurrentCode(language);
+    }
+  }, [language]);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -30,12 +44,22 @@ export default function LanguageSwitcher({ variant = 'pill', className = '' }) {
   }, [isOpen]);
 
   const handleSelectLanguage = (code) => {
+    setCurrentCode(code);
     changeLanguage(code);
+    try {
+      localStorage.setItem('orderwise_lang', code);
+      localStorage.setItem('orderwise_chat_lang', code);
+    } catch {
+      // ignore
+    }
+    if (onLanguageChange) {
+      onLanguageChange(code);
+    }
     setIsOpen(false);
   };
 
   return (
-    <div className={`relative inline-block text-left ${className}`} ref={dropdownRef}>
+    <div className={`relative inline-block text-left shrink-0 ${className}`} ref={dropdownRef}>
       <button
         type="button"
         data-testid="language-selector-button"
@@ -43,15 +67,16 @@ export default function LanguageSwitcher({ variant = 'pill', className = '' }) {
         aria-expanded={isOpen}
         aria-haspopup="true"
         aria-label="Select language"
-        className={`inline-flex items-center space-x-1.5 border border-bd bg-s2 hover:border-ac text-t text-[13px] font-sans font-medium transition-colors cursor-pointer select-none ${
+        className={`inline-flex items-center space-x-1.5 border border-bd bg-s2 hover:border-ac text-t text-[13px] font-sans font-medium transition-colors cursor-pointer select-none shrink-0 whitespace-nowrap ${
           variant === 'compact'
-            ? 'px-2.5 py-1.5 rounded-pill'
+            ? 'px-2 py-1.5 sm:px-2.5 rounded-pill'
             : 'px-3 py-1.5 rounded-pill'
         }`}
       >
         <Globe className="h-3.5 w-3.5 text-ac shrink-0" />
-        <span className="font-sans font-medium">{activeLang.nativeLabel}</span>
-        <ChevronDown className={`h-3 w-3 text-t2 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+        <span className="font-sans font-medium hidden sm:inline">{activeLang.nativeLabel}</span>
+        <span className="font-mono text-[11px] font-bold sm:hidden uppercase tracking-tight">{activeLang.code}</span>
+        <ChevronDown className={`h-3 w-3 text-t2 transition-transform duration-200 shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
       {isOpen && (

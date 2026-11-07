@@ -51,24 +51,24 @@ export default function UserProfileMenu() {
 
   return (
     <>
-      <div className="relative font-sans" ref={menuRef}>
+      <div className="relative font-sans shrink-0" ref={menuRef}>
         <button
           type="button"
           onClick={() => setOpen(!open)}
-          className="flex items-center space-x-2.5 rounded-pill border border-bd hover:border-t bg-s px-3 py-1.5 transition-colors text-left cursor-pointer"
+          className="flex items-center space-x-2 rounded-pill border border-bd hover:border-t bg-s px-2.5 py-1.5 transition-colors text-left cursor-pointer shrink-0 whitespace-nowrap min-h-[36px]"
           aria-expanded={open}
           aria-haspopup="true"
         >
-          <div className="w-6 h-6 rounded-full bg-ac flex items-center justify-center text-white font-bold text-xs uppercase">
+          <div className="w-6 h-6 rounded-full bg-ac flex items-center justify-center text-white font-bold text-xs uppercase shrink-0">
             {user?.name ? user.name.charAt(0) : <User className="h-3.5 w-3.5" />}
           </div>
-          <div className="hidden sm:block text-xs leading-none">
-            <div className="text-t font-semibold truncate max-w-[120px]">
-              {user?.name || user?.email?.split('@')[0] || 'User'}
+          <div className="hidden xl:block text-xs leading-none">
+            <div className="text-t font-semibold truncate max-w-[110px]">
+              {user?.name || user?.email?.split('@')?.[0] || 'User'}
             </div>
             <div className="text-[11px] font-mono text-t2 capitalize mt-0.5">{roleLabel}</div>
           </div>
-          <ChevronDown className={`h-3.5 w-3.5 text-t2 transition-transform ${open ? 'rotate-180' : ''}`} />
+          <ChevronDown className={`h-3.5 w-3.5 text-t2 transition-transform shrink-0 ${open ? 'rotate-180' : ''}`} />
         </button>
 
         {open && (

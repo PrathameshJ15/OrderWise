@@ -1,6 +1,7 @@
 const { query } = require('../config/db');
 const { env } = require('../config/env');
 const demoStore = require('./demoStore');
+const { detectLanguage } = require('./multilingualChatService');
 
 /**
  * Customer AI Service for OrderWise
@@ -87,11 +88,21 @@ async function handleOrderAssistantChat(userId, message, history = []) {
     return `Order #${o.id} - Status: ${o.status}, Delivery Date: ${o.promised_delivery_date || 'N/A'}, Priority: ${o.approved_priority || 'Standard'}. Items: ${itemsStr}`;
   });
 
+  const detected = detectLanguage(message);
+  const { language, dialect, script } = detected;
+
   const promptSystem = `You are OrderWise AI Assistant, an expert customer-facing assistant for an industrial supply chain platform.
 The customer is asking about their orders, inventory allocation, shipment dates, pending units, or shortages.
 Answer accurately, politely, and concisely using the provided order records.
 If an order was only partially fulfilled or deferred, explain that OrderWise uses deterministic priority-based inventory allocation and that stock was reserved for higher-priority or earlier-committed orders according to strict business rules.
 Do not invent order numbers that do not exist in the context.
+
+CRITICAL LANGUAGE REQUIREMENT:
+The customer asked in ${detected.languageLabel} (${detected.dialect}, script: ${detected.script}).
+You MUST reply in the EXACT SAME language and dialect (${detected.languageLabel}).
+- If Hindi/Hinglish: reply in conversational Hindi/Hinglish.
+- If Marathi/Roman Marathi: reply in conversational Marathi/Roman Marathi.
+- Keep responses short, simple, useful, and natural. Keep standard technical terms like Order, Inventory, Stock, Allocation, Product, Dashboard, AI in simple English.
 
 Current Customer Orders:
 ${ordersContext.length > 0 ? ordersContext.join('\n') : 'No active orders on record.'}`;
@@ -127,6 +138,7 @@ ${ordersContext.length > 0 ? ordersContext.join('\n') : 'No active orders on rec
             reply: text.trim(),
             provider: 'groq',
             model: env.GROQ_MODEL,
+            detectedLanguage: language,
           };
         }
       }
@@ -135,18 +147,73 @@ ${ordersContext.length > 0 ? ordersContext.join('\n') : 'No active orders on rec
     }
   }
 
-  // Industrial heuristic engine
+  // Industrial heuristic engine with natural language support
   const q = (message || '').toLowerCase();
   let reply = '';
 
+  const isOrderDeliveryQuery =
+    q.includes('कब आएगा') ||
+    q.includes('कब आएगी') ||
+    q.includes('कब पहुंचेगा') ||
+    q.includes('कब मिलेगा') ||
+    q.includes('कधी येईल') ||
+    q.includes('कधी येणार') ||
+    q.includes('कधी पोहोचेल') ||
+    q.includes('कधी मिळेल') ||
+    q.includes('kab aayega') ||
+    q.includes('kab ayega') ||
+    q.includes('kadhi yeil') ||
+    q.includes('kadhi yenar') ||
+    q.includes('delivery') ||
+    q.includes('when') ||
+    q.includes('arrive') ||
+    q.includes('date');
+
   if (customerOrders.length === 0) {
-    reply = "You currently don't have any placed orders. You can browse the Industrial Automation catalog and create an order to see real-time allocation in action.";
+    if (language === 'mr') {
+      reply = script === 'devanagari'
+        ? "तुमची सध्या कोणतीही ऑर्डर नोंदवलेली नाही. तुम्ही उत्पादन सूचीमधून नवीन ऑर्डर तयार करू शकता."
+        : "Tumchi sadhya kontihi order confirm nahi ahe. Tumhi Product Catalog madhun navin order create karu shakta.";
+    } else if (language === 'hi') {
+      reply = script === 'devanagari'
+        ? "वर्तमान में आपका कोई ऑर्डर दर्ज नहीं है। आप प्रोडक्ट कैटलॉग में जाकर नया ऑर्डर बना सकते हैं।"
+        : "Filhal aapka koi active order record me nahi hai. Aap Product Catalog se naya order create kar sakte hain.";
+    } else {
+      reply = "You currently don't have any placed orders. You can browse the Industrial Automation catalog and create an order to see real-time allocation in action.";
+    }
+  } else if (isOrderDeliveryQuery) {
+    const latest = customerOrders[0];
+    const dateStr = latest.promised_delivery_date || 'Standard scheduled date';
+    if (language === 'mr') {
+      reply = script === 'devanagari'
+        ? `तुमची ऑर्डर #${latest.id} (Status: ${latest.status}) ची अपेक्षित डिलिव्हरी तारीख ${dateStr} आहे. मंजूर Priority आणि Stock उपलब्धतेनुसार ऑर्डर वेळेवर पाठवली जाईल.`
+        : `Tumchi order #${latest.id} (Status: ${latest.status}) chi expected delivery date ${dateStr} ahe. Approved priority ani warehouse stock nusar order scheduled ahe.`;
+    } else if (language === 'hi') {
+      reply = script === 'devanagari'
+        ? `आपका ऑर्डर #${latest.id} (Status: ${latest.status}) की अपेक्षित डिलीवरी तारीख ${dateStr} है। स्वीकृत Priority और Stock उपलब्धता के अनुसार ऑर्डर समय पर पहुंचेगा।`
+        : `Aapka order #${latest.id} (Status: ${latest.status}) ki scheduled delivery date ${dateStr} hai. Approved priority aur warehouse stock ke mutabiq delivery ki jayegi.`;
+    } else {
+      const dates = customerOrders
+        .filter((o) => o.promised_delivery_date)
+        .map((o) => `Order #${o.id}: scheduled for ${o.promised_delivery_date}`);
+      reply = dates.length > 0 ? `Here are your scheduled delivery dates:\n• ${dates.join('\n• ')}` : `Your order #${latest.id} is scheduled for ${dateStr}.`;
+    }
   } else if (q.includes('status') || q.includes('my order') || q.includes('where is')) {
     const latest = customerOrders[0];
     const itemSummaries = (latest.items || []).map(
       (i) => `${i.product_name} (${i.allocated_quantity ?? 0}/${i.requested_quantity} ${i.unit || 'units'} allocated - ${i.allocation_status || latest.status})`
     );
-    reply = `Your most recent order is Order #${latest.id} (Status: ${latest.status.toUpperCase()}). Promised delivery date: ${latest.promised_delivery_date || 'Standard lead time'}. Fulfillment details: ${itemSummaries.join(', ')}.`;
+    if (language === 'mr') {
+      reply = script === 'devanagari'
+        ? `तुमची अलीकडील ऑर्डर #${latest.id} आहे (Status: ${latest.status.toUpperCase()}). डिलिव्हरी तारीख: ${latest.promised_delivery_date || 'नियोजित'}. वाटप माहिती: ${itemSummaries.join(', ')}.`
+        : `Tumchi latest order #${latest.id} ahe (Status: ${latest.status.toUpperCase()}). Delivery date: ${latest.promised_delivery_date || 'Standard'}. Allocation: ${itemSummaries.join(', ')}.`;
+    } else if (language === 'hi') {
+      reply = script === 'devanagari'
+        ? `आपका नवीनतम ऑर्डर #${latest.id} है (Status: ${latest.status.toUpperCase()})। डिलीवरी तारीख: ${latest.promised_delivery_date || 'मानक'}| आवंटन विवरण: ${itemSummaries.join(', ')}।`
+        : `Aapka latest order #${latest.id} hai (Status: ${latest.status.toUpperCase()}). Promised delivery date: ${latest.promised_delivery_date || 'Standard'}. Items: ${itemSummaries.join(', ')}.`;
+    } else {
+      reply = `Your most recent order is Order #${latest.id} (Status: ${latest.status.toUpperCase()}). Promised delivery date: ${latest.promised_delivery_date || 'Standard lead time'}. Fulfillment details: ${itemSummaries.join(', ')}.`;
+    }
   } else if (q.includes('partial') || q.includes('shortage') || q.includes('deferred') || q.includes('why')) {
     const deferredOrPartial = customerOrders.flatMap((o) =>
       (o.items || [])
@@ -155,17 +222,36 @@ ${ordersContext.length > 0 ? ordersContext.join('\n') : 'No active orders on rec
     );
     if (deferredOrPartial.length > 0) {
       const top = deferredOrPartial[0];
-      reply = `In Order #${top.orderId}, ${top.product_name} received ${top.allocated_quantity ?? 0} of ${top.requested_quantity} requested units (${top.allocation_status}). Under OrderWise deterministic allocation rules, scarce warehouse stock is distributed by approved priority and promised delivery date. Items below minimum acceptable quantity or with lower priority ranking are deferred until inventory replenishment.`;
+      if (language === 'mr') {
+        reply = script === 'devanagari'
+          ? `ऑर्डर #${top.orderId} मध्ये, ${top.product_name} ला ${top.allocated_quantity ?? 0}/${top.requested_quantity} युनिट्स वाटप झाले आहेत (${top.allocation_status}). कमी स्टॉक असताना OrderWise नियमांनुसार जास्त Priority आणि आधीच्या डिलिव्हरी तारखेच्या ऑर्डर्सना आधी स्टॉक दिला जातो.`
+          : `Order #${top.orderId} madhe, ${top.product_name} la ${top.allocated_quantity ?? 0}/${top.requested_quantity} units allocate jhale ahet (${top.allocation_status}). Stock kami aslyamule high priority orders na pehle stock dila jato.`;
+      } else if (language === 'hi') {
+        reply = script === 'devanagari'
+          ? `ऑर्डर #${top.orderId} में, ${top.product_name} को ${top.allocated_quantity ?? 0}/${top.requested_quantity} यूनिट्स आवंटित हुए हैं (${top.allocation_status})। सीमित स्टॉक की स्थिति में OrderWise नियमों के तहत उच्च प्राथमिकता और पुरानी तारीख के ऑर्डर्स को पहले स्टॉक दिया जाता है।`
+          : `Order #${top.orderId} me, ${top.product_name} ko ${top.allocated_quantity ?? 0}/${top.requested_quantity} units allocate hue hain (${top.allocation_status}). Scarce inventory me high priority orders ko pehle allocate kiya jata hai.`;
+      } else {
+        reply = `In Order #${top.orderId}, ${top.product_name} received ${top.allocated_quantity ?? 0} of ${top.requested_quantity} requested units (${top.allocation_status}). Under OrderWise deterministic allocation rules, scarce warehouse stock is distributed by approved priority and promised delivery date. Items below minimum acceptable quantity or with lower priority ranking are deferred until inventory replenishment.`;
+      }
     } else {
-      reply = "All items in your eligible orders have been fully allocated according to current warehouse inventory!";
+      reply = language === 'mr'
+        ? "तुमच्या सर्व पात्र ऑर्डर्समधील वस्तू पूर्णपणे वाटप झाल्या आहेत!"
+        : language === 'hi'
+        ? "आपके सभी ऑर्डर्स का स्टॉक सफलतापूर्वक पूरा आवंटित हो चुका है!"
+        : "All items in your eligible orders have been fully allocated according to current warehouse inventory!";
     }
-  } else if (q.includes('delivery') || q.includes('when') || q.includes('date') || q.includes('arrive')) {
-    const dates = customerOrders
-      .filter((o) => o.promised_delivery_date)
-      .map((o) => `Order #${o.id}: scheduled for ${o.promised_delivery_date}`);
-    reply = dates.length > 0 ? `Here are your scheduled delivery dates:\n• ${dates.join('\n• ')}` : "Your orders are currently scheduled under standard operational lead times.";
   } else {
-    reply = `I am your OrderWise Assistant. You have ${customerOrders.length} order(s) on file. Your latest order #${customerOrders[0].id} is currently ${customerOrders[0].status}. Feel free to ask about fulfillment status, delivery dates, or allocation breakdown.`;
+    if (language === 'mr') {
+      reply = script === 'devanagari'
+        ? `मी तुमचा OrderWise AI सहाय्यक आहे. तुमच्या ${customerOrders.length} ऑर्डर(s) नोंदवलेल्या आहेत. नवीनतम ऑर्डर #${customerOrders[0].id} सध्या ${customerOrders[0].status} आहे. तुम्ही डिलिव्हरी तारीख, स्टॉक किंवा वाटपाबद्दल काहीही विचारू शकता.`
+        : `Mi tumcha OrderWise AI Assistant ahe. Tumchya ${customerOrders.length} order(s) record var ahet. Latest order #${customerOrders[0].id} status: ${customerOrders[0].status}. Tumhi delivery dates ki status baddal vicharu shakta.`;
+    } else if (language === 'hi') {
+      reply = script === 'devanagari'
+        ? `मैं आपका OrderWise AI सहायक हूँ। आपके ${customerOrders.length} ऑर्डर दर्ज हैं। नवीनतम ऑर्डर #${customerOrders[0].id} का स्टेटस ${customerOrders[0].status} है। आप डिलीवरी तारीख, स्टॉक या आवंटन के बारे में पूछ सकते हैं।`
+        : `Main aapka OrderWise AI Assistant hoon. Aapke ${customerOrders.length} order(s) on file hain. Latest order #${customerOrders[0].id} is currently ${customerOrders[0].status}. Aap delivery date ya order status ke baare me pooch sakte hain.`;
+    } else {
+      reply = `I am your OrderWise Assistant. You have ${customerOrders.length} order(s) on file. Your latest order #${customerOrders[0].id} is currently ${customerOrders[0].status}. Feel free to ask about fulfillment status, delivery dates, or allocation breakdown.`;
+    }
   }
 
   return {

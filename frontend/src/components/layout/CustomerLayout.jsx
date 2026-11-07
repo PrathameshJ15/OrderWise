@@ -9,6 +9,7 @@ import {
   Menu,
   X,
 } from 'lucide-react';
+import { useTranslation } from '../../contexts/I18nContext';
 import NotificationBell from '../ui/NotificationBell';
 import UserProfileMenu from './UserProfileMenu';
 import Breadcrumbs from './Breadcrumbs';
@@ -18,6 +19,7 @@ import AnimatedRedWaves from '../ui/AnimatedRedWaves';
 
 export function CustomerLayout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -39,11 +41,11 @@ export function CustomerLayout() {
   }, [mobileMenuOpen]);
 
   const navItems = [
-    { name: 'Dashboard', to: '/dashboard', icon: LayoutDashboard, exact: true },
-    { name: 'Product Catalog', to: '/products', icon: Package },
-    { name: 'Create Order', to: '/orders/new', icon: PlusCircle },
-    { name: 'My Orders', to: '/orders', icon: ClipboardList },
-    { name: 'AI Assistant', to: '/assistant', icon: Bot },
+    { name: 'Dashboard', shortName: 'Dashboard', to: '/dashboard', icon: LayoutDashboard, exact: true, key: 'dashboard' },
+    { name: 'Product Catalog', shortName: 'Catalog', to: '/products', icon: Package, key: 'catalog' },
+    { name: 'Create Order', shortName: 'New Order', to: '/orders/new', icon: PlusCircle, key: 'create_order' },
+    { name: 'My Orders', shortName: 'Orders', to: '/orders', icon: ClipboardList, key: 'my_orders' },
+    { name: 'AI Assistant', shortName: 'AI Assistant', to: '/assistant', icon: Bot, key: 'ai_assistant', isAi: true },
   ];
 
   return (
@@ -62,58 +64,104 @@ export function CustomerLayout() {
 
       {/* Top Customer Navigation Header */}
       <header className="border-b border-bd bg-s/90 backdrop-blur-md sticky top-0 z-30 relative transition-colors">
-        <div className="max-w-container mx-auto px-4 sm:px-8">
-          <div className="flex justify-between items-center h-16">
-            {/* Logo: 1 icon mark + 1 text wordmark */}
-            <div className="flex items-center space-x-3">
-              <Link to="/dashboard" className="flex items-center space-x-2.5">
-                <img src="/logo-icon.png" alt="" className="h-7 w-7 object-contain" />
-                <span className="font-display font-bold text-[18px] text-t tracking-tight">
+        <div className="max-w-container mx-auto px-3 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16 gap-2">
+            {/* Logo: Guaranteed no squish or overlap */}
+            <div className="flex items-center space-x-2.5 shrink-0">
+              <Link to="/dashboard" className="flex items-center space-x-2 shrink-0">
+                <img src="/logo-icon.png" alt="OrderWise" className="h-7 w-7 object-contain shrink-0" />
+                <span className="font-display font-bold text-[18px] text-t tracking-tight whitespace-nowrap">
                   Order<span className="text-ac">Wise</span>
                 </span>
               </Link>
-              <span className="hidden sm:inline-block px-2.5 py-0.5 text-[11px] font-sans font-medium rounded-pill bg-ac/10 text-ac border border-ac/20">
+              <span className="hidden sm:inline-flex items-center px-2 py-0.5 text-[10px] font-sans font-medium rounded-pill bg-ac/10 text-ac border border-ac/20 whitespace-nowrap shrink-0">
                 Customer portal
               </span>
             </div>
 
-            {/* Desktop Navigation Links */}
-            <nav className="hidden md:flex items-center space-x-2" aria-label="Customer Navigation">
+            {/* Desktop Navigation Links: Wide screens (>= xl / 1280px) display full pills */}
+            <nav className="hidden xl:flex items-center space-x-1.5 shrink-0" aria-label="Customer Navigation">
               {navItems.map((item) => {
                 const Icon = item.icon;
+                const label = t(`nav.${item.key}`, item.name);
                 return (
                   <NavLink
                     key={item.to}
                     to={item.to}
                     end={item.exact}
                     className={({ isActive }) =>
-                      `flex items-center space-x-2 px-4 py-2 rounded-pill text-[14px] font-medium transition-colors ${
+                      `flex items-center space-x-2 px-3.5 py-1.5 rounded-pill text-[13.5px] font-medium transition-colors whitespace-nowrap shrink-0 ${
                         isActive
                           ? 'bg-ac text-white font-semibold shadow-xs'
+                          : item.isAi
+                          ? 'text-ac border border-ac/30 bg-ac/5 hover:bg-ac/15 font-semibold'
                           : 'text-t2 hover:text-t hover:bg-s2'
                       }`
                     }
                   >
-                    <Icon className="h-4 w-4" />
-                    <span>{item.name}</span>
+                    <Icon className="h-4 w-4 shrink-0" />
+                    <span>{label}</span>
                   </NavLink>
                 );
               })}
             </nav>
 
-            {/* Right Controls */}
-            <div className="flex items-center space-x-3">
-              <LanguageSwitcher variant="compact" className="hidden sm:inline-block" />
-              <ThemeToggle variant="segmented" className="hidden sm:inline-flex" />
-              <ThemeToggle variant="button" className="sm:hidden" />
+            {/* Laptop Navigation Links: (lg to xl / 1024px to 1279px) high-density compact pills */}
+            <nav className="hidden lg:flex xl:hidden items-center space-x-1 shrink-0" aria-label="Customer Compact Navigation">
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                const label = t(`nav.${item.key}`, item.shortName);
+                return (
+                  <NavLink
+                    key={item.to}
+                    to={item.to}
+                    end={item.exact}
+                    title={item.name}
+                    className={({ isActive }) =>
+                      `flex items-center space-x-1.5 px-2.5 py-1.5 rounded-pill text-[12.5px] font-medium transition-colors whitespace-nowrap shrink-0 ${
+                        isActive
+                          ? 'bg-ac text-white font-semibold shadow-xs'
+                          : item.isAi
+                          ? 'text-ac border border-ac/30 bg-ac/5 hover:bg-ac/15 font-semibold'
+                          : 'text-t2 hover:text-t hover:bg-s2'
+                      }`
+                    }
+                  >
+                    <Icon className="h-3.5 w-3.5 shrink-0" />
+                    <span className="truncate max-w-[110px]">{label}</span>
+                  </NavLink>
+                );
+              })}
+            </nav>
+
+            {/* Right Controls: Guaranteed zero overlap and responsive scaling */}
+            <div className="flex items-center space-x-1.5 sm:space-x-2.5 shrink-0">
+              {/* Quick AI Assistant shortcut on tablet & mobile */}
+              <NavLink
+                to="/assistant"
+                title="AI Assistant"
+                className={({ isActive }) =>
+                  `lg:hidden p-2 rounded-full border transition-colors shrink-0 ${
+                    isActive
+                      ? 'bg-ac text-white border-ac'
+                      : 'border-ac/30 bg-ac/10 text-ac hover:bg-ac/20'
+                  }`
+                }
+              >
+                <Bot className="h-4 w-4" />
+              </NavLink>
+
+              <LanguageSwitcher variant="compact" />
+              <ThemeToggle variant="segmented" className="hidden xl:inline-flex shrink-0" />
+              <ThemeToggle variant="button" className="xl:hidden shrink-0" />
               <NotificationBell />
               <UserProfileMenu />
 
-              {/* Mobile Menu Button */}
+              {/* Mobile/Tablet Drawer Toggle Button */}
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden p-2 rounded-full border border-bd text-t2 hover:text-t hover:border-t transition-colors cursor-pointer"
+                className="lg:hidden p-2 rounded-full border border-bd text-t2 hover:text-t hover:border-t transition-colors cursor-pointer shrink-0"
                 aria-label="Toggle navigation"
               >
                 {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -122,15 +170,16 @@ export function CustomerLayout() {
           </div>
         </div>
 
-        {/* Mobile Navigation Drawer */}
+        {/* Mobile/Tablet Navigation Drawer */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-bd bg-s px-4 py-3 space-y-1">
+          <div className="lg:hidden border-t border-bd bg-s px-4 py-3 space-y-1 animate-in slide-in-from-top-2 duration-150 shadow-xl">
             <div className="pt-1 pb-2 border-b border-bd/40 flex items-center justify-between">
-              <span className="text-[12px] font-mono text-t2">Language</span>
+              <span className="text-[12px] font-sans text-t2">Language</span>
               <LanguageSwitcher variant="compact" />
             </div>
             {navItems.map((item) => {
               const Icon = item.icon;
+              const label = t(`nav.${item.key}`, item.name);
               return (
                 <NavLink
                   key={item.to}
@@ -141,12 +190,14 @@ export function CustomerLayout() {
                     `flex items-center space-x-3 px-4 py-3 min-h-[44px] rounded-pill text-[14px] font-medium transition-colors active:scale-[0.99] ${
                       isActive
                         ? 'bg-ac text-white font-semibold'
+                        : item.isAi
+                        ? 'text-ac border border-ac/30 bg-ac/5 hover:bg-ac/15 font-semibold'
                         : 'text-t2 hover:text-t hover:bg-s2'
                     }`
                   }
                 >
-                  <Icon className="h-4 w-4" />
-                  <span>{item.name}</span>
+                  <Icon className="h-4 w-4 shrink-0" />
+                  <span>{label}</span>
                 </NavLink>
               );
             })}

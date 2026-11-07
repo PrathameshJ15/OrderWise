@@ -339,7 +339,7 @@ export default function AllocationDistributionVisual({
                 <line x1="214.8" y1="0.0" x2="214.8" y2="-14.0" stroke="#3a3a3a" />
                 <rect x="145" y="-36.0" width="140" height="22" rx="11" fill="#161616" stroke="#3a3a3a" />
                 <text x="214.8" y="-21.0" textAnchor="middle" fontFamily="IBM Plex Mono, monospace" fontSize="11" fill={isFulfilled ? '#4ADE80' : '#F5B544'} fontWeight="500">
-                  {primaryAllocated.customer_name ? primaryAllocated.customer_name.split(' ')[0] : 'Cust'} {primaryAllocated.allocated_quantity}/{primaryAllocated.requested_quantity}
+                  {primaryAllocated.customer_name?.split(' ')?.[0] || 'Cust'} {primaryAllocated.allocated_quantity}/{primaryAllocated.requested_quantity}
                 </text>
               </g>
             )}
@@ -350,7 +350,7 @@ export default function AllocationDistributionVisual({
                 <line x1="117.8" y1="76.0" x2="117.8" y2="62.0" stroke="#3a3a3a" />
                 <rect x="52" y="40.0" width="132" height="22" rx="11" fill="#161616" stroke="#3a3a3a" />
                 <text x="117.8" y="55.0" textAnchor="middle" fontFamily="IBM Plex Mono, monospace" fontSize="11" fill="#FF7A7A" fontWeight="500">
-                  {deferred1.customer_name ? deferred1.customer_name.split(' ')[0] : 'Cust'} {deferred1.allocated_quantity}/{deferred1.requested_quantity}
+                  {deferred1.customer_name?.split(' ')?.[0] || 'Cust'} {deferred1.allocated_quantity}/{deferred1.requested_quantity}
                 </text>
               </g>
             )}
@@ -361,7 +361,7 @@ export default function AllocationDistributionVisual({
                 <line x1="48.5" y1="136.0" x2="48.5" y2="122.0" stroke="#3a3a3a" />
                 <rect x="-18" y="100.0" width="132" height="22" rx="11" fill="#161616" stroke="#3a3a3a" />
                 <text x="48.5" y="115.0" textAnchor="middle" fontFamily="IBM Plex Mono, monospace" fontSize="11" fill="#FF7A7A" fontWeight="500">
-                  {deferred2.customer_name ? deferred2.customer_name.split(' ')[0] : 'Cust'} {deferred2.allocated_quantity}/{deferred2.requested_quantity}
+                  {deferred2.customer_name?.split(' ')?.[0] || 'Cust'} {deferred2.allocated_quantity}/{deferred2.requested_quantity}
                 </text>
               </g>
             )}
